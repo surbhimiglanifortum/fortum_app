@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+// import Routes from '../../Navigation/Routes';
 
 const {width, height} = Dimensions.get('window');
 
@@ -112,7 +113,7 @@ const OnboardingScreen = ({navigation}) => {
             <View style={{height: 50}}>
               <TouchableOpacity
                 style={styles.btn}
-                onPress={() => navigation.replace('Dashboard')}>
+                onPress={() => navigation.replace('login')}>
                 <Text style={{fontWeight: 'bold', fontSize: 15}}>
                   GET STARTED
                 </Text>

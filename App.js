@@ -4,7 +4,6 @@ import { StatusBar ,useColorScheme } from 'react-native';
 import Routes from './src/Navigation/Routes';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
-
 const App = () => {
 
   const darkTheme = {
@@ -29,7 +28,6 @@ const App = () => {
 
   const scheme = useColorScheme();
 
-console.log(scheme)
   return (
     <>
     <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>

@@ -6,6 +6,10 @@ import OnboardingScreen from '../Screen/Onboarding/OnboardingScreen';
 import OngoingDetails from '../Screen/Charging/OngoingDetails/OngoingDetails';
 import TaxInvoice from '../Screen/Charging/TaxInvoice/TaxInvoice';
 import routes from '../Utils/routes';
+import Login from '../Screen/AuthScreen/Login';
+import Signup from '../Screen/AuthScreen/Signup';
+import Verification from '../Screen/AuthScreen/Verification';
+import RechargeWallet from '../Screen/Wallet/RechargeWallet';
 
 
 
@@ -19,8 +23,11 @@ const Routes = ({  }) => {
            <Stack.Screen name={routes.onboarding} component={OnboardingScreen} options={{headerShown:false}}/>
            <Stack.Screen name='OngoingDeatils' component={OngoingDetails} options={{headerShown:true}}/>
            <Stack.Screen name={routes.taxInvoice} component={TaxInvoice} options={{headerShown:false}}/>
+           <Stack.Screen name={routes.login} component={Login} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.Signup} component={Signup} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.Verification} component={Verification} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.RechargeWallet} component={RechargeWallet} options={{headerShown:false}}  />
 
-            
 
         </Stack.Navigator>
     );

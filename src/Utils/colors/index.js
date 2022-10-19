@@ -7,6 +7,8 @@ const colors = {
     backgroundDark:'#202020',
     greenBackground:'#5AC37D',
     lightText:'#474343',
+    borderColor:'#EFEFEF',
+    lightBackGround:'#EEF2FA'
     
 }
 

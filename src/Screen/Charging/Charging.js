@@ -1,10 +1,18 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { scale } from 'react-native-size-matters'
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import ChargingCard from '../../Component/Charging/ChargingCard'
+import Card from '../../Component/Card/Card'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../Utils/routes'
+import BackSvg from '../../assests/svg/back'
+import Textinput from '../../Component/Textinput/Textinput'
+import LocationCard from '../../Component/Card/LocationCard'
+import PersonalCodeCard from '../../Component/Card/PersonalCodeCard'
+import DeleteCard from '../../Component/Card/DeleteCard'
+import ToggleCard from '../../Component/Card/ToggleCard'
+import DetailsCard from '../../Component/Card/DetailsCard'
+import AddRemoveCard from '../../Component/Card/AddRemoveCard'
+
 const Charging = () => {
 const navigation=useNavigation()
     const [selectedTab,setSelectedTab]=useState('ongoing')
@@ -28,12 +36,9 @@ const navigationHandler=()=>{
         <View style={styles.conatiner}>
             <View style={styles.innerContainer}>
                 <View style={styles.header}>
-                    <TouchableOpacity style={styles.iconContainer}>
-                        <AntDesign name='left' size={20} />
-                    </TouchableOpacity>
-                    <View style={{marginLeft:scale(90)}}>
+                  
                     <Text style={styles.headerText}>Charging</Text>
-                    </View>
+                
                 </View>
                 <View style={styles.tabContainer}>
                     <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton,{backgroundColor:selectedTab=='ongoing'?'#FFF':'#5AC37D'}]}>
@@ -44,9 +49,17 @@ const navigationHandler=()=>{
                     </TouchableOpacity>
                 </View>
                 <View>
-                    { selectedTab=='ongoing' && <ChargingCard tabName={"ongoing"} navigationHandler={navigationHandler} />}
-                    { selectedTab=='completed' && <ChargingCard tabName={'completed'} navigationHandler={navigationHandler}/>}
+                    { selectedTab=='ongoing' && <Card tabName={"ongoing"} navigationHandler={navigationHandler} />}
+                    
+                    { selectedTab=='completed' && <Card tabName={'completed'} navigationHandler={navigationHandler}/>}
                 </View>
+                {<Textinput />}
+                {<LocationCard />}
+                {<PersonalCodeCard />}
+                {<DeleteCard />}
+                {<ToggleCard />}
+                {<DetailsCard />}
+                {<AddRemoveCard  />}
             </View>
         </View>
     )
@@ -55,6 +68,7 @@ const navigationHandler=()=>{
 const styles = StyleSheet.create({
     conatiner: {
         flex: 1,
+        // backgroundColor:'#fff'
     },
     innerContainer: {
         width: '90%',
@@ -64,7 +78,8 @@ const styles = StyleSheet.create({
     header:{
         flexDirection:'row',
         alignItems:'center',
-        // justifyContent:'space-between'  
+        justifyContent:'center'  ,
+        marginVertical:10
     },
     headerText:{
 fontSize:scale(17),

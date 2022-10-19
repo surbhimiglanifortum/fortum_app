@@ -10,9 +10,13 @@ import Other from '../Other/Other'
 import colors from '../../Utils/colors'
 import commonFonts from '../../Utils/fonts/fonts'
 import CommonText from '../../Component/Text/CommonText'
-import svg from 'react-native-svg'
-// import Charger from '../../assests/charger.svg'
 import Charger from '../../assests/svg/charger'
+import HomeSvg from '../../assests/svg/home'
+import WalletSvg from '../../assests/svg/wallet'
+import NotificationSvg from '../../assests/svg/notification'
+import OtherSvg from '../../assests/svg/other'
+// import { Shadow } from 'react-native-neomorph-shadows';
+
 
 const Dashboard = () => {
 
@@ -50,24 +54,40 @@ const Dashboard = () => {
           </ScrollView>
         </View>
         <View style={[styles.tabContainer,{backgroundColor:colors.greenBackground}]}>
-          <TouchableOpacity onPress={homeButtonHandler} style={styles.tabButton}>
-            <AntDesign name='home' size={30} color={colors.white} />
+        {/* <Shadow
+  inner // <- enable inner shadow
+  useArt // <- set this prop to use non-native shadow on ios
+  style={{
+    shadowOffset: {width: 10, height: 10},
+    shadowOpacity: 1,
+    shadowColor: "grey",
+    shadowRadius: 10,
+    borderRadius: 20,
+    backgroundColor: 'white',
+    width: 100,
+    height: 100,
+    // ...include most of View/Layout styles
+  }}
+> */}
+          <TouchableOpacity onPress={homeButtonHandler} style={[styles.tabButton,selectedTab == 'home'?{borderWidth:2,paddingVertical:5,paddingHorizontal:10,borderRadius:5,borderColor:'#FFF'}:null]}>
+            <HomeSvg  color={colors.white} />
            {selectedTab == 'home'&& <CommonText showText={'Home'} />}
           </TouchableOpacity>
+          {/* </Shadow> */}
           <TouchableOpacity  onPress={walletButtonHandler} style={styles.tabButton}>
-            <AntDesign name='home' size={30} color={colors.white} />
+            <WalletSvg  color={colors.white} />
             {selectedTab == 'wallet'&&<CommonText showText={'Wallet'} />}
           </TouchableOpacity>
           <TouchableOpacity   onPress={chargingButtonHandler} style={styles.tabButton}>
-            <Charger width={120} height={40} color={colors.white} />
+            <Charger color={colors.white} />
             {selectedTab == 'charging'&&<CommonText showText={'Charging'} />}
           </TouchableOpacity>
           <TouchableOpacity  onPress={notificationButtonHandler} style={styles.tabButton}>
-            <AntDesign name='home' size={30} color={colors.white} />
+            <NotificationSvg color={colors.white} />
            {selectedTab == 'notification'&& <CommonText showText={'Notification'} />}
           </TouchableOpacity>
           <TouchableOpacity  onPress={otherButtonHandler}  style={styles.tabButton}>
-            <AntDesign name='home' size={30} color={colors.white} />
+            <OtherSvg  color={colors.white} />
             {selectedTab == 'other'&&<CommonText showText={'Others'} />}
           </TouchableOpacity>
         </View>
@@ -80,7 +100,7 @@ const Dashboard = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1,  },
-  tabContainer: { borderWidth: 1, paddingVertical: scale(20), flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: scale(10) },
+  tabContainer: {  paddingVertical: scale(20), flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: scale(10) },
 tabButton:{ flexDirection: 'row', alignItems: 'center',},
 text:{ color: colors.white,fontFamily:commonFonts.bold,marginLeft:7},
 renderComponent:{  flex: 9 },
