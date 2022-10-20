@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
     },
-    headerText: { alignItems: 'center', marginLeft: 70 },
+    headerText: { alignItems: 'center', marginLeft: 60 },
 })
 
 export default Header
