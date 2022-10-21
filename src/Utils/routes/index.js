@@ -6,7 +6,13 @@ const routes = {
     Signup:'Signup',
     Verification:'Verification',
     RechargeWallet:'RechargeWallet',
-    Profile:'Profile'
+    Profile:'Profile',
+    OngoingDetails:'OngoingDetails',
+    EvModal:'EvModal',
+    AddEvModal:'AddEvModal',
+    SelectVehicle:'SelectVehicle',
+    Preference:'Preference',
+
 }
 
 export default routes

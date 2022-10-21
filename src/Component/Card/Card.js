@@ -4,16 +4,15 @@ import { scale } from 'react-native-size-matters'
 import Charger from '../../assests/svg/charger'
 import colors from '../../Utils/colors'
 import BlackText from '../Text/BlackText'
-const Card = ({tabName,navigationHandler}) => {
+import IconCard from './IconCard'
+const Card = ({tabName,navigationHandler,Svg}) => {
    
 
   return (
     <View style={styles.container}>
         <TouchableOpacity style={styles.card} onPress={navigationHandler}>
             <View style={styles.leftContainer}>
-                <View style={styles.icon}>
-                    <Charger  />
-                </View>
+                <IconCard Svg={Svg} />
                 <View style={styles.middleContainer}>
                     <BlackText showText={'Annaporna'} />
                     <View style={styles.leftContainer}>

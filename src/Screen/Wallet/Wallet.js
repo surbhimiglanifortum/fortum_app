@@ -7,6 +7,7 @@ import Card from '../../Component/Card/Card'
 import WalletCard from '../../Component/Card/WalletCard'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../Utils/routes'
+import Charger from '../../assests/svg/charger'
 
 const Wallet = () => {
   const scheme = useColorScheme()
@@ -28,7 +29,7 @@ navigation.navigate(routes.RechargeWallet)
           {
             [1, 1, 1, 1, 1, 1, 1, , 1].map((item, i) => {
               return (
-                <Card />
+                <Card Svg={Charger} />
               )
             })
           }

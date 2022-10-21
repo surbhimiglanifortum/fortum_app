@@ -1,11 +1,13 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet,useColorScheme } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
 import commonFonts from '../../Utils/fonts/fonts'
 
-const CommonText = ({showText,fontSize}) => {
+const CommonText = ({showText,fontSize, childern,}) => {
+  const scheme=useColorScheme()
+
   return (
-      <Text style={[styles.text,{fontSize:fontSize}]}>{showText}</Text>
+      <Text style={[styles.text,{fontSize:fontSize,fontSize:fontSize,color:scheme=='dark'?colors.white:colors.BlackText}]}>{showText || childern}</Text>
   )
 }
 

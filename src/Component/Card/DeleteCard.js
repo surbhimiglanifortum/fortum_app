@@ -5,15 +5,13 @@ import Charger from '../../assests/svg/charger'
 import colors from '../../Utils/colors'
 import BlackText from '../Text/BlackText'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-const DeleteCard = ({}) => {
+import IconCard from './IconCard'
+const DeleteCard = ({Svg}) => {
 
   return (
-    <View style={styles.container}>
         <View style={styles.card} >
             <View style={styles.leftContainer}>
-                <View style={styles.icon}>
-                    <AntDesign name='car' size={25} color={'#FFF'}  />
-                </View>
+                <IconCard Svg={Svg} />
                 <View style={styles.middleContainer}>
                     <BlackText showText={'MG zs ev'} />
                 </View>
@@ -22,14 +20,10 @@ const DeleteCard = ({}) => {
                 <AntDesign name='delete' size={25} color={'red'} />
               </TouchableOpacity>
         </View>
-    </View>
   )
 }
 
 const styles =StyleSheet.create({
-    container:{
-        marginTop:25,
-    },
     card:{
         paddingVertical:scale(10),
         paddingHorizontal:scale(10),
@@ -45,7 +39,7 @@ const styles =StyleSheet.create({
         shadowOpacity:  0.1,
         shadowRadius: 3.05,
         elevation: 4,
-        marginVertical:5,
+        marginVertical:10,
         backgroundColor:'#FFF'
         // marginHorizontal:5
     },
@@ -55,8 +49,8 @@ middleContainer:{marginLeft:scale(15)},
 deleteIcon:{
     elevation:10,
     // borderWidth:1,
-    backgroundColor:'#FFF',paddingVertical:10,
-    paddingHorizontal:10,
+    backgroundColor:'#FFF',paddingVertical:6,
+    paddingHorizontal:6,
     borderRadius:10
 }
 

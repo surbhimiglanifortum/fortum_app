@@ -6,16 +6,12 @@ import BlackText from '../../Component/Text/BlackText'
 import CommonText from '../../Component/Text/CommonText'
 import Textinput from '../../Component/Textinput/Textinput'
 import Button from '../../Component/Button/Button'
-import routes from '../../Utils/routes'
 import { useNavigation } from '@react-navigation/native'
-import Header from '../../Component/Header/Header'
 
 const Profile = () => {
     const navigation = useNavigation()
     const scheme = useColorScheme()
-    const continueButtonHandler = () => {
-        navigation.navigate(routes.Verification)
-    }
+    
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <ScrollView>

@@ -47,5 +47,9 @@ allprojects {
         }
         google()
         maven { url 'https://www.jitpack.io' }
+
+        // supportLibVersion
+        // playServicesVersion
+        // androidMapsUtilsVersion
     }
 }

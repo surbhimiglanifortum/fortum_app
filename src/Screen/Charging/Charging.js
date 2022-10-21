@@ -12,6 +12,7 @@ import DeleteCard from '../../Component/Card/DeleteCard'
 import ToggleCard from '../../Component/Card/ToggleCard'
 import DetailsCard from '../../Component/Card/DetailsCard'
 import AddRemoveCard from '../../Component/Card/AddRemoveCard'
+import Charger from '../../assests/svg/charger'
 
 const Charging = () => {
 const navigation=useNavigation()
@@ -26,7 +27,7 @@ const completedBtnHandler=()=>{
 
 const navigationHandler=()=>{
     if(selectedTab=='ongoing'){
-        navigation.navigate('OngoingDeatils')
+        navigation.navigate(routes.OngoingDetails)
     }   
     else if(selectedTab=='completed'){
         navigation.navigate(routes.taxInvoice) 
@@ -49,17 +50,17 @@ const navigationHandler=()=>{
                     </TouchableOpacity>
                 </View>
                 <View>
-                    { selectedTab=='ongoing' && <Card tabName={"ongoing"} navigationHandler={navigationHandler} />}
+                    { selectedTab=='ongoing' && <Card tabName={"ongoing"} navigationHandler={navigationHandler} Svg={Charger} />}
                     
-                    { selectedTab=='completed' && <Card tabName={'completed'} navigationHandler={navigationHandler}/>}
+                    { selectedTab=='completed' && <Card tabName={'completed'} navigationHandler={navigationHandler} Svg={Charger}/>}
                 </View>
-                {<Textinput />}
+                {/* {<Textinput />}
                 {<LocationCard />}
                 {<PersonalCodeCard />}
                 {<DeleteCard />}
                 {<ToggleCard />}
                 {<DetailsCard />}
-                {<AddRemoveCard  />}
+                {<AddRemoveCard  />} */}
             </View>
         </View>
     )

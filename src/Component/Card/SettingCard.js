@@ -6,10 +6,10 @@ import BlackText from '../Text/BlackText'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import IconCard from './IconCard'
 
-const SettingCard = ({ showText, fontSize, Svg }) => {
+const SettingCard = ({ showText, fontSize, Svg,onPress }) => {
 
     return (
-            <TouchableOpacity style={styles.card} >
+            <TouchableOpacity style={styles.card} onPress={onPress}>
                 <View style={styles.leftContainer}>
                     <IconCard Svg={Svg} />
                     <View style={styles.middleContainer}>

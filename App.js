@@ -3,6 +3,8 @@ import React from 'react';
 import { StatusBar ,useColorScheme } from 'react-native';
 import Routes from './src/Navigation/Routes';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import {enableLatestRenderer} from 'react-native-maps';
+
 
 const App = () => {
 
@@ -27,7 +29,8 @@ const App = () => {
   };
 
   const scheme = useColorScheme();
-
+  enableLatestRenderer();
+  
   return (
     <>
     <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>

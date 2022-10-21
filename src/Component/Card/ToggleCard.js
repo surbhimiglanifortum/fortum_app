@@ -3,38 +3,32 @@ import React from 'react'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
 import BlackText from '../Text/BlackText'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import { Switch } from 'react-native-paper';
+import IconCard from './IconCard'
 
-const ToggleCard = ({}) => {
+const ToggleCard = ({Svg,showText,fontSize}) => {
 
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
 
     const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
   return (
-    <View style={styles.container}>
         <View style={styles.card} >
             <View style={styles.leftContainer}>
-                <View style={styles.icon}>
-                    <AntDesign name='mail' size={25} color={'#FFF'}  />
-                </View>
+                <IconCard Svg={Svg} />
                 <View style={styles.middleContainer}>
-                    <BlackText showText={'MG zs ev'} />
+                    <BlackText showText={showText} fontSize={fontSize}/>
                 </View>
             </View>
               <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={colors.green} />
         </View>
-    </View>
   )
 }
 
 const styles =StyleSheet.create({
-    container:{
-        marginTop:25,
-    },
+   
     card:{
-        paddingVertical:scale(10),
+        paddingVertical:scale(14),
         paddingHorizontal:scale(10),
         flexDirection:'row',
         alignItems:'center',
@@ -48,7 +42,7 @@ const styles =StyleSheet.create({
         shadowOpacity:  0.1,
         shadowRadius: 3.05,
         elevation: 4,
-        marginVertical:5,
+        marginVertical:9,
         backgroundColor:'#FFF'
         // marginHorizontal:5
     },

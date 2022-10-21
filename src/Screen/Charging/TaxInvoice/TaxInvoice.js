@@ -10,6 +10,7 @@ import colors from '../../../Utils/colors'
 import Charger1 from '../../../assests/svg/charger1'
 import CommonText from '../../../Component/Text/CommonText'
 import Button from '../../../Component/Button/Button'
+import Charger from '../../../assests/svg/charger'
 // import ChargingCard from '../../../Component/Charging/ChargingCard'
 // import Card from '../../../Component/Card/Card'
 
@@ -23,7 +24,7 @@ const TaxInvoice = () => {
                 <View style={styles.innerContainer}>
                     <Header showText={'Tax Invoice'} />
                     <View style={{ marginTop: 18 }}>
-                        {<Card />}
+                        {<Card Svg={Charger} />}
                     </View>
                     <View style={styles.card}>
                         <View style={styles.innerCard}>
