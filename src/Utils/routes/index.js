@@ -5,7 +5,8 @@ const routes = {
     login:'login',
     Signup:'Signup',
     Verification:'Verification',
-    RechargeWallet:'RechargeWallet'
+    RechargeWallet:'RechargeWallet',
+    Profile:'Profile'
 }
 
 export default routes

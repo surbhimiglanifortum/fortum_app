@@ -10,6 +10,7 @@ import Login from '../Screen/AuthScreen/Login';
 import Signup from '../Screen/AuthScreen/Signup';
 import Verification from '../Screen/AuthScreen/Verification';
 import RechargeWallet from '../Screen/Wallet/RechargeWallet';
+import Profile from '../Screen/Other/Profile';
 
 
 
@@ -27,6 +28,7 @@ const Routes = ({  }) => {
            <Stack.Screen name={routes.Signup} component={Signup} options={{headerShown:false}}  />
            <Stack.Screen name={routes.Verification} component={Verification} options={{headerShown:false}}  />
            <Stack.Screen name={routes.RechargeWallet} component={RechargeWallet} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.Profile} component={Profile} options={{headerShown:false}}  />
 
 
         </Stack.Navigator>
