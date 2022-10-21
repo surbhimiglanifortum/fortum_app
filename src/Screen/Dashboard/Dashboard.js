@@ -45,30 +45,16 @@ const Dashboard = () => {
     <>
       <View style={[styles.container,{backgroundColor:scheme=='dark'?colors.backgroundDark:colors.backgroundLight}]}>
         <View style={styles.renderComponent}>
-          <ScrollView>
+          <View style={{flex:1}}>
             {selectedTab == 'home' && <Home />}
             {selectedTab=='wallet' && <Wallet />}
             {selectedTab=='charging' && <Charging />}
             {selectedTab =='notification' && <Notification />}
             {selectedTab =='other' && <Other />}
-          </ScrollView>
+          </View>
         </View>
         <View style={[styles.tabContainer,{backgroundColor:colors.greenBackground}]}>
-        {/* <Shadow
-  inner // <- enable inner shadow
-  useArt // <- set this prop to use non-native shadow on ios
-  style={{
-    shadowOffset: {width: 10, height: 10},
-    shadowOpacity: 1,
-    shadowColor: "grey",
-    shadowRadius: 10,
-    borderRadius: 20,
-    backgroundColor: 'white',
-    width: 100,
-    height: 100,
-    // ...include most of View/Layout styles
-  }}
-> */}
+  
           <TouchableOpacity onPress={homeButtonHandler} style={[styles.tabButton,selectedTab == 'home'?{borderWidth:2,paddingVertical:5,paddingHorizontal:10,borderRadius:5,borderColor:'#FFF'}:null]}>
             <HomeSvg  color={colors.white} />
            {selectedTab == 'home'&& <CommonText showText={'Home'} />}
@@ -103,7 +89,7 @@ const styles = StyleSheet.create({
   tabContainer: {  paddingVertical: scale(20), flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: scale(10) },
 tabButton:{ flexDirection: 'row', alignItems: 'center',},
 text:{ color: colors.white,fontFamily:commonFonts.bold,marginLeft:7},
-renderComponent:{  flex: 9 },
+renderComponent:{  flex: 1 },
 
 
 })
