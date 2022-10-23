@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, } from 'react-native'
 import React from 'react'
 import { Card } from 'react-native-paper'
 import BlackText from '../Text/BlackText'
@@ -9,15 +9,18 @@ import Feather from 'react-native-vector-icons/Feather'
 import { scale } from 'react-native-size-matters'
 import HorizontalCard from './HorizontalCard'
 import VerticalCard from './VerticalCard'
+import GreenText from '../Text/GreenText'
 
-const DetailsCard = () => {
+const DetailsCard = ({chargerType}) => {
     return (
-        <Card style={styles.container}>
+       <TouchableWithoutFeedback>
+         <Card style={styles.container}>
             <View style={styles.innerContainer}>
                 <View>
                     <BlackText showText={'Restaurant'} />
                     <BlackText showText={'Annapoorna'} />
-                    <Text style={styles.greenText}>Availabe     < BlackText showText={'24/7'}/> </Text>
+                    <Text><GreenText showText={'Available   '} />  
+                    < BlackText showText={'24/7'} /> </Text>
                 </View>
                 <View style={styles.leftContainer}>
                 <TouchableOpacity style={styles.heartIcon}>
@@ -34,9 +37,10 @@ const DetailsCard = () => {
              </View>
                     <BlackText showText={'1.1 km'} />
             </View>
-            {<HorizontalCard />}
-            {<VerticalCard />}
+            {chargerType==1&&<HorizontalCard />}
+            {chargerType!=1&&<VerticalCard />}
         </Card>
+       </TouchableWithoutFeedback>
     )
 }
 
@@ -62,15 +66,15 @@ const styles = StyleSheet.create({
     heartIcon:{
         elevation:10,
         // borderWidth:1,
-        backgroundColor:colors.white,paddingVertical:10,
-        paddingHorizontal:10,
+        backgroundColor:colors.white,paddingVertical:5,
+        paddingHorizontal:5,
         borderRadius:10
     },
     leftIcon:{
         elevation:10,
         // borderWidth:1,
-        backgroundColor:'#3070ce',paddingVertical:10,
-        paddingHorizontal:10,
+        backgroundColor:'#3070ce',paddingVertical:5,
+        paddingHorizontal:5,
         borderRadius:10,
         marginLeft:10
     },

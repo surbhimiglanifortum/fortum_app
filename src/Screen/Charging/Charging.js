@@ -54,13 +54,13 @@ const navigationHandler=()=>{
                     
                     { selectedTab=='completed' && <Card tabName={'completed'} navigationHandler={navigationHandler} Svg={Charger}/>}
                 </View>
-                {/* {<Textinput />}
-                {<LocationCard />}
-                {<PersonalCodeCard />}
-                {<DeleteCard />}
-                {<ToggleCard />}
+                {/* {<Textinput />} */}
+                {/* {<LocationCard />} */}
+                {/* {<PersonalCodeCard />} */}
+                {/* {<DeleteCard />} */}
+                {/* {<ToggleCard />} */}
                 {<DetailsCard />}
-                {<AddRemoveCard  />} */}
+                {/* {<AddRemoveCard  />} */}
             </View>
         </View>
     )
