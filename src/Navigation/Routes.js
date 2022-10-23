@@ -15,6 +15,8 @@ import EvModal from '../Screen/Other/EvModal/EvModal';
 import AddEvModal from '../Screen/Other/EvModal/AddEvModal';
 import SelectVehicle from '../Screen/Other/EvModal/SelectVehicle';
 import Preference from '../Screen/Other/Preferences/Preference';
+import Favoruite from '../Screen/Home/Favoruite';
+import SearchLocation from '../Screen/Home/SearchLocation';
 
 
 
@@ -36,6 +38,8 @@ const Routes = ({  }) => {
            <Stack.Screen name={routes.AddEvModal} component={AddEvModal} options={{headerShown:false}}  />
            <Stack.Screen name={routes.SelectVehicle} component={SelectVehicle} options={{headerShown:false}}  />
            <Stack.Screen name={routes.Preference} component={Preference} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.Favoruite} component={Favoruite} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.SearchLocation} component={SearchLocation} options={{headerShown:false}}  />
 
         </Stack.Navigator>
     );

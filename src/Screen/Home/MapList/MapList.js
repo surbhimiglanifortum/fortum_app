@@ -1,28 +1,59 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import DetailsCard from '../../../Component/Card/DetailsCard'
+import FilterSvg from '../../../assests/svg/FilterSvg'
+import colors from '../../../Utils/colors'
+import { useNavigation } from '@react-navigation/native'
+import FilterModal from '../../../Component/Modal/FilterModal'
+import BlackText from '../../../Component/Text/BlackText'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import routes from '../../../Utils/routes'
 
 const MapList = () => {
 
-  const [listData,setListData]=useState([])
+  const navigation = useNavigation()
+  const [listData, setListData] = useState([])
+  const [openFilterModal, setOpenFilterModal] = useState(false)
 
+  const filterButtonHandler = () => {
+    setOpenFilterModal(true)
+  }
+  const searchButtonHandler = () => {
+    navigation.navigate(routes.SearchLocation)
+  }
+  const favoruiteButtonHandler = () => {
+   navigation.navigate(routes.Favoruite)
+  }
   return (
     <View style={[styles.container]}>
+      <TouchableOpacity onPress={filterButtonHandler}
+        style={styles.filter}>
+        <FilterSvg />
+      </TouchableOpacity>
       <ScrollView>
-      <View style={styles.innerContainer}>
-
-        {/* Render Details Card */}
-        {
-          [1,1,1].map((item,ind)=>{
-            return(
-             <View key={ind}>
-               <DetailsCard chargerType={1} item={item} />
-              </View>
-            )
-          })
-        }
-      </View>
+        <View style={styles.innerContainer}>
+          <View style={styles.searchContainer}>
+            <TouchableOpacity onPress={searchButtonHandler} style={styles.searchInner}>
+              <AntDesign name='search1' size={20} style={{marginRight:5}} />
+              <BlackText showText={'Random Location'} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={favoruiteButtonHandler} style={styles.favContainer}>
+              <AntDesign name='hearto' color={colors.red} size={20}/>
+            </TouchableOpacity>
+          </View>
+          {/* Render Details Card */}
+          {
+            [1, 1, 1].map((item, ind) => {
+              return (
+                <View key={ind}>
+                  <DetailsCard chargerType={1} item={item} />
+                </View>
+              )
+            })
+          }
+        </View>
       </ScrollView>
+      <FilterModal openFilterModal={openFilterModal} setOpenFilterModal={setOpenFilterModal} />
     </View>
   )
 }
@@ -34,7 +65,42 @@ const styles = StyleSheet.create({
   innerContainer: {
     width: '90%',
     alignSelf: 'center',
-    marginTop: 60
+    marginTop: 20
+  },
+  filter: {
+    marginRight: 60,
+    marginTop: 20,
+    backgroundColor: colors.white,
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    elevation: 5,
+    borderRadius: 6,
+    alignSelf: 'flex-end'
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
+  },
+  searchInner:{
+    width:'85%',
+    elevation:5,
+    paddingVertical:10,
+    paddingHorizontal:6,
+    backgroundColor:colors.white,
+    borderRadius:6,
+    flexDirection:'row',
+    alignItems:'center'
+  },
+  favContainer:{
+    width:'13%',
+    backgroundColor:colors.white,
+    elevation:5,
+    paddingVertical:10,
+    paddingHorizontal:5,
+    borderRadius:6,
+    alignItems:'center'
   }
 })
 

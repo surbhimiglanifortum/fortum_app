@@ -2,10 +2,13 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { useNavigation } from '@react-navigation/native'
 
-const BackButton = () => {
+const BackButton = ({onPress}) => {
+const navigation=useNavigation()
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={()=>{navigation.goBack()}}>
       <AntDesign name='left' size={25} color={colors.black} />
     </TouchableOpacity>
   )

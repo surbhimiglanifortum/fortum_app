@@ -12,7 +12,8 @@ const routes = {
     AddEvModal:'AddEvModal',
     SelectVehicle:'SelectVehicle',
     Preference:'Preference',
-
+    SearchLocation:'SearchLocation',
+    Favoruite:'Favoruite',
 }
 
 export default routes

@@ -43,9 +43,7 @@ export default Home = () => {
           <BlackText showText={'List'} fontSize={16} />
         </TouchableOpacity>
        </View>
-      {selectedTab=='List'&& <View>
-        <BlackText showText={'Filter'} />
-       </View>}
+      
       </View>
 
       <View >
