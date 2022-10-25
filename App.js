@@ -4,8 +4,11 @@ import { StatusBar ,useColorScheme } from 'react-native';
 import Routes from './src/Navigation/Routes';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import {enableLatestRenderer} from 'react-native-maps';
+import { Amplify } from 'aws-amplify'
+import awsconfig from './src/Utils/aws-exports'
 
 
+Amplify.configure(awsconfig)
 const App = () => {
 
   const darkTheme = {
