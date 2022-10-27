@@ -1,9 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { StatusBar ,useColorScheme } from 'react-native';
+import { StatusBar, useColorScheme } from 'react-native';
 import Routes from './src/Navigation/Routes';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import {enableLatestRenderer} from 'react-native-maps';
+import { enableLatestRenderer } from 'react-native-maps';
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 
 const App = () => {
@@ -17,7 +18,7 @@ const App = () => {
       accent: "#FAFAFA"
     },
   };
-  
+
   const lightTheme = {
     ...DefaultTheme,
     roundness: 2,
@@ -30,15 +31,19 @@ const App = () => {
 
   const scheme = useColorScheme();
   enableLatestRenderer();
-  
+
+  const queryClient = new QueryClient();
+
   return (
     <>
-    <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
-    <StatusBar />
-    <NavigationContainer>
-      {<Routes />}
-    </NavigationContainer>
-    </PaperProvider>
+      <QueryClientProvider client={queryClient} contextSharing={true}>
+        <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
+          <StatusBar />
+          <NavigationContainer>
+            {<Routes />}
+          </NavigationContainer>
+        </PaperProvider>
+      </QueryClientProvider>
     </>
 
   )

@@ -22,7 +22,7 @@ const Login = () => {
 
   const continueButtonHandler = async () => {
     try {
-      await AsyncStorage.removeItem('@viewedOnboarding',);
+      // await AsyncStorage.removeItem('@viewedOnboarding',);
       navigation.navigate(routes.Verification)
     } catch (error) {
 
