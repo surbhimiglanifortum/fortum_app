@@ -1,7 +1,10 @@
 import axios from "axios";
-import { computeDistance } from "../../Utils/helperFuncations/computeDistance";
+import Geolocation from '@react-native-community/geolocation';
 
+
+// const [currentLocation,setCurrentLocation]=useState(0)
 export const postListService = async () => {
+   
     let url = `https://stg-app-api-india.aws.fortum.com/api_app/locations/filter`
     const res = await axios.post(url, {
         headers: {
@@ -9,6 +12,8 @@ export const postListService = async () => {
         }
     })
     var locationsArray = res.data;
+//    Geolocation.getCurrentPosition(data =>{console.log(data.coords,'............cords')})
+//    console.log(currentLocation,'.....................lllllllllllllllllllllllllllllllllllllll')
     // locationsArray.map((data, index) => {
     //     console.log(data, '............ggdata')
     //     locationsArray[index] = computeDistance([location.coords.latitude, location.coords.longitude], [
