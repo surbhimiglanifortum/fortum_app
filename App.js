@@ -1,11 +1,15 @@
 import { NavigationContainer } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import Routes from './src/Navigation/Routes';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { enableLatestRenderer } from 'react-native-maps';
+import { Amplify, Auth, Hub } from 'aws-amplify'
+import awsconfig from './src/Utils/aws-exports'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import SnackContext from './src/Utils/context/SnackbarContext';
+
+Amplify.configure(awsconfig)
 
 const App = () => {
 
@@ -33,6 +37,23 @@ const App = () => {
   enableLatestRenderer();
 
   const queryClient = new QueryClient();
+  const [loading, setLoading] = useState(true)
+  const [loggedin, setloggedin] = useState(false)
+  useEffect(() => {
+    const loginCheck = async () => {
+      try {
+        const result = await Auth.currentAuthenticatedUser();
+        console.log("login result ", result)
+        if (result) {
+          setloggedin(true)
+        }
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
+    }
+    loginCheck()
+  }, [])
 
   const [currentLocation, setCurrentLocation] = useState({})
   const [mLocationsPayload, mSetLocationsPayload] = useState({ onlyAvailableConnectors: false })
@@ -44,7 +65,7 @@ const App = () => {
           <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
             <StatusBar />
             <NavigationContainer>
-              {<Routes />}
+              {!loading && <Routes loggedin={loggedin} />}
             </NavigationContainer>
           </PaperProvider>
         </QueryClientProvider>
@@ -52,6 +73,5 @@ const App = () => {
     </>
   )
 }
+
 export default App;
-
-
