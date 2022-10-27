@@ -3,13 +3,13 @@ import React from 'react'
 import BlackText from '../Text/BlackText'
 import CommonText from '../Text/CommonText';
 
-const SkipButton = () => {
+const SkipButton = ({onPress}) => {
 
   const scheme = useColorScheme();
 
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
      {scheme=='dark'?  <CommonText showText={'Skip'} /> : <BlackText showText={'Skip'} />}
     </TouchableOpacity>
   )

@@ -8,68 +8,27 @@ import BlackText from '../../Component/Text/BlackText';
 import Textinput from '../../Component/Textinput/Textinput';
 import Button from '../../Component/Button/Button';
 import SmallButton from '../../Component/Button/SmallButton';
-import BackSvg from '../../assests/svg/back';
 import GreenText from '../../Component/Text/GreenText';
 import { useNavigation } from '@react-navigation/native';
 import routes from '../../Utils/routes';
 import { Auth } from 'aws-amplify';
 
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import FaceBookSvg from '../../assests/svg/FaceBookSvg';
+import GoogleSvg from '../../assests/svg/GoogleSvg';
+
 const Login = () => {
-
-  useEffect(() => {
-    console.log("SDLKJSHNA")
-    const signup = async () => {
-      console.log("Login")
-      const { user } = await Auth.signUp({
-        username: "+917532078797",
-        password: "@Nujyadav123",
-        attributes: {
-          email: "anuj.yadav@mfilterit.com",          // optional
-          // phone_number: "+918920297922",   // optional - E.164 number convention
-          // other custom attributes 
-        },
-        autoSignIn: { // optional - enables auto sign in after user is confirmed
-          enabled: true,
-        }
-      }).catch(e => {
-        console.log("error", e)
-      })
-
-      console.log("response", user ? user : "no found")
-    }
-
-    const signin = async () => {
-      try {
-        const user = await Auth.signIn("+917532078797");
-        console.log("Lofoin0,", user)
-      } catch (error) {
-        console.log('error signing in', error);
-      }
-    }
-
-    const resendConfirmation = async () => {
-      try {
-        await Auth.resendSignUp("anuj.yadav@mfilterit.com");
-        console.log('code resent successfully');
-      } catch (err) {
-        console.log('error resending code: ', err);
-      }
-
-    }
-    // signup()
-    signin()
-    // resendConfirmation()
-    return () => {
-
-    }
-  }, [])
-
 
   const navigation = useNavigation()
   const scheme = useColorScheme();
 
-  const continueButtonHandler = () => {
-    navigation.navigate(routes.Verification)
+  const continueButtonHandler = async () => {
+    try {
+      // await AsyncStorage.removeItem('@viewedOnboarding',);
+      navigation.navigate(routes.Verification)
+    } catch (error) {
+
+    }
   }
 
   const signupHandler = () => {
@@ -100,15 +59,29 @@ const Login = () => {
           <View style={styles.bottomButton}>
             {/* Add google and facebook icon */}
             <SmallButton />
-            <SmallButton />
           </View>
+            {/* show google and facebook icon */}
+            <SmallButton Svg={GoogleSvg} />
+            <SmallButton Svg={FaceBookSvg} />
+          </View>
+          {/* to be removed later */}
+          
+          {/* <View style={{borderWidth:1,backgroundColor:colors.black,
+          overflow:'hidden',
+          elevation:10,borderRadius:5}}>
+            <View style={{borderWidth:1,backgroundColor:colors.backgroundDark,paddingVertical:10,paddingHorizontal:10,overflow:'hidden',elevation:10,shadowOffset:{
+              width: -5,
+              height: -5
+            }}}>
+              <Text>hh</Text>
+            </View>
+          </View> */}
           <View style={styles.bottomText}>
             {scheme == 'dark' ? <CommonText showText={'Don’t have account? '} fontSize={12} /> : <BlackText showText={'Don’t have account? '} fontSize={12} />}
             <TouchableOpacity onPress={signupHandler}>
               <GreenText showText={'Signup'} />
             </TouchableOpacity>
           </View>
-        </View>
       </ScrollView>
     </SafeAreaView>
   )
@@ -149,4 +122,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Login
+export default Login;

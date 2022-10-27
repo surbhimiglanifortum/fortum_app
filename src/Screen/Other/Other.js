@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, useColorScheme } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, useColorScheme, ScrollView } from 'react-native'
 import React from 'react'
 import Header from '../../Component/Header/Header'
 import SettingCard from '../../Component/Card/SettingCard'
@@ -34,9 +34,31 @@ const Other = () => {
   const preferenceHandler = () => {
     navigation.navigate(routes.Preference)
   }
+  const supportHandler = () => {
+    navigation.navigate(routes.Support)
+  }
+  const changePasswordHandler = () => {
+    navigation.navigate(routes.ChangePassword)
+  }
+  const referandEarnHandler = () => {
+    navigation.navigate(routes.ReferAndEarn)
+  }
+  const paymentMethodHandler = () => {
+    navigation.navigate(routes.PaymentMethod)
+  }
+  const orderHandler = () => {
+    navigation.navigate(routes.Order)
+  }
+  const chargingKeyHandler = () => {
+    navigation.navigate(routes.ChargingKey)
+  }
+  const storeHandler = () => {
+    navigation.navigate(routes.Store)
+  }
 
   return (
     <View style={styles.conatainer}>
+      <ScrollView>
       <View style={styles.innerContainer}>
         <Header showText={'More Settings'} />
         <View style={styles.profileContainer}>
@@ -52,17 +74,18 @@ const Other = () => {
         </View>
         <View>
           <SettingCard showText={'Ev Modals'} fontSize={15} Svg={ElectricCarSvg} onPress={evModalHandler} />
-          <SettingCard showText={'Store'} fontSize={15} Svg={StoreSvg} />
-          <SettingCard showText={'Charging Keys'} fontSize={15} Svg={ChargingSvg} />
-          <SettingCard showText={'Orders'} fontSize={15} Svg={OrderSvg} />
-          <SettingCard showText={'Payment Method'} fontSize={15} Svg={PaymentSvg} />
-          <SettingCard showText={'Refer & Earn'} fontSize={15} Svg={ReferSvg} />
-          <SettingCard showText={'Change Password'} fontSize={15} Svg={PasswordSvg} />
-          <SettingCard showText={'Support'} fontSize={15} Svg={HelpSvg} />
+          <SettingCard showText={'Store'} fontSize={15} Svg={StoreSvg} onPress={storeHandler} />
+          <SettingCard showText={'Charging Keys'} fontSize={15} Svg={ChargingSvg} onPress={chargingKeyHandler} />
+          <SettingCard showText={'Orders'} fontSize={15} Svg={OrderSvg} onPress={orderHandler} />
+          <SettingCard showText={'Payment Method'} fontSize={15} Svg={PaymentSvg} onPress={paymentMethodHandler} />
+          <SettingCard showText={'Refer & Earn'} fontSize={15} Svg={ReferSvg} onPress={referandEarnHandler} />
+          <SettingCard showText={'Change Password'} fontSize={15} Svg={PasswordSvg} onPress={changePasswordHandler} />
+          <SettingCard showText={'Support'} fontSize={15} Svg={HelpSvg} onPress={supportHandler} />
           <SettingCard showText={'Preference'} fontSize={15} Svg={PrefrenceSvg} onPress={preferenceHandler} />
           <SettingCard showText={'Logout'} fontSize={15} Svg={LogoutSvg} onPress={logoutHandler} />
         </View>
       </View>
+      </ScrollView>
     </View>
   )
 }
