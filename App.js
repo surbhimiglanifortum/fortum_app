@@ -1,11 +1,11 @@
 import { NavigationContainer } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import Routes from './src/Navigation/Routes';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { enableLatestRenderer } from 'react-native-maps';
 import { QueryClient, QueryClientProvider } from 'react-query'
-
+import SnackContext from './src/Utils/context/SnackbarContext';
 
 const App = () => {
 
@@ -34,18 +34,21 @@ const App = () => {
 
   const queryClient = new QueryClient();
 
+  const [currentLocation, setCurrentLocation] = useState({})
+
   return (
     <>
-      <QueryClientProvider client={queryClient} contextSharing={true}>
-        <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
-          <StatusBar />
-          <NavigationContainer>
-            {<Routes />}
-          </NavigationContainer>
-        </PaperProvider>
-      </QueryClientProvider>
+      <SnackContext.Provider value={{ currentLocation, setCurrentLocation }}>
+        <QueryClientProvider client={queryClient} contextSharing={true}>
+          <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
+            <StatusBar />
+            <NavigationContainer>
+              {<Routes />}
+            </NavigationContainer>
+          </PaperProvider>
+        </QueryClientProvider>
+      </SnackContext.Provider>
     </>
-
   )
 }
 export default App;

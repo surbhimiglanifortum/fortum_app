@@ -55,20 +55,6 @@ const chargingCardHandler=()=>{
   navigation.navigate(routes.ChargingStation)
 }
 
-const currentLocationFunction =()=>{
-
-  Geolocation.getCurrentPosition(data =>{
-    console.log(data.coords,'............cords')
-    setCurrentLocation(data.coords)
-  })
-}
-
-console.log(currentLocation,'...............curent location---------------')
-useEffect(() => {
-  currentLocationFunction()
-}, [])
-
-
   return (
     <View style={styles.container}>
       {selectedTab != 'List' && <MapView
