@@ -4,13 +4,13 @@ import { StatusBar, useColorScheme } from 'react-native';
 import Routes from './src/Navigation/Routes';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { enableLatestRenderer } from 'react-native-maps';
-import { Amplify } from 'aws-amplify'
+import { Amplify, Auth, Hub } from 'aws-amplify'
 import awsconfig from './src/Utils/aws-exports'
 import { QueryClient, QueryClientProvider } from 'react-query'
-
-import { Auth, Hub } from 'aws-amplify';
+import SnackContext from './src/Utils/context/SnackbarContext';
 
 Amplify.configure(awsconfig)
+
 const App = () => {
 
   const darkTheme = {
@@ -52,23 +52,26 @@ const App = () => {
         setLoading(false)
       }
     }
-
-
     loginCheck()
   }, [])
+
+  const [currentLocation, setCurrentLocation] = useState({})
+  const [mLocationsPayload, mSetLocationsPayload] = useState({ onlyAvailableConnectors: false })
+
   return (
     <>
-      <QueryClientProvider client={queryClient} contextSharing={true}>
-        <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
-          <StatusBar />
-          <NavigationContainer>
-            {!loading && <Routes loggedin={loggedin} />}
-          </NavigationContainer>
-        </PaperProvider>
-      </QueryClientProvider>
+      <SnackContext.Provider value={{ currentLocation, setCurrentLocation, mLocationsPayload, mSetLocationsPayload }}>
+        <QueryClientProvider client={queryClient} contextSharing={true}>
+          <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
+            <StatusBar />
+            <NavigationContainer>
+              {!loading && <Routes loggedin={loggedin} />}
+            </NavigationContainer>
+          </PaperProvider>
+        </QueryClientProvider>
+      </SnackContext.Provider>
     </>
   )
 }
+
 export default App;
-
-
