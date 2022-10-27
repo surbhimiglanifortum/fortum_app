@@ -10,7 +10,7 @@ const RedText = ({showText,fontSize}) => {
 }
 
 const styles=StyleSheet.create({
-text:{ color: colors.red,fontFamily:commonFonts.bold,marginLeft:10,fontSize:17},
+text:{ color: colors.red,fontFamily:commonFonts.bold,fontSize:17},
 
 })
 

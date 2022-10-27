@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DetailsCard from '../../../Component/Card/DetailsCard'
 import FilterSvg from '../../../assests/svg/FilterSvg'
 import colors from '../../../Utils/colors'
@@ -8,6 +8,7 @@ import FilterModal from '../../../Component/Modal/FilterModal'
 import BlackText from '../../../Component/Text/BlackText'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import routes from '../../../Utils/routes'
+import { postListService } from '../../../Services/HomeTabService/HomeTabService'
 
 const MapList = () => {
 
@@ -24,14 +25,46 @@ const MapList = () => {
   const favoruiteButtonHandler = () => {
    navigation.navigate(routes.Favoruite)
   }
+  const cardDetailsHandler = () => {
+   navigation.navigate(routes.ChargingStation)
+  }
+
+const listDataFunction =async()=>{
+  try {
+    const res = await postListService()
+    // console.log(res.data.locations[0],'..........data')
+    setListData(res.data.locations[0])
+
+    var locationsArray = res.data.locations[0];
+    locationsArray.map((data, index) => {
+      console.log(data,'............ggdata')
+      locationsArray[index]= computeDistance([location.coords.latitude, location.coords.longitude], [
+          data.latitude,
+          data.longitude,
+      ])
+  })
+  console.log(locationsArray,'.............................loc') 
+  locationsArray.sort(function (a, b) { return a.distance - b.distance })
+  return locationsArray;
+  } catch (error) {
+    
+  }
+}
+
+useEffect(() => {
+  listDataFunction()
+}, [])
+
+
   return (
     <View style={[styles.container]}>
+        <ScrollView>
       <TouchableOpacity onPress={filterButtonHandler}
         style={styles.filter}>
         <FilterSvg />
       </TouchableOpacity>
-      <ScrollView>
         <View style={styles.innerContainer}>
+          
           <View style={styles.searchContainer}>
             <TouchableOpacity onPress={searchButtonHandler} style={styles.searchInner}>
               <AntDesign name='search1' size={20} style={{marginRight:5}} />
@@ -41,19 +74,23 @@ const MapList = () => {
               <AntDesign name='hearto' color={colors.red} size={20}/>
             </TouchableOpacity>
           </View>
+
+      <ScrollView nestedScrollEnabled={true}>
           {/* Render Details Card */}
           {
-            [1, 1, 1].map((item, ind) => {
+            listData.map((item, ind) => {
+              console.log(item,'.............item')
               return (
                 <View key={ind}>
-                  <DetailsCard chargerType={1} item={item} />
+                  <DetailsCard chargerType={1} item={item} onPress={cardDetailsHandler} />
                 </View>
               )
             })
           }
-        </View>
       </ScrollView>
+        </View>
       <FilterModal openFilterModal={openFilterModal} setOpenFilterModal={setOpenFilterModal} />
+    </ScrollView>
     </View>
   )
 }

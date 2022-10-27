@@ -3,10 +3,10 @@ import React from 'react'
 import colors from '../../Utils/colors'
 import BackSvg from '../../assests/svg/back'
 
-const SmallButton = () => {
+const SmallButton = ({Svg}) => {
   return (
     <TouchableOpacity style={styles.container}>
-      <BackSvg />
+      <Svg />
     </TouchableOpacity>
   )
 }

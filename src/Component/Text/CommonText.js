@@ -7,7 +7,7 @@ const CommonText = ({showText,fontSize, childern,}) => {
   const scheme=useColorScheme()
 
   return (
-      <Text style={[styles.text,{fontSize:fontSize,fontSize:fontSize,color:scheme=='dark'?colors.white:colors.BlackText}]}>{showText || childern}</Text>
+      <Text style={[styles.text,{fontSize:fontSize,fontSize:fontSize,color:scheme=='dark'?colors.white:colors.lightText}]}>{showText || childern}</Text>
   )
 }
 

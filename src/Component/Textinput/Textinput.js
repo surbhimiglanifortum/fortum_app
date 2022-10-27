@@ -7,18 +7,13 @@ const Textinput = ({placeholder}) => {
     const scheme = useColorScheme()
 
     return (
-        <View style={[styles.conatiner]}>
         <View style={[styles.Innerconatiner,{backgroundColor:scheme=='dark'?colors.backgroundDark:colors.backgroundLight}]}>
             <TextInput placeholder={placeholder} style={{color:scheme=='dark'?'white':'black'}} />
-        </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    conatiner:{
-// marginTop:10
-    },
     Innerconatiner: {
         borderWidth: 2,
         paddingVertical: 2,

@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, Text, TextInput, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -12,11 +12,10 @@ const SearchLocation = () => {
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
-
+    const [searchText, setSearchText] = useState('')
     const locationCardHandler = () => {
         navigation.navigate(routes.dashboard)
     }
-
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <ScrollView>
@@ -26,11 +25,11 @@ const SearchLocation = () => {
                             <AntDesign name='left' size={22} />
                         </TouchableOpacity>
                         <View style={styles.searchContainer} >
-                            <View style={styles.leftInner}>
+                             <View style={styles.leftInner}>
                                 <AntDesign name='search1' size={20} />
-                                <TextInput placeholder='Your Location' />
+                                <TextInput placeholder='Your Location' value={searchText} onChangeText={(val) => { setSearchText(val) }} />
                             </View>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => { setSearchText('') }}>
                                 <AntDesign name='close' size={20} />
                             </TouchableOpacity>
                         </View>
@@ -48,7 +47,6 @@ const SearchLocation = () => {
                             <View style={styles.cardInner}>
                                 <BlackText showText={'Shake Mafia'} fontSize={16} />
                                 <BlackText showText={'Shake Mafia'} fontSize={13} />
-
                             </View>
                         </TouchableOpacity>
                     </View>

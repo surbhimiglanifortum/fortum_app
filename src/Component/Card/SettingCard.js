@@ -23,7 +23,7 @@ const SettingCard = ({ showText, fontSize, Svg,onPress }) => {
 
 const styles = StyleSheet.create({
     card: {
-        paddingVertical: 6,
+        paddingVertical: 10,
         paddingHorizontal: scale(10),
         flexDirection: 'row',
         alignItems: 'center',

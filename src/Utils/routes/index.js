@@ -14,6 +14,16 @@ const routes = {
     Preference:'Preference',
     SearchLocation:'SearchLocation',
     Favoruite:'Favoruite',
+    ChargingStation:'ChargingStation',
+    ChargingStationList:'ChargingStationList',
+    Support:'Support',
+    ChangePassword:'ChangePassword',
+    ReferAndEarn:'ReferAndEarn',
+    PaymentMethod:'PaymentMethod',
+    Order:'Order',
+    ChargingKey:'ChargingKey',
+    Store:'Store',
+    OrderDetails:'OrderDetails',
 }
 
 export default routes
