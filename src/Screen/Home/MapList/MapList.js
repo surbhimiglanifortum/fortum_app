@@ -61,8 +61,9 @@ const MapList = () => {
     refetchInterval: 15000,
   })
 
+  
 
-  // console.log("Check Map List Data FRom New 123 abc", data)
+  console.log("Check Map List Data FRom New 123 abc", data?.locations[0])
   // console.log("Check Map List Status FRom New", status)
 
   return (
@@ -88,7 +89,7 @@ const MapList = () => {
             {/* Render Details Card */}
             {
               data?.locations[0].map((item, ind) => {
-                console.log(item, '.............item')
+                // console.log(item, '.............item')
                 return (
                   <View key={ind}>
                     <DetailsCard chargerType={1} item={item} onPress={cardDetailsHandler} />

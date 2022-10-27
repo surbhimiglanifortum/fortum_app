@@ -16,6 +16,8 @@ import LocationSvg from '../../assests/svg/LocationSvg';
 import DetailsCard from '../../Component/Card/DetailsCard';
 import Entypo from 'react-native-vector-icons/Entypo'
 import WhiteText from '../../Component/Text/WhiteText';
+import Geolocation from '@react-native-community/geolocation';
+
 export default Home = () => {
 
   const mapRef = useRef();
@@ -23,6 +25,8 @@ export default Home = () => {
   const [selectedTab, setSelectedTab] = useState('Map')
   const [selectedCharger, setSelectedCharger] = useState(false)
   const [openFilterModal, setOpenFilterModal] = useState(false)
+const [currentLocation,setCurrentLocation]=useState(0)
+
   const mapButtonHandler = () => {
     setSelectedTab('')
   }
@@ -50,6 +54,20 @@ const chargingBtnHandler=()=>{
 const chargingCardHandler=()=>{
   navigation.navigate(routes.ChargingStation)
 }
+
+const currentLocationFunction =()=>{
+
+  Geolocation.getCurrentPosition(data =>{
+    console.log(data.coords,'............cords')
+    setCurrentLocation(data.coords)
+  })
+}
+
+console.log(currentLocation,'...............curent location---------------')
+useEffect(() => {
+  currentLocationFunction()
+}, [])
+
 
   return (
     <View style={styles.container}>
@@ -88,7 +106,7 @@ const chargingCardHandler=()=>{
 
       {/* Fillter ,favrouite,scan ,search Button  */}
       <View style={styles.iconContainer}>
-        <View style={styles.iconContainer1}>
+        {selectedTab != 'List' && <View style={styles.iconContainer1}>
           <TouchableOpacity style={styles.icon} onPress={favButtonHandler}>
             <AntDesign name='hearto' color={colors.red} size={22} />
           </TouchableOpacity>
@@ -98,7 +116,7 @@ const chargingCardHandler=()=>{
           <TouchableOpacity style={styles.icon} onPress={scannerButtonHandler}>
             <MaterialIcons name='qr-code-scanner' color={colors.black} size={22} />
           </TouchableOpacity>
-        </View>
+        </View>}
         {selectedTab != 'List' && <View style={styles.searchContainer}>
           <BlackText showText={'Show charging station nearest to'} fontSize={17} />
           <View style={styles.searchInnerContainer}>
