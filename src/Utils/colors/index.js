@@ -10,8 +10,8 @@ const colors = {
     borderColor:'#EFEFEF',
     lightBackGround:'#EEF2FA',
     lightblue:'#eef5fc',
-    lightgreen:'#BBDCD3'
-
+    lightgreen:'#BBDCD3',
+    grey:"#c7c7c7"
     
 }
 

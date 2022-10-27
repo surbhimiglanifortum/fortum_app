@@ -5,6 +5,7 @@ const routes = {
     login:'login',
     Signup:'Signup',
     Verification:'Verification',
+    MobileVerification:'MobileVerification',
     RechargeWallet:'RechargeWallet',
     Profile:'Profile',
     OngoingDetails:'OngoingDetails',

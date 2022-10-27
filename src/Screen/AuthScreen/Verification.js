@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import CommonText from '../../Component/Text/CommonText';
@@ -8,17 +8,38 @@ import Button from '../../Component/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import routes from '../../Utils/routes';
 import OtpTextinput from '../../Component/Textinput/OtpTextinput';
+import Textinput from '../../Component/Textinput/Textinput'
+import { Auth, Hub } from 'aws-amplify';
 
-const Verification = () => {
+
+const Verification = ({ route }) => {
 
     const navigation = useNavigation()
     const scheme = useColorScheme();
 
-    const VerifyButtonHandler = () => {
-        navigation.navigate(routes.dashboard)
+    const [userInput, setUserInput] = useState('101299')
+  
+    const { email_id } = route.params;
+
+
+    const VerifyButtonHandler = async () => {
+        try {
+            const result = await Auth.confirmSignUp(email_id, userInput);
+
+            if (result === "SUCCESS") {
+                navigation.navigate(routes.MobileVerification, { ...route.params })
+            } else {
+                // show error message
+            }
+        } catch (error) {
+            console.log('error confirming sign up', error);
+            // show error message
+        }
+
+
     }
 
-    
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <ScrollView>
@@ -32,16 +53,18 @@ const Verification = () => {
                     <View style={styles.textinputConatiner}>
                         {scheme == 'dark' ? <CommonText showText={'Please enter the verification code sent to '} fontSize={15} /> : <BlackText showText={'Please enter the verification code sent to '} fontSize={15} />}
                         <View style={styles.centerText}>
-                            {scheme == 'dark' ? <CommonText showText={'randam@gmail.com '} fontSize={15} /> : <BlackText showText={'randam@gmail.com '} fontSize={15} />}
+                            {scheme == 'dark' ? <CommonText showText={email_id} fontSize={15} /> : <BlackText showText={email_id} fontSize={15} />}
                             <TouchableOpacity >
-                                {scheme == 'dark' ? <CommonText showText={'Edit'} fontSize={15} /> : <BlackText showText={'Edit'} fontSize={15} />}
+                                {scheme == 'dark' ? <CommonText showText={' Edit'} fontSize={15} /> : <BlackText showText={' Edit'} fontSize={15} />}
                             </TouchableOpacity>
                         </View>
+                        <Textinput value={userInput} onCHangeText={setUserInput} />
+
                         <View style={styles.otpContainer}>
-                        <OtpTextinput />
-                        <OtpTextinput />
-                        <OtpTextinput />
-                        <OtpTextinput />
+                            <OtpTextinput />
+                            <OtpTextinput />
+                            <OtpTextinput />
+                            <OtpTextinput />
                         </View>
                         <View style={styles.resendContainer}>
                             {scheme == 'dark' ? <CommonText showText={'Didn’t receive the code?  '} fontSize={15} /> : <BlackText showText={'Didn’t receive the code?  '} fontSize={15} />}
@@ -53,7 +76,7 @@ const Verification = () => {
                     <TouchableOpacity style={styles.button} >
                         <Button onPress={VerifyButtonHandler} showText={'Verify'} />
                     </TouchableOpacity>
-                   
+
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -93,15 +116,15 @@ const styles = StyleSheet.create({
     imageContainer: {
         marginVertical: 45
     },
-    otpContainer:{
-      flexDirection:'row',
-      alignItems:'center',
-      justifyContent:'space-between',
-      paddingHorizontal:20,
-      marginTop:10,
+    otpContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        marginTop: 10,
     },
-    centerText:{ flexDirection: 'row', alignItems: 'center' },
-    resendContainer:{ flexDirection: 'row', alignItems: 'center' ,marginTop:35},
+    centerText: { flexDirection: 'row', alignItems: 'center' },
+    resendContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 35 },
 
 })
 
