@@ -35,10 +35,11 @@ const App = () => {
   const queryClient = new QueryClient();
 
   const [currentLocation, setCurrentLocation] = useState({})
+  const [mLocationsPayload, mSetLocationsPayload] = useState({ onlyAvailableConnectors: false })
 
   return (
     <>
-      <SnackContext.Provider value={{ currentLocation, setCurrentLocation }}>
+      <SnackContext.Provider value={{ currentLocation, setCurrentLocation, mLocationsPayload, mSetLocationsPayload }}>
         <QueryClientProvider client={queryClient} contextSharing={true}>
           <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
             <StatusBar />
