@@ -8,20 +8,60 @@ import Textinput from '../../Component/Textinput/Textinput'
 import Button from '../../Component/Button/Button'
 import routes from '../../Utils/routes'
 import { useNavigation } from '@react-navigation/native'
-import Header from '../../Component/Header/Header'
+import { Formik } from 'formik';
+import { Auth, Hub } from 'aws-amplify';
 
-const Signup = () => {
+const Signup = ({ route }) => {
     const navigation = useNavigation()
     const scheme = useColorScheme()
     const continueButtonHandler = () => {
         navigation.navigate(routes.Verification)
     }
+
+    const lazy_array = [
+        { name: 'First Name', value: "first_name" },
+        { name: 'Last Name', value: "last_name" },
+        { name: 'Email ID', value: "email_id" },
+        { name: 'Mobile Number', value: "mobile_number" },
+        { name: 'Referral Code (Optional)', value: "referral_code" }
+
+    ]
+    const { phone_number: prefillPhone_number, email: prefillEMail } = route.params;
+
+
+    const handleSignup = async (values, event) => {
+
+        const cognitoData = await Auth.signUp({
+            username: values.email_id,
+            password: '@Nujyadav234',
+            attributes: {
+                "custom:phoneUser": "false",
+                email: values.email_id,          // optional
+                phone_number: event.mobile_number,   // optional - E.164 number convention
+                // other custom attributes c
+            },
+            autoSignIn: { // optional - enables auto sign in after user is confirmed
+                enabled: true,
+            }
+        }).catch(e => {
+            console.log("error", e)
+            if (e.code === 'UsernameExistsException') {
+            }
+            if (e.code === 'InvalidPasswordException') {
+            }
+        })
+        console.log("cognitoData", cognitoData)
+        if (cognitoData) {
+            navigation.navigate(routes.Verification,{...values})
+        }
+        event.setSubmitting(false)
+    }
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <ScrollView>
                 <View style={styles.innerContainer}>
-                   {/* <Header /> */}
-                   <View style={styles.header}>
+                    {/* <Header /> */}
+                    <View style={styles.header}>
                         <BackButton />
                         <View style={styles.headerText}>
                             {scheme == 'dark' ? <CommonText showText={'Sign Up'} fontSize={25} /> : <BlackText showText={'Sign Up'} fontSize={25} />}
@@ -30,37 +70,32 @@ const Signup = () => {
                     <View style={{ marginVertical: 20 }}>
                         {scheme == 'dark' ? <CommonText showText={'Please tell us a bit more about yourself'} fontSize={15} /> : <BlackText showText={'Please tell us a bit more about yourself'} fontSize={15} />}
                     </View>
-                    <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'First Name'} fontSize={12} /> : <BlackText showText={'First Name'} fontSize={12} />}
-                        <Textinput />
-                    </View>
-                    <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'Last Name'} fontSize={12} /> : <BlackText showText={'Last Name'} fontSize={12} />}
-                        <Textinput />
-                    </View>
-                    <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'Email ID'} fontSize={12} /> : <BlackText showText={'Email ID'} fontSize={12} />}
-                        <Textinput />
-                    </View>
-                    <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'Mobile Number'} fontSize={12} /> : <BlackText showText={'Mobile Number'} fontSize={12} />}
-                        <Textinput />
-                    </View>
-                    <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'Password'} fontSize={12} /> : <BlackText showText={'Password'} fontSize={12} />}
-                        <Textinput />
-                    </View>
-                    <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'Confirm Password'} fontSize={12} /> : <BlackText showText={'Confirm Password'} fontSize={12} />}
-                        <Textinput />
-                    </View>
-                    <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'Referral Code (Optional)'} fontSize={12} /> : <BlackText showText={'Referral Code (Optional)'} fontSize={12} />}
-                        <Textinput />
-                    </View>
-                    <TouchableOpacity style={styles.button} >
-                        <Button onPress={continueButtonHandler} showText={'SignUp'} />
-                    </TouchableOpacity>
+
+                    <Formik
+                        initialValues={{
+                            first_name: "Anuj",
+                            last_name: "Yadav",
+                            referral_code: "",
+                            email_id: prefillEMail || 'y.anuj98@gmail.com',
+                            mobile_number: prefillPhone_number || ''
+                        }}
+                        onSubmit={handleSignup}
+                    >
+                        {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
+                            <>
+                                {lazy_array.map((e) => {
+                                    return (
+                                        <View style={styles.textinputConatiner}>
+                                            {scheme == 'dark' ? <CommonText showText={e.name} fontSize={14} /> : <BlackText showText={e.name} fontSize={14} />}
+                                            <Textinput value={values[e.value]} onChange={handleChange(e.value)} />
+                                        </View>
+                                    )
+                                })}
+
+                                <Button onPress={handleSubmit} showText={'SignUp'} onLoading={isSubmitting} />
+                            </>
+                        )}
+                    </Formik>
                 </View>
             </ScrollView>
         </SafeAreaView>

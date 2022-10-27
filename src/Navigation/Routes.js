@@ -9,6 +9,7 @@ import routes from '../Utils/routes';
 import Login from '../Screen/AuthScreen/Login';
 import Signup from '../Screen/AuthScreen/Signup';
 import Verification from '../Screen/AuthScreen/Verification';
+import MobileVerification from '../Screen/AuthScreen/MobileVerification';
 import RechargeWallet from '../Screen/Wallet/RechargeWallet';
 import Profile from '../Screen/Other/Profile';
 import EvModal from '../Screen/Other/EvModal/EvModal';
@@ -32,9 +33,9 @@ import OrderDetails from '../Screen/Other/Order/OrderDetails';
 
 const Stack = createNativeStackNavigator();
 
-const Routes = ({  }) => {
+const Routes = ({ loggedin }) => {
     return (
-        <Stack.Navigator initialRouteName={routes.onboarding} >
+        <Stack.Navigator initialRouteName={loggedin?routes.dashboard:routes.login} >
             <Stack.Screen name={routes.dashboard} component={Dashboard} options={{headerShown:false}}/>
            <Stack.Screen name={routes.onboarding} component={OnboardingScreen} options={{headerShown:false}}/>
            <Stack.Screen name={routes.OngoingDetails} component={OngoingDetails} options={{headerShown:false}}/>
@@ -42,6 +43,7 @@ const Routes = ({  }) => {
            <Stack.Screen name={routes.login} component={Login} options={{headerShown:false}}  />
            <Stack.Screen name={routes.Signup} component={Signup} options={{headerShown:false}}  />
            <Stack.Screen name={routes.Verification} component={Verification} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.MobileVerification} component={MobileVerification} options={{headerShown:false}}  />
            <Stack.Screen name={routes.RechargeWallet} component={RechargeWallet} options={{headerShown:false}}  />
            <Stack.Screen name={routes.Profile} component={Profile} options={{headerShown:false}}  />
            <Stack.Screen name={routes.EvModal} component={EvModal} options={{headerShown:false}}  />
