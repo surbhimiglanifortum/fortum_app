@@ -38,7 +38,8 @@ const App = () => {
 
   const queryClient = new QueryClient();
   const [loading, setLoading] = useState(true)
-  const [loggedin, setloggedin] = useState(false)
+  const [loggedin, setloggedin] = useState(true)
+
   useEffect(() => {
     const loginCheck = async () => {
       try {

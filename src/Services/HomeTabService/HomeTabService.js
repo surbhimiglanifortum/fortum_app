@@ -1,8 +1,5 @@
 import axios from "axios";
 
-// const [currentLocation,setCurrentLocation]=useState(0)
-
-
 export const postListService = async () => {
     try {
         let url = `https://stg-app-api-india.aws.fortum.com/api_app/locations/filter`
