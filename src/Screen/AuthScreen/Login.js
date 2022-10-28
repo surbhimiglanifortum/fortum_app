@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import FaceBookSvg from '../../assests/svg/FaceBookSvg';
 import GoogleSvg from '../../assests/svg/GoogleSvg';
 import { validatePhone, validateEmail } from '../../Utils/HelperCommonFunctions'
+import WhiteText from '../../Component/Text/WhiteText';
 
 
 const Login = () => {
@@ -25,7 +26,6 @@ const Login = () => {
   const [userInput, setuserInput] = useState('y.anuj98@gmail.com')
   const [loading, setLoading] = useState(false)
   useEffect(() => {
-
 
     const signup = async () => {
       console.log("Login")
@@ -88,13 +88,6 @@ const Login = () => {
   const navigation = useNavigation()
   const scheme = useColorScheme();
 
-  try {
-    // await AsyncStorage.removeItem('@viewedOnboarding',);
-  } catch (error) {
-
-  }
-
-
   const continueButtonHandler = async () => {
     setLoading(true)
     try {
@@ -104,9 +97,9 @@ const Login = () => {
       if (user) {
         // user found navigate to otp
         console.log("SKJHDGSHGS", validatePhone(userInput), validateEmail(userInput))
+
         if (validatePhone(userInput)) {
           // navigate to mobile input
-
           navigation.navigate(routes.MobileVerification, {
             signin: true,
             user: user,
@@ -120,9 +113,10 @@ const Login = () => {
             email_id: userInput
           })
         }
+
       }
     } catch (error) {
-      console.log("error",error)
+      console.log("error", error)
       switch (error.code) {
         case 'UserNotFoundException':
           HandleUserNotFound();
@@ -166,8 +160,9 @@ const Login = () => {
             <CommonText showText={'Please enter your mobile number or email id'} fontSize={12} />
             <Textinput value={userInput} onChange={setuserInput} placeholder={'Mobile Number / email id'} />
           </View>
-          <TouchableOpacity style={styles.button} >
-            <Button onPress={continueButtonHandler} onLoading={loading} setOnLoading={setLoading} showText={'Continue'} />
+          <TouchableOpacity style={[styles.button,{backgroundColor:userInput==''?colors.grey:colors.green}]} onPress={continueButtonHandler} onLoading={loading} setOnLoading={setLoading}  disabled={userInput === '' ? true : false} >
+            {/* <Button /> */}
+            <WhiteText showText={'Continue'} fontSize={17} />
           </TouchableOpacity>
           <View style={styles.centerText}>
             <CommonText showText={'Or Sign in with'} fontSize={12} />
@@ -180,7 +175,7 @@ const Login = () => {
           </View>
         </View>
         <View style={styles.bottomText}>
-          {scheme == 'dark' ? <CommonText showText={'Don’t have account? '} fontSize={12} /> : <BlackText showText={'Don’t have account? '} fontSize={12} />}
+          <CommonText showText={'Don’t have account? '} fontSize={12} />
           <TouchableOpacity onPress={signupHandler}>
             <GreenText showText={'Signup'} />
           </TouchableOpacity>
@@ -202,7 +197,12 @@ const styles = StyleSheet.create({
     marginVertical: 15
   },
   button: {
-    marginVertical: 15
+    marginVertical: 15,
+    backgroundColor: colors.green,
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    borderRadius: 8
   },
   centerText: {
     marginTop: 20,

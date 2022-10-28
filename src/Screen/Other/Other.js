@@ -30,6 +30,7 @@ const Other = () => {
   }
   const logoutHandler = () => {
     navigation.navigate(routes.login)
+    
   }
   const preferenceHandler = () => {
     navigation.navigate(routes.Preference)
