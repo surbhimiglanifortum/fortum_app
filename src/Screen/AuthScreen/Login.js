@@ -96,9 +96,7 @@ const Login = () => {
       console.log("ajsbjds", user)
 
       if (user) {
-        // user found navigate to otp
-        console.log("SKJHDGSHGS", validatePhone(userInput), validateEmail(userInput))
-
+    
         if (validatePhone(userInput)) {
           // navigate to mobile input
           navigation.navigate(routes.MobileVerification, {

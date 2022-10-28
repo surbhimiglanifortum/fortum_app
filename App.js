@@ -9,6 +9,8 @@ import awsconfig from './src/Utils/aws-exports'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import SnackContext from './src/Utils/context/SnackbarContext';
 import colors from './src/Utils/colors';
+import CommonModal from './src/Component/Modal/CommonModal';
+
 import { configureStore, persistor } from "./src/Redux/store";
 import { Provider, connect, ReactReduxContext } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -41,7 +43,8 @@ const App = () => {
 
   const queryClient = new QueryClient();
   const [loading, setLoading] = useState(true)
-  const [loggedin, setloggedin] = useState(true)
+  const [loggedin, setloggedin] = useState(false)
+  const [openCommonModal, setOpenCommonModal] = useState(false)
 
   useEffect(() => {
     const loginCheck = async () => {
@@ -79,6 +82,7 @@ const App = () => {
           </PersistGate>
         </Provider>
       </SnackContext.Provider>
+      <CommonModal openCommonModal={openCommonModal} setOpenCommonModal={setOpenCommonModal} />
     </>
   )
 }
