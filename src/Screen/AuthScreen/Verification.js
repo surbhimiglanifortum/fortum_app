@@ -18,24 +18,46 @@ const Verification = ({ route }) => {
     const scheme = useColorScheme();
 
     const [userInput, setUserInput] = useState('101299')
-  
-    const { email_id } = route.params;
+
+    const { email_id, signin, user } = route.params;
 
 
     const VerifyButtonHandler = async () => {
-        try {
-            const result = await Auth.confirmSignUp(email_id, userInput);
+        if (!signin) {
+            try {
+                const result = await Auth.confirmSignUp(email_id, userInput);
 
-            if (result === "SUCCESS") {
-                navigation.navigate(routes.MobileVerification, { ...route.params })
-            } else {
+                if (result === "SUCCESS") {
+                    navigation.navigate(routes.MobileVerification, { ...route.params })
+                } else {
+                    // show error message
+                }
+            } catch (error) {
+                console.log('error confirming sign up', error);
                 // show error message
             }
-        } catch (error) {
-            console.log('error confirming sign up', error);
-            // show error message
-        }
+        } else {
+            try {
+                const cognitoUser = await Auth.sendCustomChallengeAnswer(user, userInput)
+                    .then(e => {
+                        console.log("response", e)
 
+                    }).catch(e => {
+                        console.log("Error", e)
+                    });
+
+
+                const data = await Auth.currentAuthenticatedUser();
+                if (data) {
+                    navigation.navigate(routes.dashboard)
+                } else {
+                    // show wrong otp message
+                }
+            } catch (e) {
+                // Handle 3 error thrown for 3 incorrect attempts. 
+                console.log("response", e)
+            }
+        }
 
     }
 
@@ -58,8 +80,7 @@ const Verification = ({ route }) => {
                                 {scheme == 'dark' ? <CommonText showText={' Edit'} fontSize={15} /> : <BlackText showText={' Edit'} fontSize={15} />}
                             </TouchableOpacity>
                         </View>
-                        <Textinput value={userInput} onCHangeText={setUserInput} />
-
+                        <Textinput value={userInput} onChange={setUserInput} />
                         <View style={styles.otpContainer}>
                             <OtpTextinput />
                             <OtpTextinput />
