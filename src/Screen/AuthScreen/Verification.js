@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import CommonText from '../../Component/Text/CommonText';
@@ -16,8 +16,16 @@ const Verification = ({ route }) => {
 
     const navigation = useNavigation()
     const scheme = useColorScheme();
+    const otpField1 = useRef(null);
+    const otpField2 = useRef(null);
+    const otpField3 = useRef(null);
+    const otpField4 = useRef(null);
 
     const [userInput, setUserInput] = useState('101299')
+    const [userInput1, setUserInput1] = useState('')
+    const [userInput2, setUserInput2] = useState('')
+    const [userInput3, setUserInput3] = useState('')
+    const [userInput4, setUserInput4] = useState('')
 
     const { email_id, signin, user } = route.params;
 
@@ -82,15 +90,36 @@ const Verification = ({ route }) => {
                         </View>
                         <Textinput value={userInput} onChange={setUserInput} />
                         <View style={styles.otpContainer}>
-                            <OtpTextinput />
-                            <OtpTextinput />
-                            <OtpTextinput />
-                            <OtpTextinput />
+                            <OtpTextinput refData={otpField1}  value={userInput1} onChange={(pin1)=>{
+                                setUserInput1(pin1);
+                                if(pin1!== ''){
+                                    otpField2.current.focus();
+                                }
+                                }}  />
+                            <OtpTextinput refData={otpField2} value={userInput2} onChange={(pin2)=>{
+                                setUserInput2(pin2);
+                                if(pin2!== ''){
+                                    otpField3.current.focus();
+                                }
+                                }}  />
+                            <OtpTextinput refData={otpField3}  value={userInput3} onChange={(pin3)=>{
+                                setUserInput3(pin3);
+                                if(pin3!== ''){
+                                    otpField4.current.focus();
+                                }
+                                }}  />
+                            <OtpTextinput refData={otpField4}  value={userInput4} onChange={(pin4)=>{
+                                setUserInput4(pin4);
+                                if(pin4!== ''){
+                                    otpField4.current.focus();
+                                }
+                                }}  />
+                            
                         </View>
                         <View style={styles.resendContainer}>
-                            {scheme == 'dark' ? <CommonText showText={'Didn’t receive the code?  '} fontSize={15} /> : <BlackText showText={'Didn’t receive the code?  '} fontSize={15} />}
+                           <CommonText showText={'Didn’t receive the code?  '} fontSize={15} /> 
                             <TouchableOpacity >
-                                {scheme == 'dark' ? <CommonText showText={'Resend'} fontSize={15} /> : <BlackText showText={'Resend'} fontSize={15} />}
+                                <CommonText showText={'Resend'} fontSize={15} />
                             </TouchableOpacity>
                         </View>
                     </View>
