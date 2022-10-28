@@ -25,6 +25,10 @@ const routes = {
     ChargingKey:'ChargingKey',
     Store:'Store',
     OrderDetails:'OrderDetails',
+    FortumChargeAndDriveCard:'FortumChargeAndDriveCard',
+    ActivateCard:'ActivateCard',
+    CompleteKYC:'CompleteKYC',
+    Passbook:'Passbook',
 }
 
 export default routes

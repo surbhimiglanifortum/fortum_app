@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         borderColor:'#EFEFEF',
         elevation:5,
-        marginTop:10
+        marginTop:8
 
     }
 })

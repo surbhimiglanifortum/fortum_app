@@ -5,14 +5,15 @@ import Charger from '../../assests/svg/charger'
 import colors from '../../Utils/colors'
 import BlackText from '../Text/BlackText'
 import IconCard from './IconCard'
+import IconCardLarge from './IconCardLarge'
 const Card = ({tabName,navigationHandler,Svg}) => {
    
 
   return (
-    <View style={styles.container}>
+   
         <TouchableOpacity style={styles.card} onPress={navigationHandler}>
             <View style={styles.leftContainer}>
-                <IconCard Svg={Svg} />
+                <IconCardLarge Svg={Svg} />
                 <View style={styles.middleContainer}>
                     <BlackText showText={'Annaporna'} />
                     <View style={styles.leftContainer}>
@@ -26,16 +27,16 @@ const Card = ({tabName,navigationHandler,Svg}) => {
                <BlackText  showText={'120 kWh'}/>
                 </View>}
         </TouchableOpacity>
-    </View>
+  
   )
 }
 
 const styles =StyleSheet.create({
     container:{
-        // marginTop:25,
+        marginTop:10,
     },
     card:{
-        paddingVertical:scale(10),
+        paddingVertical:scale(15),
         paddingHorizontal:scale(10),
         flexDirection:'row',
         alignItems:'center',
