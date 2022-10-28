@@ -30,9 +30,11 @@ export default Home = () => {
 
   const mapRef = useRef();
   const navigation = useNavigation()
+  const [location, setLocation] = useState({})
   const [selectedTab, setSelectedTab] = useState('Map')
   const [selectedCharger, setSelectedCharger] = useState(false)
   const [openFilterModal, setOpenFilterModal] = useState(false)
+  const [locationLoading, setLocationLoading] = useState(false)
   const [visibleRegion, setVisibleRegion] = useState([0, 0, 0, 0])
 
   const mapButtonHandler = () => {
@@ -102,6 +104,51 @@ export default Home = () => {
     manual: true,
     refetchInterval: 15000,
   })
+
+  const getLocationAndAnimate = async (reload) => {
+    try {
+      setLocationLoading(true)
+      let tlocation = {}
+      if (!currentLocation.coords || reload) {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          return;
+        }
+        tlocation = await Location.getCurrentPositionAsync({});
+        // console.log(location)
+        setCurrentLocation(tlocation)
+        setLocation(tlocation)
+        mapRef.current.animateToRegion({
+          latitude: tlocation.coords.latitude,
+          longitude: tlocation.coords.longitude,
+          latitudeDelta: 0.025,
+          longitudeDelta: 0.025
+        }, 2000);
+
+      } else {
+        setLocation(currentLocation)
+        tlocation = currentLocation
+        setTimeout(() => {
+          if (mapRef.current) {
+            mapRef.current.animateToRegion({
+              latitude: tlocation.coords.latitude,
+              longitude: tlocation.coords.longitude,
+              latitudeDelta: 0.025,
+              longitudeDelta: 0.025
+            }, 2000);
+          }
+        }, 1000);
+      }
+      setLocationLoading(false)
+    } catch (error) {
+      setLocationLoading(false);
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getLocationAndAnimate()
+  }, [])
 
 
   return (
@@ -183,7 +230,7 @@ export default Home = () => {
                       longitude: parseFloat(item.longitude)
                     }}
                   >
-                    {/* <AvailMarker /> */}
+                    <AvailMarker />
                   </Marker>
                 )
             })
