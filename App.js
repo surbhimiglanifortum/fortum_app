@@ -9,7 +9,9 @@ import awsconfig from './src/Utils/aws-exports'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import SnackContext from './src/Utils/context/SnackbarContext';
 import colors from './src/Utils/colors';
-
+import { configureStore, persistor } from "./src/Redux/store";
+import { Provider, connect, ReactReduxContext } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 Amplify.configure(awsconfig)
 
 const App = () => {
@@ -62,15 +64,20 @@ const App = () => {
 
   return (
     <>
+
       <SnackContext.Provider value={{ currentLocation, setCurrentLocation, mLocationsPayload, mSetLocationsPayload }}>
-        <QueryClientProvider client={queryClient} contextSharing={true}>
-          <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
-          <StatusBar backgroundColor={scheme === 'dark' ? colors.backgroundDark : colors.lightBackGround} barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'}/>
-            <NavigationContainer>
-              {!loading && <Routes loggedin={loggedin} />}
-            </NavigationContainer>
-          </PaperProvider>
-        </QueryClientProvider>
+        <Provider store={configureStore}>
+          <PersistGate persistor={persistor} loading={null}>
+            <QueryClientProvider client={queryClient} contextSharing={true}>
+              <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
+                <StatusBar backgroundColor={scheme === 'dark' ? colors.backgroundDark : colors.lightBackGround} barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} />
+                <NavigationContainer>
+                  {!loading && <Routes loggedin={loggedin} />}
+                </NavigationContainer>
+              </PaperProvider>
+            </QueryClientProvider>
+          </PersistGate>
+        </Provider>
       </SnackContext.Provider>
     </>
   )
