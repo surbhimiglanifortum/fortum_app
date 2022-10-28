@@ -38,7 +38,7 @@ const Verification = ({ route }) => {
     const VerifyButtonHandler = async () => {
         if (!signin) {
             try {
-                const result = await Auth.confirmSignUp(email_id, userInput);
+                const result = await Auth.confirmSignUp(email_id, userInput1+userInput2+userInput3+userInput4);
 
                 if (result === "SUCCESS") {
                     navigation.navigate(routes.MobileVerification, { ...route.params })
@@ -51,7 +51,7 @@ const Verification = ({ route }) => {
             }
         } else {
             try {
-                const cognitoUser = await Auth.sendCustomChallengeAnswer(user, userInput)
+                const cognitoUser = await Auth.sendCustomChallengeAnswer(user, userInput1+userInput2+userInput3+userInput4)
                 loginSuccess()
 
             } catch (e) {
@@ -88,14 +88,14 @@ const Verification = ({ route }) => {
                         <CarLogo />
                     </View>
                     <View>
-                        {scheme == 'dark' ? <CommonText showText={'Email Verification'} fontSize={20} /> : <BlackText showText={'Email Verification'} fontSize={20} />}
+                         <CommonText showText={'Email Verification'} fontSize={20} /> 
                     </View>
                     <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'Please enter the verification code sent to '} fontSize={15} /> : <BlackText showText={'Please enter the verification code sent to '} fontSize={15} />}
+                        <CommonText showText={'Please enter the verification code sent to '} fontSize={15} />
                         <View style={styles.centerText}>
-                            {scheme == 'dark' ? <CommonText showText={email_id} fontSize={15} /> : <BlackText showText={email_id} fontSize={15} />}
+                           <CommonText showText={email_id} fontSize={15} /> 
                             <TouchableOpacity >
-                                {scheme == 'dark' ? <CommonText showText={' Edit'} fontSize={15} /> : <BlackText showText={' Edit'} fontSize={15} />}
+                               <CommonText showText={' Edit'} fontSize={15} /> 
                             </TouchableOpacity>
                         </View>
                         <Textinput value={userInput} onChange={setUserInput} />
