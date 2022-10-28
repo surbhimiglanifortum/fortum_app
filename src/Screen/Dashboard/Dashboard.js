@@ -20,7 +20,7 @@ import WhiteText from '../../Component/Text/WhiteText'
 
 
 const Dashboard = ({tabName }) => {
-console.log(tabName,'.............................tabn')
+
   const [selectedTab, setSelectedTab] = useState('home')
 
   const homeButtonHandler = () => {
