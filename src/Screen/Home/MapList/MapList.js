@@ -94,7 +94,7 @@ const MapList = () => {
           <ScrollView nestedScrollEnabled={true}>
             {/* Render Details Card */}
             {
-              data.map((item, ind) => {
+              data?.map((item, ind) => {
                 return (
                   <View key={ind}>
                     <DetailsCard chargerType={1} item={item} onPress={cardDetailsHandler} />
