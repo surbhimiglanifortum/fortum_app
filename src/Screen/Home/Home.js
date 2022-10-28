@@ -23,6 +23,7 @@ import { postListService } from '../../Services/HomeTabService/HomeTabService';
 import SnackContext from '../../Utils/context/SnackbarContext';
 import { useQuery } from 'react-query'
 import AvailMarker from '../../assests/svg/AvailMarker'
+import * as ApiAction from '../../Services/Api'
 
 let selectedMarker = {}
 
@@ -84,7 +85,7 @@ export default Home = () => {
       } else {
         location = currentLocation;
       }
-      const res = await postListService();
+      const res = await ApiAction.getLocation()
       var locationsArray = res.data?.locations[0];
       locationsArray.map((data, index) => {
         locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
@@ -93,7 +94,6 @@ export default Home = () => {
         ])
       })
       locationsArray.sort(function (a, b) { return a.distance - b.distance })
-      console.log("Charger Location Response", locationsArray)
       return locationsArray;
     } catch (error) {
       console.log("Charger Location Error", error)
