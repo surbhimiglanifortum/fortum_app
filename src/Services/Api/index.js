@@ -1,5 +1,6 @@
 import { Auth } from 'aws-amplify';
 import axios from '../BaseUrl'
+
 export const getUserDetails = async () => {
     const result = await Auth.currentAuthenticatedUser();
     if (result) {
@@ -8,4 +9,8 @@ export const getUserDetails = async () => {
         throw 'User Not logged in'
     }
 
+}
+
+export const getLocation = async (payload) => {
+    return await axios.post("/locations/filter", payload)
 }
