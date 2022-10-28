@@ -11,7 +11,7 @@ const Header = ({showText}) => {
         <View style={styles.header}>
             <BackButton />
             <View style={styles.headerText}>
-                {scheme == 'dark' ? <CommonText showText={showText} fontSize={22} /> : <BlackText showText={showText} fontSize={22} />}
+               <CommonText showText={showText} fontSize={22} /> 
             </View>
         </View>
     )
@@ -20,6 +20,7 @@ const Header = ({showText}) => {
 const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
+        alignItems:'center'
     },
     headerText: { alignItems: 'center', marginLeft: 60 },
 })

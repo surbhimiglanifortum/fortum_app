@@ -11,7 +11,8 @@ const colors = {
     lightBackGround:'#EEF2FA',
     lightblue:'#eef5fc',
     lightgreen:'#BBDCD3',
-    grey:"#c7c7c7"
+    grey:"#c7c7c7",
+    blue:'#006ADA'
     
 }
 

@@ -28,6 +28,10 @@ import Order from '../Screen/Other/Order/Order';
 import ChargingKey from '../Screen/Other/ChargingKey/ChargingKey';
 import Store from '../Screen/Other/Store/Store';
 import OrderDetails from '../Screen/Other/Order/OrderDetails';
+import FortumChargeAndDriveCard from '../Screen/Other/PaymentMethod/FortumChargeAndDriveCard';
+import ActivateCard from '../Screen/Other/PaymentMethod/ActivateCard';
+import CompleteKYC from '../Screen/Other/PaymentMethod/CompleteKYC';
+import Passbook from '../Screen/Other/PaymentMethod/Passbook/Passbook';
 
 
 
@@ -62,6 +66,10 @@ const Routes = ({ loggedin }) => {
            <Stack.Screen name={routes.ChargingKey} component={ChargingKey} options={{headerShown:false}}  />
            <Stack.Screen name={routes.Store} component={Store} options={{headerShown:false}}  />
            <Stack.Screen name={routes.OrderDetails} component={OrderDetails} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.FortumChargeAndDriveCard} component={FortumChargeAndDriveCard} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.ActivateCard} component={ActivateCard} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.CompleteKYC} component={CompleteKYC} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.Passbook} component={Passbook} options={{headerShown:false}}  />
 
         </Stack.Navigator>
     );

@@ -9,6 +9,7 @@ import awsconfig from './src/Utils/aws-exports'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 import { Auth, Hub } from 'aws-amplify';
+import colors from './src/Utils/colors';
 
 Amplify.configure(awsconfig)
 const App = () => {
@@ -60,7 +61,7 @@ const App = () => {
     <>
       <QueryClientProvider client={queryClient} contextSharing={true}>
         <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
-          <StatusBar />
+          <StatusBar backgroundColor={scheme === 'dark' ? colors.backgroundDark : colors.lightBackGround} barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'}/>
           <NavigationContainer>
             {!loading && <Routes loggedin={loggedin} />}
           </NavigationContainer>
