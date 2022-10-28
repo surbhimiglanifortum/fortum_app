@@ -160,38 +160,25 @@ const Login = () => {
             <CarLogo />
           </View>
           <View>
-            {scheme == 'dark' ? <CommonText showText={'WelCome !'} fontSize={20} /> : <BlackText showText={'WelCome !'} fontSize={20} />}
+            <CommonText showText={'WelCome !'} fontSize={20} />
           </View>
           <View style={styles.textinputConatiner}>
-            {scheme == 'dark' ? <CommonText showText={'Please enter your mobile number or email id'} fontSize={12} /> : <BlackText showText={'Please enter your mobile number or email id'} fontSize={12} />}
+            <CommonText showText={'Please enter your mobile number or email id'} fontSize={12} />
             <Textinput value={userInput} onChange={setuserInput} placeholder={'Mobile Number / email id'} />
           </View>
           <TouchableOpacity style={styles.button} >
             <Button onPress={continueButtonHandler} onLoading={loading} setOnLoading={setLoading} showText={'Continue'} />
           </TouchableOpacity>
           <View style={styles.centerText}>
-            {scheme == 'dark' ? <CommonText showText={'Or Sign in with'} fontSize={12} /> : <BlackText showText={'Or Sign in with'} fontSize={12} />}
+            <CommonText showText={'Or Sign in with'} fontSize={12} />
           </View>
-          <View style={styles.bottomButton}>
-            {/* Add google and facebook icon */}
-            {/* <SmallButton /> */}
-          </View>
-          {/* show google and facebook icon */}
-          <SmallButton Svg={GoogleSvg} />
-          <SmallButton Svg={FaceBookSvg} />
-        </View>
-        {/* to be removed later */}
 
-        {/* <View style={{borderWidth:1,backgroundColor:colors.black,
-          overflow:'hidden',
-          elevation:10,borderRadius:5}}>
-            <View style={{borderWidth:1,backgroundColor:colors.backgroundDark,paddingVertical:10,paddingHorizontal:10,overflow:'hidden',elevation:10,shadowOffset:{
-              width: -5,
-              height: -5
-            }}}>
-              <Text>hh</Text>
-            </View>
-          </View> */}
+          {/* show google and facebook icon */}
+          <View style={styles.bottomButton}>
+            <SmallButton Svg={GoogleSvg} />
+            <SmallButton Svg={FaceBookSvg} />
+          </View>
+        </View>
         <View style={styles.bottomText}>
           {scheme == 'dark' ? <CommonText showText={'Don’t have account? '} fontSize={12} /> : <BlackText showText={'Don’t have account? '} fontSize={12} />}
           <TouchableOpacity onPress={signupHandler}>

@@ -8,6 +8,7 @@ import { Amplify, Auth, Hub } from 'aws-amplify'
 import awsconfig from './src/Utils/aws-exports'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import SnackContext from './src/Utils/context/SnackbarContext';
+import colors from './src/Utils/colors';
 
 Amplify.configure(awsconfig)
 
@@ -64,7 +65,7 @@ const App = () => {
       <SnackContext.Provider value={{ currentLocation, setCurrentLocation, mLocationsPayload, mSetLocationsPayload }}>
         <QueryClientProvider client={queryClient} contextSharing={true}>
           <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
-            <StatusBar />
+          <StatusBar backgroundColor={scheme === 'dark' ? colors.backgroundDark : colors.lightBackGround} barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'}/>
             <NavigationContainer>
               {!loading && <Routes loggedin={loggedin} />}
             </NavigationContainer>

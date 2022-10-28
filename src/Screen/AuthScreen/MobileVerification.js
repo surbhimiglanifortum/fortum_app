@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import CommonText from '../../Component/Text/CommonText';
-import BlackText from '../../Component/Text/BlackText';
 import Button from '../../Component/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import routes from '../../Utils/routes';
@@ -140,14 +139,14 @@ const MobileVerification = ({ route }) => {
                         <CarLogo />
                     </View>
                     <View>
-                        {scheme == 'dark' ? <CommonText showText={'Mobile Verification'} fontSize={20} /> : <BlackText showText={'Mobile Verification'} fontSize={20} />}
+                        <CommonText showText={'Mobile Verification'} fontSize={20} /> 
                     </View>
                     <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'Please enter the verification code sent to '} fontSize={15} /> : <BlackText showText={'Please enter the verification code sent to '} fontSize={15} />}
+                       <CommonText showText={'Please enter the verification code sent to '} fontSize={15} /> 
                         <View style={styles.centerText}>
-                            {scheme == 'dark' ? <CommonText showText={email_id} fontSize={15} /> : <BlackText showText={email_id} fontSize={15} />}
+                           <CommonText showText={email_id} fontSize={15} />
                             <TouchableOpacity >
-                                {scheme == 'dark' ? <CommonText showText={' Edit'} fontSize={15} /> : <BlackText showText={' Edit'} fontSize={15} />}
+                               <CommonText showText={' Edit'} fontSize={15} /> 
                             </TouchableOpacity>
                         </View>
                         <Textinput value={userInput} onChange={setUserInput} />
@@ -159,9 +158,9 @@ const MobileVerification = ({ route }) => {
                             <OtpTextinput />
                         </View>
                         <View style={styles.resendContainer}>
-                            {scheme == 'dark' ? <CommonText showText={'Didn’t receive the code?  '} fontSize={15} /> : <BlackText showText={'Didn’t receive the code?  '} fontSize={15} />}
+                            <CommonText showText={'Didn’t receive the code?  '} fontSize={15} /> 
                             <TouchableOpacity >
-                                {scheme == 'dark' ? <CommonText showText={'Resend'} fontSize={15} /> : <BlackText showText={'Resend'} fontSize={15} />}
+                                <CommonText showText={'Resend'} fontSize={15} />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -187,7 +186,7 @@ const styles = StyleSheet.create({
         marginVertical: 15
     },
     button: {
-        marginTop: 130
+        marginTop: 80
     },
     centerText: {
         marginTop: 20,

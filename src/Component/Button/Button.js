@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
-import CommonText from '../Text/CommonText'
+import WhiteText from '../Text/WhiteText'
 
 const Button = ({ onPress, showText, color, onLoading, setOnLoading }) => {
 
@@ -16,8 +16,8 @@ const Button = ({ onPress, showText, color, onLoading, setOnLoading }) => {
 
 
   return (
-    <TouchableOpacity disabled={false} style={[styles.container]} onPress={onPress}>
-      {onLoading ? <ActivityIndicator /> : <CommonText showText={showText} fontSize={17} color={color} />}
+    <TouchableOpacity style={[styles.container]} onPress={onPress}>
+      <WhiteText showText={showText} fontSize={17} color={color} />
     </TouchableOpacity>
   )
 }

@@ -3,17 +3,16 @@ import React from 'react'
 import colors from '../../Utils/colors'
 import commonFonts from '../../Utils/fonts/fonts'
 
-const WhiteText = ({showText,fontSize,margin,color}) => {
+const BlueText = ({showText,fontSize,margin}) => {
   const scheme=useColorScheme()
   return (
-      <Text style={[styles.text,{fontSize:fontSize,marginLeft:margin,color:colors.white}]}>{showText}</Text>
+      <Text style={[styles.text,{fontSize:fontSize,marginLeft:margin}]}>{showText}</Text>
   )
 }
 
 const styles=StyleSheet.create({
-text:{ fontFamily:commonFonts.bold,fontSize:17},
+text:{ color: colors.blue,fontFamily:commonFonts.bold,fontSize:17},
 
 })
 
-
-export default WhiteText
+export default BlueText
