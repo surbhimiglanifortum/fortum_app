@@ -6,7 +6,6 @@ import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
 import Charger1 from '../../assests/svg/charger1'
 import CommonText from '../Text/CommonText'
-import ToggleCard from '../Card/ToggleCard'
 import { Switch } from 'react-native-paper';
 import WhiteButton from '../Button/WhiteButton'
 import Button from '../Button/Button'
@@ -16,9 +15,10 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
 
     const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
-const applyButtonHandler=()=>{
-    setOpenFilterModal(false)
-}
+
+    const applyButtonHandler = () => {
+        setOpenFilterModal(false)
+    }
     return (
         <Modal visible={openFilterModal} statusBarTranslucent={true}>
             <View style={styles.container}>

@@ -10,7 +10,8 @@ import routes from '../../Utils/routes'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik';
 import { Auth, Hub } from 'aws-amplify';
-
+import * as Yup from 'yup';
+import RedText from '../../Component/Text/RedText'
 const Signup = ({ route }) => {
     const navigation = useNavigation()
     const scheme = useColorScheme()
@@ -24,10 +25,27 @@ const Signup = ({ route }) => {
         { name: 'Email ID', value: "email_id" },
         { name: 'Mobile Number', value: "mobile_number" },
         { name: 'Referral Code (Optional)', value: "referral_code" }
-
     ]
     const { phone_number: prefillPhone_number, email: prefillEMail } = route.params;
 
+    const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
+    const emailRegex =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+    const SignupSchema = Yup.object().shape({
+        first_name: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!')
+            .required('First Name Required'),
+        last_name: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!')
+            .required('Last Name Required'),
+        email_id: Yup.string().email('Invalid email').matches(emailRegex, 'Email is not valid !').required('Email Required'),
+        mobile_number: Yup.string().min(10, 'Enter Valid Phone Number!').max(10, 'Enter Valid Phone Number!').matches(phoneRegExp, 'Phone Number is not valid !').required('Enter Mobile Number')
+
+    });
 
     const handleSignup = async (values, event) => {
 
@@ -54,7 +72,7 @@ const Signup = ({ route }) => {
 
       
         if (cognitoData) {
-            navigation.navigate(routes.Verification,{...values})
+            navigation.navigate(routes.Verification, { ...values })
         }
         event.setSubmitting(false)
     }
@@ -82,19 +100,24 @@ const Signup = ({ route }) => {
                             mobile_number: prefillPhone_number || ''
                         }}
                         onSubmit={handleSignup}
+                        validationSchema={SignupSchema}
                     >
-                        {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
+                        {({ handleChange, handleBlur, handleSubmit, values, isSubmitting, errors, touched }) => (
                             <>
-                                {lazy_array.map((e) => {
+                                {lazy_array.map((e, i) => {
                                     return (
-                                        <View style={styles.textinputConatiner}>
+                                        <View key={i} style={styles.textinputConatiner}>
                                             {scheme == 'dark' ? <CommonText showText={e.name} fontSize={14} /> : <BlackText showText={e.name} fontSize={14} />}
                                             <Textinput value={values[e.value]} onChange={handleChange(e.value)} />
+                                            {errors[e.value] && touched[e.value] ? (
+                                                <RedText showText={errors[e.value]} />
+                                            ) : null}
                                         </View>
                                     )
                                 })}
-
-                                <Button onPress={handleSubmit} showText={'SignUp'} onLoading={isSubmitting} />
+                                <View style={styles.btnConatiner}>
+                                    <Button onPress={handleSubmit} showText={'SignUp'} onLoading={isSubmitting} />
+                                </View>
                             </>
                         )}
                     </Formik>
@@ -124,6 +147,8 @@ const styles = StyleSheet.create({
     button: {
         marginVertical: 15
     },
+    btnConatiner: { marginBottom: 15 },
+
 })
 
 export default Signup
