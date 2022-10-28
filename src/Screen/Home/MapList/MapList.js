@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import React, { useEffect, useState, useContext } from 'react'
 import DetailsCard from '../../../Component/Card/DetailsCard'
 import FilterSvg from '../../../assests/svg/FilterSvg'
 import colors from '../../../Utils/colors'
@@ -9,13 +9,19 @@ import BlackText from '../../../Component/Text/BlackText'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import routes from '../../../Utils/routes'
 import { postListService } from '../../../Services/HomeTabService/HomeTabService'
+import SnackContext from '../../../Utils/context/SnackbarContext'
 import { useQuery } from 'react-query'
+import Geolocation from '@react-native-community/geolocation';
+import { computeDistance } from '../../../Utils/helperFuncations/computeDistance'
 
 const MapList = () => {
 
   const navigation = useNavigation()
   const [listData, setListData] = useState([])
   const [openFilterModal, setOpenFilterModal] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+
+  const { currentLocation, setCurrentLocation, } = useContext(SnackContext)
 
   const filterButtonHandler = () => {
     setOpenFilterModal(true)
@@ -30,41 +36,39 @@ const MapList = () => {
     navigation.navigate(routes.ChargingStation)
   }
 
-  // const listDataFunction = async () => {
-  //   try {
-  //     const res = await postListService()
-  //     // console.log(res.data.locations[0],'..........data')
-  //     setListData(res.data.locations[0])
+  const listDataFunction = async () => {
+    setRefreshing(true)
+    try {
+      var location = {}
+      if (!currentLocation.coords) {
+        Geolocation.getCurrentPosition(info => {
+          setCurrentLocation(info)
+        })
+      } else {
+        location = currentLocation;
+      }
+      const res = await postListService();
+      var locationsArray = res.data?.locations[0];
+      locationsArray.map((data, index) => {
+        locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
+          data?.latitude,
+          data?.longitude,
+        ])
+      })
+      locationsArray.sort(function (a, b) { return a.distance - b.distance })
+      console.log("Check location Array", locationsArray)
+      setRefreshing(false)
+      return locationsArray;
+    } catch (error) {
+      setRefreshing(false)
+      console.log("Location List Error", error)
+    }
+  }
 
-  //     var locationsArray = res.data.locations[0];
-  //     locationsArray.map((data, index) => {
-  //       console.log(data, '............ggdata')
-  //       locationsArray[index] = computeDistance([location.coords.latitude, location.coords.longitude], [
-  //         data.latitude,
-  //         data.longitude,
-  //       ])
-  //     })
-  //     console.log(locationsArray, '.............................loc')
-  //     locationsArray.sort(function (a, b) { return a.distance - b.distance })
-  //     return locationsArray;
-  //   } catch (error) {
-
-  //   }
-  // }
-
-  useEffect(() => {
-    postListService()
-  }, [])
-
-  const { data, status, refetch } = useQuery('MapDataList', postListService, {
+  const { data, status, refetch } = useQuery('MapDataList', listDataFunction, {
     // Refetch the data every second
     refetchInterval: 15000,
   })
-
-  
-
-  console.log("Check Map List Data FRom New 123 abc", data?.locations[0])
-  // console.log("Check Map List Status FRom New", status)
 
   return (
     <View style={[styles.container]}>
@@ -85,11 +89,12 @@ const MapList = () => {
             </TouchableOpacity>
           </View>
 
+          {refreshing && <ActivityIndicator style={styles.indicatorStyle} />}
+
           <ScrollView nestedScrollEnabled={true}>
             {/* Render Details Card */}
             {
-              data?.locations[0].map((item, ind) => {
-                // console.log(item, '.............item')
+              data.map((item, ind) => {
                 return (
                   <View key={ind}>
                     <DetailsCard chargerType={1} item={item} onPress={cardDetailsHandler} />
@@ -148,6 +153,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     borderRadius: 6,
     alignItems: 'center'
+  },
+  indicatorStyle: {
+    marginVertical: 20
   }
 })
 

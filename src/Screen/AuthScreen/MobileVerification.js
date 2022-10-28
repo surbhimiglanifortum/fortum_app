@@ -107,8 +107,6 @@ const MobileVerification = ({ route }) => {
             })
         } else {
             try {
-                // const data = await Auth.currentAuthenticatedUser();
-                // console.log("data",data)
                 console.log(mobile_number, userInput)
                 const cognitoUser = await Auth.sendCustomChallengeAnswer(user, userInput)
                     .then(e => {

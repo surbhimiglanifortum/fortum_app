@@ -1,7 +1,8 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
 import { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import MapView from "react-native-map-clustering";
+import { Marker } from 'react-native-maps';
 import BlackText from '../../Component/Text/BlackText';
 import colors from '../../Utils/colors';
 import MapList from './MapList/MapList';
@@ -17,6 +18,13 @@ import DetailsCard from '../../Component/Card/DetailsCard';
 import Entypo from 'react-native-vector-icons/Entypo'
 import WhiteText from '../../Component/Text/WhiteText';
 import Geolocation from '@react-native-community/geolocation';
+import { computeDistance } from '../../Utils/helperFuncations/computeDistance';
+import { postListService } from '../../Services/HomeTabService/HomeTabService';
+import SnackContext from '../../Utils/context/SnackbarContext';
+import { useQuery } from 'react-query'
+import AvailMarker from '../../assests/svg/AvailMarker'
+
+let selectedMarker = {}
 
 export default Home = () => {
 
@@ -25,7 +33,7 @@ export default Home = () => {
   const [selectedTab, setSelectedTab] = useState('Map')
   const [selectedCharger, setSelectedCharger] = useState(false)
   const [openFilterModal, setOpenFilterModal] = useState(false)
-const [currentLocation,setCurrentLocation]=useState(0)
+  const [visibleRegion, setVisibleRegion] = useState([0, 0, 0, 0])
 
   const mapButtonHandler = () => {
     setSelectedTab('')
@@ -48,49 +56,149 @@ const [currentLocation,setCurrentLocation]=useState(0)
   const locationBtnHandler = () => {
 
   }
-const chargingBtnHandler=()=>{
-  setSelectedCharger(true)
-}
-const chargingCardHandler=()=>{
-  navigation.navigate(routes.ChargingStation)
-}
+  const chargingBtnHandler = () => {
+    setSelectedCharger(true)
+  }
+  const chargingCardHandler = () => {
+    navigation.navigate(routes.ChargingStation)
+  }
 
-const currentLocationFunction =()=>{
+  const { currentLocation, setCurrentLocation, } = useContext(SnackContext)
 
-  Geolocation.getCurrentPosition(data =>{
-    console.log(data.coords,'............cords')
-    setCurrentLocation(data.coords)
+  const regionToZoom = {
+    latitude: 23.313561,
+    longitude: 78.2863013,
+    latitudeDelta: 50.4922,
+    longitudeDelta: 0.0521,
+  }
+
+  const chargerLocations = async () => {
+    try {
+      var location = {}
+      if (!currentLocation.coords) {
+        Geolocation.getCurrentPosition(info => {
+          setCurrentLocation(info)
+        })
+      } else {
+        location = currentLocation;
+      }
+      const res = await postListService();
+      var locationsArray = res.data?.locations[0];
+      locationsArray.map((data, index) => {
+        locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
+          data?.latitude,
+          data?.longitude,
+        ])
+      })
+      locationsArray.sort(function (a, b) { return a.distance - b.distance })
+      console.log("Charger Location Response", locationsArray)
+      return locationsArray;
+    } catch (error) {
+      console.log("Charger Location Error", error)
+    }
+  }
+
+  const { data, status, isLoading, refetch } = useQuery('MapData', chargerLocations, {
+    manual: true,
+    refetchInterval: 15000,
   })
-}
-
-console.log(currentLocation,'...............curent location---------------')
-useEffect(() => {
-  currentLocationFunction()
-}, [])
 
 
   return (
     <View style={styles.container}>
-      {selectedTab != 'List' && <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-        style={styles.map}
-        region={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}
-      >
-      </MapView>}
+
+      {selectedTab != 'List' &&
+        <MapView
+          ref={mapRef}
+          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+          toolbarEnabled={false}
+          onRegionChangeComplete={(r) => {
+            const getBoundingBox = (region) => ([
+              region.longitude - region.longitudeDelta / 2, // westLng - min lng
+              region.latitude - region.latitudeDelta / 2, // southLat - min lat
+              region.longitude + region.longitudeDelta / 2, // eastLng - max lng
+              region.latitude + region.latitudeDelta / 2 // northLat - max lat
+            ])
+            setVisibleRegion(getBoundingBox(r))
+            console.log("onRegions Change", r, getBoundingBox(r))
+          }}
+          showsMyLocationButton={false}
+          onMarkerPress={(e) => {
+            if (locationLoading) {
+              return false;
+            }
+            console.log("PRESS", e.nativeEvent.coordinate)
+            let marker = data;
+            marker = marker.find((item) => {
+              // marker
+              if (parseFloat(item.latitude) === e.nativeEvent.coordinate.latitude &&
+                parseFloat(item.longitude) === e.nativeEvent.coordinate.longitude) {
+                console.log("FOUND MARKER")
+                return true
+              }
+            })
+            if (marker) {
+              console.log("selected marker", marker)
+              // setselectedMarker(marker)
+              selectedMarker = marker
+              if (location.coords) {
+                // setShowBottomChargeDrawer(true)
+                // setShowBottomDrawer(false)
+                console.log("Here One")
+              }
+            }
+          }}
+          showsCompass={false}
+          showsUserLocation
+          style={styles.map}
+          initialRegion={regionToZoom}
+        // region={{
+        //   latitude: 37.78825,
+        //   longitude: -122.4324,
+        //   latitudeDelta: 0.015,
+        //   longitudeDelta: 0.0121,
+        // }}
+        >
+          {isLoading ? null :
+            data?.map((item, index) => {
+              // console.log(item)
+              // console.log(item.id)
+              // console.log(item.latitude)
+              // console.log(item.longitude)
+
+              const boxCheck = (cordx, cordy, lx, ly, rx, ry) => {
+                if (lx <= cordx && ly <= cordy && cordx <= rx && cordy <= ry)
+                  return true
+                return false
+              }
+
+              let lat = item.latitude
+              let long = item.longitude
+              let vb = visibleRegion
+              if (boxCheck(lat, long, vb[1], vb[0], vb[3], vb[2]))
+                return (
+                  <Marker key={item.id}
+                    coordinate={{
+                      latitude: parseFloat(item.latitude),
+                      longitude: parseFloat(item.longitude)
+                    }}
+                  >
+                    {/* <AvailMarker /> */}
+                  </Marker>
+                )
+            })
+          }
+        </MapView>}
+
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
           <TouchableOpacity onPress={mapButtonHandler}
-           style={[styles.tabContainer,selectedTab!='List'?{backgroundColor:colors.white,borderRadius:4,paddingVertical:3}:null,]}>
-            <WhiteText showText={'Map'} fontSize={16} color={selectedTab!='List'?colors.black:colors.white} />
+            style={[styles.tabContainer, selectedTab != 'List' ? { backgroundColor: colors.white, borderRadius: 4, paddingVertical: 3 } : null,]}>
+            <WhiteText showText={'Map'} fontSize={16} color={selectedTab != 'List' ? colors.black : colors.white} />
           </TouchableOpacity >
-          <TouchableOpacity onPress={listButtonHandler} style={[styles.tabContainer,selectedTab=='List'?{backgroundColor:colors.white,borderRadius:4,paddingVertical:3}:null,]}>
-          <WhiteText showText={'List'} fontSize={16} color={selectedTab=='List'?colors.black:colors.white} />
+          <TouchableOpacity onPress={listButtonHandler} style={[styles.tabContainer, selectedTab == 'List' ? { backgroundColor: colors.white, borderRadius: 4, paddingVertical: 3 } : null,]}>
+            <WhiteText showText={'List'} fontSize={16} color={selectedTab == 'List' ? colors.black : colors.white} />
           </TouchableOpacity>
         </View>
       </View>
@@ -129,7 +237,7 @@ useEffect(() => {
             </TouchableOpacity>
           </View>
         </View>}
-        {selectedTab != 'List' &&selectedCharger&&
+        {selectedTab != 'List' && selectedCharger &&
           <View>
             <ScrollView horizontal>
               {
@@ -179,7 +287,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius:6
+    borderRadius: 6
   },
   tabContainer: {
     width: 70,

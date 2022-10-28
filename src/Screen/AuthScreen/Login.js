@@ -22,7 +22,7 @@ const Login = () => {
 
 
 
-  const [userInput, setuserInput] = useState('+917532078797')
+  const [userInput, setuserInput] = useState('y.anuj98@gmail.com')
   const [loading, setLoading] = useState(false)
   useEffect(() => {
 
@@ -97,7 +97,6 @@ const Login = () => {
 
   const continueButtonHandler = async () => {
     setLoading(true)
-    Auth.signIn(userInput);
     try {
       const user = await Auth.signIn(userInput);
       console.log("ajsbjds", user)
@@ -123,6 +122,7 @@ const Login = () => {
         }
       }
     } catch (error) {
+      console.log("error",error)
       switch (error.code) {
         case 'UserNotFoundException':
           HandleUserNotFound();

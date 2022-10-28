@@ -8,6 +8,7 @@ import BlackText from '../../Component/Text/BlackText'
 import IconCard from '../../Component/Card/IconCard'
 import Location1Svg from '../../assests/svg/Location1Svg'
 import routes from '../../Utils/routes'
+
 const SearchLocation = () => {
 
     const navigation = useNavigation()
