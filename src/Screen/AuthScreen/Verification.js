@@ -10,12 +10,17 @@ import routes from '../../Utils/routes';
 import OtpTextinput from '../../Component/Textinput/OtpTextinput';
 import Textinput from '../../Component/Textinput/Textinput'
 import { Auth, Hub } from 'aws-amplify';
-
+import * as ApiAction from '../../Services/Api'
+import { useDispatch } from 'react-redux';
+import * as Types from '../../Redux/Types'
+import { AddToRedux } from '../../Redux/AddToRedux';
 
 const Verification = ({ route }) => {
 
     const navigation = useNavigation()
     const scheme = useColorScheme();
+
+    const dispatch = useDispatch();
 
     const [userInput, setUserInput] = useState('101299')
 
@@ -39,26 +44,31 @@ const Verification = ({ route }) => {
         } else {
             try {
                 const cognitoUser = await Auth.sendCustomChallengeAnswer(user, userInput)
-                    .then(e => {
-                        console.log("response", e)
+                loginSuccess()
 
-                    }).catch(e => {
-                        console.log("Error", e)
-                    });
-
-
-                const data = await Auth.currentAuthenticatedUser();
-                if (data) {
-                    navigation.navigate(routes.dashboard)
-                } else {
-                    // show wrong otp message
-                }
             } catch (e) {
                 // Handle 3 error thrown for 3 incorrect attempts. 
                 console.log("response", e)
             }
         }
 
+    }
+
+    const loginSuccess = async () => {
+        const data = await Auth.currentAuthenticatedUser();
+        if (data) {
+            const result = await ApiAction.getUserDetails()
+            if (result.data) {
+                dispatch(AddToRedux(result.data, Types.USERDETAILS))
+            } else {
+                throw { code: "UserNotFound" }
+            }
+            navigation.navigate(routes.dashboard)
+
+        } else {
+            // show wrong otp message
+            throw { code: "UserNotFound" }
+        }
     }
 
 

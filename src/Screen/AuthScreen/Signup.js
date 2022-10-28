@@ -43,6 +43,7 @@ const Signup = ({ route }) => {
             autoSignIn: { // optional - enables auto sign in after user is confirmed
                 enabled: true,
             }
+          
         }).catch(e => {
             console.log("error", e)
             if (e.code === 'UsernameExistsException') {
@@ -50,7 +51,8 @@ const Signup = ({ route }) => {
             if (e.code === 'InvalidPasswordException') {
             }
         })
-        console.log("cognitoData", cognitoData)
+
+      
         if (cognitoData) {
             navigation.navigate(routes.Verification,{...values})
         }

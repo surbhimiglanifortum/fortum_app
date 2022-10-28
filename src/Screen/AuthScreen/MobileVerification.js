@@ -12,8 +12,12 @@ import { Auth, Hub } from 'aws-amplify';
 import { generateSHA } from '../../Utils/HelperCommonFunctions'
 import axios from 'axios'
 import appconfig from '../../Utils/appconfig'
+import * as ApiAction from '../../Services/Api'
+import { useDispatch } from 'react-redux';
 
 const MobileVerification = ({ route }) => {
+
+    const dispatch = useDispatch();
 
     const navigation = useNavigation()
     const scheme = useColorScheme();
@@ -82,12 +86,12 @@ const MobileVerification = ({ route }) => {
                 if (r?.verified) {
                     // SIgnup to cognito
                     const cognitoResult = await Auth.signUp({
-                        username: mobile_number,
+                        username: "+91" + mobile_number,
                         password: "@Nujyadav123",
                         attributes: {
                             "custom:phoneUser": "true",
                             email: email_id,          // optional
-                            phone_number: mobile_number,   // optional - E.164 number convention
+                            phone_number: "+91" + mobile_number,   // optional - E.164 number convention
                             // other custom attributes c
                         },
                         autoSignIn: { // optional - enables auto sign in after user is confirmed
@@ -98,36 +102,44 @@ const MobileVerification = ({ route }) => {
                         console.log("error", e)
                     })
 
-                    if (cognitoResult) {
-                        navigation.navigate(routes.dashboard)
-                    }
+                    loginSuccess()
                 } else {
                     // failed to verify OTP
                 }
             })
         } else {
             try {
-                console.log(mobile_number, userInput)
-                const cognitoUser = await Auth.sendCustomChallengeAnswer(user, userInput)
+                await Auth.sendCustomChallengeAnswer(user, userInput)
                     .then(e => {
                         console.log("response", e)
-
+                        loginSuccess()
                     }).catch(e => {
                         console.log("Error", e)
                     });
 
-
-                const data = await Auth.currentAuthenticatedUser();
-                if (data) {
-                    navigation.navigate(routes.dashboard)
-                }
-                console.log("SIGN response", cognitoUser)
             } catch (e) {
                 // Handle 3 error thrown for 3 incorrect attempts. 
                 console.log("response", e)
             }
         }
 
+    }
+
+    const loginSuccess = async () => {
+        const data = await Auth.currentAuthenticatedUser();
+        if (data) {
+            const result = await ApiAction.getUserDetails()
+            if (result.data) {
+                dispatch(AddToRedux(result.data, Types.USERDETAILS))
+            } else {
+                throw { code: "UserNotFound" }
+            }
+            navigation.navigate(routes.dashboard)
+
+        } else {
+            // show wrong otp message
+            throw { code: "UserNotFound" }
+        }
     }
 
 
@@ -139,14 +151,14 @@ const MobileVerification = ({ route }) => {
                         <CarLogo />
                     </View>
                     <View>
-                        <CommonText showText={'Mobile Verification'} fontSize={20} /> 
+                        <CommonText showText={'Mobile Verification'} fontSize={20} />
                     </View>
                     <View style={styles.textinputConatiner}>
-                       <CommonText showText={'Please enter the verification code sent to '} fontSize={15} /> 
+                        <CommonText showText={'Please enter the verification code sent to '} fontSize={15} />
                         <View style={styles.centerText}>
-                           <CommonText showText={email_id} fontSize={15} />
+                            <CommonText showText={email_id} fontSize={15} />
                             <TouchableOpacity >
-                               <CommonText showText={' Edit'} fontSize={15} /> 
+                                <CommonText showText={' Edit'} fontSize={15} />
                             </TouchableOpacity>
                         </View>
                         <Textinput value={userInput} onChange={setUserInput} />
@@ -158,7 +170,7 @@ const MobileVerification = ({ route }) => {
                             <OtpTextinput />
                         </View>
                         <View style={styles.resendContainer}>
-                            <CommonText showText={'Didn’t receive the code?  '} fontSize={15} /> 
+                            <CommonText showText={'Didn’t receive the code?  '} fontSize={15} />
                             <TouchableOpacity >
                                 <CommonText showText={'Resend'} fontSize={15} />
                             </TouchableOpacity>

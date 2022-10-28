@@ -101,8 +101,8 @@ export default Home = () => {
   }
 
   const { data, status, isLoading, refetch } = useQuery('MapData', chargerLocations, {
-    manual: true,
-    refetchInterval: 15000,
+    // manual: true,
+    // refetchInterval: 15000,
   })
 
   const getLocationAndAnimate = async (reload) => {

@@ -22,7 +22,7 @@ const Login = () => {
 
 
 
-  const [userInput, setuserInput] = useState('y.anuj98@gmail.com')
+  const [userInput, setuserInput] = useState('anuj.yadav@mfilterit.com')
   const [loading, setLoading] = useState(false)
   useEffect(() => {
 
@@ -75,6 +75,7 @@ const Login = () => {
       }
     }
 
+
     // signup()
     // confirmSignUp()
     // signin()
@@ -122,9 +123,15 @@ const Login = () => {
         }
       }
     } catch (error) {
-      console.log("error",error)
+      console.log("error", error)
       switch (error.code) {
         case 'UserNotFoundException':
+          // try {
+          //   Auth.forgotPassword(userInput)
+          // } catch (error) {
+          //   console.log("ERROR in forget password", error)
+          // }
+
           HandleUserNotFound();
           break;
         default:
@@ -133,6 +140,7 @@ const Login = () => {
     }
     setLoading(false)
   }
+
 
   const HandleUserNotFound = async () => {
     const payload = {}
@@ -143,7 +151,7 @@ const Login = () => {
     }
 
     navigation.navigate(routes.Signup, {
-      phone_number: userInput
+      ...payload
     })
   }
 
