@@ -3,11 +3,10 @@ import React from 'react'
 import colors from '../../Utils/colors'
 import commonFonts from '../../Utils/fonts/fonts'
 
-const CommonText = ({showText,fontSize, childern,}) => {
+const CommonText = ({showText,fontSize, children,customstyles}) => {
   const scheme=useColorScheme()
-
   return (
-      <Text style={[styles.text,{fontSize:fontSize,fontSize:fontSize,color:scheme=='dark'?colors.white:colors.lightText}]}>{showText || childern}</Text>
+      <Text style={[styles.text,{fontSize:fontSize,fontSize:fontSize,color:scheme=='dark'?colors.white:colors.lightText},customstyles]}>{showText || children}</Text>
   )
 }
 

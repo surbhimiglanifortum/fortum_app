@@ -1,17 +1,17 @@
-import {Text, StyleSheet, useColorScheme } from 'react-native'
+import { Text, StyleSheet, useColorScheme } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
 import commonFonts from '../../Utils/fonts/fonts'
 
-const BlackText = ({showText,fontSize,margin}) => {
-  const scheme=useColorScheme()
+const BlackText = ({ showText, fontSize, margin }) => {
+  const scheme = useColorScheme()
   return (
-      <Text style={[styles.text,{fontSize:fontSize,marginLeft:margin}]}>{showText}</Text>
+    <Text style={[styles.text, { fontSize: fontSize, marginLeft: margin }]}>{showText}</Text>
   )
 }
 
-const styles=StyleSheet.create({
-text:{ color: colors.lightText,fontFamily:commonFonts.bold,fontSize:17},
+const styles = StyleSheet.create({
+  text: { color: colors.lightText, fontFamily: commonFonts.bold, fontSize: 17 },
 
 })
 

@@ -14,7 +14,7 @@ import { useQuery } from 'react-query'
 import Geolocation from '@react-native-community/geolocation';
 import { computeDistance } from '../../../Utils/helperFuncations/computeDistance'
 
-const MapList = () => {
+const MapList = ({data}) => {
 
   const navigation = useNavigation()
   const [listData, setListData] = useState([])
@@ -32,8 +32,10 @@ const MapList = () => {
   const favoruiteButtonHandler = () => {
     navigation.navigate(routes.Favoruite)
   }
-  const cardDetailsHandler = () => {
-    navigation.navigate(routes.ChargingStation)
+  const cardDetailsHandler = (data) => {
+    navigation.navigate(routes.ChargingStation, {
+      data: data
+    })
   }
 
   const listDataFunction = async () => {
@@ -65,10 +67,6 @@ const MapList = () => {
     }
   }
 
-  const { data, status, refetch } = useQuery('MapDataList', listDataFunction, {
-    // Refetch the data every second
-    refetchInterval: 15000,
-  })
 
   return (
     <View style={[styles.container]}>
@@ -97,7 +95,7 @@ const MapList = () => {
               data?.map((item, ind) => {
                 return (
                   <View key={ind}>
-                    <DetailsCard chargerType={1} item={item} onPress={cardDetailsHandler} />
+                    <DetailsCard chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
                   </View>
                 )
               })
