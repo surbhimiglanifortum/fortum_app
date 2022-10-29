@@ -10,10 +10,10 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import SnackContext from './src/Utils/context/SnackbarContext';
 import colors from './src/Utils/colors';
 import CommonModal from './src/Component/Modal/CommonModal';
-
 import { configureStore, persistor } from "./src/Redux/store";
 import { Provider, connect, ReactReduxContext } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+
 Amplify.configure(awsconfig)
 
 const App = () => {

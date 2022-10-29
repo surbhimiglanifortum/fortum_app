@@ -14,3 +14,7 @@ export const getUserDetails = async () => {
 export const getLocation = async (payload) => {
     return await axios.post("/locations/filter", payload)
 }
+
+export const getEvses = async (locid, payload) => {
+    return await axios.post("/locations/gist/" + locid, payload)
+}

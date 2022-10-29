@@ -32,8 +32,10 @@ const MapList = ({data}) => {
   const favoruiteButtonHandler = () => {
     navigation.navigate(routes.Favoruite)
   }
-  const cardDetailsHandler = () => {
-    navigation.navigate(routes.ChargingStation)
+  const cardDetailsHandler = (data) => {
+    navigation.navigate(routes.ChargingStation, {
+      data: data
+    })
   }
 
   const listDataFunction = async () => {
@@ -93,7 +95,7 @@ const MapList = ({data}) => {
               data?.map((item, ind) => {
                 return (
                   <View key={ind}>
-                    <DetailsCard chargerType={1} item={item} onPress={cardDetailsHandler} />
+                    <DetailsCard chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
                   </View>
                 )
               })
