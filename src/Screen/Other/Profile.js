@@ -8,10 +8,36 @@ import Textinput from '../../Component/Textinput/Textinput'
 import Button from '../../Component/Button/Button'
 import { useNavigation } from '@react-navigation/native'
 
-const Profile = () => {
+const Profile = ({route}) => {
+    const userData=route.params;
+    const { phone_number: prefillPhone_number, email: prefillEMail } = route.params;
+
+    console.log(userData.userDetailsData.userDetails.first_name,'..............user')
     const navigation = useNavigation()
     const scheme = useColorScheme()
     
+    const lazy_array = [
+        { name: 'First Name', value: "first_name" },
+        { name: 'Last Name', value: "last_name" },
+        { name: 'Email ID', value: "email_id" },
+        { name: 'Mobile Number', value: "mobile_number" },
+       
+    ]
+    const SignupSchema = Yup.object().shape({
+        first_name: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!')
+            .required('First Name Required'),
+        last_name: Yup.string()
+            .min(2, 'Too Short!')
+            .max(50, 'Too Long!')
+            .required('Last Name Required'),
+
+    });
+    
+    const handleSignup = async (values, event) => {
+  
+    }
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <ScrollView>
@@ -20,25 +46,25 @@ const Profile = () => {
                    <View style={styles.header}>
                         <BackButton />
                         <View style={styles.headerText}>
-                            {scheme == 'dark' ? <CommonText showText={'Profile'} fontSize={25} /> : <BlackText showText={'Profile'} fontSize={25} />}
+                          <CommonText showText={'Profile'} fontSize={25} /> 
                         </View>
                     </View>
                     <View style={{ marginVertical: 20 }}>
                     </View>
                     <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'First Name'} fontSize={12} /> : <BlackText showText={'First Name'} fontSize={12} />}
+                       <CommonText showText={'First Name'} fontSize={12} />
                         <Textinput />
                     </View>
                     <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'Last Name'} fontSize={12} /> : <BlackText showText={'Last Name'} fontSize={12} />}
+                       <CommonText showText={'Last Name'} fontSize={12} /> 
                         <Textinput />
                     </View>
                     <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'Email ID'} fontSize={12} /> : <BlackText showText={'Email ID'} fontSize={12} />}
+                       <CommonText showText={'Email ID'} fontSize={12} /> 
                         <Textinput />
                     </View>
                     <View style={styles.textinputConatiner}>
-                        {scheme == 'dark' ? <CommonText showText={'Mobile Number'} fontSize={12} /> : <BlackText showText={'Mobile Number'} fontSize={12} />}
+                       <CommonText showText={'Mobile Number'} fontSize={12} /> 
                         <Textinput />
                     </View>
                     <TouchableOpacity style={styles.button} >
