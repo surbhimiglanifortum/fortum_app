@@ -13,6 +13,7 @@ import * as ApiAction from '../../Services/Api'
 import { useDispatch } from 'react-redux';
 import * as Types from '../../Redux/Types'
 import { AddToRedux } from '../../Redux/AddToRedux';
+import CommonModal from '../../Component/Modal/CommonModal';
 
 const Verification = ({ route }) => {
 
@@ -22,9 +23,9 @@ const Verification = ({ route }) => {
     const otpField2 = useRef(null);
     const otpField3 = useRef(null);
     const otpField4 = useRef(null);
-
+const [ openCommonModal, setOpenCommonModal]=useState(false)
     const dispatch = useDispatch();
-const [loading,setLoading]=useState(false)
+    const [loading, setLoading] = useState(false)
     const [userInput, setUserInput] = useState('101299')
     const [userInput1, setUserInput1] = useState('')
     const [userInput2, setUserInput2] = useState('')
@@ -48,10 +49,12 @@ const [loading,setLoading]=useState(false)
                 }
             } catch (error) {
                 console.log('error confirming sign up', error);
+                setOpenCommonModal(true)
                 // show error message
             }
         } else {
             try {
+                console.log("otpConcatData",otpConcatData)
                 const cognitoUser = await Auth.sendCustomChallengeAnswer(user, otpConcatData)
                 loginSuccess()
 
@@ -67,6 +70,7 @@ const [loading,setLoading]=useState(false)
         const data = await Auth.currentAuthenticatedUser();
         if (data) {
             const result = await ApiAction.getUserDetails()
+            console.log("ASDKJasd",result.data)
             if (result.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
             } else {
@@ -76,6 +80,7 @@ const [loading,setLoading]=useState(false)
 
         } else {
             // show wrong otp message
+            console.log("SKDBSBA")
             throw { code: "UserNotFound" }
         }
     }
@@ -99,7 +104,7 @@ const [loading,setLoading]=useState(false)
                                 <CommonText showText={' Edit'} fontSize={15} />
                             </TouchableOpacity>
                         </View>
-                        <Textinput value={userInput} onChange={setUserInput} />
+                        {/* <Textinput value={userInput} onChange={setUserInput} /> */}
                         <View style={styles.otpContainer}>
                             <OtpTextinput refData={otpField1} value={userInput1} onChange={(pin1) => {
                                 setUserInput1(pin1);
@@ -135,11 +140,12 @@ const [loading,setLoading]=useState(false)
                         </View>
                     </View>
                     <TouchableOpacity style={styles.button} >
-                        <Button onPress={VerifyButtonHandler} showText={'Verify'} onLoading={loading}  />
+                        <Button onPress={VerifyButtonHandler} showText={'Verify'} onLoading={loading} />
                     </TouchableOpacity>
 
                 </View>
             </ScrollView>
+            <CommonModal openCommonModal={openCommonModal} setOpenCommonModal={setOpenCommonModal} showText={'Enter Correct Otp'} />
         </SafeAreaView>
     )
 }

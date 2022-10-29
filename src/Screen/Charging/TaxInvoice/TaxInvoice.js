@@ -11,10 +11,14 @@ import Charger1 from '../../../assests/svg/charger1'
 import CommonText from '../../../Component/Text/CommonText'
 import Button from '../../../Component/Button/Button'
 import Charger from '../../../assests/svg/charger'
+import { getFormatedDate } from '../../../Services/CommonServices'
 // import ChargingCard from '../../../Component/Charging/ChargingCard'
 // import Card from '../../../Component/Card/Card'
 
-const TaxInvoice = () => {
+const TaxInvoice = ({ route }) => {
+
+    const paramData = route.params.data
+    console.log(paramData.item, '..............pARAM DATA')
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
@@ -24,7 +28,7 @@ const TaxInvoice = () => {
                 <View style={styles.innerContainer}>
                     <Header showText={'Tax Invoice'} />
                     <View style={{ marginTop: 18 }}>
-                        {<Card Svg={Charger} />}
+                        {<Card Svg={Charger} dataItem={paramData} />}
                     </View>
                     <View style={styles.card}>
                         <View style={styles.innerCard}>
@@ -32,40 +36,43 @@ const TaxInvoice = () => {
                             <Charger1 />
                             <BlackText showText={'CSCC'} fontSize={15} />
                         </View>
-                        <BlackText showText={`kWh Used : ${'0'}`} fontSize={15} />
+                        <BlackText showText={`kWh Used : ${paramData?.item?.kwh}`} fontSize={15} />
                     </View>
                     <View style={styles.card}>
                         <BlackText showText={'Invoice Number'} fontSize={15} />
-                        <BlackText showText={'F37894'} fontSize={15} />
+                        <BlackText showText={
+                            paramData?.item?.order?.invoice_number
+                                ? paramData?.item?.order?.invoice_number
+                                : paramData?.item?.order?.id} fontSize={15} />
                     </View>
                     <View style={styles.InvoiceDetails}>
                         {scheme == 'dark' ? <CommonText showText={'Tax Invoice Details'} fontSize={20} /> : <BlackText showText={'Tax Invoice Details'} fontSize={20} />}
                         <View style={styles.invoiceCard}>
                             <View style={styles.innerCard1}>
                                 <BlackText showText={'Start Time'} fontSize={15} />
-                                <BlackText showText={'17/08/2022, 17:43 PM'} fontSize={15} />
+                                <BlackText showText={getFormatedDate(paramData?.item?.start_datetime)} fontSize={15} />
                             </View>
                             <View style={styles.innerCard1}>
                                 <BlackText showText={'End Time'} fontSize={15} />
-                                <BlackText showText={'17/08/2022, 17:43 PM'} fontSize={15} />
+                                <BlackText showText={getFormatedDate(paramData?.item?.end_datetime)} fontSize={15} />
                             </View>
                         </View>
                         <View style={styles.invoiceCard}>
                             <View style={styles.innerCard1}>
                                 <BlackText showText={'Price'} fontSize={15} />
-                                <BlackText showText={`₹${'14 / 01 min'}`} fontSize={15} />
+                                <BlackText showText={`₹ ${paramData?.item?.order?.pricingToApply?.price}`} fontSize={15} />
                             </View>
                             <View style={styles.innerCard1}>
                                 <BlackText showText={'Cost'} fontSize={15} />
-                                <BlackText showText={`₹${'1200'}`} fontSize={15} />
+                                <BlackText showText={`₹ ${paramData?.item?.order?.amount / 100}`} fontSize={15} />
                             </View>
                             <View style={styles.innerCard1}>
-                                <BlackText showText={'Amount of CGST (0%)'} fontSize={15} />
-                                <BlackText showText={`₹${'100'}`} fontSize={15} />
+                                <BlackText showText={'Amount of CGST (9%)'} fontSize={15} />
+                                <BlackText showText={`₹${(paramData?.item?.order?.cgst / 100).toFixed(2)}`} fontSize={15} />
                             </View>
                             <View style={styles.innerCard1}>
-                                <BlackText showText={'Amount of SGST (0%)'} fontSize={15} />
-                                <BlackText showText={`₹${'100'}`} fontSize={15} />
+                                <BlackText showText={'Amount of SGST (9%)'} fontSize={15} />
+                                <BlackText showText={`₹${(paramData?.item?.order?.sgst / 100).toFixed(2)}`} fontSize={15} />
                             </View>
                             <View style={styles.innerCard1}>
                                 <BlackText showText={'Total '} fontSize={15} />
@@ -87,7 +94,7 @@ const TaxInvoice = () => {
                             </View>
                             <View style={styles.innerCard1}>
                                 <BlackText showText={'Transaction ID'} fontSize={15} />
-                                <BlackText showText={'AL5e17AmvGB'} fontSize={15} />
+                                <BlackText showText={paramData?.item?.id} fontSize={15} />
                             </View>
                         </View>
                         <View style={styles.card}>
@@ -97,9 +104,9 @@ const TaxInvoice = () => {
                             </View>
                             <BlackText showText={'No'} fontSize={18} />
                         </View>
-                       <View style={styles.bottomButton}>
-                       <Button showText={'Download Invoice'} />
-                       </View>
+                        <View style={styles.bottomButton}>
+                            <Button showText={'Download Invoice'} />
+                        </View>
                     </View>
                 </View>
             </ScrollView>
@@ -169,8 +176,8 @@ const styles = StyleSheet.create({
     InvoiceDetails: {
         marginTop: 10,
     },
-    bottomButton:{
-        marginVertical:20
+    bottomButton: {
+        marginVertical: 20
     }
 })
 

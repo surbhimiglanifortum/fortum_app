@@ -15,6 +15,8 @@ import FontIcon from "../FortumIcons/FontIcon";
 import { getChargerMapObject } from '../../Utils/HelperCommonFunctions'
 import * as ApiAction from '../../Services/Api'
 import CommonCard from '../../Component/Card/CommonCard'
+import axios from 'axios'
+import * as ApiAction from '../../Services/Api'
 const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
 
@@ -35,7 +37,6 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
         })
         return data
     })
-
     return (
         <Modal animationType={'slide'} visible={openFilterModal} statusBarTranslucent={true}>
             <CommonView style={styles.container}>
@@ -85,6 +86,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
         </Modal>
     )
 }
+
 
 const styles = StyleSheet.create({
     container: {
