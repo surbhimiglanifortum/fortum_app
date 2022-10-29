@@ -14,7 +14,7 @@ import { useQuery } from 'react-query'
 import Geolocation from '@react-native-community/geolocation';
 import { computeDistance } from '../../../Utils/helperFuncations/computeDistance'
 
-const MapList = () => {
+const MapList = ({data}) => {
 
   const navigation = useNavigation()
   const [listData, setListData] = useState([])
@@ -65,10 +65,6 @@ const MapList = () => {
     }
   }
 
-  const { data, status, refetch } = useQuery('MapDataList', listDataFunction, {
-    // Refetch the data every second
-    // refetchInterval: 15000,
-  })
 
   return (
     <View style={[styles.container]}>

@@ -1,11 +1,9 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
-import MapView from "react-native-map-clustering";
-import { Marker } from 'react-native-maps';
+
 import BlackText from '../../Component/Text/BlackText';
 import colors from '../../Utils/colors';
-import MapList from './MapList/MapList';
+import MapList from './ChargerList/MapList';
 import IconCardWithoutBg from '../../Component/Card/IconCardWithoutBg';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FilterSvg from '../../assests/svg/FilterSvg';
@@ -22,9 +20,9 @@ import { computeDistance } from '../../Utils/helperFuncations/computeDistance';
 import { postListService } from '../../Services/HomeTabService/HomeTabService';
 import SnackContext from '../../Utils/context/SnackbarContext';
 import { useQuery } from 'react-query'
-import AvailMarker from '../../assests/svg/AvailMarker'
-import * as ApiAction from '../../Services/Api'
 
+import * as ApiAction from '../../Services/Api'
+import MapCharger from '../Home/MapCharger'
 let selectedMarker = {}
 
 export default Home = () => {
@@ -68,33 +66,36 @@ export default Home = () => {
 
   const { currentLocation, setCurrentLocation, } = useContext(SnackContext)
 
-  const regionToZoom = {
-    latitude: 23.313561,
-    longitude: 78.2863013,
-    latitudeDelta: 50.4922,
-    longitudeDelta: 0.0521,
-  }
+  useEffect(() => {
+    refetch()
+  }, [currentLocation])
+
 
   const chargerLocations = async () => {
     try {
-      var location = {}
+      let location = {}
       if (!currentLocation.coords) {
-        Geolocation.getCurrentPosition(info => {
+        const result = Geolocation.getCurrentPosition(info => {
           setCurrentLocation(info)
+
         })
       } else {
         location = currentLocation;
       }
-      const res = await ApiAction.getLocation()
-      var locationsArray = res.data?.locations[0];
-      locationsArray.map((data, index) => {
-        locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
-          data?.latitude,
-          data?.longitude,
-        ])
-      })
-      locationsArray.sort(function (a, b) { return a.distance - b.distance })
-      return locationsArray;
+      if (location?.coords) {
+        const res = await ApiAction.getLocation()
+        var locationsArray = res.data?.locations[0];
+        locationsArray.map((data, index) => {
+          locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
+            data?.latitude,
+            data?.longitude,
+          ])
+        })
+        locationsArray.sort(function (a, b) { return a.distance - b.distance })
+        return locationsArray;
+      }
+
+      return [];
     } catch (error) {
       console.log("Charger Location Error", error)
     }
@@ -153,78 +154,7 @@ export default Home = () => {
 
   return (
     <View style={styles.container}>
-
-      {selectedTab != 'List' &&
-        <MapView
-          ref={mapRef}
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          toolbarEnabled={false}
-          onRegionChangeComplete={(r) => {
-            const getBoundingBox = (region) => ([
-              region.longitude - region.longitudeDelta / 2, // westLng - min lng
-              region.latitude - region.latitudeDelta / 2, // southLat - min lat
-              region.longitude + region.longitudeDelta / 2, // eastLng - max lng
-              region.latitude + region.latitudeDelta / 2 // northLat - max lat
-            ])
-            setVisibleRegion(getBoundingBox(r))
-            console.log("onRegions Change", r, getBoundingBox(r))
-          }}
-          showsMyLocationButton={false}
-          onMarkerPress={(e) => {
-            if (locationLoading) {
-              return false;
-            }
-            console.log("PRESS", e.nativeEvent.coordinate)
-            let marker = data;
-            marker = marker.find((item) => {
-              // marker
-              if (parseFloat(item.latitude) === e.nativeEvent.coordinate.latitude &&
-                parseFloat(item.longitude) === e.nativeEvent.coordinate.longitude) {
-                console.log("FOUND MARKER")
-                return true
-              }
-            })
-            if (marker) {
-              // setselectedMarker(marker)
-              selectedMarker = marker
-              chargingBtnHandler()
-              // if (location.coords) {
-
-              //   console.log("Here One")
-              // }
-            }
-          }}
-          showsCompass={false}
-          showsUserLocation
-          style={styles.map}
-          initialRegion={regionToZoom}
-        >
-          {isLoading ? null :
-            data?.map((item, index) => {
-              const boxCheck = (cordx, cordy, lx, ly, rx, ry) => {
-                if (lx <= cordx && ly <= cordy && cordx <= rx && cordy <= ry)
-                  return true
-                return false
-              }
-
-              let lat = item.latitude
-              let long = item.longitude
-              let vb = visibleRegion
-              if (boxCheck(lat, long, vb[1], vb[0], vb[3], vb[2]))
-                return (
-                  <Marker key={item.id}
-                    coordinate={{
-                      latitude: parseFloat(item.latitude),
-                      longitude: parseFloat(item.longitude)
-                    }}
-                  >
-                    <AvailMarker />
-                  </Marker>
-                )
-            })
-          }
-        </MapView>}
-
+      {selectedTab == 'List' ? <MapList data={data} /> : <MapCharger data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
@@ -237,8 +167,6 @@ export default Home = () => {
           </TouchableOpacity>
         </View>
       </View>
-
-    
       {/* Fillter ,favrouite,scan ,search Button  */}
       <View style={styles.iconContainer}>
         {selectedTab != 'List' && <View style={styles.iconContainer1}>
@@ -248,7 +176,7 @@ export default Home = () => {
           <TouchableOpacity onPress={filterButtonHandler}>
             <IconCardWithoutBg Svg={FilterSvg} backgroundColor={colors.white} />
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={styles.icon} onPress={scannerButtonHandler}>
             <MaterialIcons name='qr-code-scanner' color={colors.black} size={22} />
           </TouchableOpacity>
@@ -285,9 +213,7 @@ export default Home = () => {
         }
       </View>
       {/* Render List Component */}
-      <View >
-        {selectedTab == 'List' && <MapList />}
-      </View>
+
       <FilterModal openFilterModal={openFilterModal} setOpenFilterModal={setOpenFilterModal} />
     </View>
   )
