@@ -32,3 +32,27 @@ export function generateSHA(number, dateISO, counter) {
     console.log("GEnerate sha done")
     return hashDigest;
 }
+
+
+export const getChargerMapObject = (standard) => {
+
+
+    const map = {
+        "IEC_62196_T1": { name: "TYPE1", icon: "connector-type1" },
+        "IEC_62196_T2_COMBO": { name: "CCS", icon: "connector-ccs" },
+        "CHADEMO": { name: "CHADEMO", icon: "connector-chademo" },
+        "IEC_62196_T2": { name: "TYPE2", icon: "connector-type2" },
+        "IEC_62196_T1_COMBO": { name: "Bharat DC001", icon: "connector-bharatdc" },
+        "DOMESTIC_F": { name: "AC 001", icon: "connector-unknown" },
+    }
+
+    if (map.hasOwnProperty(standard)) {
+        return map[standard]
+    }
+    else {
+        return {
+            name: standard,
+            icon: ""
+        }
+    }
+}

@@ -2,8 +2,8 @@ import * as React from "react";
 import Svg, { G, Path, Defs, ClipPath, Rect } from "react-native-svg";
 const Charger1 = (props) => (
   <Svg
-    width={30}
-    height={30}
+    width={"100%"}
+    height={'100%'}
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

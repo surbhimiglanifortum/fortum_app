@@ -11,6 +11,10 @@ import WhiteButton from '../Button/WhiteButton'
 import Button from '../Button/Button'
 import CommonView from '../../Component/CommonView'
 import { useQuery } from 'react-query'
+import FontIcon from "../FortumIcons/FontIcon";
+import { getChargerMapObject } from '../../Utils/HelperCommonFunctions'
+import * as ApiAction from '../../Services/Api'
+import CommonCard from '../../Component/Card/CommonCard'
 import axios from 'axios'
 import * as ApiAction from '../../Services/Api'
 const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
@@ -22,10 +26,17 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
         setOpenFilterModal(false)
     }
 
-    const { data, status, isLoading, refetch } = useQuery('MapData', async () => {
-        const res = await ApiAction.getLocation()
+    const { data: filterData, status, isLoading, refetch } = useQuery('MapData', async () => {
+        const r = await ApiAction.getUniqueConnectors()
+        // console.log("relash",r)
+        let data = JSON.parse(r.data)
+        data = data.map((item, index) => { return { title: item, active: true } })
+        let filter = {}
+        data.forEach((item, index) => {
+            filter[item] = true
+        })
+        return data
     })
-
     return (
         <Modal animationType={'slide'} visible={openFilterModal} statusBarTranslucent={true}>
             <CommonView style={styles.container}>
@@ -41,16 +52,17 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
                         <CommonText  >Connectors</CommonText>
                         <View style={styles.cardContainer}>
                             {
-                                [2, 2, 2, 2, 2].map((item, ind) => {
+                                [1]?.map((item, ind) => {
                                     return (
-                                        <View key={ind} style={styles.cardInner}>
+                                        <CommonCard key={ind} style={styles.cardInner}>
                                             <TouchableOpacity style={styles.card}>
+                                                {/* <FontIcon name={getChargerMapObject(item.title).icon} /> */}
                                                 <Charger1 />
                                             </TouchableOpacity>
                                             <View style={styles.text}>
-                                                <CommonText regular fontSize={14} showText={'TYPE-1'} />
+                                                <CommonText regular fontSize={14} >{getChargerMapObject(item.title).name}</CommonText>
                                             </View>
-                                        </View>
+                                        </CommonCard>
                                     )
                                 })
                             }
@@ -74,6 +86,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
         </Modal>
     )
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -102,13 +115,14 @@ const styles = StyleSheet.create({
         marginVertical: 30,
     },
     card: {
-        backgroundColor: colors.white,
-        elevation: 5,
+        // backgroundColor: colors.white,
+        // elevation: 5,
         paddingVertical: 16,
         paddingHorizontal: 16,
         borderRadius: 5,
         marginRight: 19,
         flexWrap: 'wrap',
+        height:85
 
 
     },
@@ -123,8 +137,7 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     cardInner: {
-        // flexWrap:'wrap',
-        overflow: 'hidden'
+        width:'20%'
     },
     middleCard: {
         flexDirection: 'row',
