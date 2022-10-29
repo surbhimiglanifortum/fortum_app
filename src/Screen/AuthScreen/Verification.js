@@ -54,6 +54,7 @@ const [ openCommonModal, setOpenCommonModal]=useState(false)
             }
         } else {
             try {
+                console.log("otpConcatData",otpConcatData)
                 const cognitoUser = await Auth.sendCustomChallengeAnswer(user, otpConcatData)
                 loginSuccess()
 
@@ -69,6 +70,7 @@ const [ openCommonModal, setOpenCommonModal]=useState(false)
         const data = await Auth.currentAuthenticatedUser();
         if (data) {
             const result = await ApiAction.getUserDetails()
+            console.log("ASDKJasd",result.data)
             if (result.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
             } else {
@@ -78,6 +80,7 @@ const [ openCommonModal, setOpenCommonModal]=useState(false)
 
         } else {
             // show wrong otp message
+            console.log("SKDBSBA")
             throw { code: "UserNotFound" }
         }
     }

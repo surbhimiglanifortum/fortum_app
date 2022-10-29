@@ -22,7 +22,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
         setOpenFilterModal(false)
     }
 
-    const { data, status, isLoading, refetch } = useQuery('MapData', async ()=>{
+    const { data, status, isLoading, refetch } = useQuery('MapData', async () => {
         const res = await ApiAction.getLocation()
     })
 

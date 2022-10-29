@@ -1,13 +1,10 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity } from 'react-native'
-import React, { useEffect } from 'react'
+import { View, SafeAreaView, StyleSheet, useColorScheme, ActivityIndicator } from 'react-native'
+import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import colors from '../../Utils/colors'
 import Header from '../../Component/Header/Header'
 import DetailsCard from '../../Component/Card/DetailsCard'
-import BlackText from '../../Component/Text/BlackText'
-import IconCard from '../../Component/Card/IconCard'
-import Location1Svg from '../../assests/svg/Location1Svg'
-import RedText from '../../Component/Text/RedText'
+import CommonText from '../../Component/Text/CommonText'
 import routes from '../../Utils/routes'
 import EvCard from '../../Component/Card/EvCard'
 import { getEvses } from '../../Services/Api'
@@ -19,68 +16,64 @@ const ChargingStation = ({ route }) => {
     const navigation = useNavigation()
     const scheme = useColorScheme()
 
+    const [loading, setLoading] = useState(false)
+
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const locDetails = route.params?.data
 
-    console.log("Check Charging Station Route", route.params?.locDetails)
-
-    const chargerCardHandler = () => {
-        navigation.navigate(routes.ChargingStationList)
+    const chargerCardHandler = (evDetails) => {
+        navigation.navigate(routes.OngoingDetails, {
+            locDetails: locDetails,
+            evDetails: evDetails
+        })
     }
 
     const evsesData = async () => {
+        setLoading(true)
         try {
             const payload = {
                 username: mUserDetails.username
             }
             const res = await getEvses(locDetails?.id, payload)
+            setLoading(false)
             return res?.data
         } catch (error) {
             console.log("Evses Data Error", error)
+            setLoading(false)
         }
     }
 
-    const { data, status, refetch } = useQuery('Evses List', evsesData, {
+    const { data, status, refetch } = useQuery(`Evses List ${locDetails.id}`, evsesData, {
         // Refetch the data every second
         refetchInterval: 15000,
     })
-
-    console.log("Check Charging Station Route Data", data)
-    console.log("Check Charging Station Route Status", status)
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <View style={styles.innerContainer}>
                 <Header showText={'Charging Station'} />
-                <View style={styles.cardContainer}>
-                    <DetailsCard item={locDetails} />
-                </View>
+                <DetailsCard item={locDetails} />
                 <View style={styles.searchList}>
-                    <BlackText showText={'Charger'} fontSize={18} />
+                    <CommonText showText={'Charger'} fontSize={18} />
+                    {loading && <ActivityIndicator />}
                     {
                         data?.evses.map((item, index) => {
-                            let ac_con = item.connectors
-                            return <EvCard title={item?.evse_id.replace("IN*CNK*", "").replace(/\*/g, '\-')} />
+                            return (
+                                item?.connectors.map((i, n) => {
+                                    return (
+                                        <EvCard onPress={() => chargerCardHandler(item)}
+                                            backgroundColor={item?.status === 'AVAILABLE' ? colors.green : item.status === 'CHARGING' ? "#4373B5" : colors.matteRed}
+                                            title={item?.evse_id.replace("IN*CNK*", "").replace(/\*/g, '\-')}
+                                            subTitle={'₹ ' + parseFloat(i?.pricing?.price).toFixed(2) + '/' + (i?.pricing?.type === "TIME" ? "min" : i?.pricing?.type === "FLAT" ? "flat" : "kWh+GST")}
+                                            rightText={item?.status}
+                                            rightTitleColor={item?.status === 'AVAILABLE' ? colors.green : item.status === 'CHARGING' ? "#4373B5" : colors.matteRed}
+                                        />
+                                    )
+                                })
+                            )
                         })
                     }
-                    {/* <TouchableOpacity style={styles.card} onPress={chargerCardHandler} >
-                        <View style={styles.centerView}>
-                            <IconCard Svg={Location1Svg} />
-                            <View style={styles.cardInner}>
-                                <BlackText showText={'Shake Mafia'} fontSize={16} />
-                                <BlackText showText={'Shake Mafia'} fontSize={13} />
-                            </View>
-                        </View>
-                        <View>
-                            <View style={{ alignItems: 'flex-end' }}>
-                                <View style={styles.rightCon}>
-                                    <BlackText showText={'0/2'} />
-                                </View>
-                                <RedText showText={'Out Of Order'} />
-                            </View>
-                        </View>
-                    </TouchableOpacity> */}
                 </View>
             </View>
         </SafeAreaView>
@@ -96,37 +89,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginVertical: 15
     },
-    cardContainer: {
-        marginTop: 20
-    },
     searchList: {
         marginTop: 20
-    },
-    card: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: colors.white,
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-        borderRadius: 6,
-        marginTop: 10,
-        elevation: 5,
-        justifyContent: 'space-between'
-    },
-    cardInner: {
-        marginLeft: 10
-    },
-    centerView: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    rightCon: {
-        backgroundColor: colors.green,
-        paddingVertical: 4,
-        paddingHorizontal: 4,
-        borderRadius: 4,
-    },
-
+    }
 })
 
 export default ChargingStation
