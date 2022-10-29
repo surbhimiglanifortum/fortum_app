@@ -67,7 +67,7 @@ const MapList = () => {
 
   const { data, status, refetch } = useQuery('MapDataList', listDataFunction, {
     // Refetch the data every second
-    refetchInterval: 15000,
+    // refetchInterval: 15000,
   })
 
   return (
