@@ -6,11 +6,14 @@ import colors from '../../Utils/colors'
 import BlackText from '../Text/BlackText'
 import IconCard from './IconCard'
 import IconCardLarge from './IconCardLarge'
+import CommonCard from './CommonCard'
 const Card = ({tabName,navigationHandler,Svg}) => {
    
 
   return (
-   
+   <CommonCard>
+
+
         <TouchableOpacity style={styles.card} onPress={navigationHandler}>
             <View style={styles.leftContainer}>
                 <IconCardLarge Svg={Svg} />
@@ -27,7 +30,7 @@ const Card = ({tabName,navigationHandler,Svg}) => {
                <BlackText  showText={'120 kWh'}/>
                 </View>}
         </TouchableOpacity>
-  
+        </CommonCard>
   )
 }
 
@@ -41,21 +44,13 @@ const styles =StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         justifyContent:'space-between',
-        borderRadius:5,
-        shadowColor: colors.black,
-        shadowOffset: {
-          width: 0,
-          height: 3,
-        },
-        shadowOpacity:  0.1,
-        shadowRadius: 3.05,
-        elevation: 4,
-        marginVertical:8,
-        backgroundColor:'#FFF'
+       
         // marginHorizontal:5
     },
     leftContainer:{flexDirection:'row',alignItems:'center'},
-icon:{paddingVertical:scale(15),paddingHorizontal:scale(18),backgroundColor:colors.greenBackground,borderRadius:5},
+icon:{paddingVertical:scale(15),paddingHorizontal:scale(18),
+    backgroundColor:colors.greenBackground,
+    borderRadius:5},
 middleContainer:{marginLeft:scale(15)},
 
 
