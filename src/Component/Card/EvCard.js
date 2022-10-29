@@ -1,16 +1,11 @@
-import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Card } from 'react-native-paper'
-import BlackText from '../Text/BlackText'
-import colors from '../../Utils/colors'
-import commonFonts from '../../Utils/fonts/fonts'
-import RedText from '../Text/RedText'
 import IconCard from './IconCard'
 import Location1Svg from '../../assests/svg/Location1Svg'
-import WhiteText from '../Text/WhiteText'
-import AppText from '../Text/AppText'
+import CommonText from '../Text/CommonText'
 
-const DetailsCard = ({ onPress, title, subTitle }) => {
+const EvCard = ({ onPress, title, subTitle, rightText, backgroundColor, rightTitleColor }) => {
 
     return (
         <TouchableOpacity style={{ marginVertical: 10 }} onPress={onPress}>
@@ -19,18 +14,16 @@ const DetailsCard = ({ onPress, title, subTitle }) => {
                     <View style={styles.centerView}>
                         <IconCard Svg={Location1Svg} />
                         <View style={styles.cardInner}>
-                            <BlackText showText={title} fontSize={16} />
-                            <BlackText showText={subTitle} fontSize={13} />
+                            <CommonText showText={title} fontSize={16} />
+                            <CommonText showText={subTitle} fontSize={13} />
                         </View>
                     </View>
                     <View>
-                        <View style={styles.rightCon}>
-                            <WhiteText showText={'0/2'} />
+                        <View style={[{ backgroundColor: backgroundColor }, styles.rightCon]}>
+                            <CommonText showText={'0/2'} customstyles={{ color: '#fff' }} />
                         </View>
 
-                        <AppText
-                            text={'Out Of Order'}
-                        />
+                        <CommonText fontSize={12} showText={rightText} customstyles={{ color: rightTitleColor }} />
                     </View>
                 </View>
             </Card>
@@ -55,7 +48,6 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     rightCon: {
-        backgroundColor: colors.green,
         paddingVertical: 4,
         paddingHorizontal: 4,
         borderRadius: 4,
@@ -63,6 +55,9 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         alignSelf: 'flex-end'
     },
+    rightText: {
+        color: '#fff'
+    }
 })
 
-export default DetailsCard
+export default EvCard
