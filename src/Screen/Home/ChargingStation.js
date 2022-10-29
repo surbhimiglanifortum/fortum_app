@@ -1,5 +1,5 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme } from 'react-native'
-import React from 'react'
+import { View, SafeAreaView, StyleSheet, useColorScheme, ActivityIndicator } from 'react-native'
+import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import colors from '../../Utils/colors'
 import Header from '../../Component/Header/Header'
@@ -16,6 +16,8 @@ const ChargingStation = ({ route }) => {
     const navigation = useNavigation()
     const scheme = useColorScheme()
 
+    const [loading, setLoading] = useState(false)
+
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const locDetails = route.params?.data
@@ -28,18 +30,21 @@ const ChargingStation = ({ route }) => {
     }
 
     const evsesData = async () => {
+        setLoading(true)
         try {
             const payload = {
                 username: mUserDetails.username
             }
             const res = await getEvses(locDetails?.id, payload)
+            setLoading(false)
             return res?.data
         } catch (error) {
             console.log("Evses Data Error", error)
+            setLoading(false)
         }
     }
 
-    const { data, status, refetch } = useQuery('Evses List', evsesData, {
+    const { data, status, refetch } = useQuery(`Evses List ${locDetails.id}`, evsesData, {
         // Refetch the data every second
         refetchInterval: 15000,
     })
@@ -51,6 +56,7 @@ const ChargingStation = ({ route }) => {
                 <DetailsCard item={locDetails} />
                 <View style={styles.searchList}>
                     <CommonText showText={'Charger'} fontSize={18} />
+                    {loading && <ActivityIndicator />}
                     {
                         data?.evses.map((item, index) => {
                             return (
