@@ -8,11 +8,7 @@ import FilterModal from '../../../Component/Modal/FilterModal'
 import BlackText from '../../../Component/Text/BlackText'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import routes from '../../../Utils/routes'
-import { postListService } from '../../../Services/HomeTabService/HomeTabService'
 import SnackContext from '../../../Utils/context/SnackbarContext'
-import { useQuery } from 'react-query'
-import Geolocation from '@react-native-community/geolocation';
-import { computeDistance } from '../../../Utils/helperFuncations/computeDistance'
 
 const MapList = ({data}) => {
 
@@ -37,36 +33,6 @@ const MapList = ({data}) => {
       data: data
     })
   }
-
-  const listDataFunction = async () => {
-    setRefreshing(true)
-    try {
-      var location = {}
-      if (!currentLocation.coords) {
-        Geolocation.getCurrentPosition(info => {
-          setCurrentLocation(info)
-        })
-      } else {
-        location = currentLocation;
-      }
-      const res = await postListService();
-      var locationsArray = res.data?.locations[0];
-      locationsArray.map((data, index) => {
-        locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
-          data?.latitude,
-          data?.longitude,
-        ])
-      })
-      locationsArray.sort(function (a, b) { return a.distance - b.distance })
-      console.log("Check location Array", locationsArray)
-      setRefreshing(false)
-      return locationsArray;
-    } catch (error) {
-      setRefreshing(false)
-      console.log("Location List Error", error)
-    }
-  }
-
 
   return (
     <View style={[styles.container]}>

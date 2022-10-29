@@ -14,50 +14,59 @@ import SupportSvg from '../../../assests/svg/SupportSvg'
 import Button from '../../../Component/Button/Button'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../../Utils/routes'
+import { getChargerMapObject } from '../../../Utils/helperFuncations/ChargerMapConfig'
 
-const OngoingDetails = () => {
-const navigation=useNavigation()
+const OngoingDetails = ({ route }) => {
+
+  const navigation = useNavigation()
   const scheme = useColorScheme()
-  const stopButtonHandler =()=>{
+  const stopButtonHandler = () => {
     navigation.navigate(routes.taxInvoice)
   }
+
+  const locDetails = route?.params?.locDetails
+  const evDetails = route.params?.evDetails
+
+  console.log("Check OnGoing Perameter", route.params?.evDetails)
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
       <View style={styles.innerContainer}>
         <Header showText={'Charging'} />
         <View style={styles.textCon}>
-          <CommonText showText={'Restaurant'} fontSize={15} />
-          <CommonText showText={'Annapoorna'} fontSize={20} />
+          <CommonText showText={locDetails?.name} />
+          <CommonText showText={`${locDetails?.address?.city} ${locDetails?.address?.street} ${locDetails?.address?.postalCode}`} fontSize={14} />
         </View>
         <View style={styles.topCard}>
           <Charger1 />
-          <View style={{ marginLeft: 5 }}>
-            <BlackText showText={'Charger 1 - CCS-2'} fontSize={15} />
-            <BlackText showText={`₹${"14 / 01 min"}`} fontSize={15} />
-          </View>
+          <CommonText
+            showText={getChargerMapObject(evDetails?.connectors[0]?.standard).name + ' - ' + (evDetails?.connectors[0]?.amperage * evDetails?.connectors[0]?.voltage / 1000).toFixed(2) + 'kW\nPrice : Rs. ' + parseFloat(evDetails?.connectors[0]?.pricing?.price).toFixed(2) + '/' + (evDetails?.connectors[0]?.pricing?.type === "TIME" ? "min" : evDetails?.connectors[0]?.pricing?.type === "FLAT" ? "flat" : "kWh+GST")}
+            fontSize={15}
+            customstyles={{ marginLeft: 10 }}
+          />
         </View>
         <View style={styles.middleCard}>
           <View style={styles.middleInner}>
-            <BlackText showText={'Time'} fontSize={18} />
+            <CommonText showText={'Time'} fontSize={18} />
           </View>
           <View style={styles.timeContainer}>
             <View>
               <TimeTextinput showText={'12'} />
-              <BlackText showText={'  Hours'} />
+              <CommonText showText={'  Hours'} />
             </View>
             <View>
-              <BlackText showText={':'} />
+              <CommonText showText={':'} />
             </View>
             <View>
               <TimeTextinput showText={'12'} />
-              <BlackText showText={' Minutes'} />
+              <CommonText showText={' Minutes'} />
             </View>
             <View>
-              <BlackText showText={':'} />
+              <CommonText showText={':'} />
             </View>
             <View>
               <TimeTextinput showText={'02'} />
-              <BlackText showText={' Seconds'} />
+              <CommonText showText={' Seconds'} />
             </View>
           </View>
         </View>
@@ -67,7 +76,7 @@ const navigation=useNavigation()
         </TouchableOpacity>
         <TouchableOpacity style={styles.topCard}>
           <IconCard Svg={SupportSvg} backgroundColor={colors.red} />
-          <BlackText showText={'Support'} fontSize={18} margin={10} />
+          <CommonText showText={'Support'} fontSize={18} margin={10} />
         </TouchableOpacity>
         <View style={styles.bottomButon}>
           <Button showText={'Stop'} onPress={stopButtonHandler} />
@@ -96,7 +105,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 10,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'flex-start',
   },
   middleCard: {
     backgroundColor: colors.white,
@@ -115,8 +124,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 45,
     marginVertical: 10
   },
-  bottomButon:{
-    marginTop:100
+  bottomButon: {
+    marginTop: 100
   }
 })
 
