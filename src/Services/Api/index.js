@@ -18,3 +18,7 @@ export const getLocation = async (payload) => {
 export const getEvses = async (locid, payload) => {
     return await axios.post("/locations/gist/" + locid, payload)
 }
+
+export const getUniqueConnectors = async () =>{
+    return await axios.get('/locations/uniqueconnectors')
+}

@@ -9,8 +9,9 @@ import CommonText from '../Text/CommonText'
 import { Switch } from 'react-native-paper';
 import WhiteButton from '../Button/WhiteButton'
 import Button from '../Button/Button'
-
-
+import CommonView from '../../Component/CommonView'
+import { useQuery } from 'react-query'
+import axios from 'axios'
 const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
 
@@ -19,19 +20,24 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
     const applyButtonHandler = () => {
         setOpenFilterModal(false)
     }
+
+    const { data, status, isLoading, refetch } = useQuery('MapData', async ()=>{
+        const res = await ApiAction.getLocation()
+    })
+
     return (
-        <Modal visible={openFilterModal} statusBarTranslucent={true}>
-            <View style={styles.container}>
+        <Modal animationType={'slide'} visible={openFilterModal} statusBarTranslucent={true}>
+            <CommonView style={styles.container}>
                 <View style={styles.innerContainer}>
                     <View style={styles.header}>
-                        <BlackText showText={'Filter'} fontSize={19} />
+                        <CommonText >Filter</CommonText>
                         <TouchableOpacity onPress={() => { setOpenFilterModal(false) }}
                             style={styles.crossIcon}>
-                            <AntDesign name='close' color={colors.black} size={20} />
+                            <AntDesign name='close' color={colors.black} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.connectorContainer}>
-                        <BlackText showText={'Connectors'} fontSize={17} />
+                        <CommonText  >Connectors</CommonText>
                         <View style={styles.cardContainer}>
                             {
                                 [2, 2, 2, 2, 2].map((item, ind) => {
@@ -41,7 +47,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
                                                 <Charger1 />
                                             </TouchableOpacity>
                                             <View style={styles.text}>
-                                                <CommonText showText={'TYPE-1'} />
+                                                <CommonText regular fontSize={14} showText={'TYPE-1'} />
                                             </View>
                                         </View>
                                     )
@@ -63,7 +69,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
                         </View>
                     </View>
                 </View>
-            </View>
+            </CommonView>
         </Modal>
     )
 }

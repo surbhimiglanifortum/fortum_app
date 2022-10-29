@@ -4,7 +4,7 @@ import MapView from "react-native-map-clustering";
 import { Marker } from 'react-native-maps';
 import { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import AvailMarker from '../../../assests/svg/AvailMarker'
-export default function index({ data, locationLoading, isLoading }) {
+export default function index({ data, locationLoading, isLoading ,chargingBtnHandler}) {
     const [visibleRegion, setVisibleRegion] = useState([0, 0, 0, 0])
 
 
