@@ -9,23 +9,27 @@ import Feather from 'react-native-vector-icons/Feather'
 import { scale } from 'react-native-size-matters'
 import HorizontalCard from './HorizontalCard'
 import VerticalCard from './VerticalCard'
-import GreenText from '../Text/GreenText'
-
+import CommonText from '../Text/CommonText'
+import CommonView from '../../Component/CommonView'
 const DetailsCard = ({ chargerType, onPress, item }) => {
-   
+
     return (
         <TouchableOpacity onPress={onPress}>
-            <Card style={styles.container}>
+            <CommonView style={styles.container}>
+
                 <View style={styles.innerContainer}>
                     <View>
-                        <BlackText showText={item?.name} fontSize={16} />
-                        <BlackText showText={'Annapoorna'} />
-                        <Text><GreenText showText={'Available   '} />
-                            < BlackText showText={'24/7'} /> </Text>
+                        <CommonText showText={item?.name} fontSize={16} />
+                        <Text>
+                            <CommonText fontSize={12} customstyles={{ color: item.summary.aggregatedStatus === 'AVAILABLE' ? colors.green : item.summary.aggregatedStatus === 'CHARGING' ? colors.red : item.summary.aggregatedStatus === 'OCCUPIED' ? colors.red : "#D25564" }}>{item?.summary?.aggregatedStatus}</CommonText>
+                            {/* // add . svg */}
+                            < CommonText fontSize={12} showText={' 24/7'} />
+                        </Text>
+
                     </View>
                     <View style={styles.leftContainer}>
                         <TouchableOpacity style={styles.heartIcon}>
-                            <AntDesign name='heart' size={25} color={'red'} />
+                            <AntDesign name='heart' size={25} />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.leftIcon}>
                             <Feather name='corner-up-right' size={25} color={colors.white} />
@@ -34,16 +38,14 @@ const DetailsCard = ({ chargerType, onPress, item }) => {
                 </View>
                 <View style={[styles.innerContainer1,]}>
                     <View style={styles.longText}>
-                        <BlackText showText={item?.address?.city} />
-                        <BlackText showText={item?.address?.street} margin={5} />
-                        <BlackText showText={item?.address?.postalCode} margin={5} />
+                        <CommonText fontSize={12} showText={`${item?.address?.city} ${item?.address?.street} ${item?.address?.postalCode}`} />
                     </View>
-                    <BlackText showText={'1.1 km'} />
+                    <CommonText fontSize={12} showText={`${item?.distance} Km`} />
                 </View>
                 {chargerType == 1 && <HorizontalCard />}
                 {chargerType == 2 && <VerticalCard />}
-            </Card>
-        </TouchableOpacity>
+            </CommonView>
+        </TouchableOpacity >
     )
 }
 
@@ -53,32 +55,25 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         marginTop: 15,
         borderRadius: 10,
-        backgroundColor: colors.white,
         // marginHorizontal:8
     },
     innerContainer: {
         flexDirection: 'row',
         alignContent: 'center',
         justifyContent: 'space-between',
-        
+
 
     },
     innerContainer1: {
         flexDirection: 'row',
         alignContent: 'center',
         justifyContent: 'space-between',
-        marginVertical:15,
-        borderTopWidth:1,
-        borderBottomWidth:1,
-        paddingVertical:12,
-        borderColor:colors.borderColor
+        marginVertical: 15,
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        paddingVertical: 12,
+        borderColor: colors.borderColor
 
-    },
-    greenText: {
-        color: colors.green,
-        marginLeft: 7,
-        fontFamily: commonFonts.semibold,
-        fontSize: 15
     },
     heartIcon: {
         elevation: 10,

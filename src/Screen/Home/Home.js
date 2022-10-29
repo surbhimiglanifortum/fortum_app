@@ -185,34 +185,22 @@ export default Home = () => {
               }
             })
             if (marker) {
-              console.log("selected marker", marker)
               // setselectedMarker(marker)
               selectedMarker = marker
-              if (location.coords) {
-                // setShowBottomChargeDrawer(true)
-                // setShowBottomDrawer(false)
-                console.log("Here One")
-              }
+              chargingBtnHandler()
+              // if (location.coords) {
+
+              //   console.log("Here One")
+              // }
             }
           }}
           showsCompass={false}
           showsUserLocation
           style={styles.map}
           initialRegion={regionToZoom}
-        // region={{
-        //   latitude: 37.78825,
-        //   longitude: -122.4324,
-        //   latitudeDelta: 0.015,
-        //   longitudeDelta: 0.0121,
-        // }}
         >
           {isLoading ? null :
             data?.map((item, index) => {
-              // console.log(item)
-              // console.log(item.id)
-              // console.log(item.latitude)
-              // console.log(item.longitude)
-
               const boxCheck = (cordx, cordy, lx, ly, rx, ry) => {
                 if (lx <= cordx && ly <= cordy && cordx <= rx && cordy <= ry)
                   return true
@@ -250,15 +238,7 @@ export default Home = () => {
         </View>
       </View>
 
-      {/* // Charger Icon */}
-      {selectedTab != 'List' &&
-        <TouchableOpacity style={styles.chargerIcon} onPress={chargingBtnHandler}>
-          <View style={styles.chargerIconInner}>
-            <Entypo name='flash' size={22} color={colors.white} />
-          </View>
-        </TouchableOpacity>
-      }
-
+    
       {/* Fillter ,favrouite,scan ,search Button  */}
       <View style={styles.iconContainer}>
         {selectedTab != 'List' && <View style={styles.iconContainer1}>
@@ -268,6 +248,7 @@ export default Home = () => {
           <TouchableOpacity onPress={filterButtonHandler}>
             <IconCardWithoutBg Svg={FilterSvg} backgroundColor={colors.white} />
           </TouchableOpacity>
+          
           <TouchableOpacity style={styles.icon} onPress={scannerButtonHandler}>
             <MaterialIcons name='qr-code-scanner' color={colors.black} size={22} />
           </TouchableOpacity>
@@ -288,7 +269,7 @@ export default Home = () => {
           <View>
             <ScrollView horizontal>
               {
-                [1, 1, 1, 1, 1, 1].map((item, ind) => {
+                data.map((item, ind) => {
                   return (
                     <View key={ind} style={{
                       paddingHorizontal: 8

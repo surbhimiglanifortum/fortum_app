@@ -50,7 +50,6 @@ const App = () => {
     const loginCheck = async () => {
       try {
         const result = await Auth.currentAuthenticatedUser();
-        console.log("login result ", result)
         if (result) {
           setloggedin(true)
         }
