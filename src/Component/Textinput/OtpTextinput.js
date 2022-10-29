@@ -10,7 +10,7 @@ const OtpTextinput = ({ placeholder, onChangeText, value, onChange, onSubmitEdit
 
         <View style={[styles.Innerconatiner, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <TextInput 
-                onChange={onChange}
+                onChangeText={onChange}
                 maxLength={1}
                 value={value}
                 keyboardType='numeric'

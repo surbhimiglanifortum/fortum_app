@@ -17,20 +17,22 @@ import BlackText from '../../Component/Text/BlackText'
 import CommonText from '../../Component/Text/CommonText'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../Utils/routes'
+import { useSelector } from 'react-redux'
 
 const Other = () => {
-
+  const userDetailsData = useSelector((state) => state.userTypeReducer)
+  console.log(userDetailsData, '.....................................redux data')
   const scheme = useColorScheme()
   const navigation = useNavigation()
   const EditProfileHandler = () => {
-    navigation.navigate(routes.Profile)
+    navigation.navigate(routes.Profile,{userDetailsData:userDetailsData})
   }
   const evModalHandler = () => {
     navigation.navigate(routes.EvModal)
   }
   const logoutHandler = () => {
     navigation.navigate(routes.login)
-    
+
   }
   const preferenceHandler = () => {
     navigation.navigate(routes.Preference)
@@ -60,32 +62,33 @@ const Other = () => {
   return (
     <View style={styles.conatainer}>
       <ScrollView>
-      <View style={styles.innerContainer}>
-        <Header showText={'More Settings'} />
-        <View style={styles.profileContainer}>
-          <TouchableOpacity style={styles.imgContainer}>
-            <Image />
-          </TouchableOpacity>
-          <View style={styles.leftConatainer}>
-            {scheme != 'dark' ? <BlackText showText={'John Doe'} fontSize={20} /> : <CommonText showText={'John Doe'} fontSize={20} />}
-            <TouchableOpacity style={styles.editButton} onPress={EditProfileHandler}>
-              <BlackText showText={'Edit Profile'} fontSize={18} />
+        <View style={styles.innerContainer}>
+          <Header showText={'More Settings'} />
+          <View style={styles.profileContainer}>
+            <TouchableOpacity style={styles.imgContainer}>
+              <Image />
             </TouchableOpacity>
+            <View style={styles.leftConatainer}>
+              {scheme != 'dark' ? <BlackText showText={`${userDetailsData.userDetails.first_name} ${userDetailsData.userDetails.last_name
+                }`} fontSize={20} /> : <CommonText showText={'John Doe'} fontSize={20} />}
+              <TouchableOpacity style={styles.editButton} onPress={EditProfileHandler} >
+                <BlackText showText={'Edit Profile'} fontSize={18} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View>
+            <SettingCard showText={'Ev Modals'} fontSize={15} Svg={ElectricCarSvg} onPress={evModalHandler} />
+            <SettingCard showText={'Store'} fontSize={15} Svg={StoreSvg} onPress={storeHandler} />
+            <SettingCard showText={'Charging Keys'} fontSize={15} Svg={ChargingSvg} onPress={chargingKeyHandler} />
+            <SettingCard showText={'Orders'} fontSize={15} Svg={OrderSvg} onPress={orderHandler} />
+            <SettingCard showText={'Payment Method'} fontSize={15} Svg={PaymentSvg} onPress={paymentMethodHandler} />
+            <SettingCard showText={'Refer & Earn'} fontSize={15} Svg={ReferSvg} onPress={referandEarnHandler} />
+            <SettingCard showText={'Change Password'} fontSize={15} Svg={PasswordSvg} onPress={changePasswordHandler} />
+            <SettingCard showText={'Support'} fontSize={15} Svg={HelpSvg} onPress={supportHandler} />
+            <SettingCard showText={'Preference'} fontSize={15} Svg={PrefrenceSvg} onPress={preferenceHandler} />
+            <SettingCard showText={'Logout'} fontSize={15} Svg={LogoutSvg} onPress={logoutHandler} />
           </View>
         </View>
-        <View>
-          <SettingCard showText={'Ev Modals'} fontSize={15} Svg={ElectricCarSvg} onPress={evModalHandler} />
-          <SettingCard showText={'Store'} fontSize={15} Svg={StoreSvg} onPress={storeHandler} />
-          <SettingCard showText={'Charging Keys'} fontSize={15} Svg={ChargingSvg} onPress={chargingKeyHandler} />
-          <SettingCard showText={'Orders'} fontSize={15} Svg={OrderSvg} onPress={orderHandler} />
-          <SettingCard showText={'Payment Method'} fontSize={15} Svg={PaymentSvg} onPress={paymentMethodHandler} />
-          <SettingCard showText={'Refer & Earn'} fontSize={15} Svg={ReferSvg} onPress={referandEarnHandler} />
-          <SettingCard showText={'Change Password'} fontSize={15} Svg={PasswordSvg} onPress={changePasswordHandler} />
-          <SettingCard showText={'Support'} fontSize={15} Svg={HelpSvg} onPress={supportHandler} />
-          <SettingCard showText={'Preference'} fontSize={15} Svg={PrefrenceSvg} onPress={preferenceHandler} />
-          <SettingCard showText={'Logout'} fontSize={15} Svg={LogoutSvg} onPress={logoutHandler} />
-        </View>
-      </View>
       </ScrollView>
     </View>
   )

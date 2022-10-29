@@ -1,29 +1,23 @@
-import { View, Text, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import SkipButton from '../../Component/Button/SkipButton';
 import CommonText from '../../Component/Text/CommonText';
-import BlackText from '../../Component/Text/BlackText';
 import Textinput from '../../Component/Textinput/Textinput';
-import Button from '../../Component/Button/Button';
 import SmallButton from '../../Component/Button/SmallButton';
 import GreenText from '../../Component/Text/GreenText';
 import { useNavigation } from '@react-navigation/native';
 import routes from '../../Utils/routes';
 import { Auth } from 'aws-amplify';
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import FaceBookSvg from '../../assests/svg/FaceBookSvg';
 import GoogleSvg from '../../assests/svg/GoogleSvg';
 import { validatePhone, validateEmail } from '../../Utils/HelperCommonFunctions'
 import WhiteText from '../../Component/Text/WhiteText';
 
-
 const Login = () => {
 
-
-
-  const [userInput, setuserInput] = useState('anuj.yadav@mfilterit.com')
+  const [userInput, setuserInput] = useState('')
   const [loading, setLoading] = useState(false)
   useEffect(() => {
 
@@ -85,7 +79,6 @@ const Login = () => {
     }
   }, [])
 
-
   const navigation = useNavigation()
   const scheme = useColorScheme();
 
@@ -94,9 +87,7 @@ const Login = () => {
     try {
       const user = await Auth.signIn(userInput);
       console.log("ajsbjds", user)
-
       if (user) {
-    
         if (validatePhone(userInput)) {
           // navigate to mobile input
           navigation.navigate(routes.MobileVerification, {
@@ -112,10 +103,9 @@ const Login = () => {
             email_id: userInput
           })
         }
-
       }
     } catch (error) {
-      console.log("error", error)
+      console.log("error---------------", error.message)
       switch (error.code) {
         case 'UserNotFoundException':
           // try {
@@ -148,11 +138,21 @@ const Login = () => {
   }
 
   const signupHandler = () => {
-    navigation.navigate(routes.Signup)
+    const payload = {}
+    if (validatePhone(userInput)) {
+      payload.phone_number = userInput
+    } else if (validateEmail) {
+      payload.email = userInput
+    }
+
+    navigation.navigate(routes.Signup, {
+      ...payload
+    })
   }
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
+      {loading==true&&<ActivityIndicator size={'large'} />}
       <ScrollView>
         <View style={styles.innerContainer}>
           <SkipButton />

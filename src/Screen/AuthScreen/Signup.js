@@ -84,19 +84,19 @@ const Signup = ({ route }) => {
                     <View style={styles.header}>
                         <BackButton />
                         <View style={styles.headerText}>
-                            {scheme == 'dark' ? <CommonText showText={'Sign Up'} fontSize={25} /> : <BlackText showText={'Sign Up'} fontSize={25} />}
+                           <CommonText showText={'Sign Up'} fontSize={25} /> 
                         </View>
                     </View>
                     <View style={{ marginVertical: 20 }}>
-                        {scheme == 'dark' ? <CommonText showText={'Please tell us a bit more about yourself'} fontSize={15} /> : <BlackText showText={'Please tell us a bit more about yourself'} fontSize={15} />}
+                        <CommonText showText={'Please tell us a bit more about yourself'} fontSize={15} /> 
                     </View>
 
                     <Formik
                         initialValues={{
-                            first_name: "Anuj",
-                            last_name: "Yadav",
+                            first_name: "",
+                            last_name: "",
                             referral_code: "",
-                            email_id: prefillEMail || 'y.anuj98@gmail.com',
+                            email_id: prefillEMail || '',
                             mobile_number: prefillPhone_number || ''
                         }}
                         onSubmit={handleSignup}

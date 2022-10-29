@@ -3,7 +3,6 @@ import React, { useRef, useState } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import CommonText from '../../Component/Text/CommonText';
-import BlackText from '../../Component/Text/BlackText';
 import Button from '../../Component/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import routes from '../../Utils/routes';
@@ -25,20 +24,22 @@ const Verification = ({ route }) => {
     const otpField4 = useRef(null);
 
     const dispatch = useDispatch();
-
+const [loading,setLoading]=useState(false)
     const [userInput, setUserInput] = useState('101299')
     const [userInput1, setUserInput1] = useState('')
     const [userInput2, setUserInput2] = useState('')
     const [userInput3, setUserInput3] = useState('')
     const [userInput4, setUserInput4] = useState('')
+    let otpConcatData = userInput1.concat(userInput2).concat(userInput3).concat(userInput4)
+    // console.log(otpConcatData, '................otp')
 
     const { email_id, signin, user } = route.params;
 
-
     const VerifyButtonHandler = async () => {
+        setLoading(true)
         if (!signin) {
             try {
-                const result = await Auth.confirmSignUp(email_id, userInput1+userInput2+userInput3+userInput4);
+                const result = await Auth.confirmSignUp(email_id, otpConcatData);
 
                 if (result === "SUCCESS") {
                     navigation.navigate(routes.MobileVerification, { ...route.params })
@@ -51,7 +52,7 @@ const Verification = ({ route }) => {
             }
         } else {
             try {
-                const cognitoUser = await Auth.sendCustomChallengeAnswer(user, userInput1+userInput2+userInput3+userInput4)
+                const cognitoUser = await Auth.sendCustomChallengeAnswer(user, otpConcatData)
                 loginSuccess()
 
             } catch (e) {
@@ -59,7 +60,7 @@ const Verification = ({ route }) => {
                 console.log("response", e)
             }
         }
-
+        setLoading(false)
     }
 
     const loginSuccess = async () => {
@@ -88,53 +89,53 @@ const Verification = ({ route }) => {
                         <CarLogo />
                     </View>
                     <View>
-                         <CommonText showText={'Email Verification'} fontSize={20} /> 
+                        <CommonText showText={'Email Verification'} fontSize={20} />
                     </View>
                     <View style={styles.textinputConatiner}>
                         <CommonText showText={'Please enter the verification code sent to '} fontSize={15} />
                         <View style={styles.centerText}>
-                           <CommonText showText={email_id} fontSize={15} /> 
+                            <CommonText showText={email_id} fontSize={15} />
                             <TouchableOpacity >
-                               <CommonText showText={' Edit'} fontSize={15} /> 
+                                <CommonText showText={' Edit'} fontSize={15} />
                             </TouchableOpacity>
                         </View>
                         <Textinput value={userInput} onChange={setUserInput} />
                         <View style={styles.otpContainer}>
-                            <OtpTextinput refData={otpField1}  value={userInput1} onChange={(pin1)=>{
+                            <OtpTextinput refData={otpField1} value={userInput1} onChange={(pin1) => {
                                 setUserInput1(pin1);
-                                if(pin1!== ''){
+                                if (pin1 !== '') {
                                     otpField2.current.focus();
                                 }
-                                }}  />
-                            <OtpTextinput refData={otpField2} value={userInput2} onChange={(pin2)=>{
+                            }} />
+                            <OtpTextinput refData={otpField2} value={userInput2} onChange={(pin2) => {
                                 setUserInput2(pin2);
-                                if(pin2!== ''){
+                                if (pin2 !== '') {
                                     otpField3.current.focus();
                                 }
-                                }}  />
-                            <OtpTextinput refData={otpField3}  value={userInput3} onChange={(pin3)=>{
+                            }} />
+                            <OtpTextinput refData={otpField3} value={userInput3} onChange={(pin3) => {
                                 setUserInput3(pin3);
-                                if(pin3!== ''){
+                                if (pin3 !== '') {
                                     otpField4.current.focus();
                                 }
-                                }}  />
-                            <OtpTextinput refData={otpField4}  value={userInput4} onChange={(pin4)=>{
+                            }} />
+                            <OtpTextinput refData={otpField4} value={userInput4} onChange={(pin4) => {
                                 setUserInput4(pin4);
-                                if(pin4!== ''){
+                                if (pin4 !== '') {
                                     otpField4.current.focus();
                                 }
-                                }}  />
-                            
+                            }} />
+
                         </View>
                         <View style={styles.resendContainer}>
-                           <CommonText showText={'Didn’t receive the code?  '} fontSize={15} /> 
+                            <CommonText showText={'Didn’t receive the code?  '} fontSize={15} />
                             <TouchableOpacity >
                                 <CommonText showText={'Resend'} fontSize={15} />
                             </TouchableOpacity>
                         </View>
                     </View>
                     <TouchableOpacity style={styles.button} >
-                        <Button onPress={VerifyButtonHandler} showText={'Verify'} />
+                        <Button onPress={VerifyButtonHandler} showText={'Verify'} onLoading={loading}  />
                     </TouchableOpacity>
 
                 </View>
