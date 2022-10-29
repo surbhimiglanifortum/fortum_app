@@ -110,7 +110,7 @@ export default Home = () => {
     try {
       setLocationLoading(true)
       let tlocation = {}
-      if (!currentLocation.coords || reload) {
+      if (!currentLocation?.coords || reload) {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
           return;
