@@ -16,9 +16,9 @@ import { useNavigation } from '@react-navigation/native'
 import routes from '../../../Utils/routes'
 
 const OngoingDetails = () => {
-const navigation=useNavigation()
+  const navigation = useNavigation()
   const scheme = useColorScheme()
-  const stopButtonHandler =()=>{
+  const stopButtonHandler = () => {
     navigation.navigate(routes.taxInvoice)
   }
   return (
@@ -115,8 +115,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 45,
     marginVertical: 10
   },
-  bottomButon:{
-    marginTop:100
+  bottomButon: {
+    marginTop: 100
   }
 })
 

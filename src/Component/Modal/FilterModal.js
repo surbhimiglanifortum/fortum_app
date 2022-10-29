@@ -12,6 +12,7 @@ import Button from '../Button/Button'
 import CommonView from '../../Component/CommonView'
 import { useQuery } from 'react-query'
 import axios from 'axios'
+import * as ApiAction from '../../Services/Api'
 const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
 
