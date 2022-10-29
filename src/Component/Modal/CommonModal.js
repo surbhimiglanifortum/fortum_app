@@ -25,7 +25,7 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal ,showText }) => {
                             </TouchableOpacity>
                         </View>
                         <View style={styles.centerText}>
-                            <BlackText showText={'Item added Successfully'} fontSize={15} />
+                            <BlackText showText={showText} fontSize={16} />
                         </View>
                         <View>
                             <Button showText={'Okay'} onPress={okayBtnHandler} />

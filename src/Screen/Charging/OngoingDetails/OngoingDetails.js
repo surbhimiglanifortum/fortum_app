@@ -16,8 +16,12 @@ import { useNavigation } from '@react-navigation/native'
 import routes from '../../../Utils/routes'
 import { getChargerMapObject } from '../../../Utils/helperFuncations/ChargerMapConfig'
 
+<<<<<<< HEAD
+const OngoingDetails = () => {
+=======
 const OngoingDetails = ({ route }) => {
 
+>>>>>>> 94c5a115c4656501cb28e3a86a7e8074bd84af43
   const navigation = useNavigation()
   const scheme = useColorScheme()
   const stopButtonHandler = () => {
