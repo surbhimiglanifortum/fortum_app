@@ -20,8 +20,28 @@ export const getEvses = async (locid, payload) => {
     return await axios.post("/locations/gist/" + locid, payload)
 }
 
-export const getUniqueConnectors = async () =>{
+export const getUniqueConnectors = async () => {
     return await axios.get('/locations/uniqueconnectors')
+}
+
+export const getPaymentOption = async (username) => {
+    return await axios.get("/users/payment_options/" + username);
+};
+
+export const payAsYouGo = async (username, payload) => {
+    return await axios.post("/juspay/initiate_payment/pay_as_you_go/" + username, payload)
+}
+
+export const checkOrderId = async (username, payload) => {
+    return await axios.post("/users/start_pay_as_you_go/" + username, payload)
+}
+
+export const walletBalanceEnquiry = async (payload) => {
+    return await axios.post("/pinelabs/wallet/check-balance", payload);
+};
+
+export const blockAmount = async (payload) => {
+    return await axios.post('/pinelabs/wallet/transaction/block-amount', payload);
 }
 
 export const walletHistory = async (username, startDate, endDate) => {
