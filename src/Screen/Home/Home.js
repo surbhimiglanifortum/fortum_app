@@ -157,10 +157,10 @@ export default Home = () => {
         <View style={styles.topTabInner}>
           <TouchableOpacity onPress={mapButtonHandler}
             style={[styles.tabContainer, selectedTab != 'List' ? { backgroundColor: colors.white, borderRadius: 4, paddingVertical: 3 } : null,]}>
-            <CommonText showText={'Map'} fontSize={16} customstyles={{color:selectedTab != 'List' ? colors.black : colors.white}} />
+            <CommonText showText={'Map'} fontSize={16} customstyles={{ color: selectedTab != 'List' ? colors.black : colors.white }} />
           </TouchableOpacity >
           <TouchableOpacity onPress={listButtonHandler} style={[styles.tabContainer, selectedTab == 'List' ? { backgroundColor: colors.white, borderRadius: 4, paddingVertical: 3 } : null,]}>
-            <CommonText showText={'List'} fontSize={16} customstyles={{color:selectedTab == 'List' ? colors.black : colors.white}} />
+            <CommonText showText={'List'} fontSize={16} customstyles={{ color: selectedTab == 'List' ? colors.black : colors.white }} />
           </TouchableOpacity>
         </View>
       </View>

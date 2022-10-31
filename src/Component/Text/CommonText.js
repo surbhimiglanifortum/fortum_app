@@ -4,10 +4,20 @@ import colors from '../../Utils/colors'
 import commonFonts from '../../Utils/fonts/fonts'
 
 const CommonText = ({ showText, fontSize = 16, children, customstyles, bold, regular }) => {
-
   const scheme = useColorScheme()
+
   return (
-    <Text style={[styles.text, { fontSize: fontSize, color: scheme == 'dark' ? colors.white : colors.lightText, fontFamily: regular ? commonFonts.regular : commonFonts.bold }, customstyles]}>{showText || children}</Text>
+    <Text style={
+      [styles.text, {
+        fontSize: fontSize,
+        color: scheme == 'dark' ? colors.white : colors.lightText, fontFamily: regular ? commonFonts.regular : commonFonts.bold
+        
+      },
+        customstyles
+      ]}
+    >
+      {showText || children}
+    </Text>
   )
 }
 
