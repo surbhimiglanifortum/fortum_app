@@ -72,7 +72,7 @@ const Profile = ({ route }) => {
                                     return (
                                         <View key={i} style={styles.textinputConatiner}>
                                             {scheme == 'dark' ? <CommonText showText={e.name} fontSize={14} /> : <CommonText showText={e.name} fontSize={14} />}
-                                            <Textinput value={values[e.value]} onChange={handleChange(e.value)} placeholderText={values[e.placeHolder]}  />
+                                            <Textinput value={values[e.value]} onChange={handleChange(e.value)} placeholderText={values[e.placeHolder]} />
                                             {errors[e.value] && touched[e.value] ? (
                                                 <CommonText showText={errors[e.value]} customstyles={{ color: colors.red }} fontSize={14} />
                                             ) : null}

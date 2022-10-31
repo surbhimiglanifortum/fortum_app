@@ -6,25 +6,26 @@ import IconCardLarge from './IconCardLarge'
 import { getFormatedDate } from '../../Services/CommonServices'
 import CommonText from '../Text/CommonText'
 import CommonCard from '../../Component/Card/CommonCard/index'
+import Charger from '../../assests/svg/charger'
+import WalletSvg from '../../assests/svg/wallet'
 
-const Card = ({ tabName, navigationHandler, Svg, dataItem,disabledCard }) => {
-
+const CardWallet = ({ navigationHandler, Svg, dataItem, }) => {
     return (
         <CommonCard>
-            <TouchableOpacity style={styles.card} onPress={navigationHandler} disabled={disabledCard}>
+            <TouchableOpacity style={styles.card} onPress={navigationHandler} >
                 <View style={styles.leftContainer}>
-                    <IconCardLarge Svg={Svg} />
+                    <IconCardLarge Svg={dataItem?.item?.topUpBalance ? WalletSvg : Charger} />
                     <View style={styles.middleContainer}>
-                        <CommonText showText={dataItem?.item?.location?.name} fontSize={14} />
+                        <CommonText showText={dataItem?.item?.topUpBalance ? "Wallet Recharge" : "Charging Done"} fontSize={14} />
                         <View style={styles.leftContainer}>
-                            <CommonText showText={getFormatedDate(dataItem?.item?.start_datetime)} fontSize={14} />
+                            <CommonText showText={getFormatedDate(dataItem?.item?.createdAt)} fontSize={14} />
                         </View>
                     </View>
                 </View>
-                {tabName != 'ongoing' && <View >
-                    <CommonText showText={`₹ ${dataItem?.item?.order?.amount / 100 ? dataItem?.item?.order?.amount / 100 : '0'}`} fontSize={14} />
-                    <CommonText showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '0'} Kwh`} fontSize={14} />
-                </View>}
+                <View>
+                    <CommonText showText={`${dataItem?.item?.topUpBalance ? ` + ₹${parseFloat(dataItem?.item?.topUpBalance.toFixed(2))}` : `₹${dataItem?.item?.consumedAmount ? dataItem?.item?.consumedAmount : '0'}`}`} fontSize={16} customstyles={{ color: dataItem?.item?.topUpBalance ? colors.black : colors.red }} />
+                    <CommonText showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '120'} Min`} fontSize={14} />
+                </View>
             </TouchableOpacity>
         </CommonCard>
     )
@@ -46,4 +47,5 @@ const styles = StyleSheet.create({
 
 })
 
-export default Card
+
+export default CardWallet

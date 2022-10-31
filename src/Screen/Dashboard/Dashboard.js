@@ -14,7 +14,7 @@ import HomeSvg from '../../assests/svg/home'
 import WalletSvg from '../../assests/svg/wallet'
 import NotificationSvg from '../../assests/svg/notification'
 import OtherSvg from '../../assests/svg/other'
-
+import DenseCard from '../../Component/Card/DenseCard/index'
 const Dashboard = ({ tabName }) => {
 
   const [selectedTab, setSelectedTab] = useState('home')
@@ -58,24 +58,24 @@ const Dashboard = ({ tabName }) => {
         </View>
         <View style={[styles.tabContainer, { backgroundColor: colors.greenBackground }]}>
 
-          <TouchableOpacity onPress={homeButtonHandler} style={[styles.tabButton, selectedTab == 'home' ? { borderWidth: 2, paddingVertical: 5, paddingHorizontal: 10, borderRadius: 5, borderColor: '#FFF' } : null]}>
+          <TouchableOpacity onPress={homeButtonHandler} style={[styles.tabButton, selectedTab == 'home' ? styles.activeTab : null]}>
             <HomeSvg color={colors.white} />
             {selectedTab == 'home' && <CommonText showText={'Home'} margin={6} customstyles={styles.tabText} />}
           </TouchableOpacity>
           {/* </Shadow> */}
-          <TouchableOpacity onPress={walletButtonHandler} style={styles.tabButton}>
+          <TouchableOpacity onPress={walletButtonHandler} style={[styles.tabButton, selectedTab == 'wallet' ? styles.activeTab : null]}>
             <WalletSvg color={colors.white} />
             {selectedTab == 'wallet' && <CommonText showText={'Wallet'} margin={6} customstyles={styles.tabText} />}
           </TouchableOpacity>
-          <TouchableOpacity onPress={chargingButtonHandler} style={styles.tabButton}>
+          <TouchableOpacity onPress={chargingButtonHandler} style={[styles.tabButton, selectedTab == 'charging' ? styles.activeTab : null]}>
             <Charger color={colors.white} />
             {selectedTab == 'charging' && <CommonText showText={'Charging'} margin={6} customstyles={styles.tabText} />}
           </TouchableOpacity>
-          <TouchableOpacity onPress={notificationButtonHandler} style={styles.tabButton}>
+          <TouchableOpacity onPress={notificationButtonHandler} style={[styles.tabButton, selectedTab == 'notification' ? styles.activeTab : null]}>
             <NotificationSvg color={colors.white} />
             {selectedTab == 'notification' && <CommonText showText={'Notification'} margin={6} customstyles={styles.tabText} />}
           </TouchableOpacity>
-          <TouchableOpacity onPress={otherButtonHandler} style={styles.tabButton}>
+          <TouchableOpacity onPress={otherButtonHandler} style={[styles.tabButton, selectedTab == 'other' ? styles.activeTab : null]}>
             <OtherSvg color={colors.white} />
             {selectedTab == 'other' && <CommonText showText={'Others'} margin={6} customstyles={styles.tabText} />}
           </TouchableOpacity>
@@ -97,7 +97,8 @@ const styles = StyleSheet.create({
     color: colors.white,
     marginLeft: 5,
     fontSize: 15
-  }
+  },
+  activeTab:{ borderWidth: 2, paddingVertical: 5, paddingHorizontal: 10, borderRadius: 5, borderColor: colors.white },
 
 })
 

@@ -15,8 +15,8 @@ export default function index({ children, style }) {
 
 const styles = StyleSheet.create({
     linearGradient: {
-        paddingLeft: 15,
-        paddingRight: 15,
-        borderRadius: 5
+        padding: 15,
+        borderRadius: 10,
+        marginVertical:10
     },
 })

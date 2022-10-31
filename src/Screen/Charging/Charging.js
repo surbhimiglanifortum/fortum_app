@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import routes from '../../Utils/routes'
 import Charger from '../../assests/svg/charger'
 import { useQuery } from 'react-query'
-import { chargingListServices } from '../../Services/ChargingTabServices/ChargingServices'
+import { chargingListCompletedServices, chargingListServices } from '../../Services/ChargingTabServices/ChargingServices'
 import CommonText from '../../Component/Text/CommonText'
 import colors from '../../Utils/colors'
 
@@ -36,7 +36,10 @@ const Charging = () => {
         const res = await chargingListServices()
         return res.data
     })
-
+    const { data: completedData, status: completedStatus, isLoading: completedIsLoading, refetch: completedreFetch } = useQuery('chargingCompletedData', async () => {
+        const res = await chargingListCompletedServices()
+        return res.data
+    })
 
     return (
         <View style={styles.conatiner}>
@@ -75,7 +78,7 @@ const Charging = () => {
                     {selectedTab == 'completed' &&
                         <>
                             <FlatList
-                                data={data}
+                                data={completedData}
                                 keyExtractor={item => item.id}
                                 renderItem={(item) => {
                                     return (
@@ -99,7 +102,8 @@ const styles = StyleSheet.create({
     innerContainer: {
         width: '90%',
         alignSelf: 'center',
-        marginVertical: scale(10)
+        marginVertical: scale(10),
+        paddingBottom: 200
     },
     header: {
         flexDirection: 'row',
