@@ -65,23 +65,18 @@ export default Home = () => {
 
   useEffect(() => {
     refetch()
-  }, [currentLocation])
+  }, [location])
 
 
   const chargerLocations = async () => {
     try {
-      let location = {}
-      if (!currentLocation.coords) {
-        const result = Geolocation.getCurrentPosition(info => {
-          setCurrentLocation(info)
+      // let location = {}
+      const res = await ApiAction.getLocation()
 
-        })
+      var locationsArray = res.data?.locations[0];
+      if (!location.coords) {
+        return locationsArray
       } else {
-        location = currentLocation;
-      }
-      if (location?.coords) {
-        const res = await ApiAction.getLocation()
-        var locationsArray = res.data?.locations[0];
         locationsArray.map((data, index) => {
           locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
             data?.latitude,
@@ -99,45 +94,19 @@ export default Home = () => {
   }
 
   const { data, status, isLoading, refetch } = useQuery('MapData', chargerLocations, {
-    // manual: true,
-    // refetchInterval: 15000,
+    refetchInterval: 15000,
   })
 
   const getLocationAndAnimate = async (reload) => {
     try {
       setLocationLoading(true)
-      let tlocation = {}
-      if (!currentLocation?.coords || reload) {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          return;
-        }
-        tlocation = await Location.getCurrentPositionAsync({});
-        // console.log(location)
-        setCurrentLocation(tlocation)
-        setLocation(tlocation)
-        mapRef.current.animateToRegion({
-          latitude: tlocation.coords.latitude,
-          longitude: tlocation.coords.longitude,
-          latitudeDelta: 0.025,
-          longitudeDelta: 0.025
-        }, 2000);
+      Geolocation.getCurrentPosition(info => {
 
-      } else {
-        setLocation(currentLocation)
-        tlocation = currentLocation
-        setTimeout(() => {
-          if (mapRef.current) {
-            mapRef.current.animateToRegion({
-              latitude: tlocation.coords.latitude,
-              longitude: tlocation.coords.longitude,
-              latitudeDelta: 0.025,
-              longitudeDelta: 0.025
-            }, 2000);
-          }
-        }, 1000);
-      }
-      setLocationLoading(false)
+        setLocation(info)
+      }, error => {
+        console.log(error)
+      })
+
     } catch (error) {
       setLocationLoading(false);
       console.log(error);
@@ -151,16 +120,16 @@ export default Home = () => {
 
   return (
     <View style={styles.container}>
-      {selectedTab == 'List' ? <MapList data={data} /> : <MapCharger data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
+      {selectedTab == 'List' ? <MapList data={data} location={location} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
           <TouchableOpacity onPress={mapButtonHandler}
             style={[styles.tabContainer, selectedTab != 'List' ? { backgroundColor: colors.white, borderRadius: 4, paddingVertical: 3 } : null,]}>
-            <CommonText showText={'Map'} fontSize={16} customstyles={{color:selectedTab != 'List' ? colors.black : colors.white}} />
+            <CommonText showText={'Map'} fontSize={16} customstyles={{ color: selectedTab != 'List' ? colors.black : colors.white }} />
           </TouchableOpacity >
           <TouchableOpacity onPress={listButtonHandler} style={[styles.tabContainer, selectedTab == 'List' ? { backgroundColor: colors.white, borderRadius: 4, paddingVertical: 3 } : null,]}>
-            <CommonText showText={'List'} fontSize={16} customstyles={{color:selectedTab == 'List' ? colors.black : colors.white}} />
+            <CommonText showText={'List'} fontSize={16} customstyles={{ color: selectedTab == 'List' ? colors.black : colors.white }} />
           </TouchableOpacity>
         </View>
       </View>
