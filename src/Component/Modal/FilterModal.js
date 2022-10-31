@@ -1,4 +1,4 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'
+import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, NativeModules } from 'react-native'
 import React from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { scale } from 'react-native-size-matters'
@@ -16,6 +16,20 @@ import { getChargerMapObject } from '../../Utils/HelperCommonFunctions'
 import CommonCard from '../../Component/Card/CommonCard'
 import axios from 'axios'
 import * as ApiAction from '../../Services/Api'
+import IEC_62196_T2_COMBO from '../../../src/assests/svg/IEC_62196_T2_COMBO'
+import IEC_62196_T1 from '../../../src/assests/svg/IEC_62196_T1'
+import CHADEMO from '../../../src/assests/svg/CHADEMO'
+import IEC_62196_T1_COMBO from '../../../src/assests/svg/IEC_62196_T1_COMBO'
+import IEC_62196_T2 from '../../../src/assests/svg/IEC_62196_T2'
+
+import DenseCard from '../Card/DenseCard'
+import { StatusBar } from 'react-native';
+
+
+const { StatusBarManager } = NativeModules;
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBarManager.HEIGHT;
+
+
 const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
 
@@ -36,42 +50,77 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
         })
         return data
     })
+
+    const getFile = (key) => {
+        console.log(key)
+        switch (key) {
+            case 'IEC_62196_T1':
+            return <IEC_62196_T1/>
+            
+                break;
+            case 'IEC_62196_T2_COMBO':
+                return <IEC_62196_T2_COMBO/>
+                break;
+            case 'CHADEMO':
+                return <CHADEMO/>
+                break;
+            case 'IEC_62196_T2':
+                return <IEC_62196_T2/>
+                break;
+            case 'IEC_62196_T1_COMBO':
+                return <IEC_62196_T1_COMBO/>
+                break;
+            case 'DOMESTIC_F':
+                return <IEC_62196_T2_COMBO/>
+                break;
+
+            default:
+                return <IEC_62196_T2_COMBO/>
+                break;
+        }
+    }
     return (
         <Modal animationType={'slide'} visible={openFilterModal} statusBarTranslucent={true}>
             <CommonView style={styles.container}>
                 <View style={styles.innerContainer}>
                     <View style={styles.header}>
+                        <View></View>
                         <CommonText >Filter</CommonText>
                         <TouchableOpacity onPress={() => { setOpenFilterModal(false) }}
                             style={styles.crossIcon}>
                             <AntDesign name='close' color={colors.black} />
                         </TouchableOpacity>
                     </View>
+                   
                     <View style={styles.connectorContainer}>
-                        <CommonText  >Connectors</CommonText>
+                        <CommonText>Connectors</CommonText>
                         <View style={styles.cardContainer}>
                             {
-                                [1]?.map((item, ind) => {
+                                filterData?.map((item, ind) => {
                                     return (
-                                        <CommonCard key={ind} style={styles.cardInner}>
-                                            <TouchableOpacity style={styles.card}>
-                                                {/* <FontIcon name={getChargerMapObject(item.title).icon} /> */}
-                                                <Charger1 />
-                                            </TouchableOpacity>
+                                        <View>
+                                            <CommonCard key={ind} style={styles.cardInner}>
+                                                <TouchableOpacity style={styles.card}>
+                                                    
+                                                   {getFile(item.title)}
+                                                </TouchableOpacity>
+                                            </CommonCard>
                                             <View style={styles.text}>
                                                 <CommonText regular fontSize={14} >{getChargerMapObject(item.title).name}</CommonText>
                                             </View>
-                                        </CommonCard>
+                                        </View>
+
+
                                     )
                                 })
                             }
                         </View>
                     </View>
-
-                    <View style={styles.middleCard}>
+                    <DenseCard style={styles.middleCard}>
                         <CommonText showText={'Show Available Charger Only'} fontSize={15} />
                         <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={colors.green} />
-                    </View>
+                    </DenseCard>
+                   
                     <View style={styles.button}>
                         <View style={styles.resetBtn}>
                             <WhiteButton showText={'Reset'} />
@@ -80,6 +129,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
                             <Button showText={'Apply'} onPress={applyButtonHandler} color={colors.white} />
                         </View>
                     </View>
+               
                 </View>
             </CommonView>
         </Modal>
@@ -90,17 +140,15 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 50,
+        marginTop: STATUSBAR_HEIGHT,
     },
     innerContainer: {
-        width: '90%',
+
         alignSelf: 'center'
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: scale(200),
-        alignSelf: 'flex-end',
         justifyContent: 'space-between'
     },
     crossIcon: {
@@ -111,32 +159,35 @@ const styles = StyleSheet.create({
         borderRadius: 6
     },
     connectorContainer: {
-        marginVertical: 30,
+
     },
     card: {
-        // backgroundColor: colors.white,
-        // elevation: 5,
-        paddingVertical: 16,
-        paddingHorizontal: 16,
-        borderRadius: 5,
-        marginRight: 19,
-        flexWrap: 'wrap',
-        height:85
-
-
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     cardContainer: {
+        marginTop: 12,
         flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 10,
         flexWrap: 'wrap',
+        justifyContent: 'space-around',
+
     },
     text: {
         alignItems: 'center',
         marginVertical: 10
     },
     cardInner: {
-        width:'20%'
+        position: 'relative',
+        margin: 10,
+        padding: 30,
+        width: 69,
+        height: 69,
+
     },
     middleCard: {
         flexDirection: 'row',
