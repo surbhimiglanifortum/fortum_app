@@ -3,7 +3,7 @@ import React from 'react'
 import colors from '../../Utils/colors'
 import CommonText from '../Text/CommonText'
 
-const Button = ({ onPress, showText, color, onLoading, setOnLoading, }) => {
+const Button = ({ onPress, showText, color, onLoading, setOnLoading, style }) => {
 
   const styles = StyleSheet.create({
     container: {
@@ -14,9 +14,8 @@ const Button = ({ onPress, showText, color, onLoading, setOnLoading, }) => {
     }
   })
 
-
   return (
-    <TouchableOpacity style={[styles.container]} onPress={onPress}  >
+    <TouchableOpacity style={[styles.container, style]} onPress={onPress}  >
       <CommonText showText={showText} fontSize={17} customstyles={{ color: colors.white }} />
     </TouchableOpacity>
   )
