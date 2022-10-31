@@ -1,20 +1,20 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity } from 'react-native'
+import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, Text } from 'react-native'
 import React from 'react'
 import Header from '../../../Component/Header/Header'
 import colors from '../../../Utils/colors'
-import BlackText from '../../../Component/Text/BlackText'
 import CommonText from '../../../Component/Text/CommonText'
 import Charger1 from '../../../assests/svg/charger1'
 import TimeTextinput from '../../../Component/Textinput/TimeTextinput'
 import IconCardWithoutBg from '../../../Component/Card/IconCardWithoutBg'
-import ReportSvg from '../../../assests/svg/ReportSvg'
-import RedText from '../../../Component/Text/RedText'
 import IconCard from '../../../Component/Card/IconCard'
-import SupportSvg from '../../../assests/svg/SupportSvg'
 import Button from '../../../Component/Button/Button'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../../Utils/routes'
 import { getChargerMapObject } from '../../../Utils/helperFuncations/ChargerMapConfig'
+import ReportLight from "../../../assests/svg/Report_light"
+import CommonCard from "../../../Component/Card/CommonCard"
+import SupportLight from '../../../assests/svg/Support_light'
+import DenseCard from "../../../Component/Card/DenseCard"
 
 const OngoingDetails = ({ route }) => {
 
@@ -37,6 +37,7 @@ const OngoingDetails = ({ route }) => {
           <CommonText showText={locDetails?.name} />
           <CommonText showText={`${locDetails?.address?.city} ${locDetails?.address?.street} ${locDetails?.address?.postalCode}`} fontSize={14} />
         </View>
+
         <View style={styles.topCard}>
           <Charger1 />
           <CommonText
@@ -70,18 +71,28 @@ const OngoingDetails = ({ route }) => {
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.topCard}>
-          <IconCardWithoutBg Svg={ReportSvg} backgroundColor={colors.red} />
-          <RedText showText={'Report'} fontSize={18} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.topCard}>
-          <IconCard Svg={SupportSvg} backgroundColor={colors.red} />
-          <CommonText showText={'Support'} fontSize={18} margin={10} />
-        </TouchableOpacity>
+
+        <CommonCard>
+          <TouchableOpacity style={styles.topCard}>
+            <IconCardWithoutBg Svg={ReportLight} />
+            <CommonText showText={'Report'} customstyles={{ color: colors.lightRed, alignSelf: 'center' }} />
+          </TouchableOpacity>
+        </CommonCard >
+
+        <CommonCard>
+          <TouchableOpacity style={styles.topCard}>
+            <IconCard Svg={SupportLight} />
+            <CommonText showText={'Support'} customstyles={{ alignSelf: 'center' }} />
+          </TouchableOpacity>
+        </CommonCard>
+
         <View style={styles.bottomButon}>
           <Button showText={'Stop'} onPress={stopButtonHandler} />
         </View>
       </View>
+
+
+
     </SafeAreaView>
   )
 }
@@ -97,15 +108,6 @@ const styles = StyleSheet.create({
   },
   textCon: {
     marginTop: 60
-  },
-  topCard: {
-    backgroundColor: colors.white,
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    marginVertical: 10,
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
   },
   middleCard: {
     backgroundColor: colors.white,
@@ -126,7 +128,11 @@ const styles = StyleSheet.create({
   },
   bottomButon: {
     marginTop: 100
-  }
+  },
+  topCard: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
 })
 
 export default OngoingDetails
