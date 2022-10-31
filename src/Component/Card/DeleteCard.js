@@ -1,11 +1,10 @@
 import { View,  StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { scale } from 'react-native-size-matters'
-import Charger from '../../assests/svg/charger'
 import colors from '../../Utils/colors'
-import BlackText from '../Text/BlackText'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import IconCard from './IconCard'
+import CommonText from '../Text/CommonText'
 const DeleteCard = ({Svg}) => {
 
   return (
@@ -13,7 +12,7 @@ const DeleteCard = ({Svg}) => {
             <View style={styles.leftContainer}>
                 <IconCard Svg={Svg} />
                 <View style={styles.middleContainer}>
-                    <BlackText showText={'MG zs ev'} />
+                    <CommonText showText={'MG zs ev'} />
                 </View>
             </View>
               <TouchableOpacity style={styles.deleteIcon}>

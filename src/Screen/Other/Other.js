@@ -13,7 +13,6 @@ import HelpSvg from '../../assests/svg/HelpSvg'
 import PrefrenceSvg from '../../assests/svg/PrefrenceSvg'
 import LogoutSvg from '../../assests/svg/LogoutSvg'
 import colors from '../../Utils/colors'
-import BlackText from '../../Component/Text/BlackText'
 import CommonText from '../../Component/Text/CommonText'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../Utils/routes'
@@ -69,10 +68,10 @@ const Other = () => {
               <Image />
             </TouchableOpacity>
             <View style={styles.leftConatainer}>
-              {scheme != 'dark' ? <BlackText showText={`${userDetailsData.userDetails.first_name} ${userDetailsData.userDetails.last_name
-                }`} fontSize={20} /> : <CommonText showText={'John Doe'} fontSize={20} />}
+             <CommonText showText={`${userDetailsData.userDetails.first_name} ${userDetailsData.userDetails.last_name
+                }`} fontSize={20} /> 
               <TouchableOpacity style={styles.editButton} onPress={EditProfileHandler} >
-                <BlackText showText={'Edit Profile'} fontSize={18} />
+                <CommonText showText={'Edit Profile'} fontSize={18} />
               </TouchableOpacity>
             </View>
           </View>

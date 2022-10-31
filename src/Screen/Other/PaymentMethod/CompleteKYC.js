@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import routes from '../../../Utils/routes'
 import { Checkbox } from 'react-native-paper';
-import BlueText from '../../../Component/Text/BlueText'
+
 const CompleteKYC = () => {
 
     const navigation = useNavigation()
@@ -59,7 +59,7 @@ const CompleteKYC = () => {
                             }}
                         />
                         <CommonText showText={'I accept the'} fontSize={12} />
-                        <BlueText showText={'Terms Of Services'} fontSize={12} />
+                        <CommonText showText={'Terms Of Services'} fontSize={12}  customstyles={{color:colors.blue}}/>
                     </View>
                     <View style={styles.bottomText}>
                         <Checkbox
@@ -70,9 +70,9 @@ const CompleteKYC = () => {
                             }}
                         />
                         <CommonText showText={'I acknowledge that '} fontSize={12} />
-                        <BlueText showText={'Terms of Service, Privacy Policy,'} fontSize={12} />
-                        <CommonText showText={'           and our default'} fontSize={12} />
-                        <BlueText showText={'Notification Settings.'} fontSize={12} />
+                        <CommonText showText={'Terms of Service, Privacy Policy,'} fontSize={12} customstyles={{color:colors.blue}} />
+                        <CommonText showText={'           and our default'} fontSize={12}  />
+                        <CommonText showText={'Notification Settings.'} fontSize={12} customstyles={{color:colors.blue}} />
                     </View>
                 </View>
             </ScrollView>

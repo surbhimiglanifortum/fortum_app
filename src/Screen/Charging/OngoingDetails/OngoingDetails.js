@@ -2,13 +2,11 @@ import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity } from
 import React from 'react'
 import Header from '../../../Component/Header/Header'
 import colors from '../../../Utils/colors'
-import BlackText from '../../../Component/Text/BlackText'
 import CommonText from '../../../Component/Text/CommonText'
 import Charger1 from '../../../assests/svg/charger1'
 import TimeTextinput from '../../../Component/Textinput/TimeTextinput'
 import IconCardWithoutBg from '../../../Component/Card/IconCardWithoutBg'
 import ReportSvg from '../../../assests/svg/ReportSvg'
-import RedText from '../../../Component/Text/RedText'
 import IconCard from '../../../Component/Card/IconCard'
 import SupportSvg from '../../../assests/svg/SupportSvg'
 import Button from '../../../Component/Button/Button'
@@ -16,12 +14,8 @@ import { useNavigation } from '@react-navigation/native'
 import routes from '../../../Utils/routes'
 import { getChargerMapObject } from '../../../Utils/helperFuncations/ChargerMapConfig'
 
-<<<<<<< HEAD
-const OngoingDetails = () => {
-=======
 const OngoingDetails = ({ route }) => {
 
->>>>>>> 94c5a115c4656501cb28e3a86a7e8074bd84af43
   const navigation = useNavigation()
   const scheme = useColorScheme()
   const stopButtonHandler = () => {
@@ -76,7 +70,7 @@ const OngoingDetails = ({ route }) => {
         </View>
         <TouchableOpacity style={styles.topCard}>
           <IconCardWithoutBg Svg={ReportSvg} backgroundColor={colors.red} />
-          <RedText showText={'Report'} fontSize={18} />
+          <CommonText showText={'Report'} fontSize={18} customstyles={{color:colors.red}} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.topCard}>
           <IconCard Svg={SupportSvg} backgroundColor={colors.red} />

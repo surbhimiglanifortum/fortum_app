@@ -1,16 +1,14 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView } from 'react-native'
+import { View, SafeAreaView, StyleSheet, useColorScheme, } from 'react-native'
 import React from 'react'
 import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import CommonText from '../../../Component/Text/CommonText'
-import BlackText from '../../../Component/Text/BlackText'
 import PersonalCodeCard from '../../../Component/Card/PersonalCodeCard'
 import { scale } from 'react-native-size-matters'
 import WhatsAppSvg from '../../../assests/svg/WhatsAppSvg'
 import SmallButton from '../../../Component/Button/SmallButton'
 import MessengerSvg from '../../../assests/svg/MessengerSvg'
-import GreenText from '../../../Component/Text/GreenText'
 
 const ReferAndEarn = () => {
     const navigation = useNavigation()
@@ -43,21 +41,21 @@ const ReferAndEarn = () => {
                     <View style={styles.card}>
                         <View style={styles.cardInner}>
                             <View style={styles.numberContainer}>
-                                <GreenText showText={'1'} fontSize={15} />
+                                <CommonText showText={'1'} fontSize={15} customstyles={{color:colors.green}}  />
                             </View>
-                            <BlackText showText={'Invite your friends '} />
+                            <CommonText showText={'Invite your friends '} />
                         </View>
                         <View style={styles.cardInner}>
                             <View style={styles.numberContainer}>
-                                <GreenText showText={'2'} fontSize={15} />
+                                <CommonText showText={'2'} fontSize={15} customstyles={{color:colors.green}}  />
                             </View>
-                            <BlackText showText={'They hit the road with ₹100 off '} />
+                            <CommonText showText={'They hit the road with ₹100 off '} />
                         </View>
                         <View style={styles.cardInner}>
                             <View style={styles.numberContainer}>
-                                <GreenText showText={'3'} fontSize={15} />
+                                <CommonText showText={'3'} fontSize={15} customstyles={{color:colors.green}}  />
                             </View>
-                            <BlackText showText={'You make saving! '} />
+                            <CommonText showText={'You make saving! '} />
                         </View>
                     </View>
                 </View>

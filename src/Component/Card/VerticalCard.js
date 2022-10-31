@@ -3,7 +3,6 @@ import React from 'react'
 import { scale } from 'react-native-size-matters'
 import CommonText from '../Text/CommonText'
 import colors from '../../Utils/colors'
-import BlackText from '../Text/BlackText'
 import Charger1 from '../../assests/svg/charger1'
 
 const VerticalCard = () => {

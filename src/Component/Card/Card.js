@@ -2,9 +2,9 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
-import BlackText from '../Text/BlackText'
 import IconCardLarge from './IconCardLarge'
 import { getFormatedDate } from '../../Services/CommonServices'
+import CommonText from '../Text/CommonText'
 
 const Card = ({ tabName, navigationHandler, Svg, dataItem }) => {
 
@@ -14,15 +14,15 @@ const Card = ({ tabName, navigationHandler, Svg, dataItem }) => {
             <View style={styles.leftContainer}>
                 <IconCardLarge Svg={Svg} />
                 <View style={styles.middleContainer}>
-                    <BlackText showText={dataItem?.item?.location?.name} />
+                    <CommonText showText={dataItem?.item?.location?.name} />
                     <View style={styles.leftContainer}>
-                        <BlackText showText={getFormatedDate(dataItem?.item?.start_datetime)} />
+                        <CommonText showText={getFormatedDate(dataItem?.item?.start_datetime)} />
                     </View>
                 </View>
             </View>
             {tabName != 'ongoing' && <View >
-                <BlackText showText={`₹ ${dataItem?.item?.total_cost ? dataItem?.item?.total_cost : '0'}`} />
-                <BlackText showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '0'} Kwh`} />
+                <CommonText showText={`₹ ${dataItem?.item?.total_cost ? dataItem?.item?.total_cost : '0'}`} />
+                <CommonText showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '0'} Kwh`} />
             </View>}
         </TouchableOpacity>
     )

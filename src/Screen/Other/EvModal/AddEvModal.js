@@ -1,12 +1,12 @@
 import { View, Text, SafeAreaView, StyleSheet, useColorScheme, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import colors from '../../../Utils/colors'
-import BlackText from '../../../Component/Text/BlackText'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import ElectricCarSvg from '../../../assests/svg/ElectricCarSvg'
 import routes from '../../../Utils/routes'
 import IconCardWithoutBg from '../../../Component/Card/IconCardWithoutBg'
+import CommonText from '../../../Component/Text/CommonText'
 
 const AddEvModal = () => {
   const navigation = useNavigation()
@@ -26,7 +26,7 @@ const AddEvModal = () => {
                 return (
                   <TouchableOpacity style={styles.card} onPress={addVehicleHandler}>
                     <IconCardWithoutBg Svg={ElectricCarSvg} backgroundColor={colors.green} />
-                    <BlackText showText={'BMW'} margin={10} />
+                    <CommonText showText={'BMW'} margin={10} />
                   </TouchableOpacity>
                 )
               })

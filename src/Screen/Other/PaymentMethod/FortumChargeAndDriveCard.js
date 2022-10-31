@@ -2,16 +2,12 @@ import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView, TouchableOp
 import React from 'react'
 import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
-import Header from '../../../Component/Header/Header'
 import CommonText from '../../../Component/Text/CommonText'
 import Button from '../../../Component/Button/Button'
 import routes from '../../../Utils/routes'
 import BackButton from '../../../Component/Button/BackButton'
-import IconCard from '../../../Component/Card/IconCard'
 import WalletSvg from '../../../assests/svg/wallet'
-import BlackText from '../../../Component/Text/BlackText'
 import IconCardLarge from '../../../Component/Card/IconCardLarge'
-import BlueText from '../../../Component/Text/BlueText'
 
 const FortumChargeAndDriveCard = () => {
 
@@ -44,20 +40,20 @@ const FortumChargeAndDriveCard = () => {
                    <View style={{marginTop:20}}>
                     <TouchableOpacity style={styles.card}>
                         <IconCardLarge Svg={WalletSvg} />
-                        <BlackText showText={'View Card Details'} fontSize={20} margin={10} />
+                        <CommonText showText={'View Card Details'} fontSize={20} margin={10} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.card}>
                         <IconCardLarge Svg={WalletSvg} />
-                        <BlackText showText={'Add Money'} fontSize={20} margin={10} />
+                        <CommonText showText={'Add Money'} fontSize={20} margin={10} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.card} onPress={passbookButtonHAndler}>
                         <IconCardLarge Svg={WalletSvg} />
-                        <BlackText showText={'Passbook'} fontSize={20} margin={10} />
+                        <CommonText showText={'Passbook'} fontSize={20} margin={10} />
                     </TouchableOpacity>
                    </View>
                    <View style={styles.centerText}>
                    <CommonText  showText={'View'} fontSize={16} />
-                   <BlueText showText={'Terms And Condition'} fontSize={16} />
+                   <CommonText showText={'Terms And Condition'} fontSize={16}  customstyles={{color:colors.blue}} />
                    </View>
                 </View>
             </ScrollView>

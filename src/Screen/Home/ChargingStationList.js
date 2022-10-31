@@ -5,8 +5,6 @@ import Button from '../../Component/Button/Button'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../Component/Header/Header'
 import routes from '../../Utils/routes'
-import BlackText from '../../Component/Text/BlackText'
-import RedText from '../../Component/Text/RedText'
 import ChargerSmallSvg from '../../assests/svg/ChargerSmallSvg'
 import CommonText from '../../Component/Text/CommonText'
 
@@ -33,19 +31,18 @@ const startBtnHandler=()=>{
                         <CommonText showText={'A'} fontSize={20} />
                        </View>
                         <View style={styles.cardInner}>
-                            <BlackText showText={'A ChargingPoint'} fontSize={16} />
-                            <BlackText showText={`₹ ${'14 / 01 min'}`} fontSize={13} />
+                            <CommonText showText={'A ChargingPoint'} fontSize={16} />
+                            <CommonText showText={`₹ ${'14 / 01 min'}`} fontSize={13} />
                         </View>
                     </View>
                     <View>
                         <View style={{ alignItems: 'flex-end' }}>
                             <View style={styles.rightCon}>
                                 <ChargerSmallSvg  />
-                                <BlackText showText={'44 KW'} fontSize={12} />
+                                <CommonText showText={'44 KW'} fontSize={12} />
                             </View>
-                            <RedText showText={'Out Of Order'} fontSize={12}  />
+                            <CommonText showText={'Out Of Order'} fontSize={12} customstyles={{color:colors.red}} />
                         </View>
-
                     </View>
                 </TouchableOpacity>
                 )

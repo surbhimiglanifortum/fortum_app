@@ -1,12 +1,12 @@
-import { View, StyleSheet, TextInput, useColorScheme } from 'react-native'
+import { View, StyleSheet,  } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
-import BlackText from '../Text/BlackText'
+import CommonText from '../Text/CommonText'
 
 const TimeTextinput = ({showText}) => {
     return ( 
         <View style={[styles.Innerconatiner,]}>
-            <BlackText showText={showText}/>
+            <CommonText showText={showText}/>
         </View>
     )
 }

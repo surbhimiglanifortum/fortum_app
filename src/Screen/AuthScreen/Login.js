@@ -6,14 +6,12 @@ import SkipButton from '../../Component/Button/SkipButton';
 import CommonText from '../../Component/Text/CommonText';
 import Textinput from '../../Component/Textinput/Textinput';
 import SmallButton from '../../Component/Button/SmallButton';
-import GreenText from '../../Component/Text/GreenText';
 import { useNavigation } from '@react-navigation/native';
 import routes from '../../Utils/routes';
 import { Auth } from 'aws-amplify';
 import FaceBookSvg from '../../assests/svg/FaceBookSvg';
 import GoogleSvg from '../../assests/svg/GoogleSvg';
 import { validatePhone, validateEmail } from '../../Utils/HelperCommonFunctions'
-import WhiteText from '../../Component/Text/WhiteText';
 
 const Login = () => {
 
@@ -168,7 +166,7 @@ const Login = () => {
           </View>
           <TouchableOpacity style={[styles.button,{backgroundColor:userInput==''?colors.grey:colors.green}]} onPress={continueButtonHandler} onLoading={loading} setOnLoading={setLoading}  disabled={userInput === '' ? true : false} >
             {/* <Button /> */}
-            <WhiteText showText={'Continue'} fontSize={17} />
+            <CommonText showText={'Continue'} fontSize={17} customstyles={{color:colors.white}} />
           </TouchableOpacity>
           <View style={styles.centerText}>
             <CommonText showText={'Or Sign in with'} fontSize={12} />
@@ -183,7 +181,7 @@ const Login = () => {
         <View style={styles.bottomText}>
           <CommonText showText={'Don’t have account? '} fontSize={12} />
           <TouchableOpacity onPress={signupHandler}>
-            <GreenText showText={'Signup'} />
+            <CommonText showText={'Signup'} customstyles={{color:colors.green}} fontSize={14}  />
           </TouchableOpacity>
         </View>
       </ScrollView>

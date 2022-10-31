@@ -3,11 +3,10 @@ import React from 'react'
 import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import { scale } from 'react-native-size-matters'
-import BlackText from '../../../Component/Text/BlackText'
 import Button from '../../../Component/Button/Button'
 import routes from '../../../Utils/routes'
+import CommonText from '../../../Component/Text/CommonText'
 
 const ChargingKey = () => {
 
@@ -29,8 +28,8 @@ const chargingKeyHandler=()=>{
                                 return (
                                     <View key={ind} style={styles.card}>
                                         <Image source={require('../../../assests/chargingKey.png')} style={styles.img} />
-                                        <BlackText showText={'Name'} fontSize={20} />
-                                        <BlackText showText={`04HDGBFGNDC98DN89`} fontSize={14} />
+                                        <CommonText showText={'Name'} fontSize={20} />
+                                        <CommonText showText={`04HDGBFGNDC98DN89`} fontSize={14} />
                                     </View>
                                 )
                             })

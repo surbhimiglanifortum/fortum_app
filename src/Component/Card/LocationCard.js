@@ -3,7 +3,7 @@ import React from 'react'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
 import Entypo from 'react-native-vector-icons/Entypo'
-import BlackText from '../Text/BlackText'
+import CommonText from '../Text/CommonText'
 const LocationCard = ({title,subTitle,iconName,fontSize}) => {
 
   return (
@@ -14,8 +14,8 @@ const LocationCard = ({title,subTitle,iconName,fontSize}) => {
                     <Entypo name={iconName} size={30} color={colors.white} />
                 </View>
                 <View style={styles.middleContainer}>
-                    <BlackText showText={title} fontSize={fontSize}/>
-                    <BlackText showText={subTitle} />
+                    <CommonText showText={title} fontSize={fontSize}/>
+                    <CommonText showText={subTitle} />
                 </View>
             </View>
               

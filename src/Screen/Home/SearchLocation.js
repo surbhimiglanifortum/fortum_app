@@ -4,10 +4,10 @@ import { useNavigation } from '@react-navigation/native'
 import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import LocationSvg from '../../assests/svg/LocationSvg'
-import BlackText from '../../Component/Text/BlackText'
 import IconCard from '../../Component/Card/IconCard'
 import Location1Svg from '../../assests/svg/Location1Svg'
 import routes from '../../Utils/routes'
+import CommonText from '../../Component/Text/CommonText'
 
 const SearchLocation = () => {
 
@@ -39,15 +39,15 @@ const SearchLocation = () => {
                         <TouchableOpacity style={styles.location}>
                             <LocationSvg />
                         </TouchableOpacity>
-                        <BlackText showText={'Current Location Using GPS'} fontSize={15} />
+                        <CommonText showText={'Current Location Using GPS'} fontSize={15} />
                     </View>
                     <View style={styles.searchList}>
-                        <BlackText showText={'Recent Searches'} fontSize={18} />
+                        <CommonText showText={'Recent Searches'} fontSize={18} />
                         <TouchableOpacity style={styles.card} onPress={locationCardHandler}>
                             <IconCard Svg={Location1Svg} />
                             <View style={styles.cardInner}>
-                                <BlackText showText={'Shake Mafia'} fontSize={16} />
-                                <BlackText showText={'Shake Mafia'} fontSize={13} />
+                                <CommonText showText={'Shake Mafia'} fontSize={16} />
+                                <CommonText showText={'Shake Mafia'} fontSize={13} />
                             </View>
                         </TouchableOpacity>
                     </View>

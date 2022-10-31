@@ -2,9 +2,9 @@ import { View,  StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
-import BlackText from '../Text/BlackText'
 import { Switch } from 'react-native-paper';
 import IconCard from './IconCard'
+import CommonText from '../Text/CommonText'
 
 const ToggleCard = ({Svg,showText,fontSize}) => {
 
@@ -17,7 +17,7 @@ const ToggleCard = ({Svg,showText,fontSize}) => {
             <View style={styles.leftContainer}>
                 <IconCard Svg={Svg} />
                 <View style={styles.middleContainer}>
-                    <BlackText showText={showText} fontSize={fontSize}/>
+                    <CommonText showText={showText} fontSize={fontSize}/>
                 </View>
             </View>
               <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={colors.green} />

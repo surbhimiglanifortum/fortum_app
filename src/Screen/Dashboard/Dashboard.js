@@ -2,7 +2,6 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, useColorScheme } 
 import React, { useEffect, useState } from 'react'
 import { scale } from 'react-native-size-matters'
 import Home from '../Home/Home'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import Wallet from '../Wallet/Wallet'
 import Charging from '../Charging/Charging'
 import Notification from '../Notification/Notification'
@@ -15,11 +14,8 @@ import HomeSvg from '../../assests/svg/home'
 import WalletSvg from '../../assests/svg/wallet'
 import NotificationSvg from '../../assests/svg/notification'
 import OtherSvg from '../../assests/svg/other'
-import WhiteText from '../../Component/Text/WhiteText'
-// import { Shadow } from 'react-native-neomorph-shadows';
 
-
-const Dashboard = ({tabName }) => {
+const Dashboard = ({ tabName }) => {
 
   const [selectedTab, setSelectedTab] = useState('home')
 
@@ -41,12 +37,12 @@ const Dashboard = ({tabName }) => {
 
   const scheme = useColorScheme();
 
- useEffect(() => {
-   if(tabName){
-    setSelectedTab('wallet')
-   }
- }, [tabName])
- 
+  useEffect(() => {
+    if (tabName) {
+      setSelectedTab('wallet')
+    }
+  }, [tabName])
+
 
   return (
     <>
@@ -64,24 +60,24 @@ const Dashboard = ({tabName }) => {
 
           <TouchableOpacity onPress={homeButtonHandler} style={[styles.tabButton, selectedTab == 'home' ? { borderWidth: 2, paddingVertical: 5, paddingHorizontal: 10, borderRadius: 5, borderColor: '#FFF' } : null]}>
             <HomeSvg color={colors.white} />
-            {selectedTab == 'home' && <WhiteText showText={'Home'} margin={6} />}
+            {selectedTab == 'home' && <CommonText showText={'Home'} margin={6} customstyles={styles.tabText} />}
           </TouchableOpacity>
           {/* </Shadow> */}
           <TouchableOpacity onPress={walletButtonHandler} style={styles.tabButton}>
             <WalletSvg color={colors.white} />
-            {selectedTab == 'wallet' && <WhiteText showText={'Wallet'} margin={6} />}
+            {selectedTab == 'wallet' && <CommonText showText={'Wallet'} margin={6} customstyles={styles.tabText} />}
           </TouchableOpacity>
           <TouchableOpacity onPress={chargingButtonHandler} style={styles.tabButton}>
             <Charger color={colors.white} />
-            {selectedTab == 'charging' && <WhiteText showText={'Charging'} margin={6} />}
+            {selectedTab == 'charging' && <CommonText showText={'Charging'} margin={6} customstyles={styles.tabText} />}
           </TouchableOpacity>
           <TouchableOpacity onPress={notificationButtonHandler} style={styles.tabButton}>
             <NotificationSvg color={colors.white} />
-            {selectedTab == 'notification' && <WhiteText showText={'Notification'} margin={6} />}
+            {selectedTab == 'notification' && <CommonText showText={'Notification'} margin={6} customstyles={styles.tabText} />}
           </TouchableOpacity>
           <TouchableOpacity onPress={otherButtonHandler} style={styles.tabButton}>
             <OtherSvg color={colors.white} />
-            {selectedTab == 'other' && <WhiteText showText={'Others'} margin={6} />}
+            {selectedTab == 'other' && <CommonText showText={'Others'} margin={6} customstyles={styles.tabText} />}
           </TouchableOpacity>
         </View>
 
@@ -97,7 +93,11 @@ const styles = StyleSheet.create({
   tabButton: { flexDirection: 'row', alignItems: 'center', },
   text: { color: colors.white, fontFamily: commonFonts.bold, marginLeft: 7 },
   renderComponent: { flex: 1 },
-
+  tabText: {
+    color: colors.white,
+    marginLeft: 5,
+    fontSize: 15
+  }
 
 })
 

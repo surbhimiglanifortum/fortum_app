@@ -1,10 +1,10 @@
 import {  TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
-import BlackText from '../Text/BlackText'
+import CommonText from '../Text/CommonText'
 const AddMoneyButton = ({backgroundColor,showText,fontSize}) => {
   return (
     <TouchableOpacity style={[styles.container,{ backgroundColor:backgroundColor}]}>
-      <BlackText showText={showText} fontSize={fontSize}  />
+      <CommonText showText={showText} fontSize={fontSize}  />
     </TouchableOpacity>
   )
 }
