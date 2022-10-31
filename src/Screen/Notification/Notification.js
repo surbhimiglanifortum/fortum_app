@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, ScrollView, SafeAreaView, } from 'react-native'
 import React from 'react'
 import Header from '../../Component/Header/Header'
 import CommonText from '../../Component/Text/CommonText'
-import BlackText from '../../Component/Text/BlackText'
 import colors from '../../Utils/colors'
 import IconCardLarge from '../../Component/Card/IconCardLarge'
 import StoreGreenSvg from '../../assests/svg/StoreGreenSvg'
@@ -22,8 +21,8 @@ const Notification = () => {
           <View style={styles.card}>
             <IconCardLarge Svg={StoreGreenSvg} />
             <View style={{ width: '85%' }}>
-              <BlackText showText={'Notification 1'} fontSize={18} margin={10} />
-              <BlackText showText={'Reach the charger and start charge your EV Real time '} fontSize={14} margin={10} />
+              <CommonText showText={'Notification 1'} fontSize={18} margin={10} />
+              <CommonText showText={'Reach the charger and start charge your EV Real time '} fontSize={14} margin={10} />
             </View>
           </View>
         </View>
@@ -34,8 +33,8 @@ const Notification = () => {
           <View style={styles.card}>
             <IconCardLarge Svg={StoreGreenSvg} />
             <View style={{ width: '85%' }}>
-              <BlackText showText={'Notification 1'} fontSize={18} margin={10} />
-              <BlackText showText={'Reach the charger and start charge your EV Real time '} fontSize={14} margin={10} />
+              <CommonText showText={'Notification 1'} fontSize={18} margin={10} />
+              <CommonText showText={'Reach the charger and start charge your EV Real time '} fontSize={14} margin={10} />
             </View>
           </View>
         </View>

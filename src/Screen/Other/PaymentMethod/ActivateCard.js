@@ -1,13 +1,10 @@
-    import { View, Text, SafeAreaView, StyleSheet, useColorScheme, ScrollView, TouchableOpacity } from 'react-native'
+    import { View,SafeAreaView, StyleSheet, useColorScheme, ScrollView, TouchableOpacity } from 'react-native'
     import React from 'react'
     import colors from '../../../Utils/colors'
-    import BackButton from '../../../Component/Button/BackButton'
-    import BlackText from '../../../Component/Text/BlackText'
     import CommonText from '../../../Component/Text/CommonText'
     import Textinput from '../../../Component/Textinput/Textinput'
     import Button from '../../../Component/Button/Button'
     import { useNavigation } from '@react-navigation/native'
-    import GreenText from '../../../Component/Text/GreenText'
     import OtpTextinput from '../../../Component/Textinput/OtpTextinput'
     import Header from '../../../Component/Header/Header'
     import routes from '../../../Utils/routes'
@@ -44,7 +41,7 @@
                             <Textinput />
                         </View>
                         <TouchableOpacity style={styles.otpBtn}>
-                            <GreenText showText={'Send OTP'} fontSize={18} />
+                            <CommonText showText={'Send OTP'} fontSize={18} customstyles={{color:colors.green}}  />
                         </TouchableOpacity>
                             <CommonText showText={'Enter OTP'} />
                         <View style={styles.otpContainer}>

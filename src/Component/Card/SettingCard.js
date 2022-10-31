@@ -2,9 +2,9 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
-import BlackText from '../Text/BlackText'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import IconCard from './IconCard'
+import CommonText from '../Text/CommonText'
 
 const SettingCard = ({ showText, fontSize, Svg,onPress }) => {
 
@@ -13,7 +13,7 @@ const SettingCard = ({ showText, fontSize, Svg,onPress }) => {
                 <View style={styles.leftContainer}>
                     <IconCard Svg={Svg} />
                     <View style={styles.middleContainer}>
-                        <BlackText showText={showText} fontSize={fontSize} />
+                        <CommonText showText={showText} fontSize={fontSize} />
                     </View>
                 </View>
                 <AntDesign name='right' color={colors.black} size={18} />

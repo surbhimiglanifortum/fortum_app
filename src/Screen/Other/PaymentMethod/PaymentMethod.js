@@ -4,13 +4,12 @@ import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import CommonText from '../../../Component/Text/CommonText'
-import SettingCard from '../../../Component/Card/SettingCard'
 import WalletSvg from '../../../assests/svg/wallet'
 import Button from '../../../Component/Button/Button'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import BlackText from '../../../Component/Text/BlackText'
 import IconCardLarge from '../../../Component/Card/IconCardLarge'
 import routes from '../../../Utils/routes'
+
 const PaymentMethod = () => {
 
   const navigation = useNavigation()
@@ -37,7 +36,7 @@ const PaymentMethod = () => {
             <View style={styles.leftContainer}>
               <IconCardLarge Svg={WalletSvg} />
               <View style={styles.middleContainer}>
-                <BlackText showText={'Pay As You Go'} fontSize={15} />
+                <CommonText showText={'Pay As You Go'} fontSize={15} />
 
               </View>
             </View>
@@ -49,8 +48,8 @@ const PaymentMethod = () => {
             <View style={styles.leftContainer}>
               <IconCardLarge Svg={WalletSvg} />
               <View style={styles.middleContainer}>
-                <BlackText showText={'Fortum Charge & Drive Card'} fontSize={15} />
-                <BlackText showText={'Activate your prepaid card'} fontSize={12} />
+                <CommonText showText={'Fortum Charge & Drive Card'} fontSize={15} />
+                <CommonText showText={'Activate your prepaid card'} fontSize={12} />
               </View>
             </View>
             <AntDesign name='right' color={colors.black} size={20} />
@@ -61,8 +60,8 @@ const PaymentMethod = () => {
             <View style={styles.leftContainer}>
               <IconCardLarge Svg={WalletSvg} />
               <View style={styles.middleContainer}>
-                <BlackText showText={'Wallet'} fontSize={15} />
-                <BlackText showText={'Balance : ₹1400 '} fontSize={15} />
+                <CommonText showText={'Wallet'} fontSize={15} />
+                <CommonText showText={'Balance : ₹1400 '} fontSize={15} />
               </View>
             </View>
             <AntDesign name='right' color={colors.black} size={20} />

@@ -1,9 +1,9 @@
 import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
-import BlackText from '../Text/BlackText'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Button from '../Button/Button'
+import CommonText from '../Text/CommonText'
 
 
 const CommonModal = ({ openCommonModal, setOpenCommonModal ,showText }) => {
@@ -19,13 +19,13 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal ,showText }) => {
                 <View style={styles.innerContainer}>
                     <View style={styles.wrapContainer}>
                         <View style={styles.header}>
-                            <BlackText showText={'Notifications'} fontSize={20} />
+                            <CommonText showText={'Notifications'} fontSize={20} />
                             <TouchableOpacity style={styles.crossBtn} onPress={() => { setOpenCommonModal(false) }}>
                                 <AntDesign name='close' size={20} />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.centerText}>
-                            <BlackText showText={showText} fontSize={16} />
+                            <CommonText showText={showText} fontSize={16} />
                         </View>
                         <View>
                             <Button showText={'Okay'} onPress={okayBtnHandler} />

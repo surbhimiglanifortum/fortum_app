@@ -5,10 +5,10 @@ import FilterSvg from '../../../assests/svg/FilterSvg'
 import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
 import FilterModal from '../../../Component/Modal/FilterModal'
-import BlackText from '../../../Component/Text/BlackText'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import routes from '../../../Utils/routes'
 import SnackContext from '../../../Utils/context/SnackbarContext'
+import CommonText from '../../../Component/Text/CommonText'
 
 const MapList = ({data}) => {
 
@@ -46,7 +46,7 @@ const MapList = ({data}) => {
           <View style={styles.searchContainer}>
             <TouchableOpacity onPress={searchButtonHandler} style={styles.searchInner}>
               <AntDesign name='search1' size={20} style={{ marginRight: 5 }} />
-              <BlackText showText={'Random Location'} />
+              <CommonText showText={'Random Location'} />
             </TouchableOpacity>
             <TouchableOpacity onPress={favoruiteButtonHandler} style={styles.favContainer}>
               <AntDesign name='hearto' color={colors.red} size={20} />

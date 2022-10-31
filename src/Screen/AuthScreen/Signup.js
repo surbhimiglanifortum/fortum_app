@@ -2,7 +2,6 @@ import { View, Text, SafeAreaView, StyleSheet, useColorScheme, ScrollView, Touch
 import React from 'react'
 import colors from '../../Utils/colors'
 import BackButton from '../../Component/Button/BackButton'
-import BlackText from '../../Component/Text/BlackText'
 import CommonText from '../../Component/Text/CommonText'
 import Textinput from '../../Component/Textinput/Textinput'
 import Button from '../../Component/Button/Button'
@@ -11,7 +10,7 @@ import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik';
 import { Auth, Hub } from 'aws-amplify';
 import * as Yup from 'yup';
-import RedText from '../../Component/Text/RedText'
+
 const Signup = ({ route }) => {
     const navigation = useNavigation()
     const scheme = useColorScheme()
@@ -107,10 +106,10 @@ const Signup = ({ route }) => {
                                 {lazy_array.map((e, i) => {
                                     return (
                                         <View key={i} style={styles.textinputConatiner}>
-                                            {scheme == 'dark' ? <CommonText showText={e.name} fontSize={14} /> : <BlackText showText={e.name} fontSize={14} />}
+                                            {scheme == 'dark' ? <CommonText showText={e.name} fontSize={14} /> : <CommonText showText={e.name} fontSize={14} />}
                                             <Textinput value={values[e.value]} onChange={handleChange(e.value)} />
                                             {errors[e.value] && touched[e.value] ? (
-                                                <RedText showText={errors[e.value]} />
+                                                <CommonText showText={errors[e.value]} customstyles={{color:colors.red}} fontSize={14} />
                                             ) : null}
                                         </View>
                                     )

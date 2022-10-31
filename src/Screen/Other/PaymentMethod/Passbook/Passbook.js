@@ -1,23 +1,16 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { scale } from 'react-native-size-matters'
-// import Card from '../../Component/Card/Card'
 import { useNavigation } from '@react-navigation/native'
-// import routes from '../../Utils/routes'
-// import Charger from '../../assests/svg/charger'
-import routes from '../../../../Utils/routes'
 import colors from '../../../../Utils/colors'
 import Header from '../../../../Component/Header/Header'
 import CommonText from '../../../../Component/Text/CommonText'
 import SmallButton from '../../../../Component/Button/SmallButton'
 import FilterSvg from '../../../../assests/svg/FilterSvg'
 import Card from '../../../../Component/Card/Card'
-import Charger from '../../../../assests/svg/charger'
 import WalletSvg from '../../../../assests/svg/wallet'
 import Button from '../../../../Component/Button/Button'
 import IconCard from '../../../../Component/Card/IconCard'
-import BlackText from '../../../../Component/Text/BlackText'
-import BlueText from '../../../../Component/Text/BlueText'
 
 const Passbook = () => {
     const navigation = useNavigation()
@@ -47,9 +40,9 @@ const Passbook = () => {
                 <View style={styles.balanceCon}>
                     <View style={styles.innerHeader}>
                     <IconCard Svg={WalletSvg} />
-                    <BlackText showText={'Balance'} margin={10} fontSize={18} />
+                    <CommonText showText={'Balance'} margin={10} fontSize={18} />
                     </View>
-                    <BlackText showText={'₹1400'} />
+                    <CommonText showText={'₹1400'} />
                 </View>
                 <View style={styles.tabContainer}>
                     <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'all' ? colors.white : colors.greenBackground }]}>

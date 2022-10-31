@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { scale } from 'react-native-size-matters'
-import BlackText from '../../../Component/Text/BlackText'
+import CommonText from '../../../Component/Text/CommonText'
 
 const Store = () => {
     const navigation = useNavigation()
@@ -25,9 +25,9 @@ const Store = () => {
                 <ScrollView>
                     <View style={styles.card}>
                         <Image source={require('../../../assests/chargingKey.png')} style={styles.img} />
-                        <BlackText showText={'Name'} fontSize={20} />
-                        <BlackText showText={'Random description dummy text'} fontSize={14} />
-                        <BlackText showText={`₹${'1400'}`} fontSize={14} />
+                        <CommonText showText={'Name'} fontSize={20} />
+                        <CommonText showText={'Random description dummy text'} fontSize={14} />
+                        <CommonText showText={`₹${'1400'}`} fontSize={14} />
                     </View>
                 </ScrollView>
 

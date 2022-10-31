@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
-import BlackText from '../Text/BlackText'
 import CommonText from '../Text/CommonText'
 
 const PersonalCodeCard = ({ showText }) => {
@@ -10,7 +9,7 @@ const PersonalCodeCard = ({ showText }) => {
     return (
         <View style={styles.card}>
             <View style={styles.container}>
-                <BlackText showText={showText} />
+                <CommonText showText={showText} />
                 <TouchableOpacity style={styles.copyBtn}>
                     <CommonText showText={'Copy'} />
                 </TouchableOpacity>

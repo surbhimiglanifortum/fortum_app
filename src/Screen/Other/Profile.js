@@ -2,7 +2,6 @@ import { View, Text, SafeAreaView, StyleSheet, useColorScheme, ScrollView, Touch
 import React from 'react'
 import colors from '../../Utils/colors'
 import BackButton from '../../Component/Button/BackButton'
-import BlackText from '../../Component/Text/BlackText'
 import CommonText from '../../Component/Text/CommonText'
 import Textinput from '../../Component/Textinput/Textinput'
 import Button from '../../Component/Button/Button'

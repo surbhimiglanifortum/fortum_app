@@ -1,7 +1,6 @@
 import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'
 import React from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import BlackText from '../Text/BlackText'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
 import Charger1 from '../../assests/svg/charger1'
@@ -13,7 +12,7 @@ import CommonView from '../../Component/CommonView'
 import { useQuery } from 'react-query'
 import FontIcon from "../FortumIcons/FontIcon";
 import { getChargerMapObject } from '../../Utils/HelperCommonFunctions'
-import * as ApiAction from '../../Services/Api'
+// import * as ApiAction from '../../Services/Api'
 import CommonCard from '../../Component/Card/CommonCard'
 import axios from 'axios'
 import * as ApiAction from '../../Services/Api'
@@ -70,7 +69,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
                     </View>
 
                     <View style={styles.middleCard}>
-                        <BlackText showText={'Show Available Charger Only'} fontSize={15} />
+                        <CommonText showText={'Show Available Charger Only'} fontSize={15} />
                         <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={colors.green} />
                     </View>
                     <View style={styles.button}>

@@ -4,11 +4,10 @@ import colors from '../../../Utils/colors'
 import Button from '../../../Component/Button/Button'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
-import DeleteCard from '../../../Component/Card/DeleteCard'
 import ElectricCarSvg from '../../../assests/svg/ElectricCarSvg'
 import routes from '../../../Utils/routes'
 import IconCardWithoutBg from '../../../Component/Card/IconCardWithoutBg'
-import BlackText from '../../../Component/Text/BlackText'
+import CommonText from '../../../Component/Text/CommonText'
 
 const SelectVehicle = () => {
     const navigation = useNavigation()
@@ -28,7 +27,7 @@ const addEvModalBtnHandler=()=>{
                 return (
                   <TouchableOpacity style={styles.card} >
                     <IconCardWithoutBg Svg={ElectricCarSvg} backgroundColor={colors.green} />
-                    <BlackText showText={'MZ zs ev'} margin={10} />
+                    <CommonText showText={'MZ zs ev'} margin={10} />
                   </TouchableOpacity>
                 )
               })

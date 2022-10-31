@@ -1,7 +1,5 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
-
-import BlackText from '../../Component/Text/BlackText';
 import colors from '../../Utils/colors';
 import MapList from './ChargerList/MapList';
 import IconCardWithoutBg from '../../Component/Card/IconCardWithoutBg';
@@ -13,8 +11,6 @@ import routes from '../../Utils/routes';
 import FilterModal from '../../Component/Modal/FilterModal';
 import LocationSvg from '../../assests/svg/LocationSvg';
 import DetailsCard from '../../Component/Card/DetailsCard';
-import Entypo from 'react-native-vector-icons/Entypo'
-import WhiteText from '../../Component/Text/WhiteText';
 import Geolocation from '@react-native-community/geolocation';
 import { computeDistance } from '../../Utils/helperFuncations/computeDistance';
 import { postListService } from '../../Services/HomeTabService/HomeTabService';
@@ -23,6 +19,7 @@ import { useQuery } from 'react-query'
 
 import * as ApiAction from '../../Services/Api'
 import MapCharger from '../Home/MapCharger'
+import CommonText from '../../Component/Text/CommonText';
 let selectedMarker = {}
 
 export default Home = () => {
@@ -160,10 +157,10 @@ export default Home = () => {
         <View style={styles.topTabInner}>
           <TouchableOpacity onPress={mapButtonHandler}
             style={[styles.tabContainer, selectedTab != 'List' ? { backgroundColor: colors.white, borderRadius: 4, paddingVertical: 3 } : null,]}>
-            <WhiteText showText={'Map'} fontSize={16} color={selectedTab != 'List' ? colors.black : colors.white} />
+            <CommonText showText={'Map'} fontSize={16} customstyles={{color:selectedTab != 'List' ? colors.black : colors.white}} />
           </TouchableOpacity >
           <TouchableOpacity onPress={listButtonHandler} style={[styles.tabContainer, selectedTab == 'List' ? { backgroundColor: colors.white, borderRadius: 4, paddingVertical: 3 } : null,]}>
-            <WhiteText showText={'List'} fontSize={16} color={selectedTab == 'List' ? colors.black : colors.white} />
+            <CommonText showText={'List'} fontSize={16} customstyles={{color:selectedTab == 'List' ? colors.black : colors.white}} />
           </TouchableOpacity>
         </View>
       </View>
@@ -182,11 +179,11 @@ export default Home = () => {
           </TouchableOpacity>
         </View>}
         {selectedTab != 'List' && <View style={styles.searchContainer}>
-          <BlackText showText={'Show charging station nearest to'} fontSize={17} />
+          <CommonText showText={'Show charging station nearest to'} fontSize={17} />
           <View style={styles.searchInnerContainer}>
             <TouchableOpacity style={styles.searchBox} onPress={searchBtnHandler}>
               <AntDesign name='search1' size={20} />
-              <BlackText showText={'Your Location'} margin={6} />
+              <CommonText showText={'Your Location'} margin={6} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.locationBtn} onPress={locationBtnHandler}>
               <LocationSvg />

@@ -1,12 +1,12 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
-import BlackText from '../Text/BlackText'
+import CommonText from '../Text/CommonText'
 
 const WhiteButton = ({onPress,showText,color}) => {
   return (
     <TouchableOpacity style={[styles.container]} onPress={onPress}>
-      <BlackText showText={showText} fontSize={17} color={color} />
+      <CommonText showText={showText} fontSize={17} color={color} />
     </TouchableOpacity>
   )
 }

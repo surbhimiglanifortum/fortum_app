@@ -5,7 +5,6 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native'
 import Card from '../../../Component/Card/Card'
 import Header from '../../../Component/Header/Header'
-import BlackText from '../../../Component/Text/BlackText'
 import colors from '../../../Utils/colors'
 import Charger1 from '../../../assests/svg/charger1'
 import CommonText from '../../../Component/Text/CommonText'
@@ -32,77 +31,77 @@ const TaxInvoice = ({ route }) => {
                     </View>
                     <View style={styles.card}>
                         <View style={styles.innerCard}>
-                            <BlackText showText={'Charger type :'} fontSize={15} />
+                            <CommonText showText={'Charger type :'} fontSize={15} />
                             <Charger1 />
-                            <BlackText showText={'CSCC'} fontSize={15} />
+                            <CommonText showText={'CSCC'} fontSize={15} />
                         </View>
-                        <BlackText showText={`kWh Used : ${paramData?.item?.kwh}`} fontSize={15} />
+                        <CommonText showText={`kWh Used : ${paramData?.item?.kwh}`} fontSize={15} />
                     </View>
                     <View style={styles.card}>
-                        <BlackText showText={'Invoice Number'} fontSize={15} />
-                        <BlackText showText={
+                        <CommonText showText={'Invoice Number'} fontSize={15} />
+                        <CommonText showText={
                             paramData?.item?.order?.invoice_number
                                 ? paramData?.item?.order?.invoice_number
                                 : paramData?.item?.order?.id} fontSize={15} />
                     </View>
                     <View style={styles.InvoiceDetails}>
-                        {scheme == 'dark' ? <CommonText showText={'Tax Invoice Details'} fontSize={20} /> : <BlackText showText={'Tax Invoice Details'} fontSize={20} />}
+                        {scheme == 'dark' ? <CommonText showText={'Tax Invoice Details'} fontSize={20} /> : <CommonText showText={'Tax Invoice Details'} fontSize={20} />}
                         <View style={styles.invoiceCard}>
                             <View style={styles.innerCard1}>
-                                <BlackText showText={'Start Time'} fontSize={15} />
-                                <BlackText showText={getFormatedDate(paramData?.item?.start_datetime)} fontSize={15} />
+                                <CommonText showText={'Start Time'} fontSize={15} />
+                                <CommonText showText={getFormatedDate(paramData?.item?.start_datetime)} fontSize={15} />
                             </View>
                             <View style={styles.innerCard1}>
-                                <BlackText showText={'End Time'} fontSize={15} />
-                                <BlackText showText={getFormatedDate(paramData?.item?.end_datetime)} fontSize={15} />
+                                <CommonText showText={'End Time'} fontSize={15} />
+                                <CommonText showText={getFormatedDate(paramData?.item?.end_datetime)} fontSize={15} />
                             </View>
                         </View>
                         <View style={styles.invoiceCard}>
                             <View style={styles.innerCard1}>
-                                <BlackText showText={'Price'} fontSize={15} />
-                                <BlackText showText={`₹ ${paramData?.item?.order?.pricingToApply?.price}`} fontSize={15} />
+                                <CommonText showText={'Price'} fontSize={15} />
+                                <CommonText showText={`₹ ${paramData?.item?.order?.pricingToApply?.price}`} fontSize={15} />
                             </View>
                             <View style={styles.innerCard1}>
-                                <BlackText showText={'Cost'} fontSize={15} />
-                                <BlackText showText={`₹ ${paramData?.item?.order?.amount / 100}`} fontSize={15} />
+                                <CommonText showText={'Cost'} fontSize={15} />
+                                <CommonText showText={`₹ ${paramData?.item?.order?.amount / 100}`} fontSize={15} />
                             </View>
                             <View style={styles.innerCard1}>
-                                <BlackText showText={'Amount of CGST (9%)'} fontSize={15} />
-                                <BlackText showText={`₹${(paramData?.item?.order?.cgst / 100).toFixed(2)}`} fontSize={15} />
+                                <CommonText showText={'Amount of CGST (9%)'} fontSize={15} />
+                                <CommonText showText={`₹${(paramData?.item?.order?.cgst / 100).toFixed(2)}`} fontSize={15} />
                             </View>
                             <View style={styles.innerCard1}>
-                                <BlackText showText={'Amount of SGST (9%)'} fontSize={15} />
-                                <BlackText showText={`₹${(paramData?.item?.order?.sgst / 100).toFixed(2)}`} fontSize={15} />
+                                <CommonText showText={'Amount of SGST (9%)'} fontSize={15} />
+                                <CommonText showText={`₹${(paramData?.item?.order?.sgst / 100).toFixed(2)}`} fontSize={15} />
                             </View>
                             <View style={styles.innerCard1}>
-                                <BlackText showText={'Total '} fontSize={15} />
-                                <BlackText showText={`₹${'1400'}`} fontSize={15} />
+                                <CommonText showText={'Total '} fontSize={15} />
+                                <CommonText showText={`₹${'1400'}`} fontSize={15} />
                             </View>
 
                         </View>
                         <View style={styles.card}>
-                            <BlackText showText={'Paid Via'} fontSize={15} />
-                            <BlackText showText={'Wallet'} fontSize={15} />
+                            <CommonText showText={'Paid Via'} fontSize={15} />
+                            <CommonText showText={'Wallet'} fontSize={15} />
                         </View>
                         <View style={styles.invoiceCard}>
                             <View style={styles.innerCard1}>
-                                <BlackText showText={'Product Name'} fontSize={15} />
+                                <CommonText showText={'Product Name'} fontSize={15} />
                                 <View>
-                                    <BlackText showText={'EV Charging Service'} fontSize={15} />
-                                    <BlackText showText={'SAC- 999799'} fontSize={15} />
+                                    <CommonText showText={'EV Charging Service'} fontSize={15} />
+                                    <CommonText showText={'SAC- 999799'} fontSize={15} />
                                 </View>
                             </View>
                             <View style={styles.innerCard1}>
-                                <BlackText showText={'Transaction ID'} fontSize={15} />
-                                <BlackText showText={paramData?.item?.id} fontSize={15} />
+                                <CommonText showText={'Transaction ID'} fontSize={15} />
+                                <CommonText showText={paramData?.item?.id} fontSize={15} />
                             </View>
                         </View>
                         <View style={styles.card}>
                             <View>
-                                <BlackText showText={'Whether GST is payable under '} fontSize={15} />
-                                <BlackText showText={'reverse charge mechanism'} fontSize={15} />
+                                <CommonText showText={'Whether GST is payable under '} fontSize={15} />
+                                <CommonText showText={'reverse charge mechanism'} fontSize={15} />
                             </View>
-                            <BlackText showText={'No'} fontSize={18} />
+                            <CommonText showText={'No'} fontSize={18} />
                         </View>
                         <View style={styles.bottomButton}>
                             <Button showText={'Download Invoice'} />

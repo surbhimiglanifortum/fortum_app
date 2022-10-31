@@ -2,12 +2,12 @@ import { View, Text, useColorScheme, StyleSheet, SafeAreaView } from 'react-nati
 import React from 'react'
 import colors from '../../Utils/colors'
 import Header from '../../Component/Header/Header'
-import BlackText from '../../Component/Text/BlackText'
 import AddButton from '../../Component/Button/AddButton'
 import AddMoneyButton from '../../Component/Button/AddMoneyButton'
 import Button from '../../Component/Button/Button'
 import WhiteButton from '../../Component/Button/WhiteButton'
 import Slider from '@react-native-community/slider';
+import CommonText from '../../Component/Text/CommonText'
 const RechargeWallet = () => {
 
   const scheme = useColorScheme()
@@ -19,7 +19,7 @@ const RechargeWallet = () => {
         <View style={styles.card}>
           <View style={styles.innerCard}>
             <AddButton backgroundColor={colors.white} iconName={'minus'} color={colors.black} />
-            <BlackText showText={'₹50'} fontSize={25} />
+            <CommonText showText={'₹50'} fontSize={25} />
             <AddButton backgroundColor={colors.greenBackground} iconName={'plus'} color={colors.white} />
           </View>
           <View>

@@ -1,16 +1,12 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView } from 'react-native'
 import React from 'react'
 import colors from '../../../Utils/colors'
-import Button from '../../../Component/Button/Button'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
-import DeleteCard from '../../../Component/Card/DeleteCard'
-import ElectricCarSvg from '../../../assests/svg/ElectricCarSvg'
 import routes from '../../../Utils/routes'
 import CommonText from '../../../Component/Text/CommonText'
 import ToggleCard from '../../../Component/Card/ToggleCard'
 import Charger from '../../../assests/svg/charger'
-import BlackText from '../../../Component/Text/BlackText'
 
 const Preference = () => {
     const navigation = useNavigation()
@@ -25,7 +21,7 @@ const Preference = () => {
                 <Header showText={'Prefernce'} />
                 
                 <View style={styles.headerText}>
-                {scheme == 'dark' ? <CommonText showText={'Internal Marketing'} fontSize={20} />:<BlackText showText={'Internal Marketing'} fontSize={20} />}
+                 <CommonText showText={'Internal Marketing'} fontSize={20} />
                     <View style={{ marginVertical: 7 }}>
                         <CommonText showText={'Yes, I want to receive internal marketing communication via'} fontSize={15} />
                     </View>
@@ -34,7 +30,7 @@ const Preference = () => {
                 <ToggleCard Svg={Charger} showText={'Push Notifications'} fontSize={16}/>
                 <ToggleCard Svg={Charger} showText={'SMS'} fontSize={16} />
                 <View style={styles.headerText}>
-                {scheme == 'dark' ? <CommonText showText={'External Marketing'} fontSize={20} />:<BlackText showText={'External Marketing'} fontSize={20} />}
+              <CommonText showText={'External Marketing'} fontSize={20} />
                     <View style={{ marginVertical: 7 }}>
                         <CommonText showText={'Yes, I want to receive internal marketing communication via'} fontSize={15} />
                     </View>

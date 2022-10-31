@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
-import BlackText from '../Text/BlackText'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import commonFonts from '../../Utils/fonts/fonts'
 const AddRemoveCard = () => {

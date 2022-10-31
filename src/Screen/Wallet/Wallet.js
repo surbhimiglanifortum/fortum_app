@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, ScrollView, SafeAreaView, useColorScheme } from
 import React from 'react'
 import Header from '../../Component/Header/Header'
 import CommonText from '../../Component/Text/CommonText'
-import BlackText from '../../Component/Text/BlackText'
 import Card from '../../Component/Card/Card'
 import WalletCard from '../../Component/Card/WalletCard'
 import { useNavigation } from '@react-navigation/native'
@@ -24,7 +23,7 @@ navigation.navigate(routes.RechargeWallet)
           {/* card */}
           <WalletCard onPress={RechargeButtonHandler} />
           <View style={styles.text}>
-            {scheme == 'dark' ? <CommonText showText={'Transcation History'} fontSize={15} /> : <BlackText showText={'Transcation History'} fontSize={15} />}
+            <CommonText showText={'Transcation History'} fontSize={15} /> 
           </View>
           {
             [1, 1, 1, 1, 1, 1, 1, , 1].map((item, i) => {

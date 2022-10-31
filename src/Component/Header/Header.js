@@ -2,8 +2,6 @@ import { View,StyleSheet, useColorScheme } from 'react-native'
 import React from 'react'
 import BackButton from '../Button/BackButton'
 import CommonText from '../Text/CommonText'
-import BlackText from '../Text/BlackText'
-import { useNavigation } from '@react-navigation/native'
 
 const Header = ({showText}) => {
      const scheme=useColorScheme()
