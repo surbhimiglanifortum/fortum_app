@@ -1,20 +1,27 @@
 import { View, Text, StyleSheet } from 'react-native'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import MapView from "react-native-map-clustering";
 import { Marker } from 'react-native-maps';
 import { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import AvailMarker from '../../../assests/svg/AvailMarker'
-export default function index({ data, locationLoading, isLoading ,chargingBtnHandler}) {
+export default function index({ data, locationLoading, isLoading, chargingBtnHandler, location }) {
     const [visibleRegion, setVisibleRegion] = useState([0, 0, 0, 0])
 
 
     const mapRef = useRef();
-    const regionToZoom = {
-        latitude: 23.313561,
-        longitude: 78.2863013,
-        latitudeDelta: 50.4922,
-        longitudeDelta: 0.0521,
-    }
+
+
+    useEffect(() => {
+        if (location?.coords) {
+            mapRef.current.animateToRegion({
+                latitude: location?.coords.latitude,
+                longitude: location.coords.longitude,
+                latitudeDelta: 0.025,
+                longitudeDelta: 0.025
+            }, 2000);
+        }
+
+    }, [location])
 
 
     return (
@@ -41,7 +48,7 @@ export default function index({ data, locationLoading, isLoading ,chargingBtnHan
                     // marker
                     if (parseFloat(item.latitude) === e.nativeEvent.coordinate.latitude &&
                         parseFloat(item.longitude) === e.nativeEvent.coordinate.longitude) {
-                        console.log("FOUND MARKER")
+                        
                         return true
                     }
                 })
@@ -58,7 +65,12 @@ export default function index({ data, locationLoading, isLoading ,chargingBtnHan
             showsCompass={false}
             showsUserLocation
             style={styles.map}
-            initialRegion={regionToZoom}
+            initialRegion={{
+                latitude: 23.313561,
+                longitude: 78.2863013,
+                latitudeDelta: 50.4922,
+                longitudeDelta: 0.0521,
+            }}
         >
             {isLoading ? null :
                 data?.map((item, index) => {
