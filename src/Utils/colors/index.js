@@ -13,7 +13,11 @@ const colors = {
     lightgreen:'#BBDCD3',
     grey:"#c7c7c7",
     blue:'#006ADA',
-    matteRed:'#D14F4F'
+    matteRed:'#D14F4F',
+    lightRed:'#FF7878',
+    denseShadow:'#D6E3F3',
+    denseShadowDark:'#303030',
+    denseShadowSecondary:'#202020'
 }
 
 export default colors
