@@ -9,7 +9,7 @@ import VerticalCard from './VerticalCard'
 import CommonText from '../Text/CommonText'
 import CommonView from '../../Component/CommonView'
 
-const DetailsCard = ({ chargerType, onPress, item }) => {
+const DetailsCard = ({ chargerType, onPress, item ,favourite}) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <CommonView style={styles.container} children={
@@ -37,7 +37,8 @@ const DetailsCard = ({ chargerType, onPress, item }) => {
                     </View>
                     <View style={[styles.innerContainer1,]}>
                         <View style={styles.longText}>
-                            <CommonText fontSize={12} showText={`${item?.address?.city} ${item?.address?.street} ${item?.address?.postalCode}`} />
+                            {favourite?<CommonText fontSize={12} showText={`${item?.address2?.city} ${item?.address2?.street} ${item?.address2?.postalCode}`} />:<CommonText fontSize={12} showText={`${item?.address?.city} ${item?.address?.street} ${item?.address?.postalCode}`} />}
+                            
                         </View>
                         <CommonText fontSize={12} showText={`${item?.distance} Km`} />
                     </View>
