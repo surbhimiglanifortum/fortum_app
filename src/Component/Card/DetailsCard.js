@@ -17,8 +17,9 @@ const DetailsCard = ({ chargerType, onPress, item }) => {
                     <View style={styles.innerContainer}>
                         <View>
                             <CommonText showText={item?.name} fontSize={16} />
-                            <CommonText fontSize={12} customstyles={{ color: item.summary.aggregatedStatus === 'AVAILABLE' ? colors.green : item.summary.aggregatedStatus === 'CHARGING' ? colors.red : item.summary.aggregatedStatus === 'OCCUPIED' ? colors.red : "#D25564" }}>{item?.summary?.aggregatedStatus}</CommonText>
+                            <CommonText fontSize={12} customstyles={{ color: item?.summary?.aggregatedStatus === 'AVAILABLE' ? colors.green : item?.summary?.aggregatedStatus === 'CHARGING' ? colors.red : item?.summary?.aggregatedStatus === 'OCCUPIED' ? colors.red : "#D25564" }}>{item?.summary?.aggregatedStatus}</CommonText>
                             < CommonText fontSize={12} showText={item?.AccessDetails?.chargetType} />
+                            {console.log("Check Business Time", item)}
                             {
                                 item?.BusineessTime?.map((i, index) => {
                                     return < CommonText fontSize={12} showText={`${i?.startTime} - ${i?.endTime}`} />

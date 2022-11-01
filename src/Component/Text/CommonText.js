@@ -11,7 +11,7 @@ const CommonText = ({ showText, fontSize = 16, children, customstyles, bold, reg
       [styles.text, {
         fontSize: fontSize,
         color: scheme == 'dark' ? colors.white : colors.lightText, fontFamily: regular ? commonFonts.regular : commonFonts.bold
-        
+
       },
         customstyles
       ]}

@@ -44,20 +44,28 @@ export const blockAmount = async (payload) => {
     return await axios.post('/pinelabs/wallet/transaction/block-amount', payload);
 }
 
-export const walletHistory = async (username, startDate, endDate) => {
+export const walletHistory = async (username, startDate, endDated) => {
     let userName = 'ritu.bhagwasiya@mfilterit.com'
-    let srtDate = '2022-07-01T11:34:21'
-    let EndData = '2022-10-31T06:02:03'
     return await axios.get(appconfig.BASE_URL + "/users/get-transactions/", {
         params: {
             username: userName,
-            startDate: srtDate,
-            endDate: EndData
+            startDate: startDate,
+            endDate: endDated
         }
     })
 }
 
 
 export const getFavouriteCHarger = async (username) => {
-    return await axios.get('/favouriteCharger/' +username );
+    return await axios.get('/favouriteCharger/' + username);
+
+};
+
+export const walletRecharge = async (username, payload) => {
+    return await axios.post("/juspay/initiate_payment/close_loop_balance/" + username, payload);
+
+}
+
+export const userGstList = async () => {
+    return await axios.get("/gst_state_map/all-gst-state")
 }

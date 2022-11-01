@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { StatusBar, useColorScheme } from 'react-native';
+import { StatusBar, useColorScheme, NativeEventEmitter, NativeModules } from 'react-native';
 import Routes from './src/Navigation/Routes';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { enableLatestRenderer } from 'react-native-maps';
@@ -13,8 +13,19 @@ import CommonModal from './src/Component/Modal/CommonModal';
 import { configureStore, persistor } from "./src/Redux/store";
 import { Provider, connect, ReactReduxContext } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+import HyperSdkReact from 'hyper-sdk-react';
 
 Amplify.configure(awsconfig)
+
+const uuidv4 = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    // eslint-disable-next-line no-bitwise
+    var r = (Math.random() * 16) | 0,
+      // eslint-disable-next-line no-bitwise
+      v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
 
 const App = () => {
 
@@ -60,6 +71,40 @@ const App = () => {
     }
     loginCheck()
   }, [])
+
+  useEffect(() => {
+    const initiate_payload = {
+      requestId: uuidv4(),
+      service: 'in.juspay.hyperpay',
+      payload: {
+        action: 'initiate',
+        merchantId: 'fortum',
+        clientId: 'fortum',
+        environment: 'production',
+      },
+    };
+    console.log("initialpayload,", initiate_payload)
+    HyperSdkReact.createHyperServices();
+    HyperSdkReact.initiate(JSON.stringify(initiate_payload));
+  }, [])
+
+  useEffect(() => {
+    const eventEmitter = new NativeEventEmitter(NativeModules.HyperSdkReact);
+    const eventListener = eventEmitter.addListener('HyperEvent', resp => {
+      const data = JSON.parse(resp);
+      const event = data.event || '';
+      switch (event) {
+        case 'initiate_result':
+          console.log('Initiate result', data);
+          break;
+        default:
+          console.log('Initiate default result', data);
+      }
+    });
+    return () => {
+      eventListener.remove();
+    };
+  }, []);
 
   const [currentLocation, setCurrentLocation] = useState({})
   const [mLocationsPayload, mSetLocationsPayload] = useState({ onlyAvailableConnectors: false })

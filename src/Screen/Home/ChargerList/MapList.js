@@ -60,6 +60,7 @@ const MapList = ({ data, setOpenFilterModal, isRefetching }) => {
             {/* Render Details Card */}
             {
               data?.map((item, ind) => {
+                {console.log("Check item of details card")}
                 return (
                   <View key={ind}>
                     <DetailsCard chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />

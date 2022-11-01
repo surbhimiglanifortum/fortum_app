@@ -32,7 +32,8 @@ import FortumChargeAndDriveCard from '../Screen/Other/PaymentMethod/FortumCharge
 import ActivateCard from '../Screen/Other/PaymentMethod/ActivateCard';
 import CompleteKYC from '../Screen/Other/PaymentMethod/CompleteKYC';
 import Passbook from '../Screen/Other/PaymentMethod/Passbook/Passbook';
-
+import MyCart from '../Screen/Other/Store/MyCart';
+import PaymentScreenJuspay from '../Screen/Juspay/PaymentScreenJuspay'
 
 
 const Stack = createNativeStackNavigator();
@@ -70,7 +71,8 @@ const Routes = ({ loggedin }) => {
            <Stack.Screen name={routes.ActivateCard} component={ActivateCard} options={{headerShown:false}}  />
            <Stack.Screen name={routes.CompleteKYC} component={CompleteKYC} options={{headerShown:false}}  />
            <Stack.Screen name={routes.Passbook} component={Passbook} options={{headerShown:false}}  />
-
+           <Stack.Screen name={routes.MyCart} component={MyCart} options={{headerShown:false}}  />
+           <Stack.Screen name={routes.PaymentScreenJuspay} component={PaymentScreenJuspay} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 };
