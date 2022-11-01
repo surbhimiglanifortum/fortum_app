@@ -29,7 +29,8 @@ const routes = {
     ActivateCard: 'ActivateCard',
     CompleteKYC: 'CompleteKYC',
     Passbook: 'Passbook',
-    PaymentScreenJuspay: 'PaymentScreenJuspay'
+    PaymentScreenJuspay: 'PaymentScreenJuspay',
+    MyCart:'MyCart',
 }
 
 export default routes

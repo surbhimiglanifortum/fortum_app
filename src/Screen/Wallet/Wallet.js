@@ -10,11 +10,10 @@ import { walletHistory } from '../../Services/Api'
 import CardWallet from '../../Component/Card/cardWallet'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment'
-import FilterSvg from '../../assests/svg/FilterSvg'
 import colors from '../../Utils/colors'
 import WalletModals from '../../Component/Modal/WalletModal'
-
-
+import { scale } from 'react-native-size-matters'
+import Fontisto from 'react-native-vector-icons/Fontisto'
 const Wallet = () => {
 
   const scheme = useColorScheme()
@@ -33,8 +32,7 @@ const Wallet = () => {
   const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
-  const [refreshing, setRefreshing] = useState(false)
-  const [techStart, setTechStart] = useState('')
+  const [techStart, setTechStart] = useState()
   const [techEnd, setTechEnd] = useState('')
 
   const showStartDatePicker = () => {
@@ -43,6 +41,14 @@ const Wallet = () => {
 
   const hideStartDatePicker = () => {
     setStartDatePickerVisibility(!isStartDatePickerVisible);
+  };
+
+  const showEndDatePicker = () => {
+    setEndDatePickerVisibility(!isEndDatePickerVisible);
+  };
+
+  const hideEndDatePicker = () => {
+    setEndDatePickerVisibility(!isEndDatePickerVisible);
   };
 
   const handleStartConfirm = (date) => {
@@ -55,17 +61,9 @@ const Wallet = () => {
     }
     let d = new Date(date).getDate()
     let srt = `${year}-${month}-${d}T00:00:00`
-    console.log("Check Hour", srt)
+    console.log("Check Hour start", srt)
     setTechStart(srt)
     hideStartDatePicker();
-  };
-
-  const showEndDatePicker = () => {
-    setEndDatePickerVisibility(!isEndDatePickerVisible);
-  };
-
-  const hideEndDatePicker = () => {
-    setEndDatePickerVisibility(!isEndDatePickerVisible);
   };
 
   const handleEndConfirm = (date) => {
@@ -78,49 +76,71 @@ const Wallet = () => {
     }
     let d = new Date(date).getDate()
     let end = `${year}-${month}-${d}T24:00:00`
-    console.log("Check Hour", end)
+    console.log("Check Hour end", end)
     setTechEnd(end)
     hideEndDatePicker();
   };
 
+  const showDateList = () => {
+    refetch()
+    setModalVisible(false)
+  }
+
   const { data, status, isLoading, refetch } = useQuery('walletData', async () => {
-    const res = await walletHistory()
+    const res = await walletHistory(techStart, techEnd)
     var result = res.data
     result = result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     return result
   })
 
-  console.log(data, '...................data trans')
 
+  console.log(techStart, techEnd, '///// in wallet')
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.innerContainer}>
         <Header showText={'Wallet'} />
-
         {/* card */}
         <WalletCard onPress={RechargeButtonHandler} />
         <View style={styles.text}>
           <CommonText showText={'Transcation History'} fontSize={15} />
         </View>
-
-        {!isLoading && data?.length > 0 ?
-          <FlatList
-            data={data}
-            keyExtractor={item => item.id}
-            renderItem={(item) => {
-              return (
-                <CardWallet dataItem={item} />
-              )
-            }}
-          /> :
-          <CommonText showText={'No History Found'} customstyles={{ alignSelf: 'center', marginTop: 50 }} />
-        }
-        <TouchableOpacity style={styles.filterBtn} onPress={() => setModalVisible(true)}>
-          <FilterSvg />
-        </TouchableOpacity>
+        <View>
+          {!isLoading && data?.length > 0 ?
+            <FlatList
+              data={data}
+              keyExtractor={item => item.id}
+              renderItem={(item) => {
+                return (
+                  <CardWallet dataItem={item} />
+                )
+              }}
+            /> :
+            <CommonText showText={'No History Found'} customstyles={{ alignSelf: 'center', marginTop: 50 }} />
+          }
+        </View>
       </View>
-      <WalletModals modalVisible={modalVisible} setModalVisible={setModalVisible} />
+      <TouchableOpacity style={styles.filterBtn} onPress={() => setModalVisible(true)}>
+        <Fontisto name='equalizer' size={20} color={colors.white} />
+      </TouchableOpacity>
+      <DateTimePickerModal
+        isVisible={isStartDatePickerVisible}
+        mode="date"
+        onConfirm={handleStartConfirm}
+        onCancel={hideStartDatePicker}
+        maximumDate={new Date()}
+      />
+
+      <DateTimePickerModal
+        isVisible={isEndDatePickerVisible}
+        mode="date"
+        onConfirm={handleEndConfirm}
+        onCancel={hideEndDatePicker}
+        maximumDate={new Date()}
+      />
+
+      <WalletModals modalVisible={modalVisible} setModalVisible={setModalVisible} showStartDatePicker={showStartDatePicker} showEndDatePicker={showEndDatePicker} startDate={startDate} endDate={endDate} showDateList={showDateList} />
+
     </SafeAreaView>
   )
 }
@@ -133,7 +153,7 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
     marginTop: 20,
-    marginBottom: 40
+    marginBottom: 540
   },
   text: {
     marginVertical: 15
@@ -145,7 +165,7 @@ const styles = StyleSheet.create({
   filterBtn: {
     position: 'absolute',
     backgroundColor: colors.green,
-    bottom: 250,
+    bottom: scale(15),
     right: 10,
     paddingVertical: 15,
     paddingHorizontal: 15,

@@ -6,11 +6,15 @@ import Header from '../../../Component/Header/Header'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { scale } from 'react-native-size-matters'
 import CommonText from '../../../Component/Text/CommonText'
+import routes from '../../../Utils/routes'
 
 const Store = () => {
     const navigation = useNavigation()
     const scheme = useColorScheme()
 
+    const cartHandler=()=>{
+        navigation.navigate(routes.MyCart)
+    }
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
@@ -18,7 +22,7 @@ const Store = () => {
                 {/* <Header /> */}
                 <View style={styles.header}>
                     <Header showText={'Store'} />
-                    <TouchableOpacity style={styles.cartCon}>
+                    <TouchableOpacity style={styles.cartCon} onPress={cartHandler}>
                         <AntDesign name='shoppingcart' color={colors.black} size={25} />
                     </TouchableOpacity>
                 </View>
@@ -65,12 +69,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 6
     },
-img:{
-alignSelf:'center',
-height:scale(120),
-width:scale(120),
-marginVertical:10
-},
+    img: {
+        alignSelf: 'center',
+        height: scale(120),
+        width: scale(120),
+        marginVertical: 10
+    },
 
 })
 
