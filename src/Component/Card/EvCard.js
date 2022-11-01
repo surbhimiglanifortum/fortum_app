@@ -1,18 +1,50 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import React from 'react'
-import { Card } from 'react-native-paper'
-import IconCard from './IconCard'
-import Location1Svg from '../../assests/svg/Location1Svg'
 import CommonText from '../Text/CommonText'
+import CommonCard from '../Card/CommonCard'
+import IEC_62196_T2_COMBO from '../../../src/assests/svg/IEC_62196_T2_COMBO'
+import IEC_62196_T1 from '../../../src/assests/svg/IEC_62196_T1'
+import CHADEMO from '../../../src/assests/svg/CHADEMO'
+import IEC_62196_T1_COMBO from '../../../src/assests/svg/IEC_62196_T1_COMBO'
+import IEC_62196_T2 from '../../../src/assests/svg/IEC_62196_T2'
 
 const EvCard = ({ onPress, title, subTitle, rightText, backgroundColor, rightTitleColor }) => {
 
+    const getFile = (key) => {
+        console.log(key)
+        switch (key) {
+            case 'IEC_62196_T1':
+                return <IEC_62196_T1 />
+                break;
+            case 'IEC_62196_T2_COMBO':
+                return <IEC_62196_T2_COMBO />
+                break;
+            case 'CHADEMO':
+                return <CHADEMO />
+                break;
+            case 'IEC_62196_T2':
+                return <IEC_62196_T2 />
+                break;
+            case 'IEC_62196_T1_COMBO':
+                return <IEC_62196_T1_COMBO />
+                break;
+            case 'DOMESTIC_F':
+                return <IEC_62196_T2_COMBO />
+                break;
+            default:
+                return <IEC_62196_T2_COMBO />
+                break;
+        }
+    }
+
     return (
         <TouchableOpacity style={{ marginVertical: 10 }} onPress={onPress}>
-            <Card >
+            <CommonCard>
                 <View style={styles.container}>
                     <View style={styles.centerView}>
-                        <IconCard Svg={Location1Svg} />
+                        <TouchableWithoutFeedback style={styles.card}>
+                            {getFile(title)}
+                        </TouchableWithoutFeedback>
                         <View style={styles.cardInner}>
                             <CommonText showText={title} fontSize={16} />
                             <CommonText showText={subTitle} fontSize={13} />
@@ -22,11 +54,10 @@ const EvCard = ({ onPress, title, subTitle, rightText, backgroundColor, rightTit
                         <View style={[{ backgroundColor: backgroundColor }, styles.rightCon]}>
                             <CommonText showText={'0/2'} customstyles={{ color: '#fff' }} />
                         </View>
-
                         <CommonText fontSize={12} showText={rightText} customstyles={{ color: rightTitleColor }} />
                     </View>
                 </View>
-            </Card>
+            </CommonCard>
         </TouchableOpacity>
     )
 }

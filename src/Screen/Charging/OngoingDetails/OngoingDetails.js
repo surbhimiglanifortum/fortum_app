@@ -85,9 +85,6 @@ const OngoingDetails = ({ route }) => {
             }
           </DenseCard>
 
-
-
-
           <DenseCard>
             <View style={styles.middleCard}>
               <View style={styles.middleInner}>
@@ -120,7 +117,6 @@ const OngoingDetails = ({ route }) => {
             </View>
           </DenseCard>
 
-
           <CommonCard>
             <TouchableOpacity style={styles.topCard}>
               <IconCardWithoutBg Svg={ReportLight} />
@@ -147,10 +143,9 @@ const OngoingDetails = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 10
   },
   innerContainer: {
-    width: '90%',
-    alignSelf: 'center',
     marginVertical: 15
   },
   textCon: {
@@ -166,9 +161,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 45,
     marginVertical: 10
-  },
-  bottomButon: {
-    marginTop: 100
   },
   topCard: {
     display: 'flex',

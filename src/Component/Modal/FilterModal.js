@@ -39,7 +39,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
         setOpenFilterModal(false)
     }
 
-    const { data: filterData, status, isLoading, refetch } = useQuery('MapData', async () => {
+    const { data: filterData, status, isLoading, refetch } = useQuery('FilterData', async () => {
         const r = await ApiAction.getUniqueConnectors()
         // console.log("relash",r)
         let data = JSON.parse(r.data)
@@ -79,6 +79,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
                 break;
         }
     }
+
     return (
         <Modal animationType={'slide'} visible={openFilterModal} statusBarTranslucent={true}>
             <CommonView style={styles.container}>
@@ -101,7 +102,6 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
                                         <View>
                                             <CommonCard key={ind} style={styles.cardInner}>
                                                 <TouchableOpacity style={styles.card}>
-                                                    
                                                    {getFile(item.title)}
                                                 </TouchableOpacity>
                                             </CommonCard>

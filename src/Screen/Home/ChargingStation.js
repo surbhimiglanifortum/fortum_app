@@ -1,4 +1,4 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, ActivityIndicator } from 'react-native'
+import { View, SafeAreaView, StyleSheet, useColorScheme, ActivityIndicator, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import colors from '../../Utils/colors'
@@ -49,10 +49,11 @@ const ChargingStation = ({ route }) => {
         refetchInterval: 15000,
     })
 
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
-            <View style={styles.innerContainer}>
-                <Header showText={'Charging Station'} />
+            <Header showText={'Charging Station'} />
+            <ScrollView>
                 <DetailsCard item={locDetails} />
                 <View style={styles.searchList}>
                     <CommonText showText={'Charger'} fontSize={18} />
@@ -75,7 +76,7 @@ const ChargingStation = ({ route }) => {
                         })
                     }
                 </View>
-            </View>
+            </ScrollView>
         </SafeAreaView>
     )
 }
@@ -83,11 +84,7 @@ const ChargingStation = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    innerContainer: {
-        width: '90%',
-        alignSelf: 'center',
-        marginVertical: 15
+        padding: 10
     },
     searchList: {
         marginTop: 20

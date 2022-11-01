@@ -3,7 +3,7 @@ import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import colors from '../../Utils/colors'
 import Header from '../../Component/Header/Header'
-import DetailsCard from '../../Component/Card/DetailsCard'
+// import DetailsCard from '../../Component/Card/DetailsCard'
 
 const Favoruite = () => {
 
@@ -15,7 +15,7 @@ const navigation=useNavigation()
       <View style={styles.innerContainer}>
         <Header showText={'Favourite'} />
        <View style={styles.cardContainer}>
-        <DetailsCard chargerType={1} />
+        {/* <DetailsCard chargerType={1} /> */}
        </View>
       </View>
     </SafeAreaView>
