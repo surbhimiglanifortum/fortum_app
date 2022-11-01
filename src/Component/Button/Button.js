@@ -11,10 +11,8 @@ const Button = ({ onPress, showText, color, onLoading, setOnLoading, style }) =>
       backgroundColor: !onLoading ? colors.greenBackground : colors.grey,
       paddingVertical: 15,
       alignItems: 'center',
-      borderRadius: 8
-    },
-    linerStyle: {
-      borderRadius: 6
+      borderRadius: 8,
+      marginVertical:10
     }
   })
 

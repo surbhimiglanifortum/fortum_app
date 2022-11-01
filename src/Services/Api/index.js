@@ -57,3 +57,11 @@ export const walletHistory = async (username, startDate, endDated) => {
         }
     })
 }
+
+export const walletRecharge = async (username, payload) => {
+    return await axios.post("/juspay/initiate_payment/close_loop_balance/" + username, payload);
+};
+
+export const userGstList = async () => {
+    return await axios.get("/gst_state_map/all-gst-state")
+}
