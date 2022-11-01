@@ -1,5 +1,5 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, NativeModules } from 'react-native'
-import React from 'react'
+import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, NativeModules, useColorScheme } from 'react-native'
+import React, { useState } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
@@ -21,7 +21,7 @@ import IEC_62196_T1 from '../../../src/assests/svg/IEC_62196_T1'
 import CHADEMO from '../../../src/assests/svg/CHADEMO'
 import IEC_62196_T1_COMBO from '../../../src/assests/svg/IEC_62196_T1_COMBO'
 import IEC_62196_T2 from '../../../src/assests/svg/IEC_62196_T2'
-
+import Loader from '../Loader'
 import DenseCard from '../Card/DenseCard'
 import { StatusBar } from 'react-native';
 
@@ -30,16 +30,24 @@ const { StatusBarManager } = NativeModules;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBarManager.HEIGHT;
 
 
-const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
+
+let payloadConnectors = {}
+let allCon = {}
+const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => {
+    const scheme = useColorScheme()
+
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+    const [connectorTypes, setConnectorTypes] = useState([])
 
-    const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
-
+    const onToggleSwitch = () => {
+        setIsSwitchOn(!isSwitchOn)
+    };
     const applyButtonHandler = () => {
+        onFilterClick(payloadConnectors, isSwitchOn)
         setOpenFilterModal(false)
     }
 
-    const { data: filterData, status, isLoading, refetch } = useQuery('MapData', async () => {
+    const { data: filterData, status, isLoading, refetch } = useQuery('FilterData', async () => {
         const r = await ApiAction.getUniqueConnectors()
         // console.log("relash",r)
         let data = JSON.parse(r.data)
@@ -48,37 +56,66 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
         data.forEach((item, index) => {
             filter[item] = true
         })
+
+        setConnectorTypes(data)
         return data
     })
 
     const getFile = (key) => {
-        console.log(key)
         switch (key) {
             case 'IEC_62196_T1':
-            return <IEC_62196_T1/>
-            
+                return <IEC_62196_T1 />
+
                 break;
             case 'IEC_62196_T2_COMBO':
-                return <IEC_62196_T2_COMBO/>
+                return <IEC_62196_T2_COMBO />
                 break;
             case 'CHADEMO':
-                return <CHADEMO/>
+                return <CHADEMO />
                 break;
             case 'IEC_62196_T2':
-                return <IEC_62196_T2/>
+                return <IEC_62196_T2 />
                 break;
             case 'IEC_62196_T1_COMBO':
-                return <IEC_62196_T1_COMBO/>
+                return <IEC_62196_T1_COMBO />
                 break;
             case 'DOMESTIC_F':
-                return <IEC_62196_T2_COMBO/>
+                return <IEC_62196_T2_COMBO />
                 break;
 
             default:
-                return <IEC_62196_T2_COMBO/>
+                return <IEC_62196_T2_COMBO />
                 break;
         }
     }
+
+    const onItemPress = (title) => {
+        payloadConnectors = {}
+        allCon = {}
+
+        allCon = connectorTypes.map((item, index) => {
+            if (item.title === title) {
+                return {
+                    title,
+                    active: !item.active
+                }
+            } else {
+                return item
+            }
+        })
+
+
+
+        allCon.forEach((item, index) => {
+            payloadConnectors[item.title] = item.active
+        })
+        setConnectorTypes(allCon)
+
+    }
+
+
+
+
     return (
         <Modal animationType={'slide'} visible={openFilterModal} statusBarTranslucent={true}>
             <CommonView style={styles.container}>
@@ -91,18 +128,19 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
                             <AntDesign name='close' color={colors.black} />
                         </TouchableOpacity>
                     </View>
-                   
+
                     <View style={styles.connectorContainer}>
                         <CommonText>Connectors</CommonText>
+                        {isLoading && <Loader />}
                         <View style={styles.cardContainer}>
                             {
-                                filterData?.map((item, ind) => {
+                                connectorTypes?.map((item, ind) => {
                                     return (
                                         <View>
-                                            <CommonCard key={ind} style={styles.cardInner}>
-                                                <TouchableOpacity style={styles.card}>
-                                                    
-                                                   {getFile(item.title)}
+                                            <CommonCard key={ind} style={[styles.cardInner, item.active ? { backgroundColor: 'green' } : null]}>
+                                                <TouchableOpacity style={styles.card} onPress={() => onItemPress(item.title)} >
+
+                                                    {getFile(item.title)}
                                                 </TouchableOpacity>
                                             </CommonCard>
                                             <View style={styles.text}>
@@ -120,16 +158,21 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
                         <CommonText showText={'Show Available Charger Only'} fontSize={15} />
                         <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={colors.green} />
                     </DenseCard>
-                   
+
                     <View style={styles.button}>
                         <View style={styles.resetBtn}>
-                            <WhiteButton showText={'Reset'} />
+                            <WhiteButton showText={'Reset'} onPress={() => {
+                                setConnectorTypes(filterData)
+                                setIsSwitchOn(false)
+                                payloadConnectors = filterData
+                                applyButtonHandler()
+                            }} />
                         </View>
                         <View style={styles.resetBtn}>
                             <Button showText={'Apply'} onPress={applyButtonHandler} color={colors.white} />
                         </View>
                     </View>
-               
+
                 </View>
             </CommonView>
         </Modal>
@@ -171,6 +214,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     cardContainer: {
+
         marginTop: 12,
         flexDirection: 'row',
         flexWrap: 'wrap',

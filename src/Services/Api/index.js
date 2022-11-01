@@ -56,3 +56,8 @@ export const walletHistory = async (username, startDate, endDate) => {
         }
     })
 }
+
+
+export const getFavouriteCHarger = async (username) => {
+    return await axios.get('/favouriteCharger/' +username );
+}

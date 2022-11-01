@@ -9,13 +9,14 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import routes from '../../../Utils/routes'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import CommonText from '../../../Component/Text/CommonText'
+import Loader from '../../../Component/Loader'
 
-const MapList = ({data}) => {
+const MapList = ({ data, setOpenFilterModal, isRefetching }) => {
 
   const navigation = useNavigation()
   const [listData, setListData] = useState([])
-  const [openFilterModal, setOpenFilterModal] = useState(false)
-  const [refreshing, setRefreshing] = useState(false)
+
+
 
   const { currentLocation, setCurrentLocation, } = useContext(SnackContext)
 
@@ -53,7 +54,7 @@ const MapList = ({data}) => {
             </TouchableOpacity>
           </View>
 
-          {refreshing && <ActivityIndicator style={styles.indicatorStyle} />}
+          {isRefetching && <Loader />}
 
           <ScrollView nestedScrollEnabled={true}>
             {/* Render Details Card */}
@@ -68,7 +69,6 @@ const MapList = ({data}) => {
             }
           </ScrollView>
         </View>
-        <FilterModal openFilterModal={openFilterModal} setOpenFilterModal={setOpenFilterModal} />
       </ScrollView>
     </View>
   )
@@ -117,9 +117,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     borderRadius: 6,
     alignItems: 'center'
-  },
-  indicatorStyle: {
-    marginVertical: 20
   }
 })
 

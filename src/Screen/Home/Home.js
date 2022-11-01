@@ -16,10 +16,14 @@ import { computeDistance } from '../../Utils/helperFuncations/computeDistance';
 import { postListService } from '../../Services/HomeTabService/HomeTabService';
 import SnackContext from '../../Utils/context/SnackbarContext';
 import { useQuery } from 'react-query'
-
+import {Auth } from 'aws-amplify'
 import * as ApiAction from '../../Services/Api'
 import MapCharger from '../Home/MapCharger'
 import CommonText from '../../Component/Text/CommonText';
+import { useSelector } from 'react-redux'
+
+
+
 let selectedMarker = {}
 
 export default Home = () => {
@@ -31,7 +35,12 @@ export default Home = () => {
   const [selectedCharger, setSelectedCharger] = useState(false)
   const [openFilterModal, setOpenFilterModal] = useState(false)
   const [locationLoading, setLocationLoading] = useState(false)
-  const [visibleRegion, setVisibleRegion] = useState([0, 0, 0, 0])
+  const [locationsPayload, setLocationsPayload] = useState({
+    onlyAvailableConnectors: false,
+  })
+
+  let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
 
   const mapButtonHandler = () => {
     setSelectedTab('')
@@ -40,19 +49,31 @@ export default Home = () => {
     setSelectedTab('List')
   }
   const favButtonHandler = () => {
-    navigation.navigate(routes.Favoruite)
+    navigation.navigate(routes.Favoruite,{location:location})
   }
   const filterButtonHandler = () => {
     setOpenFilterModal(true)
   }
   const scannerButtonHandler = () => {
 
+    Auth.currentSession().then(r => {
+      if (!r) {
+          navigation.navigate(routes.login)
+          
+      }
+      else {
+        if(mUserDetails.phone_number && mUserDetails.phone_number != ''){
+          navigation.navigate("QRScannerPage")
+        }         
+      }
+  }).catch(err => { console.log(err); navigation.navigate("MakeChargingEasySplash") });
+
   }
   const searchBtnHandler = () => {
     navigation.navigate(routes.SearchLocation)
   }
   const locationBtnHandler = () => {
-
+    getLocationAndAnimate()
   }
   const chargingBtnHandler = () => {
     setSelectedCharger(true)
@@ -65,13 +86,18 @@ export default Home = () => {
 
   useEffect(() => {
     refetch()
-  }, [location])
+  }, [location, locationsPayload])
+
+
+  useEffect(() => {
+    getLocationAndAnimate()
+  }, [])
 
 
   const chargerLocations = async () => {
     try {
       // let location = {}
-      const res = await ApiAction.getLocation()
+      const res = await ApiAction.getLocation(locationsPayload)
 
       var locationsArray = res.data?.locations[0];
       if (!location.coords) {
@@ -93,7 +119,7 @@ export default Home = () => {
     }
   }
 
-  const { data, status, isLoading, refetch } = useQuery('MapData', chargerLocations, {
+  const { data, status, isLoading, isRefetching, refetch } = useQuery('MapData', chargerLocations, {
     refetchInterval: 15000,
   })
 
@@ -113,14 +139,19 @@ export default Home = () => {
     }
   }
 
-  useEffect(() => {
-    getLocationAndAnimate()
-  }, [])
+  const onFilterClick = (filterByConnectorCategories, onlyAvailableConnectors) => {
 
+    let tlocationsPayload = {
+      onlyAvailableConnectors: onlyAvailableConnectors,
+      filterByConnectorCategories: filterByConnectorCategories
+    }
+    console.log("tlocationsPayload", tlocationsPayload)
+    setLocationsPayload(tlocationsPayload)
+  }
 
   return (
     <View style={styles.container}>
-      {selectedTab == 'List' ? <MapList data={data} location={location} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
+      {selectedTab == 'List' ? <MapList data={data} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
@@ -147,6 +178,7 @@ export default Home = () => {
             <MaterialIcons name='qr-code-scanner' color={colors.black} size={22} />
           </TouchableOpacity>
         </View>}
+
         {selectedTab != 'List' && <View style={styles.searchContainer}>
           <CommonText showText={'Show charging station nearest to'} fontSize={17} />
           <View style={styles.searchInnerContainer}>
@@ -159,6 +191,7 @@ export default Home = () => {
             </TouchableOpacity>
           </View>
         </View>}
+
         {selectedTab != 'List' && selectedCharger &&
           <View>
             <ScrollView horizontal>
@@ -173,14 +206,13 @@ export default Home = () => {
                   )
                 })
               }
-
             </ScrollView>
           </View>
         }
       </View>
       {/* Render List Component */}
 
-      <FilterModal openFilterModal={openFilterModal} setOpenFilterModal={setOpenFilterModal} />
+      <FilterModal openFilterModal={openFilterModal} setOpenFilterModal={setOpenFilterModal} onFilterClick={onFilterClick} />
     </View>
   )
 };
