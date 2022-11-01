@@ -29,6 +29,7 @@ const routes = {
     ActivateCard:'ActivateCard',
     CompleteKYC:'CompleteKYC',
     Passbook:'Passbook',
+    MyCart:'MyCart',
 }
 
 export default routes

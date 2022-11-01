@@ -17,7 +17,8 @@ const colors = {
     lightRed:'#FF7878',
     denseShadow:'#D6E3F3',
     denseShadowDark:'#303030',
-    denseShadowSecondary:'#202020'
+    denseShadowSecondary:'#202020',
+    lightGray:'#3C3C3C'
 }
 
 export default colors

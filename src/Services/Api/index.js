@@ -44,15 +44,16 @@ export const blockAmount = async (payload) => {
     return await axios.post('/pinelabs/wallet/transaction/block-amount', payload);
 }
 
-export const walletHistory = async (username, startDate, endDate) => {
+export const walletHistory = async (username, startDate, endDated) => {
+    console.log(startDate, endDated,'/////////////////////////////////////////////////////data')
     let userName = 'ritu.bhagwasiya@mfilterit.com'
-    let srtDate = '2022-07-01T11:34:21'
-    let EndData = '2022-10-31T06:02:03'
+    // let srtDate = '2022-09-01T11:34:21'
+    // let EndData = '2022-10-31T06:02:03'
     return await axios.get(appconfig.BASE_URL + "/users/get-transactions/", {
         params: {
             username: userName,
-            startDate: srtDate,
-            endDate: EndData
+            startDate: startDate,
+            endDate: endDated
         }
     })
 }
