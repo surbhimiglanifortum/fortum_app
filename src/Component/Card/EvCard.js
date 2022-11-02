@@ -38,7 +38,7 @@ const EvCard = ({ onPress, title, subTitle, rightText, backgroundColor, rightTit
     }
 
     return (
-        <TouchableOpacity style={{ marginVertical: 10 }} onPress={onPress}>
+        <TouchableOpacity onPress={onPress}>
             <CommonCard>
                 <View style={styles.container}>
                     <View style={styles.centerView}>
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 10,
+        
     },
     centerView: {
         display: 'flex',

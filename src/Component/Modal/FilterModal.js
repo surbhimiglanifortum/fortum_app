@@ -251,8 +251,6 @@ const styles = StyleSheet.create({
     },
     resetBtn: {
         width: '45%',
-        elevation: 5,
-        backgroundColor: colors.white,
         borderRadius: 8
     }
 })
