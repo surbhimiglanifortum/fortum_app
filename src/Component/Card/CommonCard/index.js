@@ -18,6 +18,6 @@ const styles = StyleSheet.create({
     container: {
         paddingVertical: 10,
         borderRadius:10,
-        margin:10
+        marginHorizontal:10
     }
 })
