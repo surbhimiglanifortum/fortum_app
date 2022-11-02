@@ -41,7 +41,7 @@ const Stack = createNativeStackNavigator();
 
 const Routes = ({ loggedin }) => {
     return (
-        <Stack.Navigator initialRouteName={loggedin?routes.dashboard:routes.login} >
+        <Stack.Navigator initialRouteName={routes.dashboard} >
             <Stack.Screen name={routes.dashboard} component={Dashboard} options={{headerShown:false}}/>
            <Stack.Screen name={routes.onboarding} component={OnboardingScreen} options={{headerShown:false}}/>
            <Stack.Screen name={routes.OngoingDetails} component={OngoingDetails} options={{headerShown:false}}/>

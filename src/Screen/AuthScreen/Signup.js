@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, StyleSheet, useColorScheme, ScrollView, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import colors from '../../Utils/colors'
 import BackButton from '../../Component/Button/BackButton'
 import CommonText from '../../Component/Text/CommonText'
@@ -10,8 +10,12 @@ import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik';
 import { Auth, Hub } from 'aws-amplify';
 import * as Yup from 'yup';
+import SnackContext from '../../Utils/context/SnackbarContext'
 
 const Signup = ({ route }) => {
+
+    const { setOpenCommonModal } = useContext(SnackContext);
+
     const navigation = useNavigation()
     const scheme = useColorScheme()
     const continueButtonHandler = () => {
@@ -46,32 +50,69 @@ const Signup = ({ route }) => {
 
     });
 
-    const handleSignup = async (values, event) => {
+    const userExist = (userName) => {
+        return Auth.signIn(userName, '123');
+    }
 
-        const cognitoData = await Auth.signUp({
-            username: values.email_id,
-            password: '@Nujyadav234',
-            attributes: {
-                "custom:phoneUser": "false",
-                email: values.email_id,          // optional
-                phone_number: event.mobile_number,   // optional - E.164 number convention
-                // other custom attributes c
-            },
-            autoSignIn: { // optional - enables auto sign in after user is confirmed
-                enabled: true,
-            }
-          
+    const handleSignup = async (values, event) => {
+        console.log(values)
+        // console.log(this.cognitoService)
+        let emailSignupSuccess = false
+        let mobileSignupSuccess = false
+        await userExist(values.email_id).then((e) => {
         }).catch(e => {
-            console.log("error", e)
-            if (e.code === 'UsernameExistsException') {
+            if (e.code == 'UserNotFoundException') {
+                emailSignupSuccess = true
             }
-            if (e.code === 'InvalidPasswordException') {
-            }
+            console.log("signup response", e)
         })
 
-      
-        if (cognitoData) {
-            navigation.navigate(routes.Verification, { ...values })
+        await userExist(values.mobile_number).then((e) => {
+        }).catch(e => {
+            if (e.code == 'UserNotFoundException') {
+                mobileSignupSuccess = true
+            }
+            console.log("signup response", e)
+        })
+
+        if (!mobileSignupSuccess || !emailSignupSuccess) {
+            // return either email or mobile already registered
+            console.log("email not esdfds")
+            if (!mobileSignupSuccess) {
+                setOpenCommonModal({ isVisible: true, message: "Mobile Number Already registered" })
+            } else {
+                setOpenCommonModal({ isVisible: true, message: "Email Already registered" })
+            }
+        } else {
+            // Signup
+            const cognitoData = await Auth.signUp({
+                username: values.email_id,
+                password: '@Nujyadav123',
+                attributes: {
+                    "custom:phoneUser": "false",
+                    email: values.email_id,          // optional
+                    phone_number: "+91" + values.mobile_number,   // optional - E.164 number convention
+
+                },
+                autoSignIn: { // optional - enables auto sign in after user is confirmed
+                    enabled: true,
+                }
+            }).catch(e => {
+                console.log("error", e)
+                if (e.code === 'UsernameExistsException') {
+                }
+                if (e.code === 'InvalidPasswordException') {
+                }
+            })
+
+            if (cognitoData) {
+                const user = await Auth.signIn(values.email_id);
+                navigation.navigate(routes.Verification, {
+                    user: user,
+                    email_id: values.email_id,
+                    mobile_number: values.mobile_number
+                })
+            }
         }
         event.setSubmitting(false)
     }
@@ -83,20 +124,20 @@ const Signup = ({ route }) => {
                     <View style={styles.header}>
                         <BackButton />
                         <View style={styles.headerText}>
-                           <CommonText showText={'Sign Up'} fontSize={25} /> 
+                            <CommonText showText={'Sign Up'} fontSize={25} />
                         </View>
                     </View>
                     <View style={{ marginVertical: 20 }}>
-                        <CommonText showText={'Please tell us a bit more about yourself'} fontSize={15} /> 
+                        <CommonText showText={'Please tell us a bit more about yourself'} fontSize={15} />
                     </View>
 
                     <Formik
                         initialValues={{
-                            first_name: "",
-                            last_name: "",
+                            first_name: "ANuj",
+                            last_name: "Yadav",
                             referral_code: "",
                             email_id: prefillEMail || '',
-                            mobile_number: prefillPhone_number || ''
+                            mobile_number: prefillPhone_number || '7532078797'
                         }}
                         onSubmit={handleSignup}
                         validationSchema={SignupSchema}
@@ -109,7 +150,7 @@ const Signup = ({ route }) => {
                                             {scheme == 'dark' ? <CommonText showText={e.name} fontSize={14} /> : <CommonText showText={e.name} fontSize={14} />}
                                             <Textinput value={values[e.value]} onChange={handleChange(e.value)} />
                                             {errors[e.value] && touched[e.value] ? (
-                                                <CommonText showText={errors[e.value]} customstyles={{color:colors.red}} fontSize={14} />
+                                                <CommonText showText={errors[e.value]} customstyles={{ color: colors.red }} fontSize={14} />
                                             ) : null}
                                         </View>
                                     )

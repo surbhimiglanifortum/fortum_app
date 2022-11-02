@@ -15,7 +15,12 @@ import WalletSvg from '../../assests/svg/wallet'
 import NotificationSvg from '../../assests/svg/notification'
 import OtherSvg from '../../assests/svg/other'
 import DenseCard from '../../Component/Card/DenseCard/index'
-const Dashboard = ({ tabName }) => {
+import { Auth } from 'aws-amplify'
+import routes from '../../Utils/routes';
+
+
+
+const Dashboard = ({ tabName, navigation }) => {
 
   const [selectedTab, setSelectedTab] = useState('home')
 
@@ -23,16 +28,31 @@ const Dashboard = ({ tabName }) => {
     setSelectedTab('home')
   }
   const walletButtonHandler = () => {
-    setSelectedTab('wallet')
+
+    handleSelection('wallet')
   }
   const chargingButtonHandler = () => {
-    setSelectedTab('charging')
+    handleSelection('charging')
   }
   const notificationButtonHandler = () => {
-    setSelectedTab('notification')
+    handleSelection('notification')
   }
   const otherButtonHandler = () => {
-    setSelectedTab('other')
+    handleSelection('other')
+  }
+
+  const handleSelection = async (tab) => {
+
+    try {
+      const result = await Auth.currentAuthenticatedUser();
+      if (result?.signInUserSession) {
+        setSelectedTab(tab)
+      }
+      return
+    } catch (error) {
+
+    }
+    navigation.navigate(routes.login)
   }
 
   const scheme = useColorScheme();
@@ -98,7 +118,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 15
   },
-  activeTab:{ borderWidth: 2, paddingVertical: 5, paddingHorizontal: 10, borderRadius: 5, borderColor: colors.white },
+  activeTab: { borderWidth: 2, paddingVertical: 5, paddingHorizontal: 10, borderRadius: 5, borderColor: colors.white },
 
 })
 

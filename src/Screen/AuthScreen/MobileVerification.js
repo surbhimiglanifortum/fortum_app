@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext,useRef } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import CommonText from '../../Component/Text/CommonText';
@@ -14,6 +14,9 @@ import axios from 'axios'
 import appconfig from '../../Utils/appconfig'
 import * as ApiAction from '../../Services/Api'
 import { useDispatch } from 'react-redux';
+import { AddToRedux } from '../../Redux/AddToRedux';
+import * as Types from '../../Redux/Types'
+import SnackContext from '../../Utils/context/SnackbarContext'
 
 const MobileVerification = ({ route }) => {
 
@@ -22,12 +25,28 @@ const MobileVerification = ({ route }) => {
     const navigation = useNavigation()
     const scheme = useColorScheme();
 
+
+    const otpField1 = useRef(null);
+    const otpField2 = useRef(null);
+    const otpField3 = useRef(null);
+    const otpField4 = useRef(null);
+
+
+    const [userInput1, setUserInput1] = useState('')
+    const [userInput2, setUserInput2] = useState('')
+    const [userInput3, setUserInput3] = useState('')
+    const [userInput4, setUserInput4] = useState('')
+
+
+    let otpConcatData = userInput1.concat(userInput2).concat(userInput3).concat(userInput4)
+
+    const { setOpenCommonModal } = useContext(SnackContext);
     // OTP
-    const [userInput, setUserInput] = useState('9699')
+
     const [loading, setLoading] = useState(false)
     const { mobile_number, email_id, signin, user } = route.params;
 
-
+    console.log("movile params", route.params)
 
     async function sendOTP(number) {
         const dateIso = new Date().toISOString()
@@ -81,11 +100,11 @@ const MobileVerification = ({ route }) => {
 
     const VerifyButtonHandler = async () => {
         if (!signin) {
-            verifyOTP(mobile_number.replace("+91", ""), userInput).then(async r => {
+            verifyOTP(mobile_number.replace("+91", ""), otpConcatData).then(async r => {
                 console.log("verifyOTP", r)
                 if (r?.verified) {
                     // SIgnup to cognito
-                    const cognitoResult = await Auth.signUp({
+                    await Auth.signUp({
                         username: "+91" + mobile_number,
                         password: "@Nujyadav123",
                         attributes: {
@@ -102,16 +121,16 @@ const MobileVerification = ({ route }) => {
                         console.log("error", e)
                     })
 
+                    await ApiAction.updateUserPhone(email_id, { phone: mobile_number })
                     loginSuccess()
                 } else {
                     // failed to verify OTP
+                    setOpenCommonModal({ isVisible: true, message: "Enter Valid OTP" })
                 }
             })
         } else {
-            
             try {
                 await Auth.sendCustomChallengeAnswer(user, userInput)
-
                     .then(e => {
                         console.log("response", e)
                         loginSuccess()
@@ -129,19 +148,15 @@ const MobileVerification = ({ route }) => {
 
     const loginSuccess = async () => {
         const data = await Auth.currentAuthenticatedUser();
-        if (data) {
+        if (data.signInUserSession) {
             const result = await ApiAction.getUserDetails()
             if (result.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
-            } else {
-                throw { code: "UserNotFound" }
+                navigation.navigate(routes.dashboard)
+                return
             }
-            navigation.navigate(routes.dashboard)
-
-        } else {
-            // show wrong otp message
-            throw { code: "UserNotFound" }
         }
+        setOpenCommonModal({ isVisible: true, message: "Something Went wrong!!!" })
     }
 
 
@@ -163,13 +178,31 @@ const MobileVerification = ({ route }) => {
                                 <CommonText showText={' Edit'} fontSize={15} />
                             </TouchableOpacity>
                         </View>
-                        <Textinput value={userInput} onChange={setUserInput} />
-
                         <View style={styles.otpContainer}>
-                            <OtpTextinput />
-                            <OtpTextinput />
-                            <OtpTextinput />
-                            <OtpTextinput />
+                            <OtpTextinput refData={otpField1} value={userInput1} onChange={(pin1) => {
+                                setUserInput1(pin1);
+                                if (pin1 !== '') {
+                                    otpField2.current.focus();
+                                }
+                            }} />
+                            <OtpTextinput refData={otpField2} value={userInput2} onChange={(pin2) => {
+                                setUserInput2(pin2);
+                                if (pin2 !== '') {
+                                    otpField3.current.focus();
+                                }
+                            }} />
+                            <OtpTextinput refData={otpField3} value={userInput3} onChange={(pin3) => {
+                                setUserInput3(pin3);
+                                if (pin3 !== '') {
+                                    otpField4.current.focus();
+                                }
+                            }} />
+                            <OtpTextinput refData={otpField4} value={userInput4} onChange={(pin4) => {
+                                setUserInput4(pin4);
+                                if (pin4 !== '') {
+                                    otpField4.current.focus();
+                                }
+                            }} />
                         </View>
                         <View style={styles.resendContainer}>
                             <CommonText showText={'Didn’t receive the code?  '} fontSize={15} />

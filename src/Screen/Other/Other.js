@@ -17,20 +17,25 @@ import CommonText from '../../Component/Text/CommonText'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../Utils/routes'
 import { useSelector } from 'react-redux'
+import { Auth } from 'aws-amplify'
 import CommonView from '../../Component/CommonView'
 const Other = () => {
   const userDetailsData = useSelector((state) => state.userTypeReducer)
-  console.log(userDetailsData, '.....................................redux data')
+  
   const scheme = useColorScheme()
   const navigation = useNavigation()
   const EditProfileHandler = () => {
-    navigation.navigate(routes.Profile,{userDetailsData:userDetailsData})
+    navigation.navigate(routes.Profile, { userDetailsData: userDetailsData })
   }
   const evModalHandler = () => {
     navigation.navigate(routes.EvModal)
   }
-  const logoutHandler = () => {
-    navigation.navigate(routes.login)
+  const logoutHandler = async () => {
+    await Auth.signOut();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: routes.dashboard }],
+    });
 
   }
   const preferenceHandler = () => {
@@ -68,8 +73,8 @@ const Other = () => {
               <Image />
             </TouchableOpacity>
             <View style={styles.leftConatainer}>
-             <CommonText showText={`${userDetailsData.userDetails.first_name} ${userDetailsData.userDetails.last_name
-                }`} fontSize={20} /> 
+              <CommonText showText={`${userDetailsData.userDetails.first_name} ${userDetailsData.userDetails.last_name
+                }`} fontSize={20} />
               <TouchableOpacity style={styles.editButton} onPress={EditProfileHandler} >
                 <CommonText showText={'Edit Profile'} fontSize={18} />
               </TouchableOpacity>

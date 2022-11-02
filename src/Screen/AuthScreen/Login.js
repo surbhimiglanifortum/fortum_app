@@ -15,67 +15,8 @@ import { validatePhone, validateEmail } from '../../Utils/HelperCommonFunctions'
 
 const Login = () => {
 
-  const [userInput, setuserInput] = useState('')
+  const [userInput, setuserInput] = useState('nyfovygu@mailo.icu')
   const [loading, setLoading] = useState(false)
-  useEffect(() => {
-
-    const signup = async () => {
-      console.log("Login")
-      const { user } = await Auth.signUp({
-        username: "anuj.yadav@mfilterit.com",
-        password: "@Nujyadav123",
-        attributes: {
-          "custom:phoneUser": "false",
-          email: "anuj.yadav@mfilterit.com",          // optional
-          phone_number: "+917532078797",   // optional - E.164 number convention
-          // other custom attributes c
-        },
-        autoSignIn: { // optional - enables auto sign in after user is confirmed
-          enabled: true,
-        }
-      }).catch(e => {
-        console.log("error", e)
-      })
-
-      console.log("response", user ? user : "no found")
-    }
-
-    const signin = async () => {
-      try {
-        const user = await Auth.signIn("anuj.yadav@mfilterit.com", "@Nujyadav123");
-        console.log("Lofoin0,", user)
-      } catch (error) {
-        console.log('error signing in', error);
-      }
-    }
-
-    const resendConfirmation = async () => {
-      try {
-        await Auth.resendSignUp("anuj.yadav@mfilterit.com");
-        console.log('code resent successfully');
-      } catch (err) {
-        console.log('error resending code: ', err);
-      }
-
-    }
-
-    async function confirmSignUp() {
-      try {
-        await Auth.confirmSignUp('anuj.yadav@mfilterit.com', '742173');
-      } catch (error) {
-        console.log('error confirming sign up', error);
-      }
-    }
-
-
-    // signup()
-    // confirmSignUp()
-    // signin()
-    // resendConfirmation()
-    return () => {
-
-    }
-  }, [])
 
   const navigation = useNavigation()
   const scheme = useColorScheme();
@@ -106,14 +47,14 @@ const Login = () => {
       console.log("error---------------", error.message)
       switch (error.code) {
         case 'UserNotFoundException':
-          // try {
-          //   Auth.forgotPassword(userInput)
-          // } catch (error) {
-          //   console.log("ERROR in forget password", error)
-          // }
-
           HandleUserNotFound();
           break;
+
+        case 'UserNotConfirmedException':
+          handleUserComfirmation()
+          break;
+
+
         default:
           break;
       }
@@ -129,11 +70,22 @@ const Login = () => {
     } else if (validateEmail) {
       payload.email = userInput
     }
-
-    navigation.navigate(routes.Signup, {
-      ...payload
-    })
+    navigation.navigate(routes.Signup, { ...payload })
   }
+
+  const handleUserComfirmation = async () => {
+    const payload = {}
+    if (validatePhone(userInput)) {
+      payload.phone_number = userInput
+    
+    } else if (validateEmail) {
+      payload.email = userInput
+      await Auth.resendSignUp(userInput);
+    navigation.navigate(routes.Verification, { ...payload })
+    }
+  }
+
+
 
   const signupHandler = () => {
     const payload = {}
@@ -150,7 +102,7 @@ const Login = () => {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
-      {loading==true&&<ActivityIndicator size={'large'} />}
+      
       <ScrollView>
         <View style={styles.innerContainer}>
           <SkipButton />
@@ -162,11 +114,11 @@ const Login = () => {
           </View>
           <View style={styles.textinputConatiner}>
             <CommonText showText={'Please enter your mobile number or email id'} fontSize={12} />
-            <Textinput value={userInput} onChange={setuserInput} placeholder={'Mobile Number / email id'} />
+            <Textinput on value={userInput} onChange={(e)=>setuserInputsetuserInput(e.toLowerCase())} placeholder={'Mobile Number / email id'} />
           </View>
-          <TouchableOpacity style={[styles.button,{backgroundColor:userInput==''?colors.grey:colors.green}]} onPress={continueButtonHandler} onLoading={loading} setOnLoading={setLoading}  disabled={userInput === '' ? true : false} >
+          <TouchableOpacity style={[styles.button, { backgroundColor: userInput == '' ? colors.grey : colors.green }]} onPress={continueButtonHandler} onLoading={loading} setOnLoading={setLoading} disabled={userInput === '' ? true : false} >
             {/* <Button /> */}
-            <CommonText showText={'Continue'} fontSize={17} customstyles={{color:colors.white}} />
+            <CommonText showText={'Continue'} fontSize={17} customstyles={{ color: colors.white }} />
           </TouchableOpacity>
           <View style={styles.centerText}>
             <CommonText showText={'Or Sign in with'} fontSize={12} />
@@ -181,7 +133,7 @@ const Login = () => {
         <View style={styles.bottomText}>
           <CommonText showText={'Don’t have account? '} fontSize={12} />
           <TouchableOpacity onPress={signupHandler}>
-            <CommonText showText={'Signup'} customstyles={{color:colors.green}} fontSize={14}  />
+            <CommonText showText={'Signup'} customstyles={{ color: colors.green }} fontSize={14} />
           </TouchableOpacity>
         </View>
       </ScrollView>
