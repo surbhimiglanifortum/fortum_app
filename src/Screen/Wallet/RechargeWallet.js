@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux'
 import routes from '../../Utils/routes'
 import { useQuery } from 'react-query'
 
-const RechargeWallet = () => {
+const RechargeWallet = ({ route }) => {
 
   const scheme = useColorScheme()
   const navigation = useNavigation()
@@ -62,19 +62,23 @@ const RechargeWallet = () => {
     } else {
       setGstError('')
     }
+
     console.log("Gst Error", gstState, gstError)
+
     const payload = {
       amount: amount.value,
       stategst: gstState
     }
+    
     const username = mUserDetails?.username
+
     try {
       setLoadingSign(true)
       const result = await walletRecharge(username, payload)
       console.log("RechargeWallet Try Block", result.data)
       if (result.data?.sdk_payload) {
         navigation.navigate(routes.PaymentScreenJuspay, {
-          // callFrom: route?.params?.callFrom,
+          callFrom: route?.params?.callFrom,
           amount: 0,
           email_address: '',
           orderid: '',
@@ -85,7 +89,8 @@ const RechargeWallet = () => {
         })
         setLoadingSign(false)
       } else {
-        setSnack({ message: 'Something Went Wrong Please Try After Some Time.', open: true, color: 'success' })
+        // setSnack({ message: 'Something Went Wrong Please Try After Some Time.', open: true, color: 'success' })
+        alert('Something Went Wrong Please Try After Some Time.')
         setLoadingSign(false)
       }
     } catch (error) {
@@ -120,7 +125,7 @@ const RechargeWallet = () => {
 
         <View style={styles.row}>
           <TouchableOpacity onPress={() => {
-            setAmount({ value: '₹ 50', error: '' })
+            setAmount({ value: '50', error: '' })
           }}>
             <CommonCard style={styles.column}>
               <CommonText showText={'₹ 50'} />
@@ -128,7 +133,7 @@ const RechargeWallet = () => {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            setAmount({ value: '₹ 100', error: '' })
+            setAmount({ value: '100', error: '' })
           }}>
             <CommonCard style={styles.column}>
               <CommonText showText={'₹ 100'} />
@@ -136,7 +141,7 @@ const RechargeWallet = () => {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            setAmount({ value: '₹ 120', error: '' })
+            setAmount({ value: '120', error: '' })
           }}>
             <CommonCard style={styles.column}>
               <CommonText showText={'₹ 120'} />
@@ -144,7 +149,7 @@ const RechargeWallet = () => {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            setAmount({ value: '₹ 150', error: '' })
+            setAmount({ value: '150', error: '' })
           }}>
             <CommonCard style={styles.column}>
               <CommonText showText={'₹ 150'} />
@@ -154,7 +159,7 @@ const RechargeWallet = () => {
 
         <View style={styles.row}>
           <TouchableOpacity onPress={() => {
-            setAmount({ value: '₹ 200', error: '' })
+            setAmount({ value: '200', error: '' })
           }}>
             <CommonCard style={styles.column}>
               <CommonText showText={'₹ 200'} />
@@ -162,7 +167,7 @@ const RechargeWallet = () => {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            setAmount({ value: '₹ 300', error: '' })
+            setAmount({ value: '300', error: '' })
           }}>
             <CommonCard style={styles.column}>
               <CommonText showText={'₹ 300'} />
@@ -170,7 +175,7 @@ const RechargeWallet = () => {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            setAmount({ value: '₹ 400', error: '' })
+            setAmount({ value: '400', error: '' })
           }}>
             <CommonCard style={styles.column}>
               <CommonText showText={'₹ 400'} />
@@ -178,7 +183,7 @@ const RechargeWallet = () => {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            setAmount({ value: '₹ 500', error: '' })
+            setAmount({ value: '500', error: '' })
           }}>
             <CommonCard style={styles.column}>
               <CommonText showText={'₹ 500'} />

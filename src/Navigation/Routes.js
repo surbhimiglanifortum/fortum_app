@@ -34,6 +34,7 @@ import CompleteKYC from '../Screen/Other/PaymentMethod/CompleteKYC';
 import Passbook from '../Screen/Other/PaymentMethod/Passbook/Passbook';
 import MyCart from '../Screen/Other/Store/MyCart';
 import PaymentScreenJuspay from '../Screen/Juspay/PaymentScreenJuspay'
+import StoreDetails from '../Screen/Other/Store/StoreDetails';
 
 
 const Stack = createNativeStackNavigator();
@@ -73,6 +74,7 @@ const Routes = ({ loggedin }) => {
            <Stack.Screen name={routes.Passbook} component={Passbook} options={{headerShown:false}}  />
            <Stack.Screen name={routes.MyCart} component={MyCart} options={{headerShown:false}}  />
            <Stack.Screen name={routes.PaymentScreenJuspay} component={PaymentScreenJuspay} options={{ headerShown: false }} />
+           <Stack.Screen name={routes.StoreDetails} component={StoreDetails} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 };

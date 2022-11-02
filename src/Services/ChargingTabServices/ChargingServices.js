@@ -1,10 +1,8 @@
 import axios from "axios";
 import appconfig from "../../Utils/appconfig";
 
-export const chargingListServices = async () => {
-    let username = 'anuj.yadav@mfilterit.com'
-    console.log("username of chqarging history API", username)
-    const url = (appconfig.BASE_URL + "/sessions/allactive/" + username);
+export const chargingListServices = async (userName) => {
+    const url = (appconfig.BASE_URL + "/sessions/allactive/" + userName);
     return await axios.get(url, {
         headers: {
             'Content-Type': 'application/json'
@@ -12,10 +10,9 @@ export const chargingListServices = async () => {
     })
 
 }
-export const chargingListCompletedServices = async () => {
-    let username = 'anuj.yadav@mfilterit.com'
-    console.log("username of chqarging history API", username)
-    const url = (appconfig.BASE_URL + "/sessions/all/" + username);
+
+export const chargingListCompletedServices = async (userName) => {
+    const url = (appconfig.BASE_URL + "/sessions/all/" + userName);
     return await axios.get(url, {
         headers: {
             'Content-Type': 'application/json'

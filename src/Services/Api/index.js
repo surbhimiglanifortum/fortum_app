@@ -45,10 +45,9 @@ export const blockAmount = async (payload) => {
 }
 
 export const walletHistory = async (username, startDate, endDated) => {
-    let userName = 'ritu.bhagwasiya@mfilterit.com'
     return await axios.get(appconfig.BASE_URL + "/users/get-transactions/", {
         params: {
-            username: userName,
+            username: username,
             startDate: startDate,
             endDate: endDated
         }
@@ -78,3 +77,15 @@ export const registerNoPhone = async (username, sub) => {
 export const updateUserPhone = async (username, payload) => {
     return await axios.post(`/users/gist/${username}/phone`, payload)
 }
+export const refundPayAsUGo = async (username, session_id) => {
+    return await axios.get("/sessions/refund/" + username + '/pay_as_you_go/' + session_id)
+}
+
+export const refundCloseLoopWallet = async (username, session_id) => {
+    return await axios.get("/sessions/add/" + username + '/close_wallet/' + session_id)
+}
+
+export const getStoreDataService = async (username) => {
+    return await axios.get(appconfig.BASE_URL + '/store/' + username);
+
+};

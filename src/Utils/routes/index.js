@@ -31,6 +31,7 @@ const routes = {
     Passbook: 'Passbook',
     PaymentScreenJuspay: 'PaymentScreenJuspay',
     MyCart:'MyCart',
+    StoreDetails:'StoreDetails',
 }
 
 export default routes
