@@ -45,10 +45,9 @@ export const blockAmount = async (payload) => {
 }
 
 export const walletHistory = async (username, startDate, endDated) => {
-    let userName = 'ritu.bhagwasiya@mfilterit.com'
     return await axios.get(appconfig.BASE_URL + "/users/get-transactions/", {
         params: {
-            username: userName,
+            username: username,
             startDate: startDate,
             endDate: endDated
         }
@@ -69,3 +68,8 @@ export const walletRecharge = async (username, payload) => {
 export const userGstList = async () => {
     return await axios.get("/gst_state_map/all-gst-state")
 }
+
+export const getStoreDataService = async (username) => {
+    return await axios.get(appconfig.BASE_URL + '/store/' + username);
+
+};

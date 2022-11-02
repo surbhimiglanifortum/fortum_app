@@ -14,14 +14,17 @@ import colors from '../../Utils/colors'
 import WalletModals from '../../Component/Modal/WalletModal'
 import { scale } from 'react-native-size-matters'
 import Fontisto from 'react-native-vector-icons/Fontisto'
+import { useSelector } from 'react-redux'
+import NoData from '../../Component/NoDataFound/NoData'
 const Wallet = () => {
 
+  let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const scheme = useColorScheme()
   const navigation = useNavigation()
+
   const RechargeButtonHandler = () => {
     navigation.navigate(routes.RechargeWallet)
   }
-
 
   let start = moment().subtract(30, 'days').calendar()
   start = moment(start).format('LL')
@@ -86,8 +89,10 @@ const Wallet = () => {
     setModalVisible(false)
   }
 
+  const username = mUserDetails?.username
+
   const { data, status, isLoading, refetch } = useQuery('walletData', async () => {
-    const res = await walletHistory(techStart, techEnd)
+    const res = await walletHistory(username,techStart, techEnd)
     var result = res.data
     result = result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     return result
@@ -116,7 +121,7 @@ const Wallet = () => {
                 )
               }}
             /> :
-            <CommonText showText={'No History Found'} customstyles={{ alignSelf: 'center', marginTop: 50 }} />
+            <NoData showText={'No History Found'} />
           }
         </View>
       </View>

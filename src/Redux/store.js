@@ -6,6 +6,7 @@ import UserTypeReducer from './reducers/UserTypeReducer'
 import ChargingStationReservReducer from './reducers/ChargingStationReservReducer'
 import CommonReducer from "./reducers/CommonReducers";
 import { LOGOUT } from "./Types";
+import AddToCartReducers from "./reducers/AddToCartreducer";
 
 const persistConfig = {
     key: 'root',
@@ -18,7 +19,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
     userTypeReducer: UserTypeReducer,
     chargingStationReservReducer: ChargingStationReservReducer,
-    commonReducer:CommonReducer
+    commonReducer:CommonReducer,
+    AddToCartReducers:AddToCartReducers
 });
 
 const removeReducer = (state, action) => {

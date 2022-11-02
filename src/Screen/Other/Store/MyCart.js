@@ -11,17 +11,43 @@ import StoreSvg from '../../../assests/svg/StoreSvg'
 import AddRemoveCard from '../../../Component/Card/AddRemoveCard'
 import { useState } from 'react'
 import Button from '../../../Component/Button/Button'
-const MyCart = () => {
-    const navigation = useNavigation()
+import { useDispatch, useSelector } from 'react-redux'
+import routes from '../../../Utils/routes'
+import { useEffect } from 'react'
+
+const MyCart = ({ route }) => {
+
     const scheme = useColorScheme()
-    const [addCartItem, setAddCartItem] = useState(0)
+    const dispatch = useDispatch()
 
-    const addCartHandler = () => {
+    const navigation = useNavigation()
+    const [cartCount, setCartCount] = useState(0);
+    const cartData = useSelector((state) => state.AddToCartReducers.cartItem)
+    let cartlength = cartData?.length
+    console.log(cartCount, '.......................................cart')
+    console.log(cartlength, '............cart-------------')
+
+    const addQty = async () => {
+        dispatch({
+            type: 'Add_To_Cart',
+            payload: cartCount
+        })
+        setCartCount(cartCount + 1)
 
     }
-    const removeCartHandler = () => {
 
+    const removeQty = () => {
+        dispatch({
+            type: 'REMOVE_To_Cart',
+            payload: cartCount
+        })
+        setCartCount(cartCount - 1)
     }
+
+    useEffect(() => {
+        setCartCount(cartlength)
+    }, [cartlength])
+
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
@@ -39,7 +65,7 @@ const MyCart = () => {
                                 </View>
                             </View>
                             <View>
-                                <AddRemoveCard />
+                                <AddRemoveCard removeQty={removeQty} addQty={addQty} cartCount={cartCount} disabled={cartCount == 1} showText={cartlength} />
                             </View>
                         </View>
                     </DenseCard>
