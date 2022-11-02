@@ -12,6 +12,7 @@ import colors from '../../Utils/colors';
 import Button from '../Button/Button';
 import CommonText from '../Text/CommonText';
 import LinearInput from '../Textinput/linearInput';
+import routes from '../../Utils/routes';
 
 const SelectPaymentMode = ({ min_balance, addMoneyPress, orderStatus, isShow, setGoodToGo, setPaymentMethod, setPayAsYouGoOrderId, evsesUid, setMsg }) => {
 
@@ -19,12 +20,10 @@ const SelectPaymentMode = ({ min_balance, addMoneyPress, orderStatus, isShow, se
     const dispatch = useDispatch();
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
-    console.log("Check Username", mUserDetails.balance)
 
     const [modalVisible, setModalVisible] = useState(false)
     const [mode, setMode] = useState('');
     const [loadingSign, setLoadingSign] = useState(false)
-    const [userData, setUserData] = useState({})
     const [isWallet, setWallet] = useState(true)
     const [allowMode, setAllowMode] = useState([])
     const [refreshing, setRefreshing] = useState(false)
@@ -107,17 +106,18 @@ const SelectPaymentMode = ({ min_balance, addMoneyPress, orderStatus, isShow, se
         // setWallet(true)
         setLoadingSign(true)
         setGoodToGo(false)
+        const username = mUserDetails.username
         const payload = {
             amount: min_balance.toString(),
             evses_uid: evsesUid
         }
         try {
-            const username = await AsyncStorage.getItem("username")
+
             const result = await payAsYouGo(username, payload)
             console.log("payAsYouGoMode try block", result.data)
             if (result.data) {
                 setPayAsYouGoOrderId(result.data.JusPayCallback.order_id)
-                navigation.navigate("PaymentScreenJuspay", {
+                navigation.navigate(routes.PaymentScreenJuspay, {
                     amount: 0,
                     email_address: '',
                     orderid: '',
@@ -315,7 +315,7 @@ const SelectPaymentMode = ({ min_balance, addMoneyPress, orderStatus, isShow, se
             {
                 !isWallet ?
                     <>
-                        <Button showText={'Add Money'} onPress={addMoneyPress} style={{marginTop:10}}/>
+                        <Button showText={'Add Money'} onPress={addMoneyPress} style={{ marginTop: 10 }} />
                     </>
                     :
                     (mode === "PAY_AS_U_GO" && isShow && !orderExist) &&

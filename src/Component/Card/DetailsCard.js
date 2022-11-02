@@ -9,7 +9,7 @@ import VerticalCard from './VerticalCard'
 import CommonText from '../Text/CommonText'
 import CommonView from '../../Component/CommonView'
 
-const DetailsCard = ({ chargerType, onPress, item }) => {
+const DetailsCard = ({ chargerType, onPress, item ,favourite}) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <CommonView style={styles.container} children={
@@ -19,7 +19,6 @@ const DetailsCard = ({ chargerType, onPress, item }) => {
                             <CommonText showText={item?.name} fontSize={16} />
                             <CommonText fontSize={12} customstyles={{ color: item?.summary?.aggregatedStatus === 'AVAILABLE' ? colors.green : item?.summary?.aggregatedStatus === 'CHARGING' ? colors.red : item?.summary?.aggregatedStatus === 'OCCUPIED' ? colors.red : "#D25564" }}>{item?.summary?.aggregatedStatus}</CommonText>
                             < CommonText fontSize={12} showText={item?.AccessDetails?.chargetType} />
-                            {console.log("Check Business Time", item)}
                             {
                                 item?.BusineessTime?.map((i, index) => {
                                     return < CommonText fontSize={12} showText={`${i?.startTime} - ${i?.endTime}`} />
@@ -37,7 +36,8 @@ const DetailsCard = ({ chargerType, onPress, item }) => {
                     </View>
                     <View style={[styles.innerContainer1,]}>
                         <View style={styles.longText}>
-                            <CommonText fontSize={12} showText={`${item?.address?.city} ${item?.address?.street} ${item?.address?.postalCode}`} />
+                            {favourite?<CommonText fontSize={12} showText={`${item?.address2?.city} ${item?.address2?.street} ${item?.address2?.postalCode}`} />:<CommonText fontSize={12} showText={`${item?.address?.city} ${item?.address?.street} ${item?.address?.postalCode}`} />}
+                            
                         </View>
                         <CommonText fontSize={12} showText={`${item?.distance} Km`} />
                     </View>
