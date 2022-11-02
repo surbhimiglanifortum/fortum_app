@@ -6,7 +6,7 @@ import WalletCard from '../../Component/Card/WalletCard'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../Utils/routes'
 import { useQuery } from 'react-query'
-import { walletHistory } from '../../Services/Api'
+import { walletHistory, getUserDetails } from '../../Services/Api'
 import CardWallet from '../../Component/Card/cardWallet'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment'
@@ -14,6 +14,8 @@ import colors from '../../Utils/colors'
 import WalletModals from '../../Component/Modal/WalletModal'
 import { scale } from 'react-native-size-matters'
 import Fontisto from 'react-native-vector-icons/Fontisto'
+import { useSelector } from 'react-redux'
+
 const Wallet = () => {
 
   const scheme = useColorScheme()
@@ -21,6 +23,17 @@ const Wallet = () => {
   const RechargeButtonHandler = () => {
     navigation.navigate(routes.RechargeWallet)
   }
+
+  const updateUserDetails = async () => {
+    const result = await getUserDetails()
+    if (result.data) {
+      dispatch(AddToRedux(result.data, Types.USERDETAILS))
+    }
+  }
+
+  useEffect(() => {
+    updateUserDetails()
+  }, [])
 
 
   let start = moment().subtract(30, 'days').calendar()
@@ -93,6 +106,7 @@ const Wallet = () => {
     return result
   })
 
+  let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
   console.log(techStart, techEnd, '///// in wallet')
 
@@ -101,7 +115,7 @@ const Wallet = () => {
       <View style={styles.innerContainer}>
         <Header showText={'Wallet'} />
         {/* card */}
-        <WalletCard onPress={RechargeButtonHandler} />
+        <WalletCard onPress={RechargeButtonHandler} title={`₹ ${mUserDetails.balance}`} />
         <View style={styles.text}>
           <CommonText showText={'Transcation History'} fontSize={15} />
         </View>
@@ -112,7 +126,9 @@ const Wallet = () => {
               keyExtractor={item => item.id}
               renderItem={(item) => {
                 return (
-                  <CardWallet dataItem={item} />
+                  <View style={{ marginVertical: 10 }}>
+                    <CardWallet dataItem={item} />
+                  </View>
                 )
               }}
             /> :
@@ -147,13 +163,11 @@ const Wallet = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    padding: 10
   },
   innerContainer: {
-    width: '90%',
-    alignSelf: 'center',
     marginTop: 20,
-    marginBottom: 540
   },
   text: {
     marginVertical: 15

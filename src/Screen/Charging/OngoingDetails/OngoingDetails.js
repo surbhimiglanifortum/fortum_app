@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Header from '../../../Component/Header/Header'
 import colors from '../../../Utils/colors'
 import CommonText from '../../../Component/Text/CommonText'
@@ -16,17 +16,50 @@ import SupportLight from '../../../assests/svg/Support_light'
 import DenseCard from "../../../Component/Card/DenseCard"
 import SelectPaymentMode from '../../../Component/MajorComponents/SelectPaymentMode'
 import { useSelector } from 'react-redux'
+import appconfig from '../../../Utils/appconfig'
+import axios from "axios"
+import { GetCouterTime } from '../../../Utils/utils'
+import PayAsUGoModal from '../../../Component/Modal/PayAsUGoModal'
+import { refundCloseLoopWallet, refundPayAsUGo } from '../../../Services/Api'
+
+var mStoppedPressed = false;
+let sessionId = ''
 
 const OngoingDetails = ({ route }) => {
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+  const username = mUserDetails?.username
+
+  const navigation = useNavigation()
+  const scheme = useColorScheme()
+
+  console.log("Check Route Params", route?.params)
 
   const [paymentMethod, setPaymentMethod] = useState('')
   const [msg, setMsg] = useState('')
   const [goodToGo, setGoodToGo] = useState(false)
+  const [isShow, setShow] = useState(true)
+  const [payAsYouGoOrderId, setPayAsYouGoOrderId] = useState('')
+  const [unpaid, setUnpaid] = useState([])
+  const [unpaidVisible, setUnpaidVisible] = useState(false)
+  const [refreshing, setRefreshing] = useState(false);
+  const [chargerText, setChargerText] = useState("Start")
+  const [chargerState, setChargerState] = useState("STOP")
+  const [isSessionActive, setSessionActive] = useState(false)
+  const [stopColor, setStopColor] = useState(null)
+  const [disableButton, setButtonDisable] = useState(false)
+  const [optionOpt, setOptionOpt] = useState('')
+  const [chargeTime, setChargeTime] = useState("")
+  const [loadingRefund, setLoadingRefund] = useState(false)
+  const [loadingWallet, setLoadingWallet] = useState(false)
+  const [showRestart, setShowRestart] = useState(false)
+  const [chargingCost, setChargingCost] = useState('')
+  const [remainingCost, setRemainingCost] = useState('')
+  const [chargeSessionID, setChargeSessionID] = useState('')
+  const [isChargerStart, setChargerStart] = useState(false)
+  const [stopPressed, setStopPressed] = useState(false)
+  const [payAsYouGoOrderStatus, setPayAsYouGoOrderStatus] = useState('')
 
-  const navigation = useNavigation()
-  const scheme = useColorScheme()
   const stopButtonHandler = () => {
     navigation.navigate(routes.taxInvoice)
   }
@@ -34,7 +67,406 @@ const OngoingDetails = ({ route }) => {
   const locDetails = route?.params?.locDetails
   const evDetails = route.params?.evDetails
 
-  console.log("Check OnGoing Perameter", route.params?.evDetails)
+  let lastPaidSession = {}
+
+  const checkIfUnpaid = () => {
+    axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/allunpaid/' + username + '?app_version=' + appconfig.APP_VERSION_NUMBER).then((res) => {
+      console.log("Check If Unpaid From Charging Start Page", res.data)
+      if (res.data != undefined && res.data !== [] && res?.data.length > 0) {
+        setUnpaid(res.data)
+        setUnpaidVisible(true)
+      }
+    }).catch((err) => console.log("Check If Unpaid From Charging Start Page Error", err))
+  }
+
+  const fetchLastSession = async () => {
+    setRefreshing(true)
+    const response = await axios.get(appconfig.BASE_URL + "/sessions/allactive/" + username);
+    setRefreshing(false)
+    response.data.forEach((item, index) => {
+      // console.log('Session Id')
+      if (!item) {
+        return;
+      }
+      // console.log(item.location.evses[0].connectors)
+      const activeConnectors = item.location.evses[0].connectors
+      activeConnectors.map(i => {
+        if (i.id === evDetails?.uid) {
+          // setChargeSessionID(response.data[1].auth_id)  
+          pollSessions(item.auth_id, 0, 0, 0)
+          setChargerText('STOP')
+          setChargerState('CHARGING')
+          setShow(false)
+          setSessionActive(true)
+          setStopColor(colors.blue)
+
+          axios.post(appconfig.TOTAL_BASE_URL + '/api_app/sessions/last', { username }).then(res => {
+            if (res.data[0].payments[0].payment_method === 'CLOSED_WALLET') {
+              setOptionOpt('Prepaid Wallet')
+            } else if (res.data[0].payments[0].payment_method === 'PAY_AS_U_GO') {
+              setOptionOpt('Pay As You Go')
+            } else if (res.data[0].payments[0].payment_method === 'PREPAID_CARD') {
+              setOptionOpt('Prepaid Card')
+            }
+          }).catch(err => {
+            console.log("Error From Last Session API", err)
+          })
+          if (item.auth_id.startsWith("fleet") || item.auth_id.startsWith("token_")) {
+            setButtonDisable(false)
+          }
+          counterinterval = setInterval(() => {
+            setChargeTime(GetCouterTime(item.start_datetime))
+          }, 1000);
+        }
+        else {
+          setChargerText('START')
+          setChargerState('STOP')
+          setSessionActive(false)
+        }
+      })
+      // checking if active session is not more than 24 hours
+      if (new Date() - new Date(item.start_datetime) > 86400000) {
+        const activeConnectors = item.location.evses[0].connectors
+        activeConnectors.map(i => {
+          if (i.id === evDetails?.uid) {
+            pollSessions(item.auth_id, 0, 0, 0)
+            setChargerText('STOP')
+            setChargerState('CHARGING')
+            setSessionActive(true)
+            setStopColor(colors.blue)
+            if (item.auth_id.startsWith("fleet") || item.auth_id.startsWith("token_")) {
+              setButtonDisable(false)
+            }
+          }
+          else {
+            setChargerText('START')
+            setChargerState('STOP')
+            setSessionActive(false)
+          }
+        })
+      }
+    })
+  }
+
+  useEffect(() => {
+    checkIfUnpaid()
+    if (evDetails?.status === "CHARGING") {
+      fetchLastSession()
+    }
+    return () => {
+      try {
+        clearInterval(counterinterval)
+      } catch (error) { }
+    }
+  }, [])
+
+  const pollSessions = (authID, contSucc, active, failcounter) => {
+    console.log("Poll seessions")
+    if (contSucc > 3) {
+      setChargerText("Start")
+      setChargerState("STOP")
+      if (paymentMethod === 'CLOSED_WALLET') {
+        setIsVisible(true)
+      }
+      try {
+        clearInterval(counterinterval)
+      } catch (error) {
+        console.log("Error in PollSession", error)
+      }
+
+
+      setRefreshing(true)
+      axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/allunpaid/' + username + '?app_version=' + appconfig.APP_VERSION_NUMBER).then((r) => {
+        console.log("get all unpaid session")
+        console.log(r.data)
+        console.log('Session Id Check Here', sessionId)
+        setRefreshing(true)
+        console.log("Check Payment Method in Poll Session", paymentMethod)
+        // amountDeductionProcess(paymentMethod)
+        console.log("Check Refund API URL", appconfig.TOTAL_BASE_URL + '/api_app/sessions/showRefundDialog/' + sessionId + '/' + username)
+        axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/showRefundDialog/' + sessionId + '/' + username).then(res => {
+          console.log("Response Restart API", res.data.data)
+          if (res.data.success) {
+            setChargingCost(res.data.data.chargingCost / 100)
+            setRemainingCost(res.data.data.remainingAmount / 100)
+            setShowRestart(true)
+            setRefreshing(false)
+          } else {
+            setIsVisible(true)
+            setRefreshing(false)
+          }
+        }).catch(error => {
+          console.log("Error Restart API", error)
+          setRefreshing(false)
+        })
+
+      }).catch(error => {
+        console.log("All Unpaid API Catch", error)
+        setRefreshing(false)
+      })
+      return
+    }
+
+    console.log('counternumber1 1 :' + contSucc + " " + active + " " + failcounter + " " + contSucc)
+
+    if (contSucc == 0 && active == 0 && failcounter > 4) {
+      active = 1;
+      console.log('counternumber1 2 :' + contSucc + " " + active + " " + failcounter + " " + contSucc)
+    }
+    let data = {
+      auth_id: authID
+    }
+
+    axios.post(appconfig.BASE_URL + "/sessions/", data).then((r) => {
+      console.log("Check Auth Id", data)
+      console.log("2 Response of session Api", r.data)
+      console.log(r.data)
+      console.log('Stop pressed', mStoppedPressed)
+      console.log('r2.data.status', r.data.status + " " + chargerState)
+      if (r.data.status === 'COMPLETED' && active == 1) {
+        setChargeSessionID("")
+        // setChargerText("Start")
+        console.log("CHARGING COMPLETED!!")
+        sessionId = r.data.id
+        // setTimeout(()=>pollSessions(authID),2000)
+        lastPaidSession = r.data
+        setTimeout(() => pollSessions(authID, contSucc + 1, active, 0), 1500)
+        mStoppedPressed = false;
+        // pollSessions(authID,contSucc+1)
+        return
+      } else if (r.data.status === 'ACTIVE') {
+        setChargerState("CHARGING")
+        console.log("ACTIVE COMMAND")
+        active = 1;
+        failcounter = 0;
+        setChargeSessionID(r.data.id)
+        sessionId = r.data.id
+        if (!mStoppedPressed) {
+          //** */
+          // setChargerText('STOP')
+          // setChargerState('CHARGING')
+          setChargerText("Stop")
+          try {
+            counterinterval = setInterval(() => {
+              setChargeTime(GetCouterTime(r.data.start_datetime))
+            }, 1000);
+          } catch (error) {
+            console.log("Error After Charging", error)
+          }
+        }
+      } else {
+        console.log(r.data.status + "!!!")
+      }
+      setTimeout(() => pollSessions(authID, contSucc, active, failcounter + 1), 2000)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+  const commandsCall = (uid, tr) => {
+    if (tr > 30) {
+      setChargerState("STOP")
+      setChargerText("Failed")
+      return
+    }
+    let data = {
+      uid: uid + ""
+    }
+    console.log("Check Command Auth", data)
+    axios.post(appconfig.BASE_URL + "/commands/", data).then((r) => {
+      console.log("commandsCall")
+      console.log(r.data.result)
+      if (r.data.result === 'ACCEPTED') {
+        console.log("ACCEPTED!!! COMMAND!")
+        pollSessions(r.data.token.auth_id, 0, 0, 0)
+      } else {
+        console.log(r.data)
+        setTimeout(() => commandsCall(uid, tr + 1), 3000)
+        console.log("REJECTED COMMAND")
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+  const startChargerCallWithToken = () => {
+    setChargerState("STARTING")
+    setChargerText("Starting...")
+    console.log("Start PRessed")
+    axios.get(appconfig.BASE_URL + "/charging_keys/ids/" + username).then(resp => {
+      console.log("/charging_keys/ids/", resp.data)
+      let vtoken = {}
+      let vtoken_id = ''
+      resp.data.forEach((item, index) => {
+        console.log("my item", item.auth_id)
+        if (item.auth_id.startsWith("token_") || item.auth_id.startsWith("fleet")) {
+          vtoken_id = item
+          console.log(vtoken_id)
+          axios.get(appconfig.BASE_URL + "/tokens/" + vtoken_id.auth_id).then(token => {
+            vtoken = token.data
+
+            let data = {
+              token: vtoken,
+              location_id: locDetails?.id,
+              evse_uid: evDetails?.uid,
+              payment_method: paymentMethod,
+              order_id: payAsYouGoOrderId
+            }
+            if (payAsYouGoOrderId === '') {
+              delete data.order_id
+            }
+            console.log(data, "PUSH TO SERVER")
+            axios.put(appconfig.TOTAL_BASE_URL + "/ocpi/emsp/2.1.1/commands/START_SESSION", data).then((r) => {
+
+              console.log("commands/START_SESSION response")
+              console.log(r.data)
+
+              if (Array.isArray(r.data) && r.data.length > 0 && r.data[0].amount) {
+                //existing bill
+                setChargerState("STOP")
+                setChargerText("Start")
+                setSnack({ message: 'You have existing bill, Please fill it first before charging', open: true, color: 'error' })
+                setShowRazorpay(true)
+                console.log("initiateJuspayr.data", r.data)
+                axios.get(appconfig.BASE_URL + "/sessions/initiateJuspay/" + userm + "/" + r.data[0].session_id).then((result) => {
+                  console.log("initiateJuspayresukt", result.data)
+                  if (result.data.success) {
+                    navigation.navigate(routes.PaymentScreenJuspay, {
+                      amount: 0,
+                      email_address: '',
+                      orderid: '',
+                      mobile_number: '',
+                      description: 'EV Charge Invoice',
+                      callback_url: '',
+                      juspay_process_payload: result.data.data.juspay_payload
+                    })
+                  } else {
+                    // manage exxception
+                  }
+                }).catch((e) => {
+                  console.log("error")
+                })
+                return
+              }
+              if (r.data.data.data.result === 'ACCEPTED') {
+                console.log("ACCEPTED!!!", r.data)
+                commandsCall(r.data.uid, 0)
+                setChargerStart(true)
+                setShow(false)
+              } else {
+                console.log("REJECTED")
+              }
+            }).catch(err => {
+              console.log("start serrsoin error", err)
+              setChargerState("STOP")
+              setChargerText("Failed")
+            })
+          })
+        }
+      })
+
+    }).catch(err => { console.log(err) })
+  }
+
+  const stopChargeSession = (id) => {
+    mStoppedPressed = true;
+    setChargerState("STOPPING")
+    setChargerText("Stopping...")
+    setStopPressed(true)
+    console.log("Stopping called")
+    let data = {
+      "session_id": id
+    }
+    console.log(data)
+    axios.put(appconfig.TOTAL_BASE_URL + "/ocpi/emsp/2.1.1/commands/STOP_SESSION", data).then((r) => {
+      // console.log(r.data.data.data.result)
+      if (r.data.data.data.result === 'ACCEPTED') {
+        console.log("ACCEPTED!!!", r.data.uid)
+        // commandsCall(r.data.uid,0)
+      } else {
+        console.log("REJECTED")
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+  const startChargerFlow = () => {
+    console.log("pressed")
+    startChargerCallWithToken()
+  }
+
+  if (route.params.started) {
+    useEffect(() => {
+      pollSessions(route.params.auth_id, 0, 0, 0)
+    }, [])
+  }
+
+  const getButtonColor = (status) => {
+    if (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') {
+      return colors.blue;
+    }
+    if (((evDetails?.status === "AVAILABLE" || route.params.started == true || isSessionActive == true) && (evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined)) || (evDetails?.status === "AVAILABLE" || route.params.started == true || isSessionActive == true) && (payAsYouGoOrderStatus == 'CHARGED' || goodToGo)) {
+      return null;
+    } else {
+      return colors.grey
+    }
+  }
+
+  const orderStatus = (data) => {
+    console.log("LOGS DATA FROM CHILD", data);
+    setPayAsYouGoOrderStatus(data)
+    if (data === "CHARGED") {
+      setShow(false)
+      setMsg("You are ready to charge.")
+    }
+  }
+
+  console.log("setPaymentMethod", paymentMethod, "setPayAsYouGoOrderId", payAsYouGoOrderId)
+
+  const switchToMapScreen = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'MapStack' }],
+    });
+  }
+
+  const initiateRefund = async (sessionId) => {
+    setLoadingRefund(true)
+    try {
+      const result = await refundPayAsUGo(username, sessionId)
+      console.log("Result initiateRefund", result.data)
+      setShowRestart(false)
+      setSnack({ message: result.data.message, open: true, color: 'error' })
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'MapStack' }],
+      });
+      setLoadingRefund(false)
+    } catch (error) {
+      console.log("Result initiateRefund error", error)
+      setLoadingRefund(false)
+    }
+  }
+
+  const initiateWalletRefund = async (sessionId) => {
+    setLoadingWallet(true)
+    try {
+      const result = await refundCloseLoopWallet(username, sessionId)
+      console.log("Result initiateWalletRefund", result.data)
+      setShowRestart(false)
+      setSnack({ message: result.data.message, open: true, color: 'error' })
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'MapStack' }],
+      });
+      setLoadingWallet(false)
+    } catch (error) {
+      console.log("Result initiateWalletRefund Catch", error)
+      setLoadingWallet(false)
+    }
+  }
+
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
@@ -69,53 +501,89 @@ const OngoingDetails = ({ route }) => {
 
           <DenseCard>
             <SelectPaymentMode
-              min_balance={route.params?.evDetails?.connectors[0]?.pricing?.min_balance}
+              min_balance={evDetails?.connectors[0]?.pricing?.min_balance}
               addMoneyPress={() => navigation.navigate(routes.RechargeWallet, {
                 routeDirection: "SelectPaymentMode",
-                minBalance: route.params?.evDetails?.connectors[0]?.pricing?.min_balance,
+                minBalance: evDetails?.connectors[0]?.pricing?.min_balance,
                 gstState: mUserDetails?.defaultState
               })}
               setPaymentMethod={setPaymentMethod}
               setMsg={setMsg}
               setGoodToGo={setGoodToGo}
+              evsesUid={evDetails?.uid}
+              isShow={isShow}
+              setPayAsYouGoOrderId={setPayAsYouGoOrderId}
+              orderStatus={orderStatus}
             />
+
             {
               msg != '' &&
               <CommonText showText={msg} regular fontSize={13} customstyles={{ color: colors.red, textAlign: 'center', paddingHorizontal: 10 }} />
             }
-          </DenseCard>
 
-          <DenseCard>
-            <View style={styles.middleCard}>
-              <View style={styles.middleInner}>
-                <CommonText showText={'Time'} fontSize={18} />
-              </View>
-              <View style={styles.timeContainer}>
-                <View>
-                  <DenseCard>
-                    <CommonText showText={'12'} customstyles={{ textAlign: 'center' }} />
-                  </DenseCard>
-                  <CommonText showText={'  Hours'} />
-                </View>
-                <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
-                <View>
-                  <DenseCard>
-                    <CommonText showText={'12'} customstyles={{ textAlign: 'center' }} />
-                  </DenseCard>
-                  <CommonText showText={' Minutes'} />
-                </View>
-                <View>
-                  <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
-                </View>
-                <View>
-                  <DenseCard>
-                    <CommonText showText={'02'} customstyles={{ textAlign: 'center' }} />
-                  </DenseCard>
-                  <CommonText showText={' Seconds'} />
-                </View>
-              </View>
-            </View>
           </DenseCard>
+          {
+            chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ?
+              <DenseCard>
+                <View style={styles.middleCard}>
+                  <View style={styles.middleInner}>
+                    <CommonText showText={'Time'} fontSize={18} />
+                  </View>
+                  <View style={styles.timeContainer}>
+                    <View>
+                      <DenseCard>
+                        <CommonText showText={chargeTime?.hours} customstyles={{ textAlign: 'center' }} />
+                      </DenseCard>
+                      <CommonText showText={'  Hours'} />
+                    </View>
+                    <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
+                    <View>
+                      <DenseCard>
+                        <CommonText showText={chargeTime?.minutes} customstyles={{ textAlign: 'center' }} />
+                      </DenseCard>
+                      <CommonText showText={' Minutes'} />
+                    </View>
+                    <View>
+                      <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
+                    </View>
+                    <View>
+                      <DenseCard>
+                        <CommonText showText={chargeTime?.seconds} customstyles={{ textAlign: 'center' }} />
+                      </DenseCard>
+                      <CommonText showText={' Seconds'} />
+                    </View>
+                  </View>
+                </View>
+              </DenseCard> :
+              null
+          }
+
+          <PayAsUGoModal
+            modalVisible={showRestart}
+            bgStyle={'rgba(0,0,0,0.5)'}
+            chargingCost={chargingCost}
+            remainingCost={remainingCost}
+            loadingRefund={loadingRefund}
+            loadingWallet={loadingWallet}
+            cancelClick={() => {
+              console.log("cancelClick")
+              setShowRestart(!showRestart)
+            }}
+            onRestartClick={() => {
+              setShowRestart(!showRestart)
+              navigation.goBack()
+            }}
+            onRefundClick={() => {
+              console.log("Refund Click", sessionId)
+              initiateRefund(sessionId)
+              navigation.goBack()
+            }}
+            onWalletClick={() => {
+              console.log("Refund In Wallet Click", sessionId)
+              initiateWalletRefund(sessionId)
+              navigation.goBack()
+            }}
+          />
 
           <CommonCard>
             <TouchableOpacity style={styles.topCard}>
@@ -132,7 +600,24 @@ const OngoingDetails = ({ route }) => {
           </CommonCard>
 
           <View style={styles.bottomButon}>
-            <Button showText={'Stop'} onPress={stopButtonHandler} />
+            <Button showText={chargerText}
+              onPress={() => {
+                console.log('my state', chargerState)
+                if (chargerState === "STOP") {
+                  startChargerFlow()
+                } else if (chargerState === 'CHARGING') {
+                  console.log("chargeSessionID")
+                  console.log(chargeSessionID)
+                  stopChargeSession(chargeSessionID)
+                } else if (isSessionActive == true && chargerState === 'CHARGING') {
+                  console.log("chargeSessionID")
+                  console.log(chargeSessionID)
+                  stopChargeSession(chargeSessionID)
+                }
+              }}
+              disable={chargerText == 'Stop' || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true) && (evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined)) || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true || evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined) && (payAsYouGoOrderStatus === "CHARGED" && paymentMethod === 'PAY_AS_U_GO') || goodToGo && !disableButton) ? false : true}
+              bg={getButtonColor("")}
+            />
           </View>
         </View>
       </ScrollView>

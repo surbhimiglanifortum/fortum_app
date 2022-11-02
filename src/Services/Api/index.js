@@ -69,3 +69,11 @@ export const walletRecharge = async (username, payload) => {
 export const userGstList = async () => {
     return await axios.get("/gst_state_map/all-gst-state")
 }
+
+export const refundPayAsUGo = async (username, session_id) => {
+    return await axios.get("/sessions/refund/" + username + '/pay_as_you_go/' + session_id)
+}
+
+export const refundCloseLoopWallet = async (username, session_id) => {
+    return await axios.get("/sessions/add/" + username + '/close_wallet/' + session_id)
+}
