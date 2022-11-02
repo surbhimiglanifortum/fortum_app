@@ -9,8 +9,12 @@ import { useQuery } from 'react-query'
 import { chargingListCompletedServices, chargingListServices } from '../../Services/ChargingTabServices/ChargingServices'
 import CommonText from '../../Component/Text/CommonText'
 import colors from '../../Utils/colors'
+import { useSelector } from 'react-redux'
+import NoData from '../../Component/NoDataFound/NoData'
 
 const Charging = () => {
+
+    let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
     const navigation = useNavigation()
     const [selectedTab, setSelectedTab] = useState('ongoing')
     const [loading, setLoading] = useState(false)
@@ -32,12 +36,15 @@ const Charging = () => {
         }
     }
 
+
+    const username = mUserDetails?.username
+
     const { data, status, isLoading, refetch } = useQuery('chargingData', async () => {
-        const res = await chargingListServices()
+        const res = await chargingListServices(username)
         return res.data
     })
     const { data: completedData, status: completedStatus, isLoading: completedIsLoading, refetch: completedreFetch } = useQuery('chargingCompletedData', async () => {
-        const res = await chargingListCompletedServices()
+        const res = await chargingListCompletedServices(username)
         return res.data
     })
 
@@ -70,13 +77,13 @@ const Charging = () => {
                                     }
                                     }
                                 /> :
-                                <CommonText showText={'No Data Found'} customstyles={{ alignSelf: 'center', marginTop: 50 }} />
+                                <NoData showText={'No Data Found'}/>
                             }
                         </>
                     }
 
                     {selectedTab == 'completed' &&
-                        <>
+                        <>{completedIsLoading && completedData.length > 0 ?
                             <FlatList
                                 data={completedData}
                                 keyExtractor={item => item.id}
@@ -86,7 +93,8 @@ const Charging = () => {
                                     )
                                 }
                                 }
-                            />
+                            /> : <NoData showText={'No Data Completed'} />
+                        }
                         </>
                     }
                 </View>

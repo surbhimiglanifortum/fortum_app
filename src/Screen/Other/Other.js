@@ -17,7 +17,7 @@ import CommonText from '../../Component/Text/CommonText'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../Utils/routes'
 import { useSelector } from 'react-redux'
-
+import CommonView from '../../Component/CommonView'
 const Other = () => {
   const userDetailsData = useSelector((state) => state.userTypeReducer)
   console.log(userDetailsData, '.....................................redux data')
@@ -59,7 +59,7 @@ const Other = () => {
   }
 
   return (
-    <View style={styles.conatainer}>
+    <CommonView style={styles.conatainer}>
       <ScrollView>
         <View style={styles.innerContainer}>
           <Header showText={'More Settings'} />
@@ -89,19 +89,11 @@ const Other = () => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </CommonView>
   )
 }
 
 const styles = StyleSheet.create({
-  conatainer: {
-    flex: 1,
-  },
-  innerContainer: {
-    width: '90%',
-    alignSelf: 'center',
-    marginVertical: 20
-  },
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'center',

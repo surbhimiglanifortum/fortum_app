@@ -18,7 +18,7 @@ const Header = ({showText}) => {
 const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
-        alignItems:'center'
+        alignItems:'center',
     },
     headerText: { alignItems: 'center', marginLeft: 60 },
 })

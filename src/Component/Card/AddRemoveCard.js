@@ -6,20 +6,21 @@ import commonFonts from '../../Utils/fonts/fonts'
 import LinearGradient from 'react-native-linear-gradient'
 import CommonText from '../Text/CommonText'
 
-const AddRemoveCard = () => {
+const AddRemoveCard = ({ removeQty, addQty, cartCount,disabled,showText }) => {
     const scheme = useColorScheme()
 
     return (
         <LinearGradient colors={scheme === 'dark' ? [colors.denseShadowDark, colors.denseShadowSecondary] : [colors.denseShadow, colors.white]} style={[styles.linearGradient]}>
             <View style={styles.container}>
-                <TouchableOpacity style={styles.minusIcon}>
-                    <AntDesign name='minus' size={20} color={colors.white} />
+                <TouchableOpacity onPress={() => removeQty()} disabled={disabled}
+                    style={[styles.minusIcon, { backgroundColor: scheme == 'dark' ? colors.lightGray : colors.white }]}>
+                    <AntDesign name='minus' size={20} color={scheme == 'dark' ? colors.white : colors.black} />
                 </TouchableOpacity>
-                <CommonText showText={'10'} />
-                <TouchableOpacity style={styles.plusIcon}>
-                    <AntDesign name='plus' size={20} />
+                <CommonText showText={cartCount ? cartCount : showText?showText:'1'} />
+                <TouchableOpacity onPress={() => addQty()}
+                    style={styles.plusIcon}>
+                    <AntDesign name='plus' size={20} color={colors.white} />
                 </TouchableOpacity>
-
             </View>
         </LinearGradient >
 
@@ -41,7 +42,9 @@ const styles = StyleSheet.create({
         elevation: 40,
         paddingVertical: 7,
         paddingHorizontal: 7,
-        borderRadius: 10
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: colors.white
     },
     minusIcon: {
         backgroundColor: colors.lightGray,
