@@ -131,9 +131,7 @@ const Wallet = () => {
               keyExtractor={item => item.id}
               renderItem={(item) => {
                 return (
-                  <View style={{ marginVertical: 10 }}>
                     <CardWallet dataItem={item} />
-                  </View>
                 )
               }}
             /> :

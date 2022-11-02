@@ -114,7 +114,7 @@ const Login = () => {
           </View>
           <View style={styles.textinputConatiner}>
             <CommonText showText={'Please enter your mobile number or email id'} fontSize={12} />
-            <Textinput on value={userInput} onChange={(e)=>setuserInputsetuserInput(e.toLowerCase())} placeholder={'Mobile Number / email id'} />
+            <Textinput on value={userInput} onChange={(e)=>setuserInput(e.toLowerCase())} placeholder={'Mobile Number / email id'} />
           </View>
           <TouchableOpacity style={[styles.button, { backgroundColor: userInput == '' ? colors.grey : colors.green }]} onPress={continueButtonHandler} onLoading={loading} setOnLoading={setLoading} disabled={userInput === '' ? true : false} >
             {/* <Button /> */}

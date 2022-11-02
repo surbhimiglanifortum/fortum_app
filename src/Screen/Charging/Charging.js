@@ -45,6 +45,7 @@ const Charging = () => {
     })
     const { data: completedData, status: completedStatus, isLoading: completedIsLoading, refetch: completedreFetch } = useQuery('chargingCompletedData', async () => {
         const res = await chargingListCompletedServices(username)
+        console.log("complete reseres", res.data)
         return res.data
     })
 
@@ -77,13 +78,13 @@ const Charging = () => {
                                     }
                                     }
                                 /> :
-                                <NoData showText={'No Data Found'}/>
+                                <NoData showText={'No Data Found'} />
                             }
                         </>
                     }
 
                     {selectedTab == 'completed' &&
-                        <>{completedIsLoading && completedData.length > 0 ?
+                        <>{!completedIsLoading && completedData.length > 0 ?
                             <FlatList
                                 data={completedData}
                                 keyExtractor={item => item.id}
@@ -106,10 +107,9 @@ const Charging = () => {
 const styles = StyleSheet.create({
     conatiner: {
         flex: 1,
+        padding:10
     },
     innerContainer: {
-        width: '90%',
-        alignSelf: 'center',
         marginVertical: scale(10),
         paddingBottom: 200
     },
