@@ -6,26 +6,26 @@ import Button from '../Button/Button'
 import CommonText from '../Text/CommonText'
 
 
-const CommonModal = ({ openCommonModal, setOpenCommonModal ,showText }) => {
+const CommonModal = ({ openCommonModal, setOpenCommonModal }) => {
 
 
 
     const okayBtnHandler = () => {
-        setOpenCommonModal(false)
+        setOpenCommonModal({ isVisible: false, message: "" })
     }
     return (
-        <Modal visible={openCommonModal} statusBarTranslucent={true} transparent>
+        <Modal visible={openCommonModal?.isVisible} statusBarTranslucent={true} transparent>
             <View style={styles.container}>
                 <View style={styles.innerContainer}>
                     <View style={styles.wrapContainer}>
                         <View style={styles.header}>
                             <CommonText showText={'Notifications'} fontSize={20} />
-                            <TouchableOpacity style={styles.crossBtn} onPress={() => { setOpenCommonModal(false) }}>
+                            <TouchableOpacity style={styles.crossBtn} onPress={() => { setOpenCommonModal({ isVisible: false, message: "" }) }}>
                                 <AntDesign name='close' size={20} />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.centerText}>
-                            <CommonText showText={showText} fontSize={16} />
+                            <CommonText showText={openCommonModal?.message} fontSize={16} />
                         </View>
                         <View>
                             <Button showText={'Okay'} onPress={okayBtnHandler} />

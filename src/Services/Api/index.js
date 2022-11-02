@@ -4,7 +4,7 @@ import axios from '../BaseUrl'
 
 export const getUserDetails = async () => {
     const result = await Auth.currentAuthenticatedUser();
-    if (result) {
+    if (result.signInUserSession) {
         return await axios.get("/users/gist/" + result.attributes.email)
     } else {
         throw 'User Not logged in'
@@ -68,4 +68,13 @@ export const walletRecharge = async (username, payload) => {
 
 export const userGstList = async () => {
     return await axios.get("/gst_state_map/all-gst-state")
+}
+
+
+export const registerNoPhone = async (username, sub) => {
+    return await axios.post(`/users/registernophone/${username}/${sub}`)
+}
+
+export const updateUserPhone = async (username, payload) => {
+    return await axios.post(`/users/gist/${username}/phone`, payload)
 }

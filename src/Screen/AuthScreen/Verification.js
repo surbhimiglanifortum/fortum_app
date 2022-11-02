@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useContext } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import CommonText from '../../Component/Text/CommonText';
@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import * as Types from '../../Redux/Types'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import CommonModal from '../../Component/Modal/CommonModal';
+import SnackContext from '../../Utils/context/SnackbarContext'
 
 const Verification = ({ route }) => {
 
@@ -23,7 +24,6 @@ const Verification = ({ route }) => {
     const otpField2 = useRef(null);
     const otpField3 = useRef(null);
     const otpField4 = useRef(null);
-const [ openCommonModal, setOpenCommonModal]=useState(false)
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false)
     const [userInput, setUserInput] = useState('101299')
@@ -32,56 +32,81 @@ const [ openCommonModal, setOpenCommonModal]=useState(false)
     const [userInput3, setUserInput3] = useState('')
     const [userInput4, setUserInput4] = useState('')
     let otpConcatData = userInput1.concat(userInput2).concat(userInput3).concat(userInput4)
-    // console.log(otpConcatData, '................otp')
+
+
+    const { setOpenCommonModal } = useContext(SnackContext);
+
 
     const { email_id, signin, user } = route.params;
 
     const VerifyButtonHandler = async () => {
         setLoading(true)
+
         if (!signin) {
             try {
-                const result = await Auth.confirmSignUp(email_id, otpConcatData);
 
-                if (result === "SUCCESS") {
-                    navigation.navigate(routes.MobileVerification, { ...route.params })
-                } else {
-                    // show error message
-                }
+                Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
+                    if (success.signInUserSession) {
+                        loginSuccess(false)
+                        navigation.navigate(routes.MobileVerification, { ...route.params })
+                    } else {
+                        // enter valid OTP   
+                        setOpenCommonModal({ isVisible: true, message: "Enter Valid OTP" })
+                    }
+                }).catch(error => {
+                    // Somethong went wrong
+                    console.log("Something went wrong", error)
+                })
             } catch (error) {
-                console.log('error confirming sign up', error);
-                setOpenCommonModal(true)
+                console.log('Something went wrong', error);
                 // show error message
+                setOpenCommonModal({ isVisible: true, message: "Something Went Wrong!!!" })
             }
         } else {
             try {
-                console.log("otpConcatData",otpConcatData)
-                const cognitoUser = await Auth.sendCustomChallengeAnswer(user, otpConcatData)
-                loginSuccess()
+                Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
+                    if (success.signInUserSession) {
+                        loginSuccess()
+                    } else {
+                        // enter valid OTP
+                        setOpenCommonModal({ isVisible: true, message: "Enter Valid OTP" })
+                    }
 
-            } catch (e) {
-                // Handle 3 error thrown for 3 incorrect attempts. 
-                console.log("response", e)
+                }).catch(error => {
+                    // Somethong went wrong
+                    console.log("Something went wrong", error)
+                    setOpenCommonModal({ isVisible: true, message: "Something Went Wrong!!!" })
+                })
+
+            } catch (error) {
+                //// Somethong went wrong
+                console.log("Something went wrong", error)
             }
         }
         setLoading(false)
     }
 
-    const loginSuccess = async () => {
+    const loginSuccess = async (navigateToDashboard = true) => {
         const data = await Auth.currentAuthenticatedUser();
-        if (data) {
+        if (data.signInUserSession) {
             const result = await ApiAction.getUserDetails()
-            console.log("ASDKJasd",result.data)
             if (result.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
+                if (navigateToDashboard) {
+                    
+                    navigation.navigate(routes.dashboard)
+                }
             } else {
-                throw { code: "UserNotFound" }
+                // show wrong otp message
+                try {
+                    const result = await ApiAction.registerNoPhone(data.attributes.email, {})
+                    // user created at backend if not exisits
+                } catch (error) {
+                    setOpenCommonModal({ isVisible: true, message: "Unable to Create User" })
+                }
             }
-            navigation.navigate(routes.dashboard)
 
-        } else {
-            // show wrong otp message
-            console.log("SKDBSBA")
-            throw { code: "UserNotFound" }
+
         }
     }
 
@@ -145,7 +170,6 @@ const [ openCommonModal, setOpenCommonModal]=useState(false)
 
                 </View>
             </ScrollView>
-            <CommonModal openCommonModal={openCommonModal} setOpenCommonModal={setOpenCommonModal} showText={'Enter Correct Otp'} />
         </SafeAreaView>
     )
 }

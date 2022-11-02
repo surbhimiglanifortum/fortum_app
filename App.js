@@ -55,13 +55,13 @@ const App = () => {
   const queryClient = new QueryClient();
   const [loading, setLoading] = useState(true)
   const [loggedin, setloggedin] = useState(false)
-  const [openCommonModal, setOpenCommonModal] = useState(false)
+  const [openCommonModal, setOpenCommonModal] = useState({isVisible:false,message:""})
 
   useEffect(() => {
     const loginCheck = async () => {
       try {
         const result = await Auth.currentAuthenticatedUser();
-        if (result) {
+        if (result.signInUserSession) {
           setloggedin(true)
         }
         setLoading(false)
@@ -112,7 +112,7 @@ const App = () => {
   return (
     <>
 
-      <SnackContext.Provider value={{ currentLocation, setCurrentLocation, mLocationsPayload, mSetLocationsPayload }}>
+      <SnackContext.Provider value={{ currentLocation, setCurrentLocation, mLocationsPayload, mSetLocationsPayload,setOpenCommonModal,openCommonModal }}>
         <Provider store={configureStore}>
           <PersistGate persistor={persistor} loading={null}>
             <QueryClientProvider client={queryClient} contextSharing={true}>
