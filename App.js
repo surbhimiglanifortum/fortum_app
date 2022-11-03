@@ -83,7 +83,6 @@ const App = () => {
         environment: 'production',
       },
     };
-    console.log("initialpayload,", initiate_payload)
     HyperSdkReact.createHyperServices();
     HyperSdkReact.initiate(JSON.stringify(initiate_payload));
   }, [])

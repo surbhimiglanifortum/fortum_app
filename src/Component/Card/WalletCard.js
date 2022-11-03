@@ -3,23 +3,35 @@ import React from 'react'
 import LocationCard from './LocationCard'
 import Button from '../Button/Button'
 import colors from '../../Utils/colors'
+import DenseCard from '../Card/DenseCard'
+import IconCardLarge from '../Card/IconCardLarge'
+import WalletLight from '../../assests/svg/Wallet_light'
+import CommonText from '../Text/CommonText'
 
-const WalletCard = ({ onPress, title }) => {
+const WalletCard = ({ onPress, title, subTitle }) => {
   return (
-    <View style={styles.container}>
-      <LocationCard title={title} fontSize={20} subTitle={'Your Prepaid Balance'} iconName={'wallet'} />
+    <DenseCard >
+      <View style={styles.row}>
+        <IconCardLarge Svg={WalletLight} />
+        <View style={styles.rightContainer}>
+          <CommonText showText={title} fontSize={24} />
+          <CommonText showText={subTitle} regular customstyles={{ marginTop: -5 }} />
+        </View>
+      </View>
       <Button showText={'Recharge'} onPress={onPress} />
-    </View>
+    </DenseCard>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.white,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    borderRadius: 10,
-    marginTop: 25
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start'
+  },
+  rightContainer: {
+    flex: 1,
+    marginLeft: 10
   }
 })
 

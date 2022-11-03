@@ -6,6 +6,8 @@ import colors from '../../Utils/colors';
 import { appConfig } from "../../../appConfig";
 import axios from 'axios'
 import CommonText from '../../Component/Text/CommonText'
+import routes from '../../Utils/routes'
+import SnackContext from '../../Utils/context/SnackbarContext'
 
 let eventListener;
 let clientId = "fortum"
@@ -21,6 +23,9 @@ let juspay_process_payload = {}
 let orderStatus
 
 const PaymentScreenJuspay = (props) => {
+
+    const { setOpenCommonModal } = useContext(SnackContext);
+
     const [isLoading, setIsLoading] = useState(true)
     const [payAsYouGoStatus, setPayAsYouGoStatus] = useState('')
     const [message, setMessage] = useState('Getting Payment Options...')
@@ -53,8 +58,6 @@ const PaymentScreenJuspay = (props) => {
         HyperSdkReact.process(JSON.stringify(juspay_process_payload.sdk_payload));
     }
 
-    // const { snack, setSnack } = useContext(SnackContext);
-
     const paymentSuccess = () => {
         if (props.route.params.showYouSavedFunction != undefined) {
             props.route.params.showYouSavedFunction()
@@ -65,8 +68,7 @@ const PaymentScreenJuspay = (props) => {
     }
 
     const paymentFail = (message) => {
-        // setSnack({ message: message, open: true, color: 'error' })
-        alert(message)
+        setOpenCommonModal({ isVisible: true, message: message })
     }
 
     useEffect(() => {
@@ -320,6 +322,10 @@ const PaymentScreenJuspay = (props) => {
                 // });
                 if (props.route.params?.callFrom === 'payPendingInvoice') {
                     props.navigation.pop(2)
+                } if (props.route.params?.callFrom === 'SelectPaymentMode') {
+                    props.navigation.pop(1)
+                } if (props.route.params?.callFrom === 'RechargerWallet') {
+                    props.navigation.navigate(routes.RechargeDone)
                 } else {
                     props.navigation.goBack()
                 }

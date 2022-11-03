@@ -9,7 +9,7 @@ import IconCard from '../../../Component/Card/IconCard'
 import Button from '../../../Component/Button/Button'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../../Utils/routes'
-import { getChargerMapObject } from '../../../Utils/helperFuncations/ChargerMapConfig'
+import { getChargerMapObject } from '../../../Utils/HelperCommonFunctions'
 import ReportLight from "../../../assests/svg/Report_light"
 import CommonCard from "../../../Component/Card/CommonCard"
 import SupportLight from '../../../assests/svg/Support_light'

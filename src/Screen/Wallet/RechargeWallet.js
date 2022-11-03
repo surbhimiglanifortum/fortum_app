@@ -69,7 +69,7 @@ const RechargeWallet = ({ route }) => {
       amount: amount.value,
       stategst: gstState
     }
-    
+
     const username = mUserDetails?.username
 
     try {
@@ -78,7 +78,7 @@ const RechargeWallet = ({ route }) => {
       console.log("RechargeWallet Try Block", result.data)
       if (result.data?.sdk_payload) {
         navigation.navigate(routes.PaymentScreenJuspay, {
-          callFrom: route?.params?.callFrom,
+          callFrom: route.params?.routeDirection || 'RechargerWallet',
           amount: 0,
           email_address: '',
           orderid: '',
@@ -101,20 +101,23 @@ const RechargeWallet = ({ route }) => {
 
   return (
     <CommonView>
-      <ScrollView>
+      <ScrollView >
         <Header showText={'Recharge Wallet'} />
-        <DenseCard >
+        <DenseCard style={{ marginTop: 20 }}>
           <View style={styles.row}>
             <CommonCard style={{ padding: 20 }}>
               <CommonText showText={'-'} customstyles={[{ color: colors.greyText }]} fontSize={20} bold />
             </CommonCard>
-            <LinearInput
-              value={amount.value}
-              onChange={(text) => { setAmount({ value: text, error: '' }) }}
-              placeholderText={'Enter Amount'}
-              style={styles.input}
-              keyboardType={'number-pad'}
-            />
+            <View style={[styles.row, { flex: 1, justifyContent: 'center' }]}>
+              <CommonText showText={'₹'} customstyles={styles.rupeeText} fontSize={25} />
+              <LinearInput
+                value={amount.value}
+                onChange={(text) => { setAmount({ value: text, error: '' }) }}
+                placeholderText={'50'}
+                style={styles.input}
+                keyboardType={'number-pad'}
+              />
+            </View>
             <CommonCard style={{ padding: 20, backgroundColor: colors.green }} >
               <CommonText showText={'+'} customstyles={[{ color: colors.white }]} fontSize={20} bold />
             </CommonCard>
@@ -226,8 +229,6 @@ const RechargeWallet = ({ route }) => {
 
 const styles = StyleSheet.create({
   input: {
-    textAlign: 'center',
-    flex: 1,
     fontSize: 20,
     fontWeight: 'bold'
   },
@@ -241,6 +242,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20
   },
+  rupeeText: {
+    marginTop: -5
+  }
 })
 
 export default RechargeWallet
