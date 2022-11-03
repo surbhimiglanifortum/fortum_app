@@ -4,7 +4,7 @@ import routes from '../../Utils/routes';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Login from '../AuthScreen/Login';
 import colors from '../../Utils/colors';
-import SkipButton from '../../Component/Button/SkipButton';
+import TextButton from '../../Component/Button/TextButton';
 const { width, height } = Dimensions.get('window');
 
 const COLORS = { primary: '#282534', white: '#fff' };
@@ -107,7 +107,7 @@ const OnboardingScreen = ({ navigation }) => {
   const Slide = ({ item, skipBtn }) => {
     return (
       <View style={{ alignItems: 'center' }}>
-        <SkipButton onPress={skipBtn} />
+        <TextButton onPress={skipBtn} />
         <Image source={require('../../assests/fortumLogo.png')}  />
         <View style={{ width: 350, height: 250 }}>
           <Image

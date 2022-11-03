@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity,
 import React, { useEffect, useState } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
-import SkipButton from '../../Component/Button/SkipButton';
+import TextButton from '../../Component/Button/TextButton';
 import CommonText from '../../Component/Text/CommonText';
 import Textinput from '../../Component/Textinput/Textinput';
 import SmallButton from '../../Component/Button/SmallButton';
@@ -12,6 +12,7 @@ import { Auth } from 'aws-amplify';
 import FaceBookSvg from '../../assests/svg/FaceBookSvg';
 import GoogleSvg from '../../assests/svg/GoogleSvg';
 import { validatePhone, validateEmail } from '../../Utils/HelperCommonFunctions'
+import Button from '../../Component/Button/Button';
 
 const Login = () => {
 
@@ -77,11 +78,11 @@ const Login = () => {
     const payload = {}
     if (validatePhone(userInput)) {
       payload.phone_number = userInput
-    
+
     } else if (validateEmail) {
       payload.email = userInput
       await Auth.resendSignUp(userInput);
-    navigation.navigate(routes.Verification, { ...payload })
+      navigation.navigate(routes.Verification, { ...payload })
     }
   }
 
@@ -102,10 +103,10 @@ const Login = () => {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
-      
+
       <ScrollView>
         <View style={styles.innerContainer}>
-          <SkipButton />
+          <TextButton onPress={() => navigation.goBack()} />
           <View style={styles.imageContainer}>
             <CarLogo />
           </View>
@@ -114,12 +115,11 @@ const Login = () => {
           </View>
           <View style={styles.textinputConatiner}>
             <CommonText showText={'Please enter your mobile number or email id'} fontSize={12} />
-            <Textinput on value={userInput} onChange={(e)=>setuserInput(e.toLowerCase())} placeholder={'Mobile Number / email id'} />
+            <Textinput on value={userInput} onChange={(e) => setuserInput(e.toLowerCase())} placeholder={'Mobile Number / email id'} />
           </View>
-          <TouchableOpacity style={[styles.button, { backgroundColor: userInput == '' ? colors.grey : colors.green }]} onPress={continueButtonHandler} onLoading={loading} setOnLoading={setLoading} disabled={userInput === '' ? true : false} >
-            {/* <Button /> */}
-            <CommonText showText={'Continue'} fontSize={17} customstyles={{ color: colors.white }} />
-          </TouchableOpacity>
+          <Button showText={"Continue"} onPress={continueButtonHandler} onLoading={loading} ></Button>
+
+
           <View style={styles.centerText}>
             <CommonText showText={'Or Sign in with'} fontSize={12} />
           </View>
@@ -132,9 +132,7 @@ const Login = () => {
         </View>
         <View style={styles.bottomText}>
           <CommonText showText={'Don’t have account? '} fontSize={12} />
-          <TouchableOpacity onPress={signupHandler}>
-            <CommonText showText={'Signup'} customstyles={{ color: colors.green }} fontSize={14} />
-          </TouchableOpacity>
+          <Button>Signup</Button>
         </View>
       </ScrollView>
     </SafeAreaView>

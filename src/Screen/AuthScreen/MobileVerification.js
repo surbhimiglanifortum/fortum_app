@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState, useEffect, useContext,useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import CommonText from '../../Component/Text/CommonText';
@@ -67,18 +67,18 @@ const MobileVerification = ({ route }) => {
     }
 
 
-    useEffect(() => {
-        // signin =>  user validation is remaining
-        if (!signin) {
-            sendOTP(mobile_number.replace('+91', '')).then(e => {
+    // useEffect(() => {
+    //     // signin =>  user validation is remaining
+    //     if (!signin) {
+    //         sendOTP(mobile_number.replace('+91', '')).then(e => {
 
-            }).catch(err => {
+    //         }).catch(err => {
 
-            })
-        }
+    //         })
+    //     }
 
 
-    }, [])
+    // }, [])
 
 
     async function verifyOTP(number, otp) {
