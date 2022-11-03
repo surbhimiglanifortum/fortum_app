@@ -30,8 +30,10 @@ const routes = {
     CompleteKYC: 'CompleteKYC',
     Passbook: 'Passbook',
     PaymentScreenJuspay: 'PaymentScreenJuspay',
-    MyCart:'MyCart',
-    StoreDetails:'StoreDetails',
+    MyCart: 'MyCart',
+    StoreDetails: 'StoreDetails',
+    RechargeDone: 'RechargeDone',
+    PayInvoice: 'PayInvoice',
     ChargingKeyDetails:'ChargingKeyDetails',
 }
 

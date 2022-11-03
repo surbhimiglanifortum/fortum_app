@@ -1,16 +1,19 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
+import React, { useState } from 'react'
 import { scale } from 'react-native-size-matters'
 import Card from '../../Component/Card/Card'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../Utils/routes'
-import Charger from '../../assests/svg/charger'
 import { useQuery } from 'react-query'
 import { chargingListCompletedServices, chargingListServices } from '../../Services/ChargingTabServices/ChargingServices'
 import CommonText from '../../Component/Text/CommonText'
 import colors from '../../Utils/colors'
 import { useSelector } from 'react-redux'
 import NoData from '../../Component/NoDataFound/NoData'
+import ChargerLight from '../../assests/svg/Charger_light'
+import CommonView from '../../Component/CommonView'
+import Header from '../../Component/Header/Header'
+
 
 const Charging = () => {
 
@@ -36,7 +39,6 @@ const Charging = () => {
         }
     }
 
-
     const username = mUserDetails?.username
 
     const { data, status, isLoading, refetch } = useQuery('chargingData', async () => {
@@ -45,69 +47,67 @@ const Charging = () => {
     })
     const { data: completedData, status: completedStatus, isLoading: completedIsLoading, refetch: completedreFetch } = useQuery('chargingCompletedData', async () => {
         const res = await chargingListCompletedServices(username)
-        console.log("complete reseres", res.data)
         return res.data
     })
 
     return (
-        <View style={styles.conatiner}>
-            <View style={styles.innerContainer}>
-                <View style={styles.header}>
-                    <CommonText showText={'Charging'} fontSize={18} />
-                </View>
-                <View style={styles.tabContainer}>
-                    <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'ongoing' ? colors.white : colors.greenBackground }]}>
-                        <CommonText customstyles={[{ color: selectedTab == 'ongoing' ? colors.black : colors.white }]} showText={'Ongoing'} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={completedBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'completed' ? '#FFF' : colors.greenBackground }]}>
-                        <CommonText customstyles={[{ color: selectedTab == 'completed' ? colors.black : '#FFF' }]} showText={'Compeleted'} />
-                    </TouchableOpacity>
-                </View>
+        <CommonView>
+            {/* <View style={styles.header}>
+                <CommonText showText={'Charging'} fontSize={18} />
+            </View> */}
+            <Header showText={'Charging'} />
+            <View style={styles.tabContainer}>
+                <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'ongoing' ? colors.white : colors.greenBackground }]}>
+                    <CommonText customstyles={[{ color: selectedTab == 'ongoing' ? colors.black : colors.white }]} showText={'Ongoing'} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={completedBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'completed' ? '#FFF' : colors.greenBackground }]}>
+                    <CommonText customstyles={[{ color: selectedTab == 'completed' ? colors.black : '#FFF' }]} showText={'Compeleted'} />
+                </TouchableOpacity>
+            </View>
 
-                <View>
-                    {selectedTab == 'ongoing' &&
-                        <>
-                            {!isLoading && data?.length > 0 ?
-                                <FlatList
-                                    data={data}
-                                    keyExtractor={item => item.id}
-                                    renderItem={(item) => {
-                                        return (
-                                            <Card tabName={"ongoing"} navigationHandler={navigationHandler} Svg={Charger} dataItem={item} />
-                                        )
-                                    }
-                                    }
-                                /> :
-                                <NoData showText={'No Data Found'} />
-                            }
-                        </>
-                    }
-
-                    {selectedTab == 'completed' &&
-                        <>{!completedIsLoading && completedData.length > 0 ?
+            <View>
+                {selectedTab == 'ongoing' &&
+                    <>
+                        {!isLoading && data?.length > 0 ?
                             <FlatList
-                                data={completedData}
+                                data={data}
                                 keyExtractor={item => item.id}
                                 renderItem={(item) => {
                                     return (
-                                        <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={Charger} dataItem={item} />
+                                        <Card tabName={"ongoing"} navigationHandler={() => navigationHandler(item)} Svg={ChargerLight} dataItem={item} />
                                     )
                                 }
                                 }
-                            /> : <NoData showText={'No Data Completed'} />
+                            /> :
+                            <NoData showText={'No Data Found'} />
                         }
-                        </>
+                    </>
+                }
+
+                {selectedTab == 'completed' &&
+                    <>{!completedIsLoading && completedData.length > 0 ?
+                        <FlatList
+                            data={completedData}
+                            keyExtractor={item => item.id}
+                            renderItem={(item) => {
+                                return (
+                                    <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={ChargerLight} dataItem={item} />
+                                )
+                            }
+                            }
+                        /> : <NoData showText={'No Data Completed'} />
                     }
-                </View>
+                    </>
+                }
             </View>
-        </View>
+        </CommonView>
     )
 }
 
 const styles = StyleSheet.create({
     conatiner: {
         flex: 1,
-        padding:10
+        padding: 10
     },
     innerContainer: {
         marginVertical: scale(10),
