@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
@@ -7,7 +7,7 @@ import { getFormatedDate } from '../../Services/CommonServices'
 import CommonText from '../Text/CommonText'
 import CommonCard from '../../Component/Card/CommonCard/index'
 
-const Card = ({ tabName, navigationHandler, Svg, dataItem,disabledCard }) => {
+const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard }) => {
 
     return (
         <CommonCard>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding:10
+        padding: 10
     },
     leftContainer: { flexDirection: 'row', alignItems: 'center' },
     icon: { paddingVertical: scale(15), paddingHorizontal: scale(18), backgroundColor: colors.greenBackground, borderRadius: 5 },

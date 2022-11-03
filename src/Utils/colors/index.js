@@ -19,7 +19,8 @@ const colors = {
     denseShadowDark: '#303030',
     denseShadowSecondary: '#202020',
     greyText: '#969696',
-    lightGray:'#3C3C3C'
+    lightGray:'#3C3C3C',
+    divider:'#EEEEEE'
 }
 
 export default colors
