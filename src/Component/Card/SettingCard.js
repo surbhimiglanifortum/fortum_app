@@ -13,9 +13,9 @@ const SettingCard = ({ showText, fontSize, Svg, onPress }) => {
         <CommonCard>
             <TouchableOpacity style={styles.card} onPress={onPress}>
                 <View style={styles.leftContainer}>
-                    <IconCardWithoutBg Svg={Svg} backgroundColor={colors.green} />
+                    <IconCardWithoutBg Svg={Svg} backgroundColor={colors.green}  />
                     <View style={styles.middleContainer}>
-                        <CommonText showText={showText} fontSize={fontSize} />
+                        <CommonText showText={showText} fontSize={fontSize} customstyles={{width:scale(180)}} />
                     </View>
                 </View>
                 <AntDesign name='right' color={colors.black} size={18} />
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding:10
+        // padding:
     },
     leftContainer: { flexDirection: 'row', alignItems: 'center' },
     middleContainer: { marginLeft: scale(15) },

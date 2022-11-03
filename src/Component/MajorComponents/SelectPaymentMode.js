@@ -31,6 +31,7 @@ const SelectPaymentMode = ({ min_balance, addMoneyPress, orderStatus, isShow, se
     const [askPin, setAskPin] = useState(false)
     const [pin, setPin] = useState({ value: '', error: '' });
     const [prepaidCardBalance, setPrepaidCardBalance] = useState('')
+    const [balance, setBalance] = useState('')
 
     const isFocused = useIsFocused()
 
@@ -42,11 +43,13 @@ const SelectPaymentMode = ({ min_balance, addMoneyPress, orderStatus, isShow, se
     const getDetails = async () => {
         const result = await getUserDetails();
         if (result.data) {
+            setBalance(result.data?.balance)
             dispatch(AddToRedux(result.data, Types.USERDETAILS))
         }
     }
 
     useEffect(() => {
+        getDetails()
         checkOrderIdStatus()
     }, [isFocused])
 
@@ -85,7 +88,7 @@ const SelectPaymentMode = ({ min_balance, addMoneyPress, orderStatus, isShow, se
     }
 
     let minBalance = parseFloat(min_balance)
-    let currentBalance = parseFloat(mUserDetails?.balance)
+    let currentBalance = parseFloat(balance)
 
     const checkWalletBalance = () => {
         setMode('CLOSED_WALLET')
@@ -289,7 +292,7 @@ const SelectPaymentMode = ({ min_balance, addMoneyPress, orderStatus, isShow, se
 
             {
                 mode == "CLOSED_WALLET" &&
-                < CommonText showText={`Available Wallet Balance : ₹ ${mUserDetails?.balance}`} regular fontSize={12} customstyles={{ marginLeft: 10 }} />
+                < CommonText showText={`Available Wallet Balance : ₹ ${balance}`} regular fontSize={12} customstyles={{ marginLeft: 10 }} />
             }
 
             {

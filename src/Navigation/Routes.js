@@ -36,6 +36,9 @@ import MyCart from '../Screen/Other/Store/MyCart';
 import PaymentScreenJuspay from '../Screen/Juspay/PaymentScreenJuspay'
 import StoreDetails from '../Screen/Other/Store/StoreDetails';
 import MobileInput from '../Screen/AuthScreen/MobileInput'
+import RechargeDone from '../Screen/Wallet/RechargeDone'
+import PayInvoice from '../Screen/Charging/PayInvoice'
+import ChargingKeyDetails from '../Screen/Other/ChargingKey/ChargingKeyDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -76,6 +79,9 @@ const Routes = ({ loggedin }) => {
             <Stack.Screen name={routes.MyCart} component={MyCart} options={{ headerShown: false }} />
             <Stack.Screen name={routes.PaymentScreenJuspay} component={PaymentScreenJuspay} options={{ headerShown: false }} />
             <Stack.Screen name={routes.StoreDetails} component={StoreDetails} options={{ headerShown: false }} />
+            <Stack.Screen name={routes.RechargeDone} component={RechargeDone} options={{ headerShown: false }} />
+            <Stack.Screen name={routes.PayInvoice} component={PayInvoice} options={{ headerShown: false }} />
+            <Stack.Screen name={routes.ChargingKeyDetails} component={ChargingKeyDetails} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 };

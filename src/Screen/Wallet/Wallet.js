@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, useColorScheme, FlatList, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, SafeAreaView, useColorScheme, FlatList, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Header from '../../Component/Header/Header'
 import CommonText from '../../Component/Text/CommonText'
 import WalletCard from '../../Component/Card/WalletCard'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
 import routes from '../../Utils/routes'
 import { useQuery } from 'react-query'
 import { walletHistory, getUserDetails } from '../../Services/Api'
@@ -20,8 +20,12 @@ import NoData from '../../Component/NoDataFound/NoData'
 const Wallet = () => {
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
   const scheme = useColorScheme()
   const navigation = useNavigation()
+  const isFocused = useIsFocused()
+
+  const [balance, setBalance] = useState('')
 
   const RechargeButtonHandler = () => {
     navigation.navigate(routes.RechargeWallet)
@@ -30,13 +34,14 @@ const Wallet = () => {
   const updateUserDetails = async () => {
     const result = await getUserDetails()
     if (result.data) {
+      setBalance(result.data?.balance)
       dispatch(AddToRedux(result.data, Types.USERDETAILS))
     }
   }
 
   useEffect(() => {
     updateUserDetails()
-  }, [])
+  }, [isFocused])
 
 
   let start = moment().subtract(30, 'days').calendar()
@@ -105,24 +110,20 @@ const Wallet = () => {
   const username = mUserDetails?.username
 
   const { data, status, isLoading, refetch } = useQuery('walletData', async () => {
-    const res = await walletHistory(username,techStart, techEnd)
+    const res = await walletHistory(username, techStart, techEnd)
     var result = res.data
     result = result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     return result
   })
-
-  // let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
-
-  // console.log(techStart, techEnd, '///// in wallet')
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.innerContainer}>
         <Header showText={'Wallet'} />
         {/* card */}
-        <WalletCard onPress={RechargeButtonHandler} title={`₹ ${mUserDetails.balance}`} />
+        <WalletCard onPress={RechargeButtonHandler} title={`₹ ${balance}`} subTitle={'Your Prepaid Balance'} />
         <View style={styles.text}>
-          <CommonText showText={'Transcation History'} fontSize={15} />
+          <CommonText showText={'Transcation History'} />
         </View>
         <View>
           {!isLoading && data?.length > 0 ?
@@ -131,7 +132,7 @@ const Wallet = () => {
               keyExtractor={item => item.id}
               renderItem={(item) => {
                 return (
-                    <CardWallet dataItem={item} />
+                  <CardWallet dataItem={item} />
                 )
               }}
             /> :
