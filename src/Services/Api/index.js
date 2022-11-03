@@ -87,5 +87,13 @@ export const refundCloseLoopWallet = async (username, session_id) => {
 
 export const getStoreDataService = async (username) => {
     return await axios.get(appconfig.BASE_URL + '/store/' + username);
-
+};
+export const getChargingKeyService = async (username) => {
+    return await axios.get(appconfig.BASE_URL + '/charging_keys/ids/' + username);
+};
+export const getChargingKeyDetailsService = async (auth_id) => {
+    return await axios.get(appconfig.BASE_URL + '/tokens/' + auth_id);
+};
+export const getOrdersService = async (username) => {
+    return await axios.get(appconfig.BASE_URL + '/orders/' + username);
 };

@@ -6,20 +6,21 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import CommonText from '../Text/CommonText'
 import IconCardWithoutBg from './IconCardWithoutBg'
 import CommonCard from '../../Component/Card/CommonCard/index'
+import IconCard from './IconCard'
 
-const SettingCard = ({ showText, fontSize, Svg, onPress }) => {
+const OrdersCard = ({ showText, fontSize, Svg, onPress }) => {
 
     return (
         <CommonCard>
-            <TouchableOpacity style={styles.card} onPress={onPress}>
+            <View style={styles.card} >
                 <View style={styles.leftContainer}>
-                    <IconCardWithoutBg Svg={Svg} backgroundColor={colors.green}  />
+                    <IconCard Svg={Svg}  />
                     <View style={styles.middleContainer}>
                         <CommonText showText={showText} fontSize={fontSize} customstyles={{width:scale(180)}} />
                     </View>
                 </View>
                 <AntDesign name='right' color={colors.black} size={18} />
-            </TouchableOpacity>
+            </View>
         </CommonCard>
 
     )
@@ -44,4 +45,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default SettingCard
+export default OrdersCard

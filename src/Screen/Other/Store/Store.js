@@ -10,6 +10,7 @@ import { useQuery } from 'react-query'
 import CommonText from '../../../Component/Text/CommonText'
 import StoreCart from '../../../Component/Card/StoreCard/StoreCart'
 import { useSelector } from 'react-redux'
+import NoData from '../../../Component/NoDataFound/NoData'
 
 const Store = () => {
 
@@ -50,7 +51,7 @@ const Store = () => {
                         }
                         }
                     /> :
-                    <CommonText showText={'No Data Found'} customstyles={{ alignSelf: 'center', marginTop: 50 }} />
+                   <NoData showText={'No Data Found'} />
                 }
 
             </View>

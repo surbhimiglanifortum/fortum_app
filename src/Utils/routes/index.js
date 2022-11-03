@@ -33,7 +33,8 @@ const routes = {
     MyCart: 'MyCart',
     StoreDetails: 'StoreDetails',
     RechargeDone: 'RechargeDone',
-    PayInvoice: 'PayInvoice'
+    PayInvoice: 'PayInvoice',
+    ChargingKeyDetails:'ChargingKeyDetails',
 }
 
 export default routes
