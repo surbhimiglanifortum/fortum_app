@@ -1,9 +1,10 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import CommonView from '../../../Component/CommonView'
 import Header from '../../../Component/Header/Header'
 import CommonText from '../../../Component/Text/CommonText'
 import { RadioButton } from 'react-native-paper'
+import colors from '../../../Utils/colors'
 
 const PayInvoice = ({ route }) => {
 
@@ -34,7 +35,7 @@ const PayInvoice = ({ route }) => {
             <CommonText showText={`Pay ₹ ${route.params?.amount}`} />
             <View>
                 <RadioButton
-                    color={AppColors.limeGreen}
+                    color={colors.green}
                     value="CLOSED_WALLET"
                     status={mode === 'CLOSED_WALLET' ? 'checked' : 'unchecked'}
                     onPress={checkWalletBalance}
