@@ -10,6 +10,10 @@ export const GetFormatedDate = (datetime) => {
     var date = new Date(datetime);
     return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}, ${date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()} ${date.getHours() >= 12 ? 'PM' : 'AM'} `
 }
+export const GetFormatedDateOnly = (datetime) => {
+    var date = new Date(datetime);
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+}
 
 export const GetCouterTime = (startTime, endDate) => {
     // console.log("Charger time ",startTime,endDate)

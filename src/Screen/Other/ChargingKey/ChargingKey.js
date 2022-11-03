@@ -1,4 +1,4 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView, Text, TouchableOpacity, Image } from 'react-native'
+import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView, Text, TouchableOpacity, Image, FlatList } from 'react-native'
 import React from 'react'
 import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
@@ -7,38 +7,57 @@ import { scale } from 'react-native-size-matters'
 import Button from '../../../Component/Button/Button'
 import routes from '../../../Utils/routes'
 import CommonText from '../../../Component/Text/CommonText'
+import CommonCard from '../../../Component/Card/CommonCard/index'
+import { getChargingKeyService } from '../../../Services/Api'
+import { useQuery } from 'react-query'
+import { useSelector } from 'react-redux'
+import NoData from '../../../Component/NoDataFound/NoData'
 
 const ChargingKey = () => {
 
+    let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
     const navigation = useNavigation()
     const scheme = useColorScheme()
-const chargingKeyHandler=()=>{
-    navigation.navigate(routes.Store)
-}
+    const chargingKeyHandler = () => {
+        navigation.navigate(routes.Store)
+    }
+
+    const username = mUserDetails?.username
+
+    const { data, status, isLoading, refetch } = useQuery('chargingKey', async () => {
+        const res = await getChargingKeyService(username)
+        return res.data
+    })
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
-            <ScrollView>
-                <View style={styles.innerContainer}>
-                    {/* <Header /> */}
-                    <Header showText={'Charging Key'} />
-                    <View >
-                        {
-                            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((item, ind) => {
-                                return (
-                                    <View key={ind} style={styles.card}>
-                                        <Image source={require('../../../assests/chargingKey.png')} style={styles.img} />
-                                        <CommonText showText={'Name'} fontSize={20} />
-                                        <CommonText showText={`04HDGBFGNDC98DN89`} fontSize={14} />
-                                    </View>
-                                )
-                            })
+            <View style={styles.innerContainer}>
+                <Header showText={'Charging Key'} />
+                {!isLoading && data?.length > 0 ?
+                    <FlatList
+                        data={data}
+                        keyExtractor={item => item.id}
+                        renderItem={(item) => {
+                            return (
+                                <TouchableOpacity onPress={() => { navigation.navigate(routes.ChargingKeyDetails, { data: item }) }}>
+                                    <CommonCard style={styles.card} >
+                                        <View >
+                                            <Image source={require('../../../assests/chargingKey.png')} style={styles.img} />
+                                            <CommonText showText={item?.item?.username} fontSize={18} />
+                                            <CommonText showText={item?.item?.auth_id} fontSize={14} />
+                                        </View>
+                                    </CommonCard>
+                                </TouchableOpacity>
+                            )
                         }
-                    </View>
+                        }
+                    /> :
+                    <NoData showText={'No Charging Key Available'} />
+                }
 
-                </View>
-            </ScrollView>
-            <View style={{ marginVertical: 20, paddingHorizontal: 15 }}>
+            </View>
+            <View style={styles.btnCon}>
                 <Button showText={'Order Charging key'} onPress={chargingKeyHandler} />
             </View>
         </SafeAreaView >
@@ -50,25 +69,14 @@ const styles = StyleSheet.create({
         flex: 1
     },
     innerContainer: {
+        flex: 1,
+        marginTop: 20,
         width: '90%',
-        alignSelf: 'center',
-        marginTop: 20
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    cartCon: {
-        backgroundColor: colors.white,
-        paddingVertical: 6,
-        paddingHorizontal: 6,
-        borderRadius: 6,
-        elevation: 5
+        alignSelf: 'center'
     },
     card: {
-        backgroundColor: colors.white,
-        marginTop: 25,
+
+        marginTop: 40,
         paddingVertical: 10,
         paddingHorizontal: 10,
         borderRadius: 6
@@ -79,6 +87,7 @@ const styles = StyleSheet.create({
         width: scale(120),
         marginVertical: 10
     },
+    btnCon: { marginVertical: 15, paddingHorizontal: 15 },
 
 })
 

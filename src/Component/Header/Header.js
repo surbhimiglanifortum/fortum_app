@@ -3,13 +3,13 @@ import React from 'react'
 import BackButton from '../Button/BackButton'
 import CommonText from '../Text/CommonText'
 
-const Header = ({showText}) => {
+const Header = ({showText,customstyles}) => {
      const scheme=useColorScheme()
     return (
         <View style={styles.header}>
             <BackButton />
             <View style={styles.headerText}>
-               <CommonText showText={showText} fontSize={22} /> 
+               <CommonText showText={showText} fontSize={22} customstyles={customstyles} /> 
             </View>
         </View>
     )

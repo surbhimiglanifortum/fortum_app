@@ -32,6 +32,7 @@ const routes = {
     PaymentScreenJuspay: 'PaymentScreenJuspay',
     MyCart:'MyCart',
     StoreDetails:'StoreDetails',
+    ChargingKeyDetails:'ChargingKeyDetails',
 }
 
 export default routes
