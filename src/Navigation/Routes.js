@@ -35,6 +35,7 @@ import Passbook from '../Screen/Other/PaymentMethod/Passbook/Passbook';
 import MyCart from '../Screen/Other/Store/MyCart';
 import PaymentScreenJuspay from '../Screen/Juspay/PaymentScreenJuspay'
 import StoreDetails from '../Screen/Other/Store/StoreDetails';
+import MobileInput from '../Screen/AuthScreen/MobileInput'
 import RechargeDone from '../Screen/Wallet/RechargeDone'
 import PayInvoice from '../Screen/Charging/PayInvoice'
 import ChargingKeyDetails from '../Screen/Other/ChargingKey/ChargingKeyDetails';
@@ -45,6 +46,7 @@ const Routes = ({ loggedin }) => {
     return (
         <Stack.Navigator initialRouteName={routes.dashboard} >
             <Stack.Screen name={routes.dashboard} component={Dashboard} options={{ headerShown: false }} />
+            <Stack.Screen name={routes.MobileInput} component={MobileInput} options={{ headerShown: false }} />
             <Stack.Screen name={routes.onboarding} component={OnboardingScreen} options={{ headerShown: false }} />
             <Stack.Screen name={routes.OngoingDetails} component={OngoingDetails} options={{ headerShown: false }} />
             <Stack.Screen name={routes.taxInvoice} component={TaxInvoice} options={{ headerShown: false }} />

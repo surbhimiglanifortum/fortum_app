@@ -15,7 +15,7 @@ export function validatePhone(phone) { //Validates the phone number
 
 
 export function generateSHA(number, dateISO, counter) {
-    console.log("GEnerate sha")
+    
     const HASH = "19c14cbe3260087bf121af4b6949469b"
     let n = number.split("")
     let counters = counter.split("")
@@ -29,7 +29,7 @@ export function generateSHA(number, dateISO, counter) {
     n = n.join(HASH)
 
     const hashDigest = sha256(n).toString();
-    console.log("GEnerate sha done")
+    
     return hashDigest;
 }
 

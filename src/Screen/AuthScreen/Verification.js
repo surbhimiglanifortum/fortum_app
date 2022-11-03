@@ -48,6 +48,18 @@ const Verification = ({ route }) => {
                 Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
                     if (success.signInUserSession) {
                         loginSuccess(false)
+                        sendOTP(input.replace('+91', '')).then(e => {
+                            setOnLoading(false)
+                            if (e?.sent) {
+                                navigation.navigate(routes.MobileVerification, { mobile_number: input, email_id: email_id })
+                            } else {
+                                setShowError(e.message)
+                            }
+                        }).catch(err => {
+                            setOnLoading(false)
+                            setShowError(err?.message)
+                            console.log("errror", err)
+                        })
                         navigation.navigate(routes.MobileVerification, { ...route.params })
                     } else {
                         // enter valid OTP   
