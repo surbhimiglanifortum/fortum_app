@@ -110,3 +110,6 @@ export const getChargingKeyDetailsService = async (auth_id) => {
 export const getOrdersService = async (username) => {
     return await axios.get(appconfig.BASE_URL + '/api_app/orders/' + username);
 };
+export const getEvModalService = async () => {
+    return await axios.get(appconfig.BASE_URL + '/api_app/ev');
+};
