@@ -38,6 +38,8 @@ const MobileVerification = ({ route }) => {
     const [userInput4, setUserInput4] = useState('')
 
 
+
+
     let otpConcatData = userInput1.concat(userInput2).concat(userInput3).concat(userInput4)
 
     const { setOpenCommonModal } = useContext(SnackContext);
@@ -46,6 +48,7 @@ const MobileVerification = ({ route }) => {
     const { mobile_number, email_id, signin, user } = route.params;
 
     async function verifyOTP(number, otp) {
+
         const url = appconfig.TOTAL_BASE_URL + '/verifyotp'
         try {
             const result = await axios.post(url, { number, otp })
@@ -63,6 +66,7 @@ const MobileVerification = ({ route }) => {
 
 
     const VerifyButtonHandler = async () => {
+        setLoading(true)
         if (!signin) {
             verifyOTP(mobile_number.replace("+91", ""), otpConcatData).then(async r => {
                 console.log("verifyOTP", r)
@@ -94,27 +98,35 @@ const MobileVerification = ({ route }) => {
                             console.log("error in update user phone", err)
                             setOpenCommonModal({ isVisible: true, message: err.message })
                         })
+                    setLoading(false)
+
 
                 } else {
+                    setLoading(false)
+
                     // failed to verify OTP
                     setOpenCommonModal({ isVisible: true, message: "Enter Valid OTP" })
                 }
             }).catch(err => {
+                setLoading(false)
                 setOpenCommonModal({ isVisible: true, message: err.message })
             })
         } else {
             try {
-                await Auth.sendCustomChallengeAnswer(user, userInput)
+                await Auth.sendCustomChallengeAnswer(user, otpConcatData)
                     .then(e => {
                         console.log("response", e)
                         loginSuccess()
                     }).catch(e => {
                         console.log("Error", e)
                     });
+                setLoading(false)
 
             } catch (e) {
                 // Handle 3 error thrown for 3 incorrect attempts. 
                 console.log("response", e)
+                setLoading(false)
+
             }
         }
 

@@ -47,9 +47,9 @@ const Verification = ({ route }) => {
 
                 Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
                     if (success.signInUserSession) {
-                        loginSuccess(false)
+                        
                         ApiAction.sendOTP(mobile_number.replace('+91', '')).then(e => {
-
+                            loginSuccess(false)
                             if (e.data.sent) {
                                 navigation.navigate(routes.MobileVerification, { ...route.params })
                             } else {
@@ -57,11 +57,11 @@ const Verification = ({ route }) => {
                             }
                         }).catch(err => {
                             setOpenCommonModal({ isVisible: true, message: err })
-
+                            loginSuccess(false)
                             console.log("errror", err)
                         })
-                        navigation.navigate(routes.MobileVerification, { ...route.params })
                     } else {
+                        loginSuccess(false)
                         // enter valid OTP   
                         setOpenCommonModal({ isVisible: true, message: "Enter Valid OTP" })
                     }
@@ -73,6 +73,7 @@ const Verification = ({ route }) => {
             } catch (error) {
                 console.log('Something went wrong', error);
                 // show error message
+                loginSuccess(false)
                 setOpenCommonModal({ isVisible: true, message: "Something Went Wrong!!!" })
             }
         } else {
@@ -85,19 +86,21 @@ const Verification = ({ route }) => {
                         // enter valid OTP
                         setOpenCommonModal({ isVisible: true, message: "Enter Valid OTP" })
                     }
-
+                    loginSuccess(false)
                 }).catch(error => {
                     // Somethong went wrong
                     console.log("Something went wrong", error)
                     setOpenCommonModal({ isVisible: true, message: "Something Went Wrong!!!" })
+                    loginSuccess(false)
                 })
 
             } catch (error) {
                 //// Somethong went wrong
+                loginSuccess(false)
                 console.log("Something went wrong", error)
             }
         }
-        setLoading(false)
+        
     }
 
     const loginSuccess = async (navigateToDashboard = true) => {
