@@ -1,6 +1,6 @@
 import { View, StyleSheet, useColorScheme, ScrollView } from 'react-native'
-import React from 'react'
-import { useNavigation } from '@react-navigation/native'
+import React, { useEffect, useState } from 'react'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import CommonText from '../../../Component/Text/CommonText'
 import Button from '../../../Component/Button/Button'
@@ -11,20 +11,36 @@ import ChargerLight from '../../../assests/svg/Charger_light'
 import IconCard from '../../../Component/Card/IconCard'
 import Divider from '../../../Component/Divider'
 import routes from '../../../Utils/routes'
+import { getSessionDetails } from '../../../Services/Api'
 
 const TaxInvoice = ({ route }) => {
 
     const paramData = route.params.data
-    console.log(paramData?.item?.paid, '..............pARAM DATA')
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
+    const isFocused = useIsFocused()
+
+    const [isPaid, setPaid] = useState(paramData.item?.paid)
+
 
     const handleButtonClick = () => {
         navigation.navigate(routes.PayInvoice, {
             amount: paramData?.item?.order?.amount / 100
         })
     }
+
+    const sessionDetails = async () => {
+        const result = await getSessionDetails(paramData?.item?.id)
+        if (result.data)
+            setPaid(result.data?.paid)
+        else
+            console.log('Something went wrong.')
+    }
+
+    useEffect(() => {
+        sessionDetails()
+    }, [isFocused])
 
     return (
         <CommonView>
@@ -126,7 +142,7 @@ const TaxInvoice = ({ route }) => {
                     </DenseCard>
                 </View>
                 <Button
-                    showText={paramData?.item?.paid ? 'Download Invoice' : 'Pay'}
+                    showText={isPaid ? 'Download Invoice' : 'Pay'}
                     onPress={() => handleButtonClick()}
                 />
             </ScrollView>

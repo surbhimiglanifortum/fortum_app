@@ -8,11 +8,11 @@ import CommonText from '../Text/CommonText'
 
 const CommonModal = ({ openCommonModal, setOpenCommonModal }) => {
 
-
-
     const okayBtnHandler = () => {
+        openCommonModal?.onOkPress()
         setOpenCommonModal({ isVisible: false, message: "" })
     }
+
     return (
         <Modal visible={openCommonModal?.isVisible} statusBarTranslucent={true} transparent>
             <View style={styles.container}>

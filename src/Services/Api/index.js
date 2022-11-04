@@ -86,8 +86,7 @@ export const refundCloseLoopWallet = async (username, session_id) => {
 }
 
 export const getStoreDataService = async (username) => {
-    return await axios.get(appconfig.BASE_URL + '/api_app/store/' + username);
-
+    return await axios.get('/api_app/store/' + username);
 };
 
 
@@ -101,15 +100,42 @@ export const sendOTP = async (phone) => {
 
     // return await axios.get(appconfig.BASE_URL + '/store/' + username);
 };
+
 export const getChargingKeyService = async (username) => {
-    return await axios.get(appconfig.BASE_URL + '/api_app/charging_keys/ids/' + username);
+    return await axios.get('/api_app/charging_keys/ids/' + username);
 };
+
 export const getChargingKeyDetailsService = async (auth_id) => {
-    return await axios.get(appconfig.BASE_URL + '/api_app/tokens/' + auth_id);
+    return await axios.get('/api_app/tokens/' + auth_id);
 };
+
 export const getOrdersService = async (username) => {
-    return await axios.get(appconfig.BASE_URL + '/api_app/orders/' + username);
+    return await axios.get('/api_app/orders/' + username);
 };
+
+export const chargingList = async (username) => {
+    return await axios.get('/api_app/sessions/allactive/' + username);
+}
+
+export const chargingListCompleted = async (username) => {
+    return await axios.get('/api_app/sessions/all/' + username);
+}
+
+export const getAllUnpaid = async (username) => {
+    return await axios.get('/api_app/sessions/allunpaid/' + username + '?app_version=' + appconfig.APP_VERSION_NUMBER);
+}
+
+export const unpaidPayByJuspay = async (session_id) => {
+    return await axios.get('/api_app/sessions/pay/juspay/' + session_id);
+}
+
+export const unpaidPayByWallet = async (session_id) => {
+    return await axios.get('/api_app/sessions/pay/close_wallet/' + session_id);
+}
+
+export const getSessionDetails = async (session_id) => {
+    return await axios.get('/api_app/sessions/session_details/' + session_id);
+}
 export const getEvModalService = async () => {
     return await axios.get(appconfig.BASE_URL + '/api_app/ev');
 };

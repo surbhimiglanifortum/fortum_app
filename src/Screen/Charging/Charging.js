@@ -5,7 +5,7 @@ import Card from '../../Component/Card/Card'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../Utils/routes'
 import { useQuery } from 'react-query'
-import { chargingListCompletedServices, chargingListServices } from '../../Services/ChargingTabServices/ChargingServices'
+import { chargingListCompleted, chargingList } from '../../Services/Api'
 import CommonText from '../../Component/Text/CommonText'
 import colors from '../../Utils/colors'
 import { useSelector } from 'react-redux'
@@ -45,13 +45,13 @@ const Charging = () => {
 
     const { data, status, isLoading, refetch } = useQuery('chargingData', async () => {
         setLoaderOpen(true)
-        const res = await chargingListServices(username)
+        const res = await chargingList(username)
         setLoaderOpen(false)
         return res.data
     })
     const { data: completedData, status: completedStatus, isLoading: completedIsLoading, refetch: completedreFetch } = useQuery('chargingCompletedData', async () => {
         setLoaderOpen(true)
-        const res = await chargingListCompletedServices(username)
+        const res = await chargingListCompleted(username)
         setLoaderOpen(false)
         return res.data
     })
@@ -91,7 +91,7 @@ const Charging = () => {
                 }
 
                 {selectedTab == 'completed' &&
-                    <>{!loaderOpen && completedData.length > 0 ?
+                    <>{!loaderOpen && completedData?.length > 0 ?
                         <FlatList
                             data={completedData}
                             keyExtractor={item => item.id}
