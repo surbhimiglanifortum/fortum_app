@@ -42,44 +42,8 @@ const MobileVerification = ({ route }) => {
 
     const { setOpenCommonModal } = useContext(SnackContext);
     // OTP
-
     const [loading, setLoading] = useState(false)
     const { mobile_number, email_id, signin, user } = route.params;
-
-    console.log("movile params", route.params)
-
-    async function sendOTP(number) {
-        const dateIso = new Date().toISOString()
-        const counter = Math.floor(Math.random() * (999 - 100)) + 100
-        const hash = generateSHA(number, dateIso, counter.toString());
-        console.log("akjshsadhhdsahdaj")
-        console.log({ number: number, hash: hash, dateiso: dateIso, counter: counter })
-
-        const url = appconfig.TOTAL_BASE_URL + '/sendotp'
-        try {
-            const result = await axios.post(url, { number: number, hash: hash, dateiso: dateIso, counter: counter.toString() })
-            console.log("Axios result is ", result.status, result.data, result)
-            return result.data
-        } catch (e) {
-            console.log("Error occurred while sending OTP")
-            return { sent: false, message: 'Server error' }
-        }
-    }
-
-
-    // useEffect(() => {
-    //     // signin =>  user validation is remaining
-    //     if (!signin) {
-    //         sendOTP(mobile_number.replace('+91', '')).then(e => {
-
-    //         }).catch(err => {
-
-    //         })
-    //     }
-
-
-    // }, [])
-
 
     async function verifyOTP(number, otp) {
         const url = appconfig.TOTAL_BASE_URL + '/verifyotp'
@@ -119,14 +83,24 @@ const MobileVerification = ({ route }) => {
 
                     }).catch(e => {
                         console.log("error", e)
+                        setOpenCommonModal({ isVisible: true, message: e.message })
                     })
 
-                    await ApiAction.updateUserPhone(email_id, { phone: mobile_number })
-                    loginSuccess()
+                    await ApiAction.updateUserPhone(email_id, { phone: mobile_number.replace("+91", "") }).
+                        then((e) => {
+                            loginSuccess()
+                        }).catch((err) => {
+
+                            console.log("error in update user phone", err)
+                            setOpenCommonModal({ isVisible: true, message: err.message })
+                        })
+
                 } else {
                     // failed to verify OTP
                     setOpenCommonModal({ isVisible: true, message: "Enter Valid OTP" })
                 }
+            }).catch(err => {
+                setOpenCommonModal({ isVisible: true, message: err.message })
             })
         } else {
             try {
@@ -173,7 +147,7 @@ const MobileVerification = ({ route }) => {
                     <View style={styles.textinputConatiner}>
                         <CommonText showText={'Please enter the verification code sent to '} fontSize={15} />
                         <View style={styles.centerText}>
-                            <CommonText showText={email_id} fontSize={15} />
+                            <CommonText showText={mobile_number} fontSize={15} />
                             <TouchableOpacity >
                                 <CommonText showText={' Edit'} fontSize={15} />
                             </TouchableOpacity>

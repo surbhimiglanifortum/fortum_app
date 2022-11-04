@@ -16,7 +16,7 @@ import Button from '../../Component/Button/Button';
 
 const Login = () => {
 
-  const [userInput, setuserInput] = useState('nyfovygu@mailo.icu')
+  const [userInput, setuserInput] = useState('anuj.yadav@mfilterit.com')
   const [loading, setLoading] = useState(false)
 
   const navigation = useNavigation()
@@ -26,7 +26,6 @@ const Login = () => {
     setLoading(true)
     try {
       const user = await Auth.signIn(userInput);
-      console.log("ajsbjds", user)
       if (user) {
         if (validatePhone(userInput)) {
           // navigate to mobile input

@@ -1,5 +1,5 @@
 import sha256 from 'crypto-js/sha256';
-
+import { Auth } from 'aws-amplify';
 
 
 export function validateEmail(email) { //Validates the email address
@@ -15,7 +15,7 @@ export function validatePhone(phone) { //Validates the phone number
 
 
 export function generateSHA(number, dateISO, counter) {
-    
+
     const HASH = "19c14cbe3260087bf121af4b6949469b"
     let n = number.split("")
     let counters = counter.split("")
@@ -29,7 +29,7 @@ export function generateSHA(number, dateISO, counter) {
     n = n.join(HASH)
 
     const hashDigest = sha256(n).toString();
-    
+
     return hashDigest;
 }
 
@@ -55,4 +55,8 @@ export const getChargerMapObject = (standard) => {
             icon: ""
         }
     }
+}
+
+export const userExist = (userName) => {
+    return Auth.signIn(userName, '123');
 }

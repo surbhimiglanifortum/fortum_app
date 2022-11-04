@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import routes from '../../Utils/routes';
 import colors from '../../Utils/colors'
 import * as ApiAction from '../../Services/Api'
-import { generateSHA } from '../../Utils/HelperCommonFunctions'
+import { userExist } from '../../Utils/HelperCommonFunctions'
 
 
 export default function MobileInput({ navigation, route }) {
@@ -37,20 +37,30 @@ export default function MobileInput({ navigation, route }) {
     const onSubmit = () => {
         if (input != '' && input.match(phoneRegExp)) {
             setOnLoading(true)
-            ApiAction.sendOTP(input.replace('+91', '')).then(e => {
-                
-                setOnLoading(false)
-                if (e?.data?.sent) {
-                    navigation.navigate(routes.MobileVerification, { mobile_number: input, email_id: email_id })
-                } else {
-                    setShowError(e.data.message)
-                }
-            }).catch(err => {
-                setOnLoading(false)
-                setShowError(err?.message)
-                console.log("errror", err)
-            })
 
+            userExist('+91' + input).then((e) => {
+                setOnLoading(false)
+                setShowError("Mobile number already registered")
+            }).catch(e => {
+                console.log(e.code)
+                if (e.code == 'UserNotFoundException') {
+                    ApiAction.sendOTP(input.replace('+91', '')).then(e => {
+                        setOnLoading(false)
+                        if (e?.data?.sent) {
+                            navigation.navigate(routes.MobileVerification, { mobile_number: input, email_id: email_id })
+                        } else {
+                            setShowError(e.data.message)
+                        }
+                    }).catch(err => {
+                        setOnLoading(false)
+                        setShowError(err?.message)
+                    })
+                } else {
+                    setOnLoading(false)
+                    setShowError("Mobile number already registered")
+                }
+
+            })
 
         } else {
             // enter valid phone number
