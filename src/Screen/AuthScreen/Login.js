@@ -16,7 +16,7 @@ import Button from '../../Component/Button/Button';
 
 const Login = () => {
 
-  const [userInput, setuserInput] = useState('anuj.yadav@mfilterit.com')
+  const [userInput, setuserInput] = useState('')
   const [loading, setLoading] = useState(false)
 
   const navigation = useNavigation()
@@ -25,7 +25,15 @@ const Login = () => {
   const continueButtonHandler = async () => {
     setLoading(true)
     try {
-      const user = await Auth.signIn(userInput);
+      let user
+      // console.log(userInput)
+      if (validatePhone(userInput)) {
+        console.log('phone',("+91" + userInput).toString())
+        user = await Auth.signIn(("+91"+userInput).trim());
+      } else {
+        console.log(email)
+        user = await Auth.signIn(userInput);
+      }
       if (user) {
         if (validatePhone(userInput)) {
           // navigate to mobile input
