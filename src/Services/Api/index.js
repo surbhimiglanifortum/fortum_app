@@ -136,3 +136,6 @@ export const unpaidPayByWallet = async (session_id) => {
 export const getSessionDetails = async (session_id) => {
     return await axios.get('/api_app/sessions/session_details/' + session_id);
 }
+export const getEvModalService = async () => {
+    return await axios.get(appconfig.BASE_URL + '/api_app/ev');
+};

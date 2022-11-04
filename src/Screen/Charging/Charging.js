@@ -13,6 +13,7 @@ import NoData from '../../Component/NoDataFound/NoData'
 import ChargerLight from '../../assests/svg/Charger_light'
 import CommonView from '../../Component/CommonView'
 import Header from '../../Component/Header/Header'
+import Loader from '../../Component/Loader'
 
 
 const Charging = () => {
@@ -20,7 +21,8 @@ const Charging = () => {
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
     const navigation = useNavigation()
     const [selectedTab, setSelectedTab] = useState('ongoing')
-    const [loading, setLoading] = useState(false)
+    const [loaderOpen, setLoaderOpen] = useState(false)
+
     const ongoingBtnHandler = () => {
         setSelectedTab('ongoing')
     }
@@ -42,11 +44,15 @@ const Charging = () => {
     const username = mUserDetails?.username
 
     const { data, status, isLoading, refetch } = useQuery('chargingData', async () => {
+        setLoaderOpen(true)
         const res = await chargingList(username)
+        setLoaderOpen(false)
         return res.data
     })
     const { data: completedData, status: completedStatus, isLoading: completedIsLoading, refetch: completedreFetch } = useQuery('chargingCompletedData', async () => {
+        setLoaderOpen(true)
         const res = await chargingListCompleted(username)
+        setLoaderOpen(false)
         return res.data
     })
 
@@ -68,7 +74,7 @@ const Charging = () => {
             <View>
                 {selectedTab == 'ongoing' &&
                     <>
-                        {!isLoading && data?.length > 0 ?
+                        {!loaderOpen && data?.length > 0 ?
                             <FlatList
                                 data={data}
                                 keyExtractor={item => item.id}
@@ -79,13 +85,13 @@ const Charging = () => {
                                 }
                                 }
                             /> :
-                            <NoData showText={'No Data Found'} />
+                            !loaderOpen && <NoData showText={'No Data Found'} />
                         }
                     </>
                 }
 
                 {selectedTab == 'completed' &&
-                    <>{!completedIsLoading && completedData?.length > 0 ?
+                    <>{!loaderOpen && completedData?.length > 0 ?
                         <FlatList
                             data={completedData}
                             keyExtractor={item => item.id}
@@ -95,11 +101,12 @@ const Charging = () => {
                                 )
                             }
                             }
-                        /> : <NoData showText={'No Data Completed'} />
+                        /> : !loaderOpen && <NoData showText={'No Data Completed'} />
                     }
                     </>
                 }
             </View>
+            <Loader modalOpen={loaderOpen} />
         </CommonView>
     )
 }

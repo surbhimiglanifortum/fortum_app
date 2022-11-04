@@ -14,22 +14,20 @@ import colors from '../../Utils/colors'
 import WalletModals from '../../Component/Modal/WalletModal'
 import { scale } from 'react-native-size-matters'
 import Fontisto from 'react-native-vector-icons/Fontisto'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import NoData from '../../Component/NoDataFound/NoData'
-// import { NeomorphBlur } from 'react-native-neomorph-shadows';
-// import { NeuView } from 'react-native-neu-element';
-
-
+import Loader from '../../Component/Loader'
 
 const Wallet = () => {
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
-
+  const dispatch = useDispatch()
   const scheme = useColorScheme()
   const navigation = useNavigation()
   const isFocused = useIsFocused()
 
   const [balance, setBalance] = useState('')
+  const [loaderOpen, setLoaderOpen] = useState(false)
 
   const RechargeButtonHandler = () => {
     navigation.navigate(routes.RechargeWallet)
@@ -114,9 +112,11 @@ const Wallet = () => {
   const username = mUserDetails?.username
 
   const { data, status, isLoading, refetch } = useQuery('walletData', async () => {
+    setLoaderOpen(true)
     const res = await walletHistory(username, techStart, techEnd)
     var result = res.data
     result = result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    setLoaderOpen(false)
     return result
   })
 
@@ -131,7 +131,7 @@ const Wallet = () => {
         </View>
 
         <View>
-          {!isLoading && data?.length > 0 ?
+          {!loaderOpen && data?.length > 0 ?
             <FlatList
               data={data}
               keyExtractor={item => item.id}
@@ -141,7 +141,7 @@ const Wallet = () => {
                 )
               }}
             /> :
-            <NoData showText={'No History Found'} />
+            !loaderOpen && <NoData showText={'No History Found'} />
           }
         </View>
       </View>
@@ -165,7 +165,7 @@ const Wallet = () => {
       />
 
       <WalletModals modalVisible={modalVisible} setModalVisible={setModalVisible} showStartDatePicker={showStartDatePicker} showEndDatePicker={showEndDatePicker} startDate={startDate} endDate={endDate} showDateList={showDateList} />
-
+      <Loader modalOpen={loaderOpen} />
     </SafeAreaView>
   )
 }

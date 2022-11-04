@@ -38,17 +38,9 @@ const Order = () => {
                     <CommonText showText={'Today'} fontSize={16} />
                 </View>
                 <OrdersCard Svg={OrderGreenSvg} showText={'8GDGBC57JG4GHDH'} fontSize={16} onPress={orderCardHandler} />
-
-
-                <View>
-                    <CommonText showText={'sdff'} />
+                <View style={styles.headerText}>
+                    <CommonText showText={'12/08/2022'} fontSize={16} />
                 </View>
-              
-
-
-                    <View style={styles.headerText}>
-                        <CommonText showText={'12/08/2022'} fontSize={16} />
-                    </View>
                 {!isLoading && data?.length > 0 ?
                     <FlatList
                         data={data}
