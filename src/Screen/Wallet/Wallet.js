@@ -16,6 +16,10 @@ import { scale } from 'react-native-size-matters'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import { useSelector } from 'react-redux'
 import NoData from '../../Component/NoDataFound/NoData'
+// import { NeomorphBlur } from 'react-native-neomorph-shadows';
+// import { NeuView } from 'react-native-neu-element';
+
+
 
 const Wallet = () => {
 
@@ -125,6 +129,7 @@ const Wallet = () => {
         <View style={styles.text}>
           <CommonText showText={'Transcation History'} />
         </View>
+
         <View>
           {!isLoading && data?.length > 0 ?
             <FlatList

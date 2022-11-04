@@ -11,6 +11,7 @@ import { Formik } from 'formik';
 import { Auth, Hub } from 'aws-amplify';
 import * as Yup from 'yup';
 import SnackContext from '../../Utils/context/SnackbarContext'
+import {userExist} from '../../Utils/HelperCommonFunctions'
 
 const Signup = ({ route }) => {
 
@@ -50,9 +51,7 @@ const Signup = ({ route }) => {
 
     });
 
-    const userExist = (userName) => {
-        return Auth.signIn(userName, '123');
-    }
+
 
     const handleSignup = async (values, event) => {
         console.log(values)
@@ -91,8 +90,6 @@ const Signup = ({ route }) => {
                 attributes: {
                     "custom:phoneUser": "false",
                     email: values.email_id,          // optional
-                    phone_number: "+91" + values.mobile_number,   // optional - E.164 number convention
-
                 },
                 autoSignIn: { // optional - enables auto sign in after user is confirmed
                     enabled: true,

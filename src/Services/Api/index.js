@@ -5,7 +5,7 @@ import { generateSHA } from '../../Utils/HelperCommonFunctions'
 export const getUserDetails = async () => {
     const result = await Auth.currentAuthenticatedUser();
     if (result.signInUserSession) {
-        return await axios.get("/users/gist/" + result.attributes.email)
+        return await axios.get("/api_app/users/gist/" + result.attributes.email)
     } else {
         throw 'User Not logged in'
     }
@@ -99,14 +99,14 @@ export const sendOTP = async (phone) => {
 
     return await axios.post(appconfig.BASE_URL + '/sendotp', payload);
 
-    return await axios.get(appconfig.BASE_URL + '/store/' + username);
+    // return await axios.get(appconfig.BASE_URL + '/store/' + username);
 };
 export const getChargingKeyService = async (username) => {
-    return await axios.get(appconfig.BASE_URL + '/charging_keys/ids/' + username);
+    return await axios.get(appconfig.BASE_URL + '/api_app/charging_keys/ids/' + username);
 };
 export const getChargingKeyDetailsService = async (auth_id) => {
-    return await axios.get(appconfig.BASE_URL + '/tokens/' + auth_id);
+    return await axios.get(appconfig.BASE_URL + '/api_app/tokens/' + auth_id);
 };
 export const getOrdersService = async (username) => {
-    return await axios.get(appconfig.BASE_URL + '/orders/' + username);
+    return await axios.get(appconfig.BASE_URL + '/api_app/orders/' + username);
 };

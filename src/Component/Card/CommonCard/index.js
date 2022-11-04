@@ -3,12 +3,12 @@ import React from 'react'
 import { Card } from 'react-native-paper'
 import colors from '../../../Utils/colors'
 
-export default function index({ children, style }) {
+export default function index({ children, style ,ref}) {
 
     const scheme = useColorScheme()
 
     return (
-        <Card style={[{ backgroundColor: scheme === 'dark' ? colors.backgroundDark : colors.backgroundLight }, styles.container, style]}>
+        <Card  ref={ref} style={[{ backgroundColor: scheme === 'dark' ? colors.backgroundDark : colors.backgroundLight }, styles.container, style]}>
             {children}
         </Card>
     )

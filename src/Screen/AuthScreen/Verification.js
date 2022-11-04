@@ -37,7 +37,7 @@ const Verification = ({ route }) => {
     const { setOpenCommonModal } = useContext(SnackContext);
 
 
-    const { email_id, signin, user } = route.params;
+    const { email_id, signin, user, mobile_number } = route.params;
 
     const VerifyButtonHandler = async () => {
         setLoading(true)
@@ -48,16 +48,16 @@ const Verification = ({ route }) => {
                 Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
                     if (success.signInUserSession) {
                         loginSuccess(false)
-                        sendOTP(input.replace('+91', '')).then(e => {
-                            setOnLoading(false)
-                            if (e?.sent) {
-                                navigation.navigate(routes.MobileVerification, { mobile_number: input, email_id: email_id })
+                        ApiAction.sendOTP(mobile_number.replace('+91', '')).then(e => {
+
+                            if (e.data.sent) {
+                                navigation.navigate(routes.MobileVerification, { ...route.params })
                             } else {
-                                setShowError(e.message)
+                                setOpenCommonModal({ isVisible: true, message: e.data.message })
                             }
                         }).catch(err => {
-                            setOnLoading(false)
-                            setShowError(err?.message)
+                            setOpenCommonModal({ isVisible: true, message: err })
+
                             console.log("errror", err)
                         })
                         navigation.navigate(routes.MobileVerification, { ...route.params })
@@ -67,6 +67,7 @@ const Verification = ({ route }) => {
                     }
                 }).catch(error => {
                     // Somethong went wrong
+                    setOpenCommonModal({ isVisible: true, message: error.message })
                     console.log("Something went wrong", error)
                 })
             } catch (error) {
@@ -77,6 +78,7 @@ const Verification = ({ route }) => {
         } else {
             try {
                 Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
+                    console.log("Valid otp", success)
                     if (success.signInUserSession) {
                         loginSuccess()
                     } else {
@@ -102,10 +104,10 @@ const Verification = ({ route }) => {
         const data = await Auth.currentAuthenticatedUser();
         if (data.signInUserSession) {
             const result = await ApiAction.getUserDetails()
-            if (result.data) {
+            if (result?.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
                 if (navigateToDashboard) {
-                    
+
                     navigation.navigate(routes.dashboard)
                 }
             } else {
