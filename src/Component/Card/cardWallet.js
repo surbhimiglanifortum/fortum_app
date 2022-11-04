@@ -20,7 +20,7 @@ const CardWallet = ({ navigationHandler, Svg, dataItem, }) => {
                     <View style={styles.leftContainer}>
                         <IconCardLarge Svg={dataItem?.item?.topUpBalance ? WalletLight : ChargerLight} />
                         <View style={styles.middleContainer}>
-                            <CommonText showText={dataItem?.item?.topUpBalance ? measure : "Charging Done"} fontSize={14} />
+                            <CommonText showText={dataItem?.item?.topUpBalance ? 'Wallet Recharge' : "Charging Done"} fontSize={14} />
                             <View style={styles.leftContainer}>
                                 <CommonText showText={getFormatedDate(dataItem?.item?.createdAt)} fontSize={14} />
                             </View>
