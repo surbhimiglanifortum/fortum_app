@@ -321,7 +321,7 @@ const PaymentScreenJuspay = (props) => {
                 //     routes: [{ name: 'MapStack' }],
                 // });
                 if (props.route.params?.callFrom === 'payPendingInvoice') {
-                    props.navigation.pop(2)
+                    props.navigation.pop(1)
                 } if (props.route.params?.callFrom === 'SelectPaymentMode') {
                     props.navigation.pop(1)
                 } if (props.route.params?.callFrom === 'RechargerWallet') {
