@@ -64,27 +64,27 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
     const getFile = (key) => {
         switch (key) {
             case 'IEC_62196_T1':
-                return <IEC_62196_T1 />
+                return <IEC_62196_T1 fill={scheme == 'dark'?'#FAFAFA':'#000'} />
 
                 break;
             case 'IEC_62196_T2_COMBO':
-                return <IEC_62196_T2_COMBO />
+                return <IEC_62196_T2_COMBO fill={scheme == 'dark'?'#FAFAFA':'#000'}  />
                 break;
             case 'CHADEMO':
-                return <CHADEMO />
+                return <CHADEMO  fill={scheme == 'dark'?'#FAFAFA':'#000'}/>
                 break;
             case 'IEC_62196_T2':
-                return <IEC_62196_T2 />
+                return <IEC_62196_T2 fill={scheme == 'dark'?'#FAFAFA':'#000'} />
                 break;
             case 'IEC_62196_T1_COMBO':
-                return <IEC_62196_T1_COMBO />
+                return <IEC_62196_T1_COMBO  fill={scheme == 'dark'?'#FAFAFA':'#000'}/>
                 break;
             case 'DOMESTIC_F':
-                return <IEC_62196_T2_COMBO />
+                return <IEC_62196_T2_COMBO fill={scheme == 'dark'?'#FAFAFA':'#000'} />
                 break;
 
             default:
-                return <IEC_62196_T2_COMBO />
+                return <IEC_62196_T2_COMBO  fill={scheme == 'dark'?'#FAFAFA':'#000'}/>
                 break;
         }
     }
@@ -117,7 +117,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
 
 
     return (
-        <Modal animationType={'slide'} visible={openFilterModal} statusBarTranslucent={true}>
+        <Modal animationType={'slide'} visible={openFilterModal} statusBarTranslucent={false}>
             <CommonView style={styles.container}>
                 <View style={styles.innerContainer}>
                     <View style={styles.header}>
@@ -137,9 +137,8 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
                                 connectorTypes?.map((item, ind) => {
                                     return (
                                         <View>
-                                            <CommonCard key={ind} style={[styles.cardInner, item.active ? { backgroundColor: 'green' } : null]}>
-                                                <TouchableOpacity style={styles.card} onPress={() => onItemPress(item.title)} >
-
+                                            <CommonCard active key={ind} style={[styles.cardInner, item.active ? { backgroundColor: 'green' } : null]}>
+                                                <TouchableOpacity style={{ width: 69, height: 59, alignItems: 'center', justifyContent: 'center' }} onPress={() => onItemPress(item.title)} >
                                                     {getFile(item.title)}
                                                 </TouchableOpacity>
                                             </CommonCard>
@@ -154,10 +153,16 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
                             }
                         </View>
                     </View>
-                    <DenseCard style={styles.middleCard}>
-                        <CommonText showText={'Show Available Charger Only'} fontSize={15} />
-                        <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={colors.green} />
-                    </DenseCard>
+                    <View style={{marginTop:30}}>
+                        <DenseCard>
+                            <View style={styles.middleCard}>
+                                <CommonText showText={'Show Available Charger Only'} fontSize={15} />
+                                <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={colors.green} />
+                            </View>
+
+                        </DenseCard>
+                    </View>
+
 
                     <View style={styles.button}>
                         <View style={styles.resetBtn}>
@@ -205,25 +210,18 @@ const styles = StyleSheet.create({
 
     },
     card: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     cardContainer: {
 
         marginTop: 12,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'space-around',
+        justifyContent: 'space-evenly',
 
     },
     text: {
         alignItems: 'center',
-        marginVertical: 10
+
     },
     cardInner: {
         position: 'relative',
@@ -235,19 +233,14 @@ const styles = StyleSheet.create({
     },
     middleCard: {
         flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: colors.white,
-        elevation: 5,
-        paddingVertical: 15,
-        paddingHorizontal: 10,
-        borderRadius: 5
+
     },
     button: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: scale(280)
+        marginTop: scale(230)
     },
     resetBtn: {
         width: '45%',

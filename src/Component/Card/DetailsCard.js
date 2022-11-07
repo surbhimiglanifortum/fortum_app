@@ -1,18 +1,18 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import { scale } from 'react-native-size-matters'
-import HorizontalCard from './HorizontalCard'
-import VerticalCard from './VerticalCard'
 import CommonText from '../Text/CommonText'
-import CommonView from '../../Component/CommonView'
+import CommonCard from '../../Component/Card/CommonCard/index'
 
-const DetailsCard = ({ chargerType, onPress, item ,favourite}) => {
+const DetailsCard = ({ chargerType, onPress, item, favourite }) => {
+    const scheme = useColorScheme()
+
     return (
         <TouchableOpacity onPress={onPress}>
-            <CommonView style={styles.container} children={
+            <CommonCard>
                 <>
                     <View style={styles.innerContainer}>
                         <View>
@@ -34,17 +34,17 @@ const DetailsCard = ({ chargerType, onPress, item ,favourite}) => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={[styles.innerContainer1,]}>
+                    <View style={[styles.innerContainer1, { borderColor: scheme == 'dark' ? colors.borderColorDark : colors.borderColor }]}>
                         <View style={styles.longText}>
-                            {favourite?<CommonText fontSize={12} showText={`${item?.address2?.city} ${item?.address2?.street} ${item?.address2?.postalCode}`} />:<CommonText fontSize={12} showText={`${item?.address?.city} ${item?.address?.street} ${item?.address?.postalCode}`} />}
-                            
+                            {favourite ? <CommonText fontSize={12} showText={`${item?.address2?.city} ${item?.address2?.street} ${item?.address2?.postalCode}`} /> : <CommonText fontSize={12} showText={`${item?.address?.city} ${item?.address?.street} ${item?.address?.postalCode}`} />}
+
                         </View>
                         <CommonText fontSize={12} showText={`${item?.distance} Km`} />
                     </View>
                     {/* {chargerType == 1 && <HorizontalCard />}
                     {chargerType == 2 && <VerticalCard />} */}
                 </>
-            } />
+            </CommonCard>
         </TouchableOpacity >
     )
 }
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderBottomWidth: 1,
         paddingVertical: 12,
-        borderColor: colors.borderColor
+
     },
     heartIcon: {
         elevation: 10,
