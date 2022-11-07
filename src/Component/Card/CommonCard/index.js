@@ -17,12 +17,12 @@ export default function index({ children, style, ref, active }) {
             style={{
                 shadowRadius: 3,
                 borderRadius: 12,
-                backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight,
+                backgroundColor: active ? colors.greenBackground : scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight,
                 margin: 10,
                 marginVertical: 10,
                 padding: 10,
             }}
-        >
+        >            
             {children}
         </NeomorphFlex>
 
