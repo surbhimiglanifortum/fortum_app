@@ -5,7 +5,7 @@ import commonFonts from '../../Utils/fonts/fonts'
 import { NeomorphFlex } from 'react-native-neomorph-shadows'
 
 
-const Textinput = ({ placeholder, value, onChange, placeholderText, keyboardType }) => {
+const Textinput = ({ placeholder, value, onChange, placeholderText, keyboardType, editable }) => {
 
     const scheme = useColorScheme()
 
@@ -17,13 +17,13 @@ const Textinput = ({ placeholder, value, onChange, placeholderText, keyboardType
             style={{
                 shadowRadius: 3,
                 borderRadius: 12,
-                backgroundColor: scheme=='dark'?colors.backgroundDark:colors.backgroundLight,
+                backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight,
                 // margin: 10,
                 marginVertical: 10,
                 padding: 5,
             }}
         >
-            <TextInput keyboardType={keyboardType || 'default'} onChangeText={onChange} value={value} placeholder={placeholder} style={{ color: scheme == 'dark' ? 'white' : 'black', fontFamily: commonFonts.regular }} />
+            <TextInput editable={editable} keyboardType={keyboardType || 'default'} onChangeText={onChange} value={value} placeholder={placeholder} style={{ color: scheme == 'dark' ? 'white' : 'black', fontFamily: commonFonts.regular }} />
         </NeomorphFlex>
     )
 }

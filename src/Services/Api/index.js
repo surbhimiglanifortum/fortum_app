@@ -143,3 +143,11 @@ export const getEvModalService = async () => {
 export const getPinelabHistroy = async (payload) => {
     return await axios.post('/api_app/pinelabs/wallet/history', payload);
 }
+
+export const getPinelabBalance = async (payload) => {
+    return await axios.post("/api_app/pinelabs/wallet/check-balance", payload);
+};
+
+export const sentKycOtp = async (payload) => {
+    return await axios.post("/api_app/pinelabs/user/prepaid-card/start", payload);
+};

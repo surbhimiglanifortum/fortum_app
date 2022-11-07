@@ -17,15 +17,24 @@ import WalletLight from '../../../../assests/svg/Wallet_light'
 import { useSelector } from 'react-redux'
 import { getPinelabHistroy } from '../../../../Services/Api'
 import PinelabPassbookFilter from '../../../../Component/Modal/PinelabPassbookFilter'
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from 'moment'
+import { getPinelabBalance } from '../../../../Services/Api'
 
 const Passbook = () => {
     const navigation = useNavigation()
+
+    const [modalVisible, setModalVisible] = useState(false)
     const [selectedTab, setSelectedTab] = useState('all')
     const [refreshing, setRefreshing] = useState(false)
     const [techStart, setTechStart] = useState('')
     const [techEnd, setTechEnd] = useState('')
     const [noTrans, setNoTrans] = useState('')
     const [data, setData] = useState([])
+    const [startDate, setStartDate] = useState('')
+    const [endDate, setEndDate] = useState('')
+    const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
+    const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
 
     const allBtnHandler = () => {
         setSelectedTab('all')
@@ -41,6 +50,7 @@ const Passbook = () => {
 
     useEffect(() => {
         getWalletHistory()
+        getWalletBalance()
     }, [])
 
     const getWalletHistory = async () => {
@@ -64,13 +74,73 @@ const Passbook = () => {
         }
     }
 
+    const getWalletBalance = async () => {
+        try {
+            const payload = {
+                username: mUserDetails?.username
+            }
+            const result = await getPinelabBalance(payload)
+            console.log("Get Pinelab Balance Error", result?.data)
+        } catch (error) {
+            console.log("Get Pinelab Balance Error", error)
+        }
+
+    }
+
+    const showStartDatePicker = () => {
+        setStartDatePickerVisibility(!isStartDatePickerVisible);
+    };
+
+    const hideStartDatePicker = () => {
+        setStartDatePickerVisibility(!isStartDatePickerVisible);
+    };
+
+    const handleStartConfirm = (date) => {
+        let selectedDate = moment(date).format('LL')
+        setStartDate(selectedDate)
+        let year = new Date(date).getFullYear()
+        let month = new Date(date).getMonth() + 1
+        if (month <= 9) {
+            month = "0" + month
+        }
+        let d = new Date(date).getDate()
+        let srt = `${year}-${month}-${d}T00:00:00`
+        console.log("Check Hour", srt)
+        setTechStart(srt)
+        hideStartDatePicker();
+    };
+
+    const showEndDatePicker = () => {
+        setEndDatePickerVisibility(!isEndDatePickerVisible);
+    };
+
+    const hideEndDatePicker = () => {
+        setEndDatePickerVisibility(!isEndDatePickerVisible);
+    };
+
+    const handleEndConfirm = (date) => {
+        let selectedDate = moment(date).format('LL')
+        setEndDate(selectedDate)
+        let year = new Date(date).getFullYear()
+        let month = new Date(date).getMonth() + 1
+        if (month <= 9) {
+            month = "0" + month
+        }
+        let d = new Date(date).getDate()
+        let end = `${year}-${month}-${d}T24:00:00`
+        console.log("Check Hour", end)
+        setTechEnd(end)
+        hideEndDatePicker();
+    };
+
+
     return (
         <CommonView>
             <View style={styles.innerHeader}>
                 <View style={{ flex: 1 }}>
                     <Header showText={'Passbook'} />
                 </View>
-                <SmallButton Svg={FilterSvg} />
+                <SmallButton Svg={FilterSvg} onPress={() => setModalVisible(true)} />
             </View>
 
             <DenseCard>
@@ -97,14 +167,43 @@ const Passbook = () => {
 
             <View style={{ height: 500, marginTop: 15 }}>
                 <ScrollView>
-                    {selectedTab == 'all' && <Card tabName={"all"} Svg={WalletSvg} />}
+                    {selectedTab == 'all' && <Card tabName={"all"} Svg={WalletLight} />}
 
-                    {selectedTab == 'sent' && <Card tabName={'sent'} Svg={WalletSvg} />}
+                    {selectedTab == 'sent' && <Card tabName={'sent'} Svg={WalletLight} />}
 
-                    {selectedTab == 'receive' && <Card tabName={'receive'} Svg={WalletSvg} />}
+                    {selectedTab == 'receive' && <Card tabName={'receive'} Svg={WalletLight} />}
                 </ScrollView>
-                <PinelabPassbookFilter isVisible={true} bgStyle={'rgba(0,0,0,0.5)'} />
+
+                <PinelabPassbookFilter
+                    isVisible={modalVisible}
+                    bgStyle={'rgba(0,0,0,0.5)'}
+                    startDate={startDate}
+                    endDate={endDate}
+                    showStartDatePicker={showStartDatePicker}
+                    showEndDatePicker={showEndDatePicker}
+                    noTrans={noTrans}
+                    setNoTrans={setNoTrans}
+                    onClosePress={() => setModalVisible(false)}
+                />
+
+                <DateTimePickerModal
+                    isVisible={isStartDatePickerVisible}
+                    mode="date"
+                    onConfirm={handleStartConfirm}
+                    onCancel={hideStartDatePicker}
+                    maximumDate={new Date()}
+                />
+
+                <DateTimePickerModal
+                    isVisible={isEndDatePickerVisible}
+                    mode="date"
+                    onConfirm={handleEndConfirm}
+                    onCancel={hideEndDatePicker}
+                    maximumDate={new Date()}
+                />
+
             </View>
+
             <Button showText={'Download Passbook'} />
         </CommonView>
     )

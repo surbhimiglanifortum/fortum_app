@@ -4,8 +4,10 @@ import CommonView from '../CommonView'
 import CommonText from '../Text/CommonText'
 import Textinput from '../Textinput/Textinput'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import Button from '../Button/Button'
+import WhiteButton from '../Button/WhiteButton'
 
-const PinelabPassbookFilter = ({ isVisible, bgStyle, startDate, endDate, showStartDatePicker, showEndDatePicker, noTrans, setNoTrans }) => {
+const PinelabPassbookFilter = ({ isVisible, bgStyle, startDate, endDate, showStartDatePicker, showEndDatePicker, noTrans, setNoTrans, onClosePress }) => {
 
     return (
         <Modal
@@ -15,27 +17,53 @@ const PinelabPassbookFilter = ({ isVisible, bgStyle, startDate, endDate, showSta
         >
             <View style={[styles.centeredView, { backgroundColor: bgStyle }]}>
                 <CommonView style={styles.modalView} isFlex={false}>
+                    <View style={styles.wrapper}>
+                        <CommonText showText={'Select Date'} black />
+                        <Ionicons name={"close"} size={24} style={{ marginLeft: 10 }} onPress={onClosePress} />
+                    </View>
+
                     <View style={{ marginVertical: 10 }}>
-                        <CommonText showText={'Start Date'} />
+                        <CommonText showText={'Start Date'} fontSize={14} />
                         <TouchableOpacity style={[styles.inputWrapper, styles.wrapper]} onPress={showStartDatePicker}>
-                            <Textinput editable={false} value={startDate} placeholder={'Please Select Start Date'} />
-                            <Ionicons name={"calendar"} size={24} />
+                            <View style={{ flex: 1 }}>
+                                <Textinput
+                                    editable={false}
+                                    value={startDate}
+                                    placeholder={'Please Select Start Date'}
+                                />
+                            </View>
+                            <Ionicons name={"calendar"} size={24} style={{ marginLeft: 10 }} />
                         </TouchableOpacity>
                     </View>
 
                     <View style={{ marginVertical: 10 }}>
-                        <CommonText showText={'End Date'} />
+                        <CommonText showText={'End Date'} fontSize={14} />
                         <TouchableOpacity style={[styles.inputWrapper, styles.wrapper]} onPress={showEndDatePicker}>
-                            <Textinput editable={false} value={endDate} placeholder={'Please Select End Date'} />
-                            <Ionicons name={"calendar"} size={24} />
+                            <View style={{ flex: 1 }}>
+                                <Textinput
+                                    editable={false}
+                                    value={endDate}
+                                    placeholder={'Please Select End Date'}
+                                />
+                            </View>
+                            <Ionicons name={"calendar"} size={24} style={{ marginLeft: 10 }} />
                         </TouchableOpacity>
                     </View>
 
                     <View style={{ marginVertical: 10 }}>
                         <CommonText showText={'Number of Transaction'} />
                         <View style={[styles.inputWrapper, styles.wrapper]}>
-                            <Textinput value={noTrans} placeholder={'Please Enter Number of Transactions'} onChangeText={setNoTrans} keyboardType={'numeric'} />
-                            <Ionicons name={"copy"} size={24} />
+                            <View style={{ flex: 1 }} fontSize={14}>
+                                <Textinput value={noTrans} placeholder={'Please Enter Number of Transactions'} onChange={setNoTrans} keyboardType={'numeric'} />
+                            </View>
+                            <Ionicons name={"copy"} size={24} style={{ marginLeft: 10 }} />
+                        </View>
+                    </View>
+
+                    <View style={styles.wrapper}>
+                        <WhiteButton showText={'Cancel'} style={{ flex: 1, marginRight: 5 }} onPress={onClosePress} />
+                        <View style={{ flex: 1, marginLeft: 5 }}>
+                            <Button showText={'Show'} />
                         </View>
                     </View>
                 </CommonView>
@@ -53,7 +81,7 @@ const styles = StyleSheet.create({
     modalView: {
         margin: 20,
         borderRadius: 20,
-        padding: 35,
+        padding: 15,
         paddingTop: 10,
         shadowColor: "rgba(0,0,0,0.1)",
         shadowOffset: {
