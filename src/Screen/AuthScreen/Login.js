@@ -28,8 +28,8 @@ const Login = () => {
       let user
       // console.log(userInput)
       if (validatePhone(userInput)) {
-        console.log('phone',("+91" + userInput).toString())
-        user = await Auth.signIn(("+91"+userInput).trim());
+        console.log('phone', ("+91" + userInput).toString())
+        user = await Auth.signIn(("+91" + userInput).trim());
       } else {
         console.log(email)
         user = await Auth.signIn(userInput);
@@ -93,8 +93,6 @@ const Login = () => {
     }
   }
 
-
-
   const signupHandler = () => {
     const payload = {}
     if (validatePhone(userInput)) {
@@ -118,14 +116,13 @@ const Login = () => {
             <CarLogo />
           </View>
           <View>
-            <CommonText showText={'WelCome !'} fontSize={20} />
+            <CommonText showText={'Welcome !'} fontSize={20} />
           </View>
           <View style={styles.textinputConatiner}>
             <CommonText showText={'Please enter your mobile number or email id'} fontSize={12} />
             <Textinput on value={userInput} onChange={(e) => setuserInput(e.toLowerCase())} placeholder={'Mobile Number / email id'} />
           </View>
           <Button showText={"Continue"} onPress={continueButtonHandler} onLoading={loading} ></Button>
-
 
           <View style={styles.centerText}>
             <CommonText showText={'Or Sign in with'} fontSize={12} />
@@ -139,7 +136,7 @@ const Login = () => {
         </View>
         <View style={styles.bottomText}>
           <CommonText showText={'Don’t have account? '} fontSize={12} />
-          <Button>Signup</Button>
+          <TextButton>Signup</TextButton>
         </View>
       </ScrollView>
     </SafeAreaView>

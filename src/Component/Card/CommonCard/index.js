@@ -4,14 +4,16 @@ import { Card } from 'react-native-paper'
 import colors from '../../../Utils/colors'
 import { Neomorph, Shadow, NeomorphFlex } from 'react-native-neomorph-shadows'
 
-export default function index({ children, style, ref,margin  }) {
+export default function index({ children, style, ref,margin,active  }) {
 
     const scheme = useColorScheme()
 
     return (
         <NeomorphFlex
-            // <- enable shadow inside of neomorph
+            inner={active ? true : false} // <- enable shadow inside of neomorph
             swapShadows // <- change zIndex of each shadow color
+            // darkShadowColor='#000' // <- set this
+            // lightShadowColor="#fff" // <- this
             style={{
                 shadowRadius: 3,
                 borderRadius: 12,
@@ -20,7 +22,7 @@ export default function index({ children, style, ref,margin  }) {
                 // marginVertical: 10,
                 padding: 10,
             }}
-        >
+        >            
             {children}
         </NeomorphFlex>
 

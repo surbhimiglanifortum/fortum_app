@@ -2,7 +2,7 @@ import { useColorScheme, StyleSheet } from 'react-native'
 import React from 'react'
 import colors from '../../../Utils/colors'
 import LinearGradient from 'react-native-linear-gradient';
-import { Neomorph, Shadow, NeomorphFlex } from 'react-native-neomorph-shadows'
+import { NeomorphFlex } from 'react-native-neomorph-shadows'
 
 export default function index({ children, style ,padding,customStyle,backgroundColor}) {
 

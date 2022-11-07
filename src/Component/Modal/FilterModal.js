@@ -64,27 +64,27 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
     const getFile = (key) => {
         switch (key) {
             case 'IEC_62196_T1':
-                return <IEC_62196_T1 />
+                return <IEC_62196_T1 fill={scheme == 'dark' ? '#FAFAFA' : '#000'} />
 
                 break;
             case 'IEC_62196_T2_COMBO':
-                return <IEC_62196_T2_COMBO />
+                return <IEC_62196_T2_COMBO fill={scheme == 'dark' ? '#FAFAFA' : '#000'} />
                 break;
             case 'CHADEMO':
-                return <CHADEMO />
+                return <CHADEMO fill={scheme == 'dark' ? '#FAFAFA' : '#000'} />
                 break;
             case 'IEC_62196_T2':
-                return <IEC_62196_T2 />
+                return <IEC_62196_T2 fill={scheme == 'dark' ? '#FAFAFA' : '#000'} />
                 break;
             case 'IEC_62196_T1_COMBO':
-                return <IEC_62196_T1_COMBO />
+                return <IEC_62196_T1_COMBO fill={scheme == 'dark' ? '#FAFAFA' : '#000'} />
                 break;
             case 'DOMESTIC_F':
-                return <IEC_62196_T2_COMBO />
+                return <IEC_62196_T2_COMBO fill={scheme == 'dark' ? '#FAFAFA' : '#000'} />
                 break;
 
             default:
-                return <IEC_62196_T2_COMBO />
+                return <IEC_62196_T2_COMBO fill={scheme == 'dark' ? '#FAFAFA' : '#000'} />
                 break;
         }
     }
@@ -117,47 +117,70 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
 
 
     return (
-        <Modal animationType={'slide'} visible={openFilterModal} statusBarTranslucent={true}>
+        <Modal animationType={'slide'} visible={openFilterModal} statusBarTranslucent={false} >
             <CommonView style={styles.container}>
                 <View style={styles.innerContainer}>
-                    <View style={styles.header}>
-                        <View></View>
-                        <CommonText >Filter</CommonText>
-                        <TouchableOpacity onPress={() => { setOpenFilterModal(false) }}
-                            style={styles.crossIcon}>
-                            <AntDesign name='close' color={colors.black} />
-                        </TouchableOpacity>
-                    </View>
 
-                    <View style={styles.connectorContainer}>
-                        <CommonText>Connectors</CommonText>
-                        {isLoading && <Loader />}
-                        <View style={styles.cardContainer}>
-                            {
-                                connectorTypes?.map((item, ind) => {
-                                    return (
-                                        <View>
-                                            <CommonCard key={ind} style={[styles.cardInner, item.active ? { backgroundColor: 'green' } : null]}>
-                                                <TouchableOpacity style={styles.card} onPress={() => onItemPress(item.title)} >
+                    <View>
+                        <View style={styles.header}>
 
-                                                    {getFile(item.title)}
-                                                </TouchableOpacity>
-                                            </CommonCard>
-                                            <View style={styles.text}>
-                                                <CommonText regular fontSize={14} >{getChargerMapObject(item.title).name}</CommonText>
-                                            </View>
-                                        </View>
+                            <View style={{ flex: 1 }}>
+                                <CommonText fontSize={16} >Filter</CommonText>
+                            </View>
+                            <View>
+                                <CommonCard>
+                                    <TouchableOpacity onPress={() => { setOpenFilterModal(false) }}
+                                        style={{ alignSelf: 'center', justifyContent: 'center' }}>
+                                        <AntDesign size={20} name='close' color={scheme == 'dark'?colors.backgroundLight: colors.ligthIcon} />
+                                    </TouchableOpacity>
+
+                                </CommonCard>
+                            </View>
 
 
-                                    )
-                                })
-                            }
                         </View>
+
+
+                        <View style={{marginTop:scale(20)}}>
+                            <CommonText fontSize={16}> Connectors</CommonText>
+                            {isLoading && <Loader />}
+                            <View style={styles.cardContainer}>
+                                {
+                                    connectorTypes?.map((item, ind) => {
+                                        return (
+                                            <View>
+                                                <CommonCard active={item?.active ? true : false} key={ind} style={[styles.cardInner]}>
+                                                    <TouchableOpacity style={{ width: 69, height: 59, alignItems: 'center', justifyContent: 'center' }} onPress={() => onItemPress(item.title)} >
+                                                        {getFile(item.title)}
+                                                    </TouchableOpacity>
+                                                </CommonCard>
+                                                <View style={styles.text}>
+                                                    <CommonText regular fontSize={14} >{getChargerMapObject(item.title).name}</CommonText>
+                                                </View>
+                                            </View>
+
+
+                                        )
+                                    })
+                                }
+                            </View>
+                        </View>
+                        <View style={{ marginTop: 30 }}>
+                            <DenseCard>
+                                <View style={styles.middleCard}>
+                                    <CommonText showText={'Show Available Charger Only'} fontSize={15} />
+                                    <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={colors.green} />
+                                </View>
+
+                            </DenseCard>
+                        </View>
+
+
+
                     </View>
-                    <DenseCard style={styles.middleCard}>
-                        <CommonText showText={'Show Available Charger Only'} fontSize={15} />
-                        <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={colors.green} />
-                    </DenseCard>
+
+
+
 
                     <View style={styles.button}>
                         <View style={styles.resetBtn}>
@@ -175,7 +198,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
 
                 </View>
             </CommonView>
-        </Modal>
+        </Modal >
     )
 }
 
@@ -186,7 +209,8 @@ const styles = StyleSheet.create({
         marginTop: STATUSBAR_HEIGHT,
     },
     innerContainer: {
-
+        flex: 1,
+        justifyContent: 'space-between',
         alignSelf: 'center'
     },
     header: {
@@ -194,36 +218,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    crossIcon: {
-        backgroundColor: colors.white,
-        paddingVertical: 4,
-        paddingHorizontal: 6,
-        elevation: 5,
-        borderRadius: 6
-    },
+
     connectorContainer: {
 
     },
     card: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     cardContainer: {
 
         marginTop: 12,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'space-around',
+        justifyContent: 'space-evenly',
 
     },
     text: {
         alignItems: 'center',
-        marginVertical: 10
+
     },
     cardInner: {
         position: 'relative',
@@ -235,19 +246,14 @@ const styles = StyleSheet.create({
     },
     middleCard: {
         flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: colors.white,
-        elevation: 5,
-        paddingVertical: 15,
-        paddingHorizontal: 10,
-        borderRadius: 5
+
     },
     button: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: scale(280)
+
     },
     resetBtn: {
         width: '45%',

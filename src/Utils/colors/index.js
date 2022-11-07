@@ -3,11 +3,13 @@ const colors = {
     black: '#000',
     green: '#5AC37D',
     red: '#F83131',
+    ligthIcon:"#002449",
     backgroundLight: '#ECF4FC',
     backgroundDark: '#202020',
     greenBackground: '#5AC37D',
     lightText: '#474343',
     borderColor: '#EFEFEF',
+    borderColorDark: '#151515',
     lightBackGround: '#EEF2FA',
     lightblue: '#eef5fc',
     lightgreen: '#BBDCD3',
@@ -19,8 +21,9 @@ const colors = {
     denseShadowDark: '#303030',
     denseShadowSecondary: '#202020',
     greyText: '#969696',
-    lightGray:'#3C3C3C',
-    divider:'#EEEEEE'
+    lightGray: '#3C3C3C',
+    divider: '#EEEEEE',
+    highlightedBackground: '#86A8FF'
 }
 
 export default colors
