@@ -61,7 +61,7 @@ const Charging = () => {
             {/* <View style={styles.header}>
                 <CommonText showText={'Charging'} fontSize={18} />
             </View> */}
-            <Header showText={'Charging'} />
+            <Header showText={'Charging'} backButton={false} />
             <View style={styles.tabContainer}>
                 <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'ongoing' ? colors.white : colors.greenBackground }]}>
                     <CommonText customstyles={[{ color: selectedTab == 'ongoing' ? colors.black : colors.white }]} showText={'Ongoing'} />

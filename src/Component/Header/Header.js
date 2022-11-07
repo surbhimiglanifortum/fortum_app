@@ -8,7 +8,10 @@ const Header = ({ showText, backButton = true, style }) => {
     return (
         <View style={[styles.header]}>
             {backButton && <BackButton />}
-            <CommonText showText={showText} fontSize={22} customstyles={styles.headerText} />
+            <CommonText showText={showText} fontSize={22} customstyles={[styles.headerText, {
+                marginLeft: backButton ?
+                    -25 : 0
+            }]} />
         </View>
     )
 }
@@ -23,7 +26,6 @@ const styles = StyleSheet.create({
     headerText: {
         textAlign: 'center',
         flex: 1,
-        marginLeft: -25
     },
 })
 

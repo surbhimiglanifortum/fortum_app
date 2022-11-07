@@ -123,7 +123,7 @@ const Wallet = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.innerContainer}>
-        <Header showText={'Wallet'} />
+        <Header showText={'Wallet'} backButton={false} />
         {/* card */}
         <WalletCard onPress={RechargeButtonHandler} title={`₹ ${balance}`} subTitle={'Your Prepaid Balance'} />
         <View style={styles.text}>
