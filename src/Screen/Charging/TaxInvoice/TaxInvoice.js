@@ -45,15 +45,20 @@ const TaxInvoice = ({ route }) => {
         <CommonView>
             <Header showText={'Tax Invoice'} />
             <ScrollView>
-                <DenseCard style={styles.row}>
-                    <IconCard Svg={ChargerLight} />
-                    <View style={{ flex: 1 }}>
-                        <CommonText showText={paramData?.item?.location?.name} fontSize={14} />
-                        <CommonText showText={getFormatedDate(paramData?.item?.start_datetime)} fontSize={14} regular />
-                    </View>
-                    <View>
-                        <CommonText showText={`₹ ${paramData?.item?.order?.amount / 100 ? paramData?.item?.order?.amount / 100 : '0'}`} fontSize={14} />
-                        <CommonText showText={`${paramData?.item?.kwh ? paramData?.item?.kwh : '0'} Kwh`} fontSize={14} regular />
+                <DenseCard >
+                    <View style={styles.row}>
+                        <View>
+                            <IconCard Svg={ChargerLight} />
+                        </View>
+
+                        <View style={{}}>
+                            <CommonText showText={paramData?.item?.location?.name} fontSize={14} />
+                            <CommonText showText={getFormatedDate(paramData?.item?.start_datetime)} fontSize={14} regular />
+                        </View>
+                        <View>
+                            <CommonText showText={`₹ ${paramData?.item?.order?.amount / 100 ? paramData?.item?.order?.amount / 100 : '0'}`} fontSize={14} />
+                            <CommonText showText={`${paramData?.item?.kwh ? paramData?.item?.kwh : '0'} Kwh`} fontSize={14} regular />
+                        </View>
                     </View>
                 </DenseCard>
 
@@ -80,11 +85,11 @@ const TaxInvoice = ({ route }) => {
                         <View >
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Start Time'} fontSize={14} regular />
-                                <CommonText showText={paramData?.item?.start_datetime ? getFormatedDate(paramData?.item?.start_datetime) : 'NA'} fontSize={14} regular />
+                                <CommonText semibold showText={paramData?.item?.start_datetime ? getFormatedDate(paramData?.item?.start_datetime) : 'NA'} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'End Time'} fontSize={14} regular />
-                                <CommonText showText={paramData?.item?.end_datetime ? getFormatedDate(paramData?.item?.end_datetime) : 'NA'} fontSize={14} regular />
+                                <CommonText semibold showText={paramData?.item?.end_datetime ? getFormatedDate(paramData?.item?.end_datetime) : 'NA'} fontSize={14} regular />
                             </View>
                         </View>
                     </DenseCard>
@@ -92,24 +97,24 @@ const TaxInvoice = ({ route }) => {
                         <View >
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Price'} fontSize={14} regular />
-                                <CommonText showText={`₹ ${paramData?.item?.order?.pricingToApply?.price ? paramData?.item?.order?.pricingToApply?.price : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.pricingToApply?.price ? paramData?.item?.order?.pricingToApply?.price : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Cost'} fontSize={14} regular />
-                                <CommonText showText={`₹ ${paramData?.item?.order?.amount ? ((paramData?.item?.order?.amount - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst)) / 100).toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? ((paramData?.item?.order?.amount - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst)) / 100).toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of CGST (9%)'} fontSize={14} regular />
-                                <CommonText showText={`₹ ${(paramData?.item?.order?.cgst / 100).toFixed(2) ? (paramData?.item?.order?.cgst / 100).toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.cgst / 100).toFixed(2) ? (paramData?.item?.order?.cgst / 100).toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of SGST (9%)'} fontSize={14} regular />
-                                <CommonText showText={`₹ ${(paramData?.item?.order?.sgst / 100).toFixed(2) ? (paramData?.item?.order?.sgst / 100).toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.sgst / 100).toFixed(2) ? (paramData?.item?.order?.sgst / 100).toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <Divider />
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Total '} fontSize={14} />
-                                <CommonText showText={`₹ ${paramData?.item?.order?.amount / 100 ? paramData?.item?.order?.amount / 100 : 'NA'}`} fontSize={14} />
+                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount / 100 ? paramData?.item?.order?.amount / 100 : 'NA'}`} fontSize={14} />
                             </View>
                         </View>
                     </DenseCard>
@@ -129,7 +134,7 @@ const TaxInvoice = ({ route }) => {
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Transaction ID'} fontSize={14} regular />
-                                <CommonText showText={paramData?.item?.id} fontSize={14} />
+                                <CommonText semibold showText={paramData?.item?.id} fontSize={14} />
                             </View>
                         </View>
                     </DenseCard>
@@ -158,6 +163,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between'
     },
     header: {
         flexDirection: 'row',

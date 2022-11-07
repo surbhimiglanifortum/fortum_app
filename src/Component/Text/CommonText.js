@@ -3,14 +3,14 @@ import React from 'react'
 import colors from '../../Utils/colors'
 import commonFonts from '../../Utils/fonts/fonts'
 
-const CommonText = ({ showText, fontSize = 16, children, customstyles, bold, regular }) => {
+const CommonText = ({ showText, fontSize = 16, children, customstyles, bold, regular, semibold}) => {
   const scheme = useColorScheme()
 
   return (
     <Text style={
       [styles.text, {
         fontSize: fontSize,
-        color: scheme == 'dark' ? colors.white : colors.lightText, fontFamily: regular ? commonFonts.regular : commonFonts.bold
+        color: scheme == 'dark' ? colors.white : colors.lightText, fontFamily: semibold? commonFonts.bold:regular ? commonFonts.regular : commonFonts.bold
 
       },
         customstyles
