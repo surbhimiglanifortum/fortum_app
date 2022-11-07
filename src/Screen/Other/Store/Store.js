@@ -11,7 +11,7 @@ import CommonText from '../../../Component/Text/CommonText'
 import StoreCart from '../../../Component/Card/StoreCard/StoreCart'
 import { useSelector } from 'react-redux'
 import NoData from '../../../Component/NoDataFound/NoData'
-
+import CommonView from '../../../Component/CommonView/index'
 const Store = () => {
 
     const navigation = useNavigation()
@@ -30,9 +30,9 @@ const Store = () => {
     })
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
+        <CommonView>
             <View style={styles.innerContainer}>
-                <View style={styles.header}>
+                <View style={[styles.header]}>
                     <Header showText={'Store'} />
                     <StoreCart onPress={cartHandler} />
                 </View>
@@ -51,11 +51,10 @@ const Store = () => {
                         }
                         }
                     /> :
-                   <NoData showText={'No Data Found'} />
+                    <NoData showText={'No Data Found'} />
                 }
-
             </View>
-        </SafeAreaView>
+        </CommonView>
     )
 }
 
@@ -64,10 +63,10 @@ const styles = StyleSheet.create({
         flex: 1
     },
     innerContainer: {
-        width: '90%',
+        width: '100%',
         alignSelf: 'center',
         marginTop: 20,
-        flex: 1
+        flex: 1,
     },
     header: {
         flexDirection: 'row',

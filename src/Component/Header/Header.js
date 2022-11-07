@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingBottom: 10
+        paddingBottom: 10,
+        paddingHorizontal:12
     },
     headerText: {
         textAlign: 'center',

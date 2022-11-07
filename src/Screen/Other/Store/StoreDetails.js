@@ -16,7 +16,7 @@ import StoreCart from '../../../Component/Card/StoreCard/StoreCart'
 
 const StoreDetails = ({ route }) => {
 
-    const dispatch =useDispatch()
+    const dispatch = useDispatch()
     const navigateData = route.params.dataItem.item
     console.log(navigateData, '............navigate data')
 
@@ -29,25 +29,27 @@ const StoreDetails = ({ route }) => {
     }
 
     const addQty = async () => {
-        setCartCount(cartCount + 1)
         dispatch({
-            type: 'Add_To_Cart',
-            payload: cartCount
+            type: 'ADD_CART_ITEM',
+            payload: { id:navigateData.id, cartItem:1,...navigateData }
         })
+        setCartCount(cartCount + 1)
 
     }
 
     const removeQty = () => {
         dispatch({
-            type: 'REMOVE_To_Cart',
-            payload: cartCount
+            type: 'SUB_CART_ITEM',
+            payload: { id:navigateData.id, cartItem: 1 ,...navigateData}
+
         })
         setCartCount(cartCount - 1)
     }
+
     const addCartBtn = () => {
         dispatch({
-            type: 'Add_To_Cart',
-            payload: cartCount+1
+            type: 'ADD_TO_CART',
+            payload: { id:navigateData.id, cartItem: 1,...navigateData }
         })
         setCartCount(1)
     }
@@ -70,11 +72,11 @@ const StoreDetails = ({ route }) => {
                     </DenseCard>
                 </View>
 
-                {cartCount == 0 && <Button showText={'Add to Cart'} onPress={()=>addCartBtn(navigateData)} />}
+                {cartCount == 0 && <Button showText={'Add to Cart'} onPress={() => addCartBtn(navigateData)} />}
                 {cartCount >= 1 && <View style={styles.btnCon}>
                     <AddRemoveCard cartCount={cartCount} addQty={addQty} removeQty={removeQty} />
                     <View style={styles.addCartBtn}>
-                        <Button showText={'Checkout'}  onPress={cartHandler} />
+                        <Button showText={'Checkout'} onPress={cartHandler} />
                     </View>
                 </View>}
 
