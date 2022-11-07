@@ -5,12 +5,13 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import commonFonts from '../../Utils/fonts/fonts'
 import LinearGradient from 'react-native-linear-gradient'
 import CommonText from '../Text/CommonText'
+import DenseCard from '../../Component/Card/DenseCard/index'
 
 const AddRemoveCard = ({ removeQty, addQty, cartCount,disabled,showText }) => {
     const scheme = useColorScheme()
 
     return (
-        <LinearGradient colors={scheme === 'dark' ? [colors.denseShadowDark, colors.denseShadowSecondary] : [colors.denseShadow, colors.white]} style={[styles.linearGradient]}>
+       <DenseCard padding={5}>
             <View style={styles.container}>
                 <TouchableOpacity onPress={() => removeQty()} disabled={disabled}
                     style={[styles.minusIcon, { backgroundColor: scheme == 'dark' ? colors.lightGray : colors.white }]}>
@@ -22,7 +23,7 @@ const AddRemoveCard = ({ removeQty, addQty, cartCount,disabled,showText }) => {
                     <AntDesign name='plus' size={20} color={colors.white} />
                 </TouchableOpacity>
             </View>
-        </LinearGradient >
+            </DenseCard>
 
     )
 }
@@ -30,12 +31,12 @@ const AddRemoveCard = ({ removeQty, addQty, cartCount,disabled,showText }) => {
 const styles = StyleSheet.create({
     container: {
         alignSelf: 'center',
-        paddingVertical: 7,
-        width: 150,
+        // paddingVertical: 2,
+        width: 120,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 10
+        paddingHorizontal: 5
     },
     plusIcon: {
         backgroundColor: colors.green,

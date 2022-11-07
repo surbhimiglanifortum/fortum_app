@@ -14,6 +14,9 @@ import Button from '../../../Component/Button/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import routes from '../../../Utils/routes'
 import { useEffect } from 'react'
+import CommonView from '../../../Component/CommonView/index'
+import LightBgColor from '../../../assests/svg/LightBgColor'
+import StoreGreenSvg from '../../../assests/svg/StoreGreenSvg'
 
 const MyCart = ({ route }) => {
 
@@ -23,25 +26,32 @@ const MyCart = ({ route }) => {
     const navigation = useNavigation()
     const [cartCount, setCartCount] = useState(0);
     const cartData = useSelector((state) => state.AddToCartReducers.cartItem)
+    const cartDataDetails = useSelector((state) => state.AddToCartReducers)
     let cartlength = cartData?.length
-    console.log(cartCount, '.......................................cart')
-    console.log(cartlength, '............cart-------------')
 
-    const addQty = async () => {
+    const addQty = async (item) => {
         dispatch({
-            type: 'Add_To_Cart',
-            payload: cartCount
+            type: 'ADD_CART_ITEM',
+            payload: { id: item.id, cartItem: item.cartItem }
         })
-        setCartCount(cartCount + 1)
 
     }
 
-    const removeQty = () => {
+    const removeQty = (item) => {
         dispatch({
-            type: 'REMOVE_To_Cart',
-            payload: cartCount
+            type: 'SUB_CART_ITEM',
+            payload: { id: item.id, cartItem: item.cartItem }
+
         })
-        setCartCount(cartCount - 1)
+
+    }
+
+    const getTotalCartValue = () => {
+        let cost = 0
+        cartDataDetails?.cartItem.forEach((item, index) => {
+            cost += item.price * item.cartItem
+        })
+        return cost
     }
 
     useEffect(() => {
@@ -50,57 +60,66 @@ const MyCart = ({ route }) => {
 
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
-            <View style={styles.innerContainer}>
-                <Header showText={'MY Cart'} />
-
-                <View style={styles.topCard}>
-                    <DenseCard>
-                        <View style={styles.denceInnnerCard}>
-                            <View style={styles.cartInner}>
-                                <IconCardLarge Svg={StoreSvg} />
-                                <View style={styles.cartDetailsText}>
-                                    <CommonText showText={'Name'} />
-                                    <CommonText showText={`₹ ${'1400'}`} />
-                                </View>
+        <CommonView>
+            <ScrollView >
+                <View style={styles.innerContainer}>
+                    <Header showText={'MY Cart'} />
+                    <View style={styles.topCard}>
+                        {cartDataDetails?.cartItem.map((item, ind) => {
+                            return (
+                                <DenseCard key={ind} padding={5}>
+                                    <View style={styles.denceInnnerCard}>
+                                        <View style={[styles.cartInner, { width: '50%' }]}>
+                                            <View style={{ width: '48%' }}>
+                                                <DenseCard padding={0} >
+                                                    <IconCardLarge Svg={scheme == 'dark' ? StoreGreenSvg : StoreSvg} />
+                                                </DenseCard>
+                                            </View>
+                                            <View style={[styles.cartDetailsText, { width: '50%' }]}>
+                                                <CommonText showText={item?.name} />
+                                                <CommonText showText={`₹ ${item?.price * item?.cartItem
+                                                    }`} regular customstyles={{}} />
+                                            </View>
+                                        </View>
+                                        <View style={{ width: '45%' }}>
+                                            <AddRemoveCard removeQty={() => removeQty(item)} addQty={() => { addQty(item) }} cartCount={item?.cartItem} disabled={cartCount == 0} showText={cartlength} />
+                                        </View>
+                                    </View>
+                                </DenseCard>
+                            )
+                        })}
+                    </View>
+                    <View style={styles.topCard}>
+                        <CommonText showText={'Order Summary'} customstyles={{ marginLeft: 10 }} />
+                        <DenseCard>
+                            <View style={styles.innerCard}>
+                                <CommonText showText={'Price'} regular />
+                                <CommonText showText={`₹ ${getTotalCartValue()}`} />
                             </View>
-                            <View>
-                                <AddRemoveCard removeQty={removeQty} addQty={addQty} cartCount={cartCount} disabled={cartCount == 1} showText={cartlength} />
+                            <View style={styles.innerCard}>
+                                <CommonText showText={'Cost'} regular />
+                                <CommonText showText={`₹ ${'1200'}`} />
                             </View>
-                        </View>
-                    </DenseCard>
+                            <View style={styles.innerCard}>
+                                <CommonText showText={'Amount of CGST (9%)'} regular />
+                                <CommonText showText={`₹ ${'100'}`} />
+                            </View>
+                            <View style={styles.innerCard}>
+                                <CommonText showText={'Amount of SGST (9%)'} regular />
+                                <CommonText showText={`₹ ${'100'}`} />
+                            </View>
+                            <View style={styles.innerCard}>
+                                <CommonText showText={'Total '} customstyles={{ marginTop: 20 }} />
+                                <CommonText showText={`₹ ${'1400'}`} customstyles={{ marginTop: 20, fontFamily: commonFonts.bold }} />
+                            </View>
+                        </DenseCard>
+                    </View>
                 </View>
-                <View style={styles.topCard}>
-                    <CommonText showText={'Order Summary'} />
-                    <DenseCard>
-                        <View style={styles.innerCard}>
-                            <CommonText showText={'Price'} />
-                            <CommonText showText={`₹ ${'1400'}`} />
-                        </View>
-                        <View style={styles.innerCard}>
-                            <CommonText showText={'Price'} />
-                            <CommonText showText={`₹ ${'1200'}`} />
-                        </View>
-                        <View style={styles.innerCard}>
-                            <CommonText showText={'Amount of CGST (9%)'} />
-                            <CommonText showText={`₹ ${'100'}`} />
-                        </View>
-                        <View style={styles.innerCard}>
-                            <CommonText showText={'Amount of SGST (9%)'} />
-                            <CommonText showText={`₹ ${'100'}`} />
-                        </View>
-                        <View style={styles.innerCard}>
-                            <CommonText showText={'Total '} customstyles={{ marginTop: 20 }} />
-                            <CommonText showText={`₹ ${'1400'}`} customstyles={{ marginTop: 20, fontFamily: commonFonts.bold }} />
-                        </View>
+            </ScrollView>
 
-                    </DenseCard>
-                </View>
-            </View>
-            <View style={styles.bottomBtn}>
-                <Button showText={'Proceed to Pay'} />
-            </View>
-        </SafeAreaView>
+            <Button showText={'Proceed to Pay'} />
+
+        </CommonView>
     )
 }
 
@@ -109,12 +128,10 @@ const styles = StyleSheet.create({
         flex: 1
     },
     innerContainer: {
-        width: '90%',
-        alignSelf: 'center',
-        marginTop: 20
+        marginTop: 20,
     },
     topCard: {
-        marginTop: 25
+        marginVertical: 25,
     },
     innerCard: {
         flexDirection: 'row',
@@ -125,22 +142,22 @@ const styles = StyleSheet.create({
     },
     cartInner: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     cartDetailsText: {
-        marginLeft: 10
+        marginLeft: 5,
+        flexWrap: 'nowrap',
+
     },
     denceInnnerCard: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+
     },
     bottomBtn: {
-        position: 'absolute',
-        bottom: 20,
         alignSelf: 'flex-start',
-        width: '90%',
-        alignSelf: 'center'
+        alignSelf: 'center',
     }
 })
 

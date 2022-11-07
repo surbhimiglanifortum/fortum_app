@@ -14,6 +14,8 @@ import * as Types from '../../../Redux/Types'
 import { getPaymentOption, getAllUnpaid, unpaidPayByJuspay, unpaidPayByWallet } from '../../../Services/Api'
 import RadioBtn from '../../../Component/Button/RadioButton'
 import SnackContext from '../../../Utils/context/SnackbarContext'
+import CommonCard from '../../../Component/Card/CommonCard'
+import DenseCard from '../../../Component/Card/DenseCard'
 
 
 const PayInvoice = ({ route }) => {
@@ -190,21 +192,23 @@ const PayInvoice = ({ route }) => {
     return (
         <CommonView>
             <Header showText={'Pay Invoice'} />
-            <CommonText showText={`Pay ₹ ${route.params?.amount}`} customstyles={styles.heading} />
+            {refreshing && <ActivityIndicator size={'small'} color={colors.black} style={{ position: 'absolute', alignSelf: 'center', backgroundColor: colors.white, padding: 10 }} />}
+            <DenseCard style={styles.wrapper}>
+                <CommonText showText={'Pending Amount'} customstyles={{ flex: 1 }} />
+                <CommonText showText={`₹ ${route.params?.amount}`} />
+            </DenseCard>
             <View>
-                {refreshing && <ActivityIndicator size={'small'} color={colors.black} style={{ position: 'absolute', alignSelf: 'center', backgroundColor: colors.white, padding: 10 }} />}
-
-                <View style={styles.wrapper}>
+                <CommonCard style={styles.wrapper}>
+                    <View style={{ flex: 1 }}>
+                        <CommonText showText={'Prepaid Wallet'} regular />
+                        <CommonText showText={`Balance : ₹ ${walletBalance}`} fontSize={12} regular />
+                    </View>
                     <RadioBtn
                         value="CLOSED_WALLET"
                         status={mode === 'CLOSED_WALLET' ? 'checked' : 'unchecked'}
                         onPress={checkWalletBalance}
                     />
-                    <View style={{ flex: 1 }}>
-                        <CommonText showText={'Prepaid Wallet'} regular />
-                        <CommonText showText={`Balance : ₹ ${walletBalance}`} fontSize={12} regular />
-                    </View>
-                </View>
+                </CommonCard>
 
                 {allowMode.includes('CLOSED_WALLET') &&
                     (
@@ -218,26 +222,26 @@ const PayInvoice = ({ route }) => {
 
                 {
                     allowMode.includes('PAY_AS_U_GO') &&
-                    <View style={styles.wrapper}>
+                    <CommonCard style={styles.wrapper}>
+                        <CommonText showText={'Debit Card / Credit Card / UPI'} regular customstyles={{ flex: 1 }} />
                         <RadioBtn
                             value="PAY_AS_U_GO"
                             status={mode === 'PAY_AS_U_GO' ? 'checked' : 'unchecked'}
                             onPress={payAsYouGoMode}
                         />
-                        <CommonText showText={'Debit Card / Credit Card / UPI'} regular />
-                    </View>
+                    </CommonCard>
                 }
 
                 {
                     !allowMode.includes('PREPAID_CARD') &&
-                    <View style={styles.wrapper}>
+                    <CommonCard style={styles.wrapper}>
+                        <CommonText showText={'Prepaid Card'} regular customstyles={{ flex: 1 }} />
                         <RadioBtn
                             value="PREPAID_CARD"
                             status={mode === 'PREPAID_CARD' ? 'checked' : 'unchecked'}
                             onPress={prepaidCard}
                         />
-                        <CommonText showText={'Prepaid Card'} regular />
-                    </View>
+                    </CommonCard>
                 }
 
                 {
@@ -266,10 +270,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: 15,
         alignItems: 'center'
-    },
-    heading: {
-        textAlign: 'center',
-        marginVertical: 20
     },
     bottomBox: {
         position: 'absolute',

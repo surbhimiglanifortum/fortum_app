@@ -92,8 +92,6 @@ const Login = () => {
     }
   }
 
-
-
   const signupHandler = () => {
     const payload = {}
     if (validatePhone(userInput)) {
@@ -124,7 +122,6 @@ const Login = () => {
             <Textinput on value={userInput} onChange={(e) => setuserInput(e.toLowerCase())} placeholder={'Mobile Number / email id'} />
           </View>
           <Button showText={"Continue"} onPress={continueButtonHandler} onLoading={loading} ></Button>
-
 
           <View style={styles.centerText}>
             <CommonText showText={'Or Sign in with'} fontSize={12} />

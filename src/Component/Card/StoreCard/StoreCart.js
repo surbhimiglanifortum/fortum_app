@@ -28,7 +28,10 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 8,
         borderRadius: 8,
-        elevation: 5
+        elevation: 5,
+       
+        position:'absolute',
+        right:5
     },
     cartNum: { position: 'absolute', backgroundColor: '#f55c7f', right: -10, top: -15, paddingHorizontal: 5, borderRadius: 100, borderWidth: 2, borderColor: colors.white, width: 30, paddingVertical: 4 },
 })
