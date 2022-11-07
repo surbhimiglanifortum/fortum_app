@@ -1,26 +1,15 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import React from 'react'
-import colors from '../../Utils/colors'
-import BackSvg from '../../assests/svg/back'
+import CommonCard from '../Card/CommonCard'
 
-const SmallButton = ({Svg}) => {
+const SmallButton = ({ Svg }) => {
   return (
-    <TouchableOpacity style={styles.container}>
-      <Svg />
-    </TouchableOpacity>
+    <CommonCard>
+      <TouchableOpacity>
+        <Svg />
+      </TouchableOpacity>
+    </CommonCard>
   )
 }
-
-const styles =StyleSheet.create({
-  container:{
-    backgroundColor:colors.white,
-    alignSelf:'flex-start',
-    paddingVertical:10,
-    paddingHorizontal:15,
-    borderRadius:8,
-    elevation:10,
-    marginLeft:10
-  }  
-})
 
 export default SmallButton

@@ -16,7 +16,6 @@ export default function index({ children, style }) {
                 borderRadius: 12,
                 backgroundColor: colors.backgroundLight,
                 margin: 10,
-                marginVertical: 10,
                 padding: 15,
             }}
         >

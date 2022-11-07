@@ -2,6 +2,7 @@ import { Auth } from 'aws-amplify';
 import appconfig from '../../Utils/appconfig';
 import axios from '../BaseUrl'
 import { generateSHA } from '../../Utils/HelperCommonFunctions'
+
 export const getUserDetails = async () => {
     const result = await Auth.currentAuthenticatedUser();
     if (result.signInUserSession) {
@@ -54,7 +55,6 @@ export const walletHistory = async (username, startDate, endDated) => {
     })
 }
 
-
 export const getFavouriteCHarger = async (username) => {
     return await axios.get('/api_app/favouriteCharger/' + username);
 
@@ -69,7 +69,6 @@ export const userGstList = async () => {
     return await axios.get("/api_app/gst_state_map/all-gst-state")
 }
 
-
 export const registerNoPhone = async (username, sub) => {
     return await axios.post(`/api_app/users/registernophone/${username}/${sub}`)
 }
@@ -77,6 +76,7 @@ export const registerNoPhone = async (username, sub) => {
 export const updateUserPhone = async (username, payload) => {
     return await axios.post(`/api_app/users/gist/${username}/phone`, payload)
 }
+
 export const refundPayAsUGo = async (username, session_id) => {
     return await axios.get("/api_app/sessions/refund/" + username + '/pay_as_you_go/' + session_id)
 }
@@ -88,7 +88,6 @@ export const refundCloseLoopWallet = async (username, session_id) => {
 export const getStoreDataService = async (username) => {
     return await axios.get('/api_app/store/' + username);
 };
-
 
 export const sendOTP = async (phone) => {
     const dateIso = new Date().toISOString()
@@ -136,6 +135,11 @@ export const unpaidPayByWallet = async (session_id) => {
 export const getSessionDetails = async (session_id) => {
     return await axios.get('/api_app/sessions/session_details/' + session_id);
 }
+
 export const getEvModalService = async () => {
     return await axios.get(appconfig.BASE_URL + '/api_app/ev');
-};
+}
+
+export const getPinelabHistroy = async (payload) => {
+    return await axios.post('/api_app/pinelabs/wallet/history', payload);
+}

@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
 import colors from '../../../../Utils/colors'
@@ -11,10 +11,21 @@ import Card from '../../../../Component/Card/Card'
 import WalletSvg from '../../../../assests/svg/wallet'
 import Button from '../../../../Component/Button/Button'
 import IconCard from '../../../../Component/Card/IconCard'
+import CommonView from '../../../../Component/CommonView'
+import DenseCard from '../../../../Component/Card/DenseCard'
+import WalletLight from '../../../../assests/svg/Wallet_light'
+import { useSelector } from 'react-redux'
+import { getPinelabHistroy } from '../../../../Services/Api'
+import PinelabPassbookFilter from '../../../../Component/Modal/PinelabPassbookFilter'
 
 const Passbook = () => {
     const navigation = useNavigation()
     const [selectedTab, setSelectedTab] = useState('all')
+    const [refreshing, setRefreshing] = useState(false)
+    const [techStart, setTechStart] = useState('')
+    const [techEnd, setTechEnd] = useState('')
+    const [noTrans, setNoTrans] = useState('')
+    const [data, setData] = useState([])
 
     const allBtnHandler = () => {
         setSelectedTab('all')
@@ -26,59 +37,80 @@ const Passbook = () => {
         setSelectedTab('receive')
     }
 
+    let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
+    useEffect(() => {
+        getWalletHistory()
+    }, [])
+
+    const getWalletHistory = async () => {
+        setRefreshing(true)
+        const payload = {
+            username: mUserDetails?.username,
+            TransactionFilter: {
+                BeginDate: techStart,
+                EndDate: techEnd,
+                NoOfTransactions: noTrans
+            }
+        }
+        try {
+            const result = await getPinelabHistroy(payload)
+            console.log("Pinelab Wallet History Response", result.data)
+            setData(result.data)
+            setRefreshing(false)
+        } catch (error) {
+            console.log("Pinelab Wallet History Error", error)
+            setRefreshing(false)
+        }
+    }
 
     return (
-        <View style={styles.conatiner}>
-            <View style={styles.innerContainer}>
-                <View style={styles.header}>
-                    <View style={styles.innerHeader}>
-                        <Header />
-                        <CommonText showText={'Passbook'} fontSize={18} />
-                    </View>
-                    <SmallButton Svg={FilterSvg} />
+        <CommonView>
+            <View style={styles.innerHeader}>
+                <View style={{ flex: 1 }}>
+                    <Header showText={'Passbook'} />
                 </View>
-                <View style={styles.balanceCon}>
-                    <View style={styles.innerHeader}>
-                    <IconCard Svg={WalletSvg} />
-                    <CommonText showText={'Balance'} margin={10} fontSize={18} />
-                    </View>
-                    <CommonText showText={'₹1400'} />
-                </View>
-                <View style={styles.tabContainer}>
-                    <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'all' ? colors.white : colors.greenBackground }]}>
-                        <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'sent' ? colors.white : colors.greenBackground }]}>
-                        <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'receive' ? colors.white : colors.greenBackground }]}>
-                        <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Receive</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ height: 500 ,marginTop:15}}>
-                    <ScrollView>
-                        {selectedTab == 'all' && <Card tabName={"all"} Svg={WalletSvg} />}
-                        {selectedTab == 'sent' && <Card tabName={'sent'} Svg={WalletSvg} />}
-                        {selectedTab == 'receive' && <Card tabName={'receive'} Svg={WalletSvg} />}
-                    </ScrollView>
-                </View>
-                <Button showText={'Download Passbook'} />
-
-
+                <SmallButton Svg={FilterSvg} />
             </View>
-        </View>
+
+            <DenseCard>
+                <View style={styles.innerHeader}>
+                    <View style={[styles.innerHeader, { flex: 1 }]}>
+                        <IconCard Svg={WalletLight} />
+                        <CommonText showText={'Balance'} fontSize={14} regular customstyles={{ marginLeft: 10 }} />
+                    </View>
+                    <CommonText showText={'₹1400'} fontSize={14} />
+                </View>
+            </DenseCard>
+
+            <View style={styles.tabContainer}>
+                <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'all' ? colors.white : colors.greenBackground }]}>
+                    <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'sent' ? colors.white : colors.greenBackground }]}>
+                    <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'receive' ? colors.white : colors.greenBackground }]}>
+                    <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Receive</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View style={{ height: 500, marginTop: 15 }}>
+                <ScrollView>
+                    {selectedTab == 'all' && <Card tabName={"all"} Svg={WalletSvg} />}
+
+                    {selectedTab == 'sent' && <Card tabName={'sent'} Svg={WalletSvg} />}
+
+                    {selectedTab == 'receive' && <Card tabName={'receive'} Svg={WalletSvg} />}
+                </ScrollView>
+                <PinelabPassbookFilter isVisible={true} bgStyle={'rgba(0,0,0,0.5)'} />
+            </View>
+            <Button showText={'Download Passbook'} />
+        </CommonView>
     )
 }
 
 const styles = StyleSheet.create({
-    conatiner: {
-        flex: 1,
-    },
-    innerContainer: {
-        width: '90%',
-        alignSelf: 'center',
-        marginVertical: scale(10)
-    },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -117,18 +149,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     innerHeader: {
+        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center'
     },
-    balanceCon:{
-        flexDirection:'row',
-        alignItems:'center',
-        justifyContent:'space-between',
-        backgroundColor:colors.white,
-        paddingVertical:12,
-        paddingHorizontal:10,
-        borderRadius:8
-    }
 })
 
 
