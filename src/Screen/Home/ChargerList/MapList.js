@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useColorScheme } from 'react-native'
 import React, { useEffect, useState, useContext } from 'react'
 import DetailsCard from '../../../Component/Card/DetailsCard'
 import FilterSvg from '../../../assests/svg/FilterSvg'
@@ -79,9 +79,9 @@ const styles = StyleSheet.create({
     // flex:1,
   },
   innerContainer: {
-    width: '90%',
+    // width: '90%',
     alignSelf: 'center',
-    marginTop: 20
+    // marginTop: 20
   },
   filter: {
     marginRight: 60,
