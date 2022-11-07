@@ -46,13 +46,33 @@ const PayInvoice = ({ route }) => {
 
     useEffect(() => {
         userDetails()
-        paymentOptions()
     }, [isFocused])
 
     useEffect(() => {
         paymentOptions()
     }, [])
 
+    useEffect(() => {
+        setRefreshing(true)
+        getUserDetails().then((res) => {
+            if (mode === 'CLOSED_WALLET') {
+                if (res.data?.balance < route.params?.amount) {
+                    setMsg("Your wallet balance is low. Please select other option or add money in your wallet.")
+                    setWalletBalance(res?.data?.balance)
+                    setWallet(false)
+                    setRefreshing(false)
+                } else {
+                    setWalletBalance(res?.data?.balance)
+                    setMsg('')
+                    setWallet(true)
+                    setRefreshing(false)
+                }
+            }
+        }).catch((error) => {
+            console.log("Error in Updating Balance", error)
+        })
+
+    }, [isFocused])
 
     const checkWalletBalance = () => {
         setMode('CLOSED_WALLET')

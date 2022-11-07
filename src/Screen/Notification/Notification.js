@@ -13,7 +13,7 @@ const Notification = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.innerContainer}>
-        <Header showText={'Notifications'} />
+        <Header showText={'Notifications'} backButton={false}/>
 
         {/* Card Container today */}
         <View style={styles.cardContainer}>
