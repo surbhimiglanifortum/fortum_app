@@ -31,6 +31,7 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                 ref={mapRef}
                 provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 toolbarEnabled={false}
+                
                 onRegionChangeComplete={(r) => {
                     const getBoundingBox = (region) => ([
                         region.longitude - region.longitudeDelta / 2, // westLng - min lng
