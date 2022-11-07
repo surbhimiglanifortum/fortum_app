@@ -9,6 +9,10 @@ import Button from '../../../Component/Button/Button'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import IconCardLarge from '../../../Component/Card/IconCardLarge'
 import routes from '../../../Utils/routes'
+import CommonCard from '../../../Component/Card/CommonCard'
+import WalletLight from '../../../assests/svg/Wallet_light'
+import RupeeLight from '../../../assests/svg/Ruppe_light'
+import CardLight from '../../../assests/svg/Card_light'
 
 const PaymentMethod = () => {
 
@@ -19,7 +23,7 @@ const PaymentMethod = () => {
   }
   const walletCardHandler = (tabName) => {
     console.log(tabName, '.................tab')
-    navigation.navigate(routes.dashboard, {tabName})
+    navigation.navigate(routes.dashboard, { tabName })
   }
   const [tabName, setTabName] = useState('wallet')
   return (
@@ -28,49 +32,44 @@ const PaymentMethod = () => {
         <View style={styles.innerContainer}>
           {/* <Header /> */}
           <Header showText={'Payment Method'} />
-          <View style={styles.headerText}>
-            <CommonText showText={'Tell us how you want to pay and then you are ready to start charging'} fontSize={15} />
-          </View>
-          {/* Pay As you go card */}
-          <TouchableOpacity style={styles.card}>
-            <View style={styles.leftContainer}>
-              <IconCardLarge Svg={WalletSvg} />
-              <View style={styles.middleContainer}>
-                <CommonText showText={'Pay As You Go'} fontSize={15} />
 
-              </View>
+          <CommonText showText={'Tell us how you want to pay and then you are ready to start charging'} fontSize={14} regular customstyles={{ marginVertical: 20 }} />
+
+          {/* Pay As you go card */}
+          <CommonCard style={styles.card}>
+            <View style={styles.card}>
+              <IconCardLarge Svg={RupeeLight} />
+              <CommonText showText={'Pay As You Go'} fontSize={15} />
             </View>
             <AntDesign name='right' color={colors.black} size={20} />
-          </TouchableOpacity>
+          </CommonCard>
 
           {/* Fortum charge card */}
-          <TouchableOpacity style={styles.card} onPress={fortumChargeCardHandler}>
-            <View style={styles.leftContainer}>
-              <IconCardLarge Svg={WalletSvg} />
+          <CommonCard style={styles.card} onPress={fortumChargeCardHandler}>
+            <View style={styles.card}>
+              <IconCardLarge Svg={CardLight} />
               <View style={styles.middleContainer}>
                 <CommonText showText={'Fortum Charge & Drive Card'} fontSize={15} />
                 <CommonText showText={'Activate your prepaid card'} fontSize={12} />
               </View>
             </View>
             <AntDesign name='right' color={colors.black} size={20} />
-          </TouchableOpacity>
+          </CommonCard>
 
           {/* Wallet */}
-          <TouchableOpacity style={styles.card} onPress={() => { walletCardHandler(tabName) }}>
-            <View style={styles.leftContainer}>
-              <IconCardLarge Svg={WalletSvg} />
+          <CommonCard style={styles.card} onPress={() => { walletCardHandler(tabName) }}>
+            <View style={styles.card}>
+              <IconCardLarge Svg={WalletLight} />
               <View style={styles.middleContainer}>
                 <CommonText showText={'Wallet'} fontSize={15} />
                 <CommonText showText={'Balance : ₹1400 '} fontSize={15} />
               </View>
             </View>
             <AntDesign name='right' color={colors.black} size={20} />
-          </TouchableOpacity>
-
-
-
+          </CommonCard>
         </View>
       </ScrollView>
+
       <View style={styles.btnContainer}>
         <Button showText={'Add Payment Method'} />
       </View>
@@ -99,24 +98,12 @@ const styles = StyleSheet.create({
   btnContainer: {
     paddingVertical: 15,
     paddingHorizontal: 15
-  }, card: {
-    paddingVertical: 15,
-    paddingHorizontal: 10,
+  },
+  card: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: 5,
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.05,
-    elevation: 4,
-    marginVertical: 5,
-    backgroundColor: '#FFF',
-    marginVertical: 10
   },
   leftContainer: { flexDirection: 'row', alignItems: 'center' },
   middleContainer: { marginLeft: 15 },
