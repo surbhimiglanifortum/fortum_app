@@ -23,7 +23,6 @@ const TaxInvoice = ({ route }) => {
 
     const [isPaid, setPaid] = useState(paramData.item?.paid)
 
-
     const handleButtonClick = () => {
         navigation.navigate(routes.PayInvoice, {
             amount: paramData?.item?.order?.amount / 100
@@ -32,8 +31,8 @@ const TaxInvoice = ({ route }) => {
 
     const sessionDetails = async () => {
         const result = await getSessionDetails(paramData?.item?.id)
-        if (result.data)
-            setPaid(result.data?.paid)
+        if (result.data?.data)
+            setPaid(result.data.data?.paid)
         else
             console.log('Something went wrong.')
     }
