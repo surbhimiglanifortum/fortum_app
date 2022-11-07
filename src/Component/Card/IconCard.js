@@ -11,7 +11,7 @@ const IconCard = ({ Svg, backgroundColor }) => {
 }
 
 const styles = StyleSheet.create({
-  icon: { paddingVertical: 8, paddingHorizontal: 8, borderRadius: 6, },
+
 
 })
 
