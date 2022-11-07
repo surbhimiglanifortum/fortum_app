@@ -235,14 +235,14 @@ const styles = StyleSheet.create({
   topTabInner: {
     backgroundColor: colors.greenBackground,
     paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 6
   },
   tabContainer: {
-    width: 70,
+    width: 90,
     alignItems: 'center'
   },
   iconContainer: {
