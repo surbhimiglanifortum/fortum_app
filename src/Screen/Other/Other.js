@@ -19,9 +19,10 @@ import routes from '../../Utils/routes'
 import { useSelector } from 'react-redux'
 import { Auth } from 'aws-amplify'
 import CommonView from '../../Component/CommonView'
-const Other = () => {
+import BackBtnTab from '../../Component/Button/BackBtnTab'
+const Other = ({ setSelectedTab }) => {
   const userDetailsData = useSelector((state) => state.userTypeReducer)
-  
+
   const scheme = useColorScheme()
   const navigation = useNavigation()
   const EditProfileHandler = () => {
@@ -62,20 +63,23 @@ const Other = () => {
   const storeHandler = () => {
     navigation.navigate(routes.Store)
   }
+  const backhandler = () => {
+    setSelectedTab('home')
+  }
 
   return (
-    <CommonView style={styles.conatainer}>
+    <CommonView >
       <ScrollView>
         <View style={styles.innerContainer}>
-          <Header showText={'More Settings'} />
+          <BackBtnTab onPress={backhandler} showText={"More Settings"} />
           <View style={styles.profileContainer}>
-            <TouchableOpacity style={styles.imgContainer}>
+            <TouchableOpacity style={[styles.imgContainer, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, }]}>
               <Image />
             </TouchableOpacity>
             <View style={styles.leftConatainer}>
               <CommonText showText={`${userDetailsData.userDetails.first_name} ${userDetailsData.userDetails.last_name
                 }`} fontSize={20} />
-              <TouchableOpacity style={styles.editButton} onPress={EditProfileHandler} >
+              <TouchableOpacity style={[styles.editButton, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, }]} onPress={EditProfileHandler} >
                 <CommonText showText={'Edit Profile'} fontSize={18} />
               </TouchableOpacity>
             </View>
@@ -119,11 +123,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 10,
     borderRadius: 15,
-    backgroundColor: colors.white,
+
     borderColor: colors.green,
     marginTop: 10,
     elevation: 5
-  }
+  },
+  header: { flexDirection: 'row', alignItems: 'center', width: '65%', justifyContent: 'space-between' },
 })
 
 export default Other

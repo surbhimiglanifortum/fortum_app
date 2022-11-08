@@ -17,8 +17,9 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import { useDispatch, useSelector } from 'react-redux'
 import NoData from '../../Component/NoDataFound/NoData'
 import Loader from '../../Component/Loader'
+import BackBtnTab from '../../Component/Button/BackBtnTab'
 
-const Wallet = () => {
+const Wallet = ({setSelectedTab}) => {
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const dispatch = useDispatch()
@@ -120,10 +121,16 @@ const Wallet = () => {
     return result
   })
 
+  const backhandler = () => {
+    setSelectedTab('home')
+  }
+
+
   return (
     <SafeAreaView style={styles.container}>
+      <BackBtnTab onPress={backhandler} showText={"Wallet"} />
       <View style={styles.innerContainer}>
-        <Header showText={'Wallet'} backButton={false} />
+
         {/* card */}
         <WalletCard onPress={RechargeButtonHandler} title={`₹ ${balance}`} subTitle={'Your Prepaid Balance'} />
         <View style={styles.text}>
@@ -179,7 +186,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   text: {
-    marginVertical: 15
+    marginVertical: 15,
+    paddingHorizontal:12
   },
   card: {
     flexDirection: 'row',
