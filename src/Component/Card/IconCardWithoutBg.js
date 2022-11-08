@@ -11,7 +11,7 @@ const IconCardWithoutBg = ({Svg,backgroundColor}) => {
 }
 
 const styles =StyleSheet.create({
-    icon:{paddingVertical:5,paddingHorizontal:8,backgroundColor:colors.greenBackground,borderRadius:5},
+    
 
 })
 

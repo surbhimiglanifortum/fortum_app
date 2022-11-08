@@ -4,6 +4,9 @@ import MapView from "react-native-map-clustering";
 import { Marker } from 'react-native-maps';
 import { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import AvailMarker from '../../../assests/svg/AvailMarker'
+import DarkMap from '../../../Utils/DarkMapView.json'
+
+
 export default function index({ data, locationLoading, isLoading, chargingBtnHandler, location }) {
     const [visibleRegion, setVisibleRegion] = useState([0, 0, 0, 0])
 
@@ -31,7 +34,7 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                 ref={mapRef}
                 provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 toolbarEnabled={false}
-                
+                // customMapStyle={dark}
                 onRegionChangeComplete={(r) => {
                     const getBoundingBox = (region) => ([
                         region.longitude - region.longitudeDelta / 2, // westLng - min lng
