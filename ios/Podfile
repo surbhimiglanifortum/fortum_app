@@ -38,6 +38,13 @@ target 'FortumApp' do
       # necessary for Mac Catalyst builds
       :mac_catalyst_enabled => false
     )
+   
+      fuse_path = "./Pods/HyperSDK/Fuse.rb"
+      clean_assets = false # Pass true to re-download all the assets
+      if File.exist?(fuse_path)
+        if system("ruby", fuse_path.to_s, clean_assets.to_s)
+        end
+      end
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 end
