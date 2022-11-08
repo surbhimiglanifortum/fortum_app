@@ -3,11 +3,11 @@ import React from 'react'
 import BackButton from '../Button/BackButton'
 import CommonText from '../Text/CommonText'
 
-const Header = ({ showText, backButton = true, style }) => {
+const Header = ({ showText, backButton = true, style ,onPress}) => {
     const scheme = useColorScheme()
     return (
         <View style={[styles.header]}>
-            {backButton && <BackButton />}
+            {backButton && <BackButton onPress={onPress} />}
             <CommonText showText={showText} fontSize={16} bold customstyles={[styles.headerText, {
                 marginLeft: backButton ?
                     -25 : 0

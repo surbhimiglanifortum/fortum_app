@@ -14,9 +14,10 @@ import ChargerLight from '../../assests/svg/Charger_light'
 import CommonView from '../../Component/CommonView'
 import Header from '../../Component/Header/Header'
 import Loader from '../../Component/Loader'
+import BackBtnTab from '../../Component/Button/BackBtnTab'
 
 
-const Charging = () => {
+const Charging = ({setSelectedTabs}) => {
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
     const navigation = useNavigation()
@@ -56,12 +57,16 @@ const Charging = () => {
         return res.data
     })
 
+    const backhandler = () => {
+        setSelectedTabs('home')
+      }
+    
+
     return (
         <CommonView>
-            {/* <View style={styles.header}>
-                <CommonText showText={'Charging'} fontSize={18} />
-            </View> */}
-            <Header showText={'Charging'} backButton={false} />
+        <BackBtnTab onPress={backhandler} showText={"Charging"} />
+        
+           
             <View style={styles.tabContainer}>
                 <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'ongoing' ? colors.white : colors.greenBackground }]}>
                     <CommonText customstyles={[{ color: selectedTab == 'ongoing' ? colors.black : colors.white }]} showText={'Ongoing'} />

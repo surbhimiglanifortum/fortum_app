@@ -4,7 +4,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import CommonText from '../../Text/CommonText'
 import colors from '../../../Utils/colors'
 import { useSelector } from 'react-redux'
-import CommonView from '../../CommonView/index'
+import CommonCard from '../../Card/CommonCard/index'
 
 const StoreCart = ({ onPress }) => {
 
@@ -13,11 +13,15 @@ const StoreCart = ({ onPress }) => {
     let cartlength = cartData?.length
 
     return (
+        
         <TouchableOpacity style={[styles.cartCon, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, }]} onPress={onPress}>
-            <AntDesign name='shoppingcart' color={colors.black} size={25} />
+            <CommonCard>       
+                     <AntDesign name='shoppingcart' color={scheme=='dark'?colors.white:colors.black} size={25} />
             {<View style={styles.cartNum}>
                 <CommonText showText={cartlength} fontSize={12} customstyles={{ color: colors.white, textAlign: 'center' }} />
             </View>}
+            </CommonCard>
+
         </TouchableOpacity>
     )
 }
@@ -26,10 +30,8 @@ const styles = StyleSheet.create({
     cartCon: {
         backgroundColor: colors.white,
         paddingVertical: 8,
-        paddingHorizontal: 8,
+        paddingHorizontal: 0,
         borderRadius: 8,
-        elevation: 5,
-       
         position:'absolute',
         right:5
     },

@@ -47,7 +47,7 @@ const Dashboard = ({ tabName, navigation }) => {
       const result = await Auth.currentAuthenticatedUser();
       console.log("resul", result)
       if (result?.signInUserSession) {
-        if ( true || result.attributes.phone_number &&  result.attributes.phone_number != '') {
+        if (true || result.attributes.phone_number && result.attributes.phone_number != '') {
           setSelectedTab(tab)
         } else {
           navigation.navigate(routes.MobileInput)
@@ -76,18 +76,23 @@ const Dashboard = ({ tabName, navigation }) => {
         <View style={styles.renderComponent}>
           <View style={{ flex: 1 }}>
             {selectedTab == 'home' && <Home />}
-            {selectedTab == 'wallet' && <Wallet />}
-            {selectedTab == 'charging' && <Charging />}
-            {selectedTab == 'notification' && <Notification />}
-            {selectedTab == 'other' && <Other />}
+            {selectedTab == 'wallet' && <Wallet  setSelectedTab={setSelectedTab}/>}
+            {selectedTab == 'charging' && <Charging setSelectedTabs={setSelectedTab} />}
+            {selectedTab == 'notification' && <Notification setSelectedTab={setSelectedTab} />}
+            {selectedTab == 'other' && <Other  setSelectedTab={setSelectedTab} />}
           </View>
         </View>
         <View style={[styles.tabContainer, { backgroundColor: colors.greenBackground }]}>
+          
+          
+          {/* <DenseCard> */}
+            <TouchableOpacity onPress={homeButtonHandler} style={[styles.tabButton, selectedTab == 'home' ? styles.activeTab : null]}>
+              <HomeSvg color={colors.white} />
+              {selectedTab == 'home' && <CommonText showText={'Home'} margin={6} customstyles={styles.tabText} />}
+            </TouchableOpacity>
+          {/* </DenseCard> */}
 
-          <TouchableOpacity onPress={homeButtonHandler} style={[styles.tabButton, selectedTab == 'home' ? styles.activeTab : null]}>
-            <HomeSvg color={colors.white} />
-            {selectedTab == 'home' && <CommonText showText={'Home'} margin={6} customstyles={styles.tabText} />}
-          </TouchableOpacity>
+
           {/* </Shadow> */}
           <TouchableOpacity onPress={walletButtonHandler} style={[styles.tabButton, selectedTab == 'wallet' ? styles.activeTab : null]}>
             <WalletSvg color={colors.white} />
