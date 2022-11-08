@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme,FlatList } from 'react-native'
 import colors from '../../Utils/colors';
 import MapList from './ChargerList/MapList';
 import IconCardWithoutBg from '../../Component/Card/IconCardWithoutBg';
@@ -79,6 +79,7 @@ export default Home = () => {
     getLocationAndAnimate()
   }
   const chargingBtnHandler = () => {
+  
     setSelectedCharger(true)
   }
   const chargingCardHandler = () => {
@@ -132,6 +133,7 @@ export default Home = () => {
       Geolocation.getCurrentPosition(info => {
 
         setLocation(info)
+        setLocationLoading(false)
       }, error => {
         console.log(error)
       })
@@ -158,7 +160,6 @@ export default Home = () => {
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
-
           {selectedTab != 'List' ?
             <DenseCard paddingLeft={40} paddingRight={40} padding={7} marginVertical={2} margin={2}>
               <TouchableOpacity onPress={listButtonHandler} >
@@ -171,15 +172,25 @@ export default Home = () => {
             </TouchableOpacity >
           }
 
-          {selectedTab == 'List' ? <DenseCard paddingLeft={40} paddingRight={40} padding={7}marginVertical={2} margin={2}>
+          {selectedTab == 'List' ? <DenseCard paddingLeft={40} paddingRight={40} padding={7} marginVertical={2} margin={2}>
             <TouchableOpacity onPress={listButtonHandler} >
-              <CommonText showText={'List'} fontSize={16} customstyles={{ color: scheme == 'dark' ? selectedTab == 'List' ? colors.green : colors.white : selectedTab == 'List' ? colors.mapTitle : colors.white }}/>
+              <CommonText showText={'List'} fontSize={16} customstyles={{ color: scheme == 'dark' ? selectedTab == 'List' ? colors.green : colors.white : selectedTab == 'List' ? colors.mapTitle : colors.white }} />
             </TouchableOpacity>
           </DenseCard> : <TouchableOpacity onPress={listButtonHandler} style={[styles.tabContainer]}>
             <CommonText showText={'List'} fontSize={16} customstyles={{ color: scheme == 'dark' ? selectedTab == 'List' ? colors.green : colors.white : selectedTab == 'List' ? colors.mapTitle : colors.white }} />
           </TouchableOpacity>
           }
         </View>
+
+        {selectedTab == 'List' && <TouchableOpacity onPress={filterButtonHandler}
+          style={{ position: 'absolute', right: -70 }}>
+          <CommonCard>
+            <FilterSvg fill={scheme == 'dark' ? colors.white:colors.black} />
+          </CommonCard>
+        </TouchableOpacity>}
+
+
+
       </View>
       {/* Fillter ,favrouite,scan ,search Button  */}
       <View style={styles.iconContainer}>
@@ -217,21 +228,34 @@ export default Home = () => {
         </View>}
 
         {selectedTab != 'List' && selectedCharger &&
-          <View>
-            <ScrollView horizontal>
-              {
-                data.map((item, ind) => {
-                  return (
-                    <View key={ind} style={{
-                      paddingHorizontal: 8
-                    }} >
-                      <DetailsCard chargerType={2} item={item} onPress={chargingCardHandler} />
-                    </View>
-                  )
-                })
-              }
-            </ScrollView>
-          </View>
+         <FlatList
+         horizontal={true}
+         data={data || []}
+         keyExtractor={item => item.id}
+         renderItem={({ item }) => {
+           return (
+             <DetailsCard chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
+           )
+         }
+         }
+       />
+
+
+          // <View>
+          //   <ScrollView horizontal>
+          //     {
+          //       data.map((item, ind) => {
+          //         return (
+          //           <View key={ind} style={{
+          //             paddingHorizontal: 8
+          //           }} >
+          //             <DetailsCard chargerType={2} item={item} onPress={chargingCardHandler} />
+          //           </View>
+          //         )
+          //       })
+          //     }
+          //   </ScrollView>
+          // </View>
         }
       </View>
       {/* Render List Component */}
@@ -258,8 +282,8 @@ const styles = StyleSheet.create({
   },
   topTabInner: {
     backgroundColor: colors.greenBackground,
-    paddingVertical: 5,
-    paddingHorizontal: 5,
+    paddingVertical: 3,
+    paddingHorizontal: 3,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -267,9 +291,9 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     // padding:10,
-    paddingLeft:40,
-    paddingRight:40,
-  
+    paddingLeft: 40,
+    paddingRight: 40,
+
     alignItems: 'center'
   },
   iconContainer: {

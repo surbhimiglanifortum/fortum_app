@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet,useColorScheme } from 'react-native'
 import React, { useState, useRef, useEffect } from 'react'
 import MapView from "react-native-map-clustering";
 import { Marker } from 'react-native-maps';
 import { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import AvailMarker from '../../../assests/svg/AvailMarker'
 import DarkMap from '../../../Utils/DarkMapView.json'
-
+import LighMapView from '../../../Utils/LighMapView.json'
 
 export default function index({ data, locationLoading, isLoading, chargingBtnHandler, location }) {
     const [visibleRegion, setVisibleRegion] = useState([0, 0, 0, 0])
@@ -13,6 +13,7 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
 
     const mapRef = useRef();
 
+    const scheme = useColorScheme()
 
     useEffect(() => {
         if (location?.coords) {
@@ -34,7 +35,7 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                 ref={mapRef}
                 provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 toolbarEnabled={false}
-                // customMapStyle={dark}
+                customMapStyle={scheme=='dark'?DarkMap:LighMapView}
                 onRegionChangeComplete={(r) => {
                     const getBoundingBox = (region) => ([
                         region.longitude - region.longitudeDelta / 2, // westLng - min lng
@@ -46,6 +47,7 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                 }}
                 showsMyLocationButton={false}
                 onMarkerPress={(e) => {
+                                       
                     if (locationLoading) {
                         return false;
                     }
@@ -59,13 +61,10 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                         }
                     })
                     if (marker) {
-                        // setselectedMarker(marker)
+                       
                         selectedMarker = marker
                         chargingBtnHandler()
-                        // if (location.coords) {
-
-                        //   console.log("Here One")
-                        // }
+                       
                     }
                 }}
                 showsCompass={false}
