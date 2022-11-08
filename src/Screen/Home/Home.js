@@ -240,22 +240,6 @@ export default Home = () => {
          }
        />
 
-
-          // <View>
-          //   <ScrollView horizontal>
-          //     {
-          //       data.map((item, ind) => {
-          //         return (
-          //           <View key={ind} style={{
-          //             paddingHorizontal: 8
-          //           }} >
-          //             <DetailsCard chargerType={2} item={item} onPress={chargingCardHandler} />
-          //           </View>
-          //         )
-          //       })
-          //     }
-          //   </ScrollView>
-          // </View>
         }
       </View>
       {/* Render List Component */}
