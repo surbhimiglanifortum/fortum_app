@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, useColorScheme, ScrollView } from 'react-native'
 import React from 'react'
-import Header from '../../Component/Header/Header'
 import SettingCard from '../../Component/Card/SettingCard'
 import ElectricCarSvg from '../../assests/svg/ElectricCarSvg'
 import StoreSvg from '../../assests/svg/StoreSvg'
@@ -20,17 +19,23 @@ import { useSelector } from 'react-redux'
 import { Auth } from 'aws-amplify'
 import CommonView from '../../Component/CommonView'
 import BackBtnTab from '../../Component/Button/BackBtnTab'
-const Other = ({ setSelectedTab }) => {
-  const userDetailsData = useSelector((state) => state.userTypeReducer)
+import ProfileSvg from '../../assests/svg/ProfileSvg'
+import YouSavedModal from '../../Component/Modal/YouSavedModal'
+import RatingModal from '../../Component/Modal/RatingModal'
 
+const Other = ({ setSelectedTab }) => {
+
+  const userDetailsData = useSelector((state) => state.userTypeReducer)
   const scheme = useColorScheme()
   const navigation = useNavigation()
   const EditProfileHandler = () => {
     navigation.navigate(routes.Profile, { userDetailsData: userDetailsData })
   }
+
   const evModalHandler = () => {
     navigation.navigate(routes.EvModal)
   }
+
   const logoutHandler = async () => {
     await Auth.signOut();
     navigation.reset({
@@ -69,12 +74,12 @@ const Other = ({ setSelectedTab }) => {
 
   return (
     <CommonView >
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.innerContainer}>
           <BackBtnTab onPress={backhandler} showText={"More Settings"} />
           <View style={styles.profileContainer}>
             <TouchableOpacity style={[styles.imgContainer, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, }]}>
-              <Image />
+              <ProfileSvg fill={scheme == 'dark' ? colors.darkIcon : colors.lightIcon} />
             </TouchableOpacity>
             <View style={styles.leftConatainer}>
               <CommonText showText={`${userDetailsData.userDetails.first_name} ${userDetailsData.userDetails.last_name
@@ -98,6 +103,8 @@ const Other = ({ setSelectedTab }) => {
           </View>
         </View>
       </ScrollView>
+      {/* <YouSavedModal />
+      <RatingModal /> */}
     </CommonView>
   )
 }
@@ -106,14 +113,18 @@ const styles = StyleSheet.create({
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 50
+    marginVertical: 30,
+    paddingHorizontal: 12
   },
   imgContainer: {
-    borderWidth: 1,
     width: 100,
     height: 100,
     borderRadius: 100,
-    backgroundColor: colors.white
+    borderWidth: 2,
+    borderColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center'
+
   },
   leftConatainer: {
     marginLeft: 10

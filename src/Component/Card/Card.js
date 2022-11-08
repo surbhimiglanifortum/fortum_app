@@ -6,6 +6,7 @@ import IconCardLarge from './IconCardLarge'
 import { getFormatedDate } from '../../Services/CommonServices'
 import CommonText from '../Text/CommonText'
 import CommonCard from '../../Component/Card/CommonCard/index'
+import CommonIconCard from './CommonIconCard/CommonIconCard'
 
 const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard }) => {
 
@@ -13,7 +14,7 @@ const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard }) => {
         <CommonCard>
             <TouchableOpacity style={styles.card} onPress={navigationHandler} disabled={disabledCard}>
                 <View style={styles.leftContainer}>
-                    <IconCardLarge Svg={Svg} />
+                    <CommonIconCard Svg={Svg} />
                     <View style={styles.middleContainer}>
                         <CommonText showText={dataItem?.item?.location?.name} fontSize={14} />
                         <View style={styles.leftContainer}>

@@ -6,6 +6,8 @@ import StoreGreenSvg from '../../assests/svg/StoreGreenSvg'
 import BackBtnTab from '../../Component/Button/BackBtnTab'
 import CommonView from '../../Component/CommonView/index'
 import CommonCard from '../../Component/Card/CommonCard/index'
+import CommonIconCard from '../../Component/Card/CommonIconCard/CommonIconCard'
+import StoreSvg from '../../assests/svg/StoreSvg'
 
 const Notification = ({ setSelectedTab }) => {
 
@@ -22,8 +24,8 @@ const Notification = ({ setSelectedTab }) => {
           <CommonText showText={'Today'} customstyles={{ marginLeft: 10 }} />
           <CommonCard>
             <View style={styles.card}>
-              <IconCardLarge Svg={StoreGreenSvg} />
-              <View style={{ width: '85%' }}>
+              <CommonIconCard Svg={StoreSvg} />
+              <View style={{ width: '85%',marginLeft:10 }}>
                 <CommonText showText={'Notification 1'} fontSize={18} margin={10} />
                 <CommonText showText={'Reach the charger and start charge your EV Real time '} fontSize={14} margin={10} />
               </View>
@@ -34,8 +36,8 @@ const Notification = ({ setSelectedTab }) => {
           <CommonText showText={'12/06/2022'} customstyles={{ marginLeft: 10 }} />
           <CommonCard>
             <View style={styles.card}>
-              <IconCardLarge Svg={StoreGreenSvg} />
-              <View style={{ width: '85%' }}>
+              <CommonIconCard Svg={StoreSvg} />
+              <View style={{ width: '85%',marginLeft:10 }}>
                 <CommonText showText={'Notification 1'} fontSize={18} margin={10} />
                 <CommonText showText={'Reach the charger and start charge your EV Real time '} fontSize={14} margin={10} />
               </View>

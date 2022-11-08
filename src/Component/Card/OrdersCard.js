@@ -1,25 +1,24 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native'
 import React from 'react'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import CommonText from '../Text/CommonText'
-import IconCardWithoutBg from './IconCardWithoutBg'
 import CommonCard from '../../Component/Card/CommonCard/index'
-import IconCard from './IconCard'
+import CommonIconCard from './CommonIconCard/CommonIconCard'
 
 const OrdersCard = ({ showText, fontSize, Svg, onPress }) => {
-
+const scheme=useColorScheme()
     return (
         <CommonCard>
             <View style={styles.card} >
                 <View style={styles.leftContainer}>
-                    <IconCard Svg={Svg}  />
+                    <CommonIconCard Svg={Svg}  />
                     <View style={styles.middleContainer}>
                         <CommonText showText={showText} fontSize={fontSize} customstyles={{width:scale(180)}} />
                     </View>
                 </View>
-                <AntDesign name='right' color={colors.black} size={18} />
+                <AntDesign name='right' color={scheme=='dark'?colors.white:colors.black} size={18} />
             </View>
         </CommonCard>
 

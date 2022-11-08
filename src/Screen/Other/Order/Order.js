@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView, FlatList, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
@@ -13,6 +13,7 @@ import NoData from '../../../Component/NoDataFound/NoData'
 import OrdersCard from '../../../Component/Card/OrdersCard'
 import OrderGreenSvg from '../../../assests/svg/OrderGreenSvg'
 import { useSelector } from 'react-redux'
+import Loader from '../../../Component/Loader'
 const Order = () => {
 
     const navigation = useNavigation()
@@ -20,12 +21,15 @@ const Order = () => {
     const orderCardHandler = () => {
         navigation.navigate(routes.OrderDetails)
     }
+    const [loaderOpen, setLoaderOpen] = useState(false)
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
     const username = mUserDetails?.username
 
     const { data, status, isLoading, refetch } = useQuery('ordersData', async () => {
+        setLoaderOpen(true)
         const res = await getOrdersService(username)
+        setLoaderOpen(false)
         return res.data
     })
 
@@ -37,11 +41,11 @@ const Order = () => {
                 <View style={styles.headerText}>
                     <CommonText showText={'Today'} fontSize={16} />
                 </View>
-                <OrdersCard Svg={OrderGreenSvg} showText={'8GDGBC57JG4GHDH'} fontSize={16} onPress={orderCardHandler} />
+                <OrdersCard Svg={OrderSvg} showText={'8GDGBC57JG4GHDH'} fontSize={16} />
                 <View style={styles.headerText}>
                     <CommonText showText={'12/08/2022'} fontSize={16} />
                 </View>
-                {!isLoading && data?.length > 0 ?
+                {!loaderOpen && data?.length > 0 ?
                     <FlatList
                         data={data}
                         keyExtractor={item => item.id}
@@ -50,16 +54,18 @@ const Order = () => {
                                 <TouchableOpacity onPress={() => {
                                     navigation.navigate(routes.OrderDetails, { dataItem: item })
                                 }} >
-                                    <OrdersCard Svg={OrderGreenSvg} showText={item?.item?.id} fontSize={16} />
+                                    <OrdersCard Svg={OrderSvg} showText={item?.item?.id} fontSize={16} />
                                 </TouchableOpacity>
                             )
                         }
                         }
                     /> :
-                    <NoData showText={'No Orders List Found'} />
+                    !loaderOpen && <NoData showText={'No Orders List Found'} />
                 }
 
             </View>
+            <Loader modalOpen={loaderOpen} />
+
         </SafeAreaView>
     )
 }
@@ -69,8 +75,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     innerContainer: {
-        width: '90%',
-        alignSelf: 'center',
+
         marginTop: 20,
         flex: 1
     },
@@ -81,6 +86,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         marginTop: 25,
+        paddingHorizontal: 12
 
     }
 })

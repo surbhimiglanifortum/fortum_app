@@ -11,14 +11,21 @@ import { scale } from 'react-native-size-matters'
 import Button from '../../../Component/Button/Button'
 import AddRemoveCard from '../../../Component/Card/AddRemoveCard'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import StoreCart from '../../../Component/Card/StoreCard/StoreCart'
+import ChargingKeyWhiteSvg from '../../../assests/svg/ChargingKeyWhiteSvg'
+import ChargingKeyBlackSvg from '../../../assests/svg/ChargingKeyBlackSvg'
 
 const StoreDetails = ({ route }) => {
 
     const dispatch = useDispatch()
     const navigateData = route.params.dataItem.item
-    console.log(navigateData, '............navigate data')
+
+    const cartData = useSelector((state) => state.AddToCartReducers.cartItem)
+    console.log(cartData, '..................cart')
+    let cartCout = cartData.filter(e => {
+        return {...e}})
+    console.log(cartCout, '............cart cout')
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
@@ -31,7 +38,7 @@ const StoreDetails = ({ route }) => {
     const addQty = async () => {
         dispatch({
             type: 'ADD_CART_ITEM',
-            payload: { id:navigateData.id, cartItem:1,...navigateData }
+            payload: { id: navigateData.id, cartItem: 1, ...navigateData }
         })
         setCartCount(cartCount + 1)
 
@@ -40,7 +47,7 @@ const StoreDetails = ({ route }) => {
     const removeQty = () => {
         dispatch({
             type: 'SUB_CART_ITEM',
-            payload: { id:navigateData.id, cartItem: 1 ,...navigateData}
+            payload: { id: navigateData.id, cartItem: 1, ...navigateData }
 
         })
         setCartCount(cartCount - 1)
@@ -49,7 +56,7 @@ const StoreDetails = ({ route }) => {
     const addCartBtn = () => {
         dispatch({
             type: 'ADD_TO_CART',
-            payload: { id:navigateData.id, cartItem: 1,...navigateData }
+            payload: { id: navigateData.id, cartItem: 1, ...navigateData }
         })
         setCartCount(1)
     }
@@ -64,7 +71,10 @@ const StoreDetails = ({ route }) => {
                         <StoreCart onPress={cartHandler} />
                     </View>
                     <DenseCard>
-                        <Image source={navigateData?.icon ? { uri: navigateData?.icon } : require('../../../assests/chargingKey.png')} style={styles.img} />
+                        {navigateData?.icon?.length > 1 ? <Image source={{ uri: navigateData?.icon }} style={styles.img} />
+                            : <View style={styles.img}>
+                                {scheme == 'dark' ? <ChargingKeyWhiteSvg /> : <ChargingKeyBlackSvg />}
+                            </View>}
                     </DenseCard>
                     <DenseCard style={styles.card}>
                         <CommonText showText={navigateData?.name} fontSize={20} />
@@ -115,7 +125,9 @@ const styles = StyleSheet.create({
     img: {
         width: scale(200),
         height: scale(200),
-        alignSelf: 'center'
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     btnCon: {
         flexDirection: 'row',
