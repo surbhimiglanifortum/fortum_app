@@ -7,12 +7,14 @@ import DenseCard from '../Card/DenseCard'
 import IconCardLarge from '../Card/IconCardLarge'
 import WalletLight from '../../assests/svg/Wallet_light'
 import CommonText from '../Text/CommonText'
+import CommonIconCard from './CommonIconCard/CommonIconCard'
+import WalletSvg from '../../assests/svg/wallet'
 
 const WalletCard = ({ onPress, title, subTitle }) => {
   return (
     <DenseCard >
       <View style={styles.row}>
-        <IconCardLarge Svg={WalletLight} />
+        <CommonIconCard Svg={WalletSvg} />
         <View style={styles.rightContainer}>
           <CommonText showText={title} fontSize={24} />
           <CommonText showText={subTitle} regular customstyles={{ marginTop: -5 }} />

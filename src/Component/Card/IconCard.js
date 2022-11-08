@@ -4,7 +4,7 @@ import colors from '../../Utils/colors'
 
 const IconCard = ({ Svg, backgroundColor }) => {
   return (
-    <View style={[styles.icon, { backgroundColor: backgroundColor }]}>
+    <View style={[styles.icon, { backgroundColor: backgroundColor,paddingVertical:5,paddingHorizontal:5,borderRadius:5 }]}>
       <Svg />
     </View>
   )

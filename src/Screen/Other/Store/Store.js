@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, FlatList, } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
@@ -12,10 +12,13 @@ import StoreCart from '../../../Component/Card/StoreCard/StoreCart'
 import { useSelector } from 'react-redux'
 import NoData from '../../../Component/NoDataFound/NoData'
 import CommonView from '../../../Component/CommonView/index'
+import Loader from '../../../Component/Loader'
 const Store = () => {
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
+
+    const [loaderOpen, setLoaderOpen] = useState(false)
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const cartHandler = () => {
@@ -25,7 +28,9 @@ const Store = () => {
     const username = mUserDetails?.username
 
     const { data, status, isLoading, refetch } = useQuery('storeData', async () => {
+        setLoaderOpen(true)
         const res = await getStoreDataService(username)
+        setLoaderOpen(false)
         return res.data
     })
 
@@ -36,7 +41,7 @@ const Store = () => {
                     <Header showText={'Store'} />
                     <StoreCart onPress={cartHandler} />
                 </View>
-                {!isLoading && data?.length > 0 ?
+                {!loaderOpen && data?.length > 0 ?
                     <FlatList
                         data={data}
                         keyExtractor={item => item.id}
@@ -51,9 +56,10 @@ const Store = () => {
                         }
                         }
                     /> :
-                    <NoData showText={'No Data Found'} />
+                    !loaderOpen && <NoData showText={'No Data Found'} />
                 }
             </View>
+            <Loader modalOpen={loaderOpen} />
         </CommonView>
     )
 }

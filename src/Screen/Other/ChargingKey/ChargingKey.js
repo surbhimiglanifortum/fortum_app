@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView, Text, TouchableOpacity, Image, FlatList } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
@@ -12,10 +12,14 @@ import { getChargingKeyService } from '../../../Services/Api'
 import { useQuery } from 'react-query'
 import { useSelector } from 'react-redux'
 import NoData from '../../../Component/NoDataFound/NoData'
+import Loader from '../../../Component/Loader'
+import ChargingKeyWhiteSvg from '../../../assests/svg/ChargingKeyWhiteSvg'
+import ChargingKeyBlackSvg from '../../../assests/svg/ChargingKeyBlackSvg'
 
 const ChargingKey = () => {
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+    const [loaderOpen, setLoaderOpen] = useState(false)
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
@@ -26,7 +30,9 @@ const ChargingKey = () => {
     const username = mUserDetails?.username
 
     const { data, status, isLoading, refetch } = useQuery('chargingKey', async () => {
+        setLoaderOpen(true)
         const res = await getChargingKeyService(username)
+        setLoaderOpen(false)
         return res.data
     })
 
@@ -34,7 +40,7 @@ const ChargingKey = () => {
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <View style={styles.innerContainer}>
                 <Header showText={'Charging Key'} />
-                {!isLoading && data?.length > 0 ?
+                {!loaderOpen && data?.length > 0 ?
                     <FlatList
                         data={data}
                         keyExtractor={item => item.id}
@@ -43,7 +49,9 @@ const ChargingKey = () => {
                                 <TouchableOpacity onPress={() => { navigation.navigate(routes.ChargingKeyDetails, { data: item }) }}>
                                     <CommonCard style={styles.card} >
                                         <View >
-                                            <Image source={require('../../../assests/chargingKey.png')} style={styles.img} />
+                                            <View style={styles.img}>
+                                                {scheme == 'dark' ? <ChargingKeyWhiteSvg /> : <ChargingKeyBlackSvg />}
+                                            </View>
                                             <CommonText showText={item?.item?.username} fontSize={18} />
                                             <CommonText showText={item?.item?.auth_id} fontSize={14} />
                                         </View>
@@ -53,13 +61,15 @@ const ChargingKey = () => {
                         }
                         }
                     /> :
-                    <NoData showText={'No Charging Key Available'} />
+                    !loaderOpen && <NoData showText={'No Charging Key Available'} />
                 }
 
             </View>
             <View style={styles.btnCon}>
                 <Button showText={'Order Charging key'} onPress={chargingKeyHandler} />
             </View>
+            <Loader modalOpen={loaderOpen} />
+
         </SafeAreaView >
     )
 }
@@ -76,16 +86,12 @@ const styles = StyleSheet.create({
     },
     card: {
 
-        marginTop: 40,
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-        borderRadius: 6
     },
     img: {
         alignSelf: 'center',
         height: scale(120),
         width: scale(120),
-        marginVertical: 10
+        marginVertical: 25
     },
     btnCon: { marginVertical: 15, paddingHorizontal: 15 },
 

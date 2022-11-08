@@ -26,7 +26,9 @@ const colors = {
     greyText: '#969696',
     lightGray: '#3C3C3C',
     divider: '#EEEEEE',
-    highlightedBackground: '#86A8FF'
+    highlightedBackground: '#86A8FF',
+    darkIcon:'#1D9C71',
+    lightIcon:'#C4E1D9',
 }
 
 export default colors

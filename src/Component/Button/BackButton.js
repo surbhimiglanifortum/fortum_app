@@ -9,19 +9,13 @@ const BackButton = ({ onPress }) => {
   const scheme = useColorScheme()
 
   return (
-    <CommonCard margin={1}>
-      <TouchableOpacity style={[styles.container]} onPress={() => { navigation.goBack() }}>
-        <AntDesign name='left' size={25} color={ scheme == 'dark'?colors.white:colors.black} />
-      </TouchableOpacity>
-    </CommonCard>
+    <TouchableOpacity onPress={() => { navigation.goBack() }}>
+      <CommonCard margin={1}>
+        <AntDesign name='left' size={25} color={scheme == 'dark' ? colors.white : colors.black} />
+      </CommonCard>
+    </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignSelf: 'flex-start'
-  }
-})
 
 
 export default BackButton

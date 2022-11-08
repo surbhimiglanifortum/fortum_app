@@ -12,6 +12,8 @@ import IconCard from '../../../Component/Card/IconCard'
 import Divider from '../../../Component/Divider'
 import routes from '../../../Utils/routes'
 import { getSessionDetails } from '../../../Services/Api'
+import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
+import Charger from '../../../assests/svg/charger'
 
 const TaxInvoice = ({ route }) => {
 
@@ -48,7 +50,7 @@ const TaxInvoice = ({ route }) => {
                 <DenseCard >
                     <View style={styles.row}>
                         <View>
-                            <IconCard Svg={ChargerLight} />
+                            <CommonIconCard Svg={Charger} />
                         </View>
 
                         <View style={{}}>
@@ -80,7 +82,7 @@ const TaxInvoice = ({ route }) => {
                     </View>
                 </DenseCard>
                 <View style={styles.InvoiceDetails}>
-                    <CommonText showText={'Tax Invoice Details'} />
+                    <CommonText showText={'Tax Invoice Details'}  customstyles={{paddingHorizontal:12}}/>
                     <DenseCard>
                         <View >
                             <View style={styles.innerCard1}>

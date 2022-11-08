@@ -17,7 +17,6 @@ const BackBtnTab = ({ onPress,showText }) => {
       </TouchableOpacity>
     </CommonCard>
     <CommonText showText={showText} fontSize={18} />
-
     </View>
   )
 }
@@ -26,7 +25,7 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'flex-start'
   },
-  header: { flexDirection: 'row', alignItems: 'center', width: '65%', justifyContent: 'space-between' },
+  header: { flexDirection: 'row', alignItems: 'center', width: '70%', justifyContent: 'space-between',paddingHorizontal:10 },
 
 })
 

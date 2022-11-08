@@ -10,14 +10,13 @@ import CommonText from '../../Component/Text/CommonText'
 import colors from '../../Utils/colors'
 import { useSelector } from 'react-redux'
 import NoData from '../../Component/NoDataFound/NoData'
-import ChargerLight from '../../assests/svg/Charger_light'
 import CommonView from '../../Component/CommonView'
-import Header from '../../Component/Header/Header'
 import Loader from '../../Component/Loader'
 import BackBtnTab from '../../Component/Button/BackBtnTab'
+import Charger from '../../assests/svg/charger'
 
 
-const Charging = ({setSelectedTabs}) => {
+const Charging = ({ setSelectedTabs }) => {
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
     const navigation = useNavigation()
@@ -59,14 +58,12 @@ const Charging = ({setSelectedTabs}) => {
 
     const backhandler = () => {
         setSelectedTabs('home')
-      }
-    
+    }
+
 
     return (
         <CommonView>
-        <BackBtnTab onPress={backhandler} showText={"Charging"} />
-        
-           
+            <BackBtnTab onPress={backhandler} showText={"Charging"} />
             <View style={styles.tabContainer}>
                 <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'ongoing' ? colors.white : colors.greenBackground }]}>
                     <CommonText customstyles={[{ color: selectedTab == 'ongoing' ? colors.black : colors.white }]} showText={'Ongoing'} />
@@ -75,7 +72,6 @@ const Charging = ({setSelectedTabs}) => {
                     <CommonText customstyles={[{ color: selectedTab == 'completed' ? colors.black : '#FFF' }]} showText={'Compeleted'} />
                 </TouchableOpacity>
             </View>
-
             <View>
                 {selectedTab == 'ongoing' &&
                     <>
@@ -85,7 +81,7 @@ const Charging = ({setSelectedTabs}) => {
                                 keyExtractor={item => item.id}
                                 renderItem={(item) => {
                                     return (
-                                        <Card tabName={"ongoing"} navigationHandler={() => navigationHandler(item)} Svg={ChargerLight} dataItem={item} />
+                                        <Card tabName={"ongoing"} navigationHandler={() => navigationHandler(item)} Svg={Charger} dataItem={item} />
                                     )
                                 }
                                 }
@@ -102,7 +98,7 @@ const Charging = ({setSelectedTabs}) => {
                             keyExtractor={item => item.id}
                             renderItem={(item) => {
                                 return (
-                                    <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={ChargerLight} dataItem={item} />
+                                    <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={Charger} dataItem={item} />
                                 )
                             }
                             }
@@ -152,7 +148,8 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderRadius: 5,
         paddingHorizontal: 10,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginHorizontal: 10
     },
     tabButton: {
         backgroundColor: '#FFF',

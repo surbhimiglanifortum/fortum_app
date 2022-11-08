@@ -17,6 +17,7 @@ import { useEffect } from 'react'
 import CommonView from '../../../Component/CommonView/index'
 import LightBgColor from '../../../assests/svg/LightBgColor'
 import StoreGreenSvg from '../../../assests/svg/StoreGreenSvg'
+import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 
 const MyCart = ({ route }) => {
 
@@ -54,6 +55,10 @@ const MyCart = ({ route }) => {
         return cost
     }
 
+    const ProceedToPayHadnler = () => {
+
+    }
+
     useEffect(() => {
         setCartCount(cartlength)
     }, [cartlength])
@@ -70,10 +75,8 @@ const MyCart = ({ route }) => {
                                 <DenseCard key={ind} padding={5}>
                                     <View style={styles.denceInnnerCard}>
                                         <View style={[styles.cartInner, { width: '50%' }]}>
-                                            <View style={{ width: '48%' }}>
-                                                <DenseCard padding={0} >
-                                                    <IconCardLarge Svg={scheme == 'dark' ? StoreGreenSvg : StoreSvg} />
-                                                </DenseCard>
+                                            <View style={{ width: '35%' }}>
+                                                <CommonIconCard Svg={StoreSvg} />
                                             </View>
                                             <View style={[styles.cartDetailsText, { width: '50%' }]}>
                                                 <CommonText showText={item?.name} />
@@ -89,7 +92,7 @@ const MyCart = ({ route }) => {
                             )
                         })}
                     </View>
-                    <View style={styles.topCard}>
+                    {cartDataDetails?.cartItem.length > 0 && <View style={styles.topCard}>
                         <CommonText showText={'Order Summary'} customstyles={{ marginLeft: 10 }} />
                         <DenseCard>
                             <View style={styles.innerCard}>
@@ -110,14 +113,14 @@ const MyCart = ({ route }) => {
                             </View>
                             <View style={styles.innerCard}>
                                 <CommonText showText={'Total '} customstyles={{ marginTop: 20 }} />
-                                <CommonText showText={`₹ ${'1400'}`} customstyles={{ marginTop: 20, fontFamily: commonFonts.bold }} />
+                                <CommonText showText={`₹ ${getTotalCartValue()}`} customstyles={{ marginTop: 20, fontFamily: commonFonts.bold }} />
                             </View>
                         </DenseCard>
-                    </View>
+                    </View>}
                 </View>
             </ScrollView>
 
-            <Button showText={'Proceed to Pay'} />
+            <Button showText={'Proceed to Pay'} onPress={ProceedToPayHadnler} />
 
         </CommonView>
     )

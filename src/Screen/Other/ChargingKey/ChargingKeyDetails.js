@@ -8,6 +8,7 @@ import { useQuery } from 'react-query'
 import DenseCard from '../../../Component/Card/DenseCard/index'
 import ChargingKeySvg from '../../../assests/svg/ChargingKeySvg'
 import IconCard from '../../../Component/Card/IconCard'
+import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 
 const ChargingKeyDetails = ({ route }) => {
 
@@ -26,7 +27,7 @@ const ChargingKeyDetails = ({ route }) => {
                 <Header showText={'Charging Key'} />
                 <DenseCard style={styles.card}>
                     <View style={styles.keyInner}>
-                        <IconCard Svg={ChargingKeySvg} backgroundColor={colors.lightgreen} />
+                        <CommonIconCard Svg={ChargingKeySvg} backgroundColor={colors.lightgreen} />
                         <View style={styles.textCon}>
                             <CommonText showText={(data?.visual_number || "").startsWith("VIRTUAL_TOKEN")
                                 ? "App charging key"
