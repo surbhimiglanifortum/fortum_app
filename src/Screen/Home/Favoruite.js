@@ -18,7 +18,7 @@ const Favoruite = ({ route }) => {
   const navigation = useNavigation()
   const scheme = useColorScheme()
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
-
+console.log("SDJS",location)
   const { data, isFetching } = useQuery("FavouriteData", async () => {
     const result = await ApiAction.getFavouriteCHarger(mUserDetails.username)
     var locationsArray = result.data?.result
@@ -34,6 +34,7 @@ const Favoruite = ({ route }) => {
       })
 
     }
+    console.log("locationsArray",locationsArray)
     return locationsArray
 
   })

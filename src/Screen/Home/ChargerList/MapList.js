@@ -27,7 +27,7 @@ const MapList = ({ data, setOpenFilterModal, isRefetching }) => {
     navigation.navigate(routes.SearchLocation)
   }
   const favoruiteButtonHandler = () => {
-    navigation.navigate(routes.Favoruite)
+    navigation.navigate(routes.Favoruite, { location: location })
   }
   const cardDetailsHandler = (data) => {
     navigation.navigate(routes.ChargingStation, {

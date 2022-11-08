@@ -3,8 +3,6 @@ export const computeDistance = ([prevLat, prevLong], [lat, long]) => {
     const prevLongInRad = toRad(prevLong);
     const latInRad = toRad(lat);
     const longInRad = toRad(long);
-    // console.log(prevLat,prevLong,lat,long)
-    // console.log("copute distance")
     return (
         // In kilometers
         6377.830272 *
