@@ -4,7 +4,7 @@ import { Card } from 'react-native-paper'
 import colors from '../../../Utils/colors'
 import { Neomorph, Shadow, NeomorphFlex } from 'react-native-neomorph-shadows'
 
-export default function index({ children, style, ref,margin,active  }) {
+export default function index({ children, style, ref,margin,active,padding, backgroundColor ,marginLeft }) {
 
     const scheme = useColorScheme()
 
@@ -17,10 +17,11 @@ export default function index({ children, style, ref,margin,active  }) {
             style={{
                 shadowRadius: 3,
                 borderRadius: 12,
-                backgroundColor:scheme=='dark' ?colors.backgroundDark:colors.backgroundLight,
+                backgroundColor: backgroundColor || (active ? colors.greenBackground : scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight),
                 margin: margin||10,
+                marginLeft: marginLeft || margin || 10,
                 // marginVertical: 10,
-                padding: 10,
+                padding: padding || 10,
             }}
         >            
             {children}

@@ -17,7 +17,7 @@ import OtherSvg from '../../assests/svg/other'
 import DenseCard from '../../Component/Card/DenseCard/index'
 import { Auth } from 'aws-amplify'
 import routes from '../../Utils/routes';
-
+import DashboardCard from '../../Component/Card/DashboardCard'
 
 
 const Dashboard = ({ tabName, navigation }) => {
@@ -28,7 +28,6 @@ const Dashboard = ({ tabName, navigation }) => {
     setSelectedTab('home')
   }
   const walletButtonHandler = () => {
-
     handleSelection('wallet')
   }
   const chargingButtonHandler = () => {
@@ -45,7 +44,7 @@ const Dashboard = ({ tabName, navigation }) => {
 
     try {
       const result = await Auth.currentAuthenticatedUser();
-      console.log("resul", result)
+      console.log("asdjhfbahbfafhjbdshjf", tab)
       if (result?.signInUserSession) {
         if (true || result.attributes.phone_number && result.attributes.phone_number != '') {
           setSelectedTab(tab)
@@ -76,39 +75,50 @@ const Dashboard = ({ tabName, navigation }) => {
         <View style={styles.renderComponent}>
           <View style={{ flex: 1 }}>
             {selectedTab == 'home' && <Home />}
-            {selectedTab == 'wallet' && <Wallet  setSelectedTab={setSelectedTab}/>}
+            {selectedTab == 'wallet' && <Wallet setSelectedTab={setSelectedTab} />}
             {selectedTab == 'charging' && <Charging setSelectedTabs={setSelectedTab} />}
             {selectedTab == 'notification' && <Notification setSelectedTab={setSelectedTab} />}
-            {selectedTab == 'other' && <Other  setSelectedTab={setSelectedTab} />}
+            {selectedTab == 'other' && <Other setSelectedTab={setSelectedTab} />}
           </View>
         </View>
         <View style={[styles.tabContainer, { backgroundColor: colors.greenBackground }]}>
           
-          
-          {/* <DenseCard> */}
-            <TouchableOpacity onPress={homeButtonHandler} style={[styles.tabButton, selectedTab == 'home' ? styles.activeTab : null]}>
-              <HomeSvg color={colors.white} />
-              {selectedTab == 'home' && <CommonText showText={'Home'} margin={6} customstyles={styles.tabText} />}
-            </TouchableOpacity>
-          {/* </DenseCard> */}
-
-
-          {/* </Shadow> */}
-          <TouchableOpacity onPress={walletButtonHandler} style={[styles.tabButton, selectedTab == 'wallet' ? styles.activeTab : null]}>
-            <WalletSvg color={colors.white} />
-            {selectedTab == 'wallet' && <CommonText showText={'Wallet'} margin={6} customstyles={styles.tabText} />}
+          <TouchableOpacity onPress={homeButtonHandler} style={[styles.tabButton]}>
+            {selectedTab == 'home' ? <DashboardCard><View style={styles.tabButton}><HomeSvg color={colors.white} /><CommonText showText={'Home'} margin={6} customstyles={styles.tabText} /></View></DashboardCard> : <HomeSvg color={colors.white} />}
           </TouchableOpacity>
+
+          <TouchableOpacity onPress={walletButtonHandler} style={[styles.tabButton]}>
+            {selectedTab == 'wallet' ? <DashboardCard><View style={styles.tabButton}>
+              <WalletSvg color={colors.white} />
+              <CommonText showText={'Wallet'} margin={6} customstyles={styles.tabText} />
+            </View></DashboardCard> : <WalletSvg color={colors.white} />}
+          </TouchableOpacity>
+
+
+
           <TouchableOpacity onPress={chargingButtonHandler} style={[styles.tabButton, selectedTab == 'charging' ? styles.activeTab : null]}>
-            <Charger color={colors.white} />
-            {selectedTab == 'charging' && <CommonText showText={'Charging'} margin={6} customstyles={styles.tabText} />}
+
+            {selectedTab == 'charging' ? <DashboardCard><View style={styles.tabButton}>
+              <Charger color={colors.white} />
+              <CommonText showText={'Charging'} margin={6} customstyles={styles.tabText} />
+            </View></DashboardCard> : <Charger color={colors.white} />}
           </TouchableOpacity>
+
+
           <TouchableOpacity onPress={notificationButtonHandler} style={[styles.tabButton, selectedTab == 'notification' ? styles.activeTab : null]}>
-            <NotificationSvg color={colors.white} />
-            {selectedTab == 'notification' && <CommonText showText={'Notification'} margin={6} customstyles={styles.tabText} />}
+            {selectedTab == 'notification' ? <DashboardCard><View style={styles.tabButton}>
+              <NotificationSvg color={colors.white} />
+              <CommonText showText={'Notification'} margin={6} customstyles={styles.tabText} />
+            </View></DashboardCard> : <NotificationSvg color={colors.white} />}
           </TouchableOpacity>
+
+
           <TouchableOpacity onPress={otherButtonHandler} style={[styles.tabButton, selectedTab == 'other' ? styles.activeTab : null]}>
-            <OtherSvg color={colors.white} />
-            {selectedTab == 'other' && <CommonText showText={'Others'} margin={6} customstyles={styles.tabText} />}
+
+            {selectedTab == 'other' ? <DashboardCard><View style={styles.tabButton}>
+              <OtherSvg color={colors.white} />
+              <CommonText showText={'Others'} margin={6} customstyles={styles.tabText} />
+            </View></DashboardCard> : <OtherSvg color={colors.white} />}
           </TouchableOpacity>
         </View>
 
@@ -129,7 +139,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 15
   },
-  activeTab: { borderWidth: 2, paddingVertical: 5, paddingHorizontal: 10, borderRadius: 5, borderColor: colors.white },
+  // activeTab: { borderWidth: 2, paddingVertical: 5, paddingHorizontal: 10, borderRadius: 5, borderColor: colors.white },
 
 })
 

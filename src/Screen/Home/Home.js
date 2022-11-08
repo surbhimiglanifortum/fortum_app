@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme,FlatList } from 'react-native'
 import colors from '../../Utils/colors';
 import MapList from './ChargerList/MapList';
 import IconCardWithoutBg from '../../Component/Card/IconCardWithoutBg';
@@ -16,17 +16,19 @@ import { computeDistance } from '../../Utils/helperFuncations/computeDistance';
 import { postListService } from '../../Services/HomeTabService/HomeTabService';
 import SnackContext from '../../Utils/context/SnackbarContext';
 import { useQuery } from 'react-query'
-import {Auth } from 'aws-amplify'
+import { Auth } from 'aws-amplify'
 import * as ApiAction from '../../Services/Api'
 import MapCharger from '../Home/MapCharger'
 import CommonText from '../../Component/Text/CommonText';
 import { useSelector } from 'react-redux'
-
+import CommonCard from '../../Component/Card/CommonCard'
+import DenseCard from '../../Component/Card/DenseCard'
 
 
 let selectedMarker = {}
 
 export default Home = () => {
+
 
   const mapRef = useRef();
   const navigation = useNavigation()
@@ -41,6 +43,7 @@ export default Home = () => {
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
+  const scheme = useColorScheme()
 
   const mapButtonHandler = () => {
     setSelectedTab('')
@@ -49,7 +52,7 @@ export default Home = () => {
     setSelectedTab('List')
   }
   const favButtonHandler = () => {
-    navigation.navigate(routes.Favoruite,{location:location})
+    navigation.navigate(routes.Favoruite, { location: location })
   }
   const filterButtonHandler = () => {
     setOpenFilterModal(true)
@@ -58,15 +61,15 @@ export default Home = () => {
 
     Auth.currentSession().then(r => {
       if (!r) {
-          navigation.navigate(routes.login)
-          
+        navigation.navigate(routes.login)
+
       }
       else {
-        if(mUserDetails.phone_number && mUserDetails.phone_number != ''){
+        if (mUserDetails.phone_number && mUserDetails.phone_number != '') {
           navigation.navigate("QRScannerPage")
-        }         
+        }
       }
-  }).catch(err => { console.log(err); navigation.navigate("MakeChargingEasySplash") });
+    }).catch(err => { console.log(err); navigation.navigate("MakeChargingEasySplash") });
 
   }
   const searchBtnHandler = () => {
@@ -76,6 +79,7 @@ export default Home = () => {
     getLocationAndAnimate()
   }
   const chargingBtnHandler = () => {
+  
     setSelectedCharger(true)
   }
   const chargingCardHandler = () => {
@@ -129,6 +133,7 @@ export default Home = () => {
       Geolocation.getCurrentPosition(info => {
 
         setLocation(info)
+        setLocationLoading(false)
       }, error => {
         console.log(error)
       })
@@ -155,31 +160,61 @@ export default Home = () => {
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
-          <TouchableOpacity onPress={mapButtonHandler}
-            style={[styles.tabContainer, selectedTab != 'List' ? { backgroundColor: colors.white, borderRadius: 4, paddingVertical: 3 } : null,]}>
-            <CommonText showText={'Map'} fontSize={16} customstyles={{ color: selectedTab != 'List' ? colors.black : colors.white }} />
-          </TouchableOpacity >
-          <TouchableOpacity onPress={listButtonHandler} style={[styles.tabContainer, selectedTab == 'List' ? { backgroundColor: colors.white, borderRadius: 4, paddingVertical: 3 } : null,]}>
-            <CommonText showText={'List'} fontSize={16} customstyles={{ color: selectedTab == 'List' ? colors.black : colors.white }} />
+          {selectedTab != 'List' ?
+            <DenseCard paddingLeft={40} paddingRight={40} padding={7} marginVertical={2} margin={2}>
+              <TouchableOpacity onPress={listButtonHandler} >
+                <CommonText showText={'Map'} fontSize={16} customstyles={{ color: scheme == 'dark' ? selectedTab != 'List' ? colors.green : colors.white : selectedTab != 'List' ? colors.mapTitle : colors.white }} />
+              </TouchableOpacity>
+            </DenseCard>
+            : <TouchableOpacity onPress={mapButtonHandler}
+              style={[styles.tabContainer]}>
+              <CommonText showText={'Map'} fontSize={16} customstyles={{ color: scheme == 'dark' ? selectedTab != 'List' ? colors.green : colors.white : selectedTab != 'List' ? colors.mapTitle : colors.white }} />
+            </TouchableOpacity >
+          }
+
+          {selectedTab == 'List' ? <DenseCard paddingLeft={40} paddingRight={40} padding={7} marginVertical={2} margin={2}>
+            <TouchableOpacity onPress={listButtonHandler} >
+              <CommonText showText={'List'} fontSize={16} customstyles={{ color: scheme == 'dark' ? selectedTab == 'List' ? colors.green : colors.white : selectedTab == 'List' ? colors.mapTitle : colors.white }} />
+            </TouchableOpacity>
+          </DenseCard> : <TouchableOpacity onPress={listButtonHandler} style={[styles.tabContainer]}>
+            <CommonText showText={'List'} fontSize={16} customstyles={{ color: scheme == 'dark' ? selectedTab == 'List' ? colors.green : colors.white : selectedTab == 'List' ? colors.mapTitle : colors.white }} />
           </TouchableOpacity>
+          }
         </View>
+
+        {selectedTab == 'List' && <TouchableOpacity onPress={filterButtonHandler}
+          style={{ position: 'absolute', right: -70 }}>
+          <CommonCard>
+            <FilterSvg fill={scheme == 'dark' ? colors.white:colors.black} />
+          </CommonCard>
+        </TouchableOpacity>}
+
+
+
       </View>
       {/* Fillter ,favrouite,scan ,search Button  */}
       <View style={styles.iconContainer}>
         {selectedTab != 'List' && <View style={styles.iconContainer1}>
-          <TouchableOpacity style={styles.icon} onPress={favButtonHandler}>
-            <AntDesign name='hearto' color={colors.red} size={22} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={filterButtonHandler}>
-            <IconCardWithoutBg Svg={FilterSvg} backgroundColor={colors.white} />
-          </TouchableOpacity>
+          <CommonCard>
+            <TouchableOpacity onPress={favButtonHandler}>
+              <AntDesign name='hearto' color={colors.red} size={22} />
+            </TouchableOpacity>
+          </CommonCard>
 
-          <TouchableOpacity style={styles.icon} onPress={scannerButtonHandler}>
-            <MaterialIcons name='qr-code-scanner' color={colors.black} size={22} />
-          </TouchableOpacity>
+          <CommonCard>
+            <TouchableOpacity onPress={filterButtonHandler}>
+              <FilterSvg fill={scheme == 'dark' ? '#FAFAFA' : '#000'} />
+            </TouchableOpacity>
+          </CommonCard>
+
+          <CommonCard>
+            <TouchableOpacity onPress={scannerButtonHandler}>
+              <MaterialIcons name='qr-code-scanner' color={scheme == 'dark' ? colors.white : colors.black} size={22} />
+            </TouchableOpacity>
+          </CommonCard>
         </View>}
 
-        {selectedTab != 'List' && <View style={styles.searchContainer}>
+        {false && selectedTab != 'List' && <View style={styles.searchContainer}>
           <CommonText showText={'Show charging station nearest to'} fontSize={17} />
           <View style={styles.searchInnerContainer}>
             <TouchableOpacity style={styles.searchBox} onPress={searchBtnHandler}>
@@ -193,21 +228,34 @@ export default Home = () => {
         </View>}
 
         {selectedTab != 'List' && selectedCharger &&
-          <View>
-            <ScrollView horizontal>
-              {
-                data.map((item, ind) => {
-                  return (
-                    <View key={ind} style={{
-                      paddingHorizontal: 8
-                    }} >
-                      <DetailsCard chargerType={2} item={item} onPress={chargingCardHandler} />
-                    </View>
-                  )
-                })
-              }
-            </ScrollView>
-          </View>
+         <FlatList
+         horizontal={true}
+         data={data || []}
+         keyExtractor={item => item.id}
+         renderItem={({ item }) => {
+           return (
+             <DetailsCard chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
+           )
+         }
+         }
+       />
+
+
+          // <View>
+          //   <ScrollView horizontal>
+          //     {
+          //       data.map((item, ind) => {
+          //         return (
+          //           <View key={ind} style={{
+          //             paddingHorizontal: 8
+          //           }} >
+          //             <DetailsCard chargerType={2} item={item} onPress={chargingCardHandler} />
+          //           </View>
+          //         )
+          //       })
+          //     }
+          //   </ScrollView>
+          // </View>
         }
       </View>
       {/* Render List Component */}
@@ -234,15 +282,18 @@ const styles = StyleSheet.create({
   },
   topTabInner: {
     backgroundColor: colors.greenBackground,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingVertical: 3,
+    paddingHorizontal: 3,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: 6
+    borderRadius: 12
   },
   tabContainer: {
-    width: 70,
+    // padding:10,
+    paddingLeft: 40,
+    paddingRight: 40,
+
     alignItems: 'center'
   },
   iconContainer: {
@@ -267,14 +318,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between'
   },
-  icon: {
-    paddingVertical: 5,
-    paddingHorizontal: 8,
-    backgroundColor: colors.white,
-    borderRadius: 5,
-    marginHorizontal: 10,
-    elevation: 10
-  },
+
   searchBox: {
     flexDirection: 'row',
     alignItems: 'center',

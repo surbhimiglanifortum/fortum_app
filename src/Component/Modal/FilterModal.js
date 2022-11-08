@@ -123,15 +123,16 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
 
                     <View>
                         <View style={styles.header}>
-
-                            <View style={{ flex: 1 }}>
+                            <View>
+                            </View>
+                            <View style={{  }}>
                                 <CommonText fontSize={16} >Filter</CommonText>
                             </View>
                             <View>
                                 <CommonCard>
                                     <TouchableOpacity onPress={() => { setOpenFilterModal(false) }}
                                         style={{ alignSelf: 'center', justifyContent: 'center' }}>
-                                        <AntDesign size={20} name='close' color={scheme == 'dark'?colors.backgroundLight: colors.ligthIcon} />
+                                        <AntDesign size={20} name='close' color={scheme == 'dark' ? colors.backgroundLight : colors.ligthIcon} />
                                     </TouchableOpacity>
 
                                 </CommonCard>
@@ -141,7 +142,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
                         </View>
 
 
-                        <View style={{marginTop:scale(20)}}>
+                        <View style={{ marginTop: scale(20) }}>
                             <CommonText fontSize={16}> Connectors</CommonText>
                             {isLoading && <Loader />}
                             <View style={styles.cardContainer}>
@@ -150,7 +151,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
                                         return (
                                             <View>
                                                 <CommonCard active={item?.active ? true : false} key={ind} style={[styles.cardInner]}>
-                                                    <TouchableOpacity style={{ width: 69, height: 59, alignItems: 'center', justifyContent: 'center' }} onPress={() => onItemPress(item.title)} >
+                                                    <TouchableOpacity style={{ width: 59, height: 49, alignItems: 'center', justifyContent: 'center' }} onPress={() => onItemPress(item.title)} >
                                                         {getFile(item.title)}
                                                     </TouchableOpacity>
                                                 </CommonCard>
@@ -206,7 +207,6 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: STATUSBAR_HEIGHT,
     },
     innerContainer: {
         flex: 1,

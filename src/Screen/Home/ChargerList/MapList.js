@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useColorScheme } from 'react-native'
+import { View, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native'
 import React, { useEffect, useState, useContext } from 'react'
 import DetailsCard from '../../../Component/Card/DetailsCard'
 import FilterSvg from '../../../assests/svg/FilterSvg'
@@ -37,46 +37,42 @@ const MapList = ({ data, setOpenFilterModal, isRefetching }) => {
 
   return (
     <View style={[styles.container]}>
-      <ScrollView>
-        <TouchableOpacity onPress={filterButtonHandler}
-          style={styles.filter}>
-          <FilterSvg />
-        </TouchableOpacity>
-        <View style={styles.innerContainer}>
 
-          <View style={styles.searchContainer}>
-            <TouchableOpacity onPress={searchButtonHandler} style={styles.searchInner}>
-              <AntDesign name='search1' size={20} style={{ marginRight: 5 }} />
-              <CommonText showText={'Random Location'} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={favoruiteButtonHandler} style={styles.favContainer}>
-              <AntDesign name='hearto' color={colors.red} size={20} />
-            </TouchableOpacity>
-          </View>
 
-          {isRefetching && <Loader />}
+      <View style={styles.innerContainer}>
 
-          <ScrollView nestedScrollEnabled={true}>
-            {/* Render Details Card */}
-            {
-              data?.map((item, ind) => {
-                return (
-                  <View key={ind}>
-                    <DetailsCard chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
-                  </View>
-                )
-              })
-            }
-          </ScrollView>
+        <View style={styles.searchContainer}>
+          <TouchableOpacity onPress={searchButtonHandler} style={styles.searchInner}>
+            <AntDesign name='search1' size={20} style={{ marginRight: 5 }} />
+            <CommonText showText={'Random Location'} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={favoruiteButtonHandler} style={styles.favContainer}>
+            <AntDesign name='hearto' color={colors.red} size={20} />
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+
+        {isRefetching && <Loader />}
+
+        <FlatList
+          data={data || []}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => {
+            return (
+              <DetailsCard chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
+            )
+          }
+          }
+        />
+      </View>
+
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    // flex:1,
+    flex: 1,
+    marginTop: 80
   },
   innerContainer: {
     // width: '90%',

@@ -31,7 +31,6 @@ const Login = () => {
         console.log('phone', ("+91" + userInput).toString())
         user = await Auth.signIn(("+91" + userInput).trim());
       } else {
-        console.log(email)
         user = await Auth.signIn(userInput);
       }
       if (user) {
