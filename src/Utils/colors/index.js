@@ -3,6 +3,8 @@ const colors = {
     black: '#000',
     green: '#5AC37D',
     red: '#FE6A6A',
+    svgColor:'#D8E3EF',
+    svgColorDark:'#787878',
     'mapTitle':"#10284E",
     ligthIcon:"#002449",
     backgroundLight: '#ECF4FC',

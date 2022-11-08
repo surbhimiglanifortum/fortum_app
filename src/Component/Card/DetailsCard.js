@@ -26,12 +26,16 @@ const DetailsCard = ({ chargerType, onPress, item, favourite }) => {
                             }
                         </View>
                         <View style={styles.leftContainer}>
-                            <TouchableOpacity style={styles.heartIcon}>
-                                <AntDesign name='heart' size={25} />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.leftIcon}>
-                                <Feather name='corner-up-right' size={25} color={colors.white} />
-                            </TouchableOpacity>
+                            <CommonCard margin={1} padding={8}>
+                                <TouchableOpacity >
+                                    <AntDesign name='hearto' color={scheme == 'dark' ? colors.svgColorDark : colors.svgColor} size={18} />
+                                </TouchableOpacity>
+                            </CommonCard>
+                            <CommonCard marginLeft={10} margin={1} padding={8} backgroundColor={'#3070CE'}>
+                                <TouchableOpacity style={styles.leftIcon}>
+                                    <Feather name='corner-up-right' size={18} color={colors.white} />
+                                </TouchableOpacity>
+                            </CommonCard>
                         </View>
                     </View>
                     <View style={[styles.innerContainer1, { borderColor: scheme == 'dark' ? colors.borderColorDark : colors.borderColor }]}>
@@ -72,18 +76,13 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
 
     },
-    heartIcon: {
-        elevation: 10,
-        backgroundColor: colors.white, paddingVertical: 5,
-        paddingHorizontal: 5,
-        borderRadius: 10
-    },
     leftIcon: {
-        elevation: 10,
-        backgroundColor: '#3070ce', paddingVertical: 5,
-        paddingHorizontal: 5,
-        borderRadius: 10,
-        marginLeft: 10
+        // elevation: 10,
+        // backgroundColor: '#3070CE',
+        // padding: 8,
+        // borderRadius: 12,
+        // margin: 1,
+        // marginLeft: 10,
     },
     leftContainer: {
         flexDirection: 'row',
