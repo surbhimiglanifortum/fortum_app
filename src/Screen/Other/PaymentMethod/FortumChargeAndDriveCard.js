@@ -1,11 +1,10 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView, TouchableOpacity, Linking } from 'react-native'
-import React from 'react'
+import { View, StyleSheet, useColorScheme, ScrollView, TouchableOpacity, Linking } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import colors from '../../../Utils/colors'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
 import CommonText from '../../../Component/Text/CommonText'
 import Button from '../../../Component/Button/Button'
 import routes from '../../../Utils/routes'
-import WalletSvg from '../../../assests/svg/wallet'
 import IconCardLarge from '../../../Component/Card/IconCardLarge'
 import Header from '../../../Component/Header/Header'
 import CommonCard from '../../../Component/Card/CommonCard'
@@ -14,17 +13,23 @@ import CardLight from '../../../assests/svg/Card_light'
 import RupeeLight from '../../../assests/svg/Ruppe_light'
 import CommonView from '../../../Component/CommonView'
 import PinelabCard from '../../../assests/svg/PinelabCard'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { getUserDetails } from '../../../Services/Api'
+import { AddToRedux } from '../../../Redux/AddToRedux'
+import * as Types from '../../../Redux/Types'
 
 const FortumChargeAndDriveCard = () => {
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
+    const dispatch = useDispatch();
+
+    const [isAccount, setAccount] = useState()
 
     const actiavteButtonHAndler = () => {
         navigation.navigate(routes.ActivateCard)
     }
-    
+
     const passbookButtonHAndler = () => {
         navigation.navigate(routes.Passbook)
     }
@@ -33,6 +38,20 @@ const FortumChargeAndDriveCard = () => {
 
     console.log("Check Pinelab details", mUserDetails?.pinelabs_account)
 
+    const getDetails = async () => {
+        const result = await getUserDetails();
+        if (result.data?.pinelabs_account) {
+            setAccount(true)
+            dispatch(AddToRedux(result.data, Types.USERDETAILS))
+        }
+    }
+
+    const isFocused = useIsFocused()
+
+    useEffect(() => {
+        getDetails()
+    }, [isFocused])
+
     return (
         <CommonView >
             <ScrollView>
@@ -40,7 +59,7 @@ const FortumChargeAndDriveCard = () => {
                 <Header showText={'Fortum Charge & Drive Card'} />
 
                 {
-                    !mUserDetails?.pinelabs_account &&
+                    !isAccount &&
                     <>
                         <View style={styles.headerText}>
                             <CommonText showText={'Activate your prepaid card by following ew steps. Today!'} regular fontSize={14} />
@@ -52,7 +71,7 @@ const FortumChargeAndDriveCard = () => {
                 }
 
                 {
-                    mUserDetails?.pinelabs_account &&
+                    isAccount &&
                     <>
                         <View style={{ marginTop: 20 }}>
                             <CommonCard>
@@ -86,7 +105,7 @@ const FortumChargeAndDriveCard = () => {
             </ScrollView>
 
             {
-                !mUserDetails?.pinelabs_account &&
+                !isAccount &&
                 <View style={styles.btnContainer}>
                     <Button showText={'Activate'} onPress={actiavteButtonHAndler} />
                 </View>

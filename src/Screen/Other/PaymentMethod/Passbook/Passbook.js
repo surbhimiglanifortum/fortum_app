@@ -17,7 +17,7 @@ import WalletLight from '../../../../assests/svg/Wallet_light'
 import { useSelector } from 'react-redux'
 import { getPinelabHistroy } from '../../../../Services/Api'
 import PinelabPassbookFilter from '../../../../Component/Modal/PinelabPassbookFilter'
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from "react-native-modal-datetime-picker"
 import moment from 'moment'
 import { getPinelabBalance } from '../../../../Services/Api'
 

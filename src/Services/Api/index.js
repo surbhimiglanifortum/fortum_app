@@ -11,7 +11,6 @@ export const getUserDetails = async () => {
     } else {
         throw 'User Not logged in'
     }
-
 }
 
 export const getLocation = async (payload) => {
@@ -75,7 +74,6 @@ export const addFavouriteCharger = async (username, location_id) => {
 
 export const walletRecharge = async (username, payload) => {
     return await axios.post("/api_app/juspay/initiate_payment/close_loop_balance/" + username, payload);
-
 }
 
 export const userGstList = async () => {
@@ -107,10 +105,7 @@ export const sendOTP = async (phone) => {
     const counter = Math.floor(Math.random() * (999 - 100)) + 100
     const hash = generateSHA(phone, dateIso, counter.toString());
     const payload = { number: phone, hash: hash, dateiso: dateIso, counter: counter.toString() }
-
     return await axios.post(appconfig.BASE_URL + '/sendotp', payload);
-
-    // return await axios.get(appconfig.BASE_URL + '/store/' + username);
 };
 
 export const getChargingKeyService = async (username) => {
@@ -163,6 +158,37 @@ export const getPinelabBalance = async (payload) => {
 
 export const sentKycOtp = async (payload) => {
     return await axios.post("/api_app/pinelabs/user/prepaid-card/start", payload);
+<<<<<<< HEAD
+}
+
+export const resendPinelabOtp = async (payload) => {
+    return await axios.post("/api_app/pinelabs/user/prepaid-card/resend-otp", payload);
+}
+
+export const validatePinelabOtp = async (payload) => {
+    return await axios.post("/api_app/pinelabs/user/prepaid-card/validate-otp", payload);
+}
+
+export const pinelabDocVerify = async (payload) => {
+    return await axios.post("/api_app/pinelabs/user/verify/document", payload);
+}
+
+export const createPinelabWallet = async (payload) => {
+    return await axios.post("/api_app/pinelabs/create-wallet", payload);
+};
+
+export const createPinelabDigitalCard = async (payload) => {
+    return await axios.post("/api_app/pinelabs/card/issue/digital-card", payload);
+};
+
+export const getEncryptData = async (payload) => {
+    return await axios.post('/api_app/pinelabs/card/encrypted-sdk-cred', payload)
+}
+
+export const orderPinelabCard = async (payload) => {
+    return await axios.post('/api_app/pinelabs/card/order/digital-to-physical-card', payload)
+}
+=======
 };
 
 export const getFaqService = async () => {
@@ -173,3 +199,4 @@ export const updateProfileService = async (username, fname,) => {
     console.log(username, fname, '..............in serv')
     return await axios.post(appconfig.BASE_URL + "/api_app/gist/" + username + "/first_name",{first_name: fname})
 };
+>>>>>>> c259bc7dad8ab129e9363ddcd94efffae6e41f88

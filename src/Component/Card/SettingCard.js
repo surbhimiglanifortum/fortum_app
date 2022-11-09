@@ -22,7 +22,7 @@ const SettingCard = ({ showText, fontSize, Svg, onPress }) => {
                             shadowRadius: 3,
                             borderRadius: 12,
                             backgroundColor: scheme == 'dark' ? colors.darkIcon : colors.lightIcon,
-                            padding: 12,
+                            padding: 12
                         }}>
                         <Svg fill={scheme == 'dark' ? colors.white : colors.green} />
                     </NeomorphFlex>

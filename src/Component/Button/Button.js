@@ -8,8 +8,8 @@ const Button = ({ onPress, showText, color, onLoading, setOnLoading, style, disa
 
   const styles = StyleSheet.create({
     container: {
-      
-      alignItems: 'center', 
+
+      alignItems: 'center',
     },
     backgroundColorStyle: {
 
