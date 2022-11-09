@@ -5,7 +5,7 @@ import colors from '../../Utils/colors'
 export default function index({ children, style, isFlex = true }) {
     const scheme = useColorScheme()
     return (
-        <SafeAreaView style={[isFlex ? { flex: 1 } : {}, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, padding: 10}, style]}>
+        <SafeAreaView style={[isFlex ? { flex: 1 } : {}, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, paddingLeft: 10,paddingRight:10}, style]}>
             {children}
         </SafeAreaView>
     )

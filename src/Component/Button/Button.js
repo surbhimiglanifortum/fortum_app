@@ -31,6 +31,7 @@ const Button = ({ onPress, showText, color, onLoading, setOnLoading, style, disa
         // margin: 10,
         marginVertical: 10,
         padding: 18,
+        ...style
       }}
     >
 

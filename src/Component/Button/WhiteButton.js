@@ -17,6 +17,7 @@ const WhiteButton = ({ onPress, showText, color, style, onLoading }) => {
         backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight,
         marginVertical: 10,
         padding: 18,
+        ...style
       }}
     >
       <TouchableOpacity onPress={onPress} style={[styles.container]} disabled={onLoading}>

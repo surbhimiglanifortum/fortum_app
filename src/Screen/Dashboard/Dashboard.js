@@ -73,7 +73,7 @@ const Dashboard = ({ tabName, navigation }) => {
     <>
       <View style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
         <View style={styles.renderComponent}>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1}}>
             {selectedTab == 'home' && <Home />}
             {selectedTab == 'wallet' && <Wallet setSelectedTab={setSelectedTab} />}
             {selectedTab == 'charging' && <Charging setSelectedTabs={setSelectedTab} />}
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   tabContainer: { paddingVertical: scale(20), flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: scale(25) },
   tabButton: { flexDirection: 'row', alignItems: 'center', },
   text: { color: colors.white, fontFamily: commonFonts.bold, marginLeft: 7 },
-  renderComponent: { flex: 1 },
+  renderComponent: { flex: 1},
   tabText: {
     color: colors.white,
     marginLeft: 5,
