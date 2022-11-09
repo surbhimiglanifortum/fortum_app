@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useContext, useRef } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import CommonText from '../../Component/Text/CommonText';
@@ -7,9 +7,7 @@ import Button from '../../Component/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import routes from '../../Utils/routes';
 import OtpTextinput from '../../Component/Textinput/OtpTextinput';
-import Textinput from '../../Component/Textinput/Textinput'
-import { Auth, Hub } from 'aws-amplify';
-import { generateSHA } from '../../Utils/HelperCommonFunctions'
+import { Auth } from 'aws-amplify';
 import axios from 'axios'
 import appconfig from '../../Utils/appconfig'
 import * as ApiAction from '../../Services/Api'
@@ -25,20 +23,15 @@ const MobileVerification = ({ route }) => {
     const navigation = useNavigation()
     const scheme = useColorScheme();
 
-
     const otpField1 = useRef(null);
     const otpField2 = useRef(null);
     const otpField3 = useRef(null);
     const otpField4 = useRef(null);
 
-
     const [userInput1, setUserInput1] = useState('')
     const [userInput2, setUserInput2] = useState('')
     const [userInput3, setUserInput3] = useState('')
     const [userInput4, setUserInput4] = useState('')
-
-
-
 
     let otpConcatData = userInput1.concat(userInput2).concat(userInput3).concat(userInput4)
 

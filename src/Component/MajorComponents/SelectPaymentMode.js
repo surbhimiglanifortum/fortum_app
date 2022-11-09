@@ -3,8 +3,7 @@ import { View, Text, SafeAreaView, StyleSheet, ActivityIndicator } from 'react-n
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getPaymentOption, payAsYouGo, checkOrderId, walletBalanceEnquiry, blockAmount, getUserDetails } from '../../Services/Api'
 import { Picker } from '@react-native-community/picker';
-import { useNavigation } from '@react-navigation/native';
-import { useIsFocused } from '@react-navigation/native'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
 import { useSelector, useDispatch } from 'react-redux'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import * as Types from '../../Redux/Types'

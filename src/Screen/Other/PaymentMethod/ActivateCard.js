@@ -1,5 +1,5 @@
 import { View, StyleSheet, useColorScheme, ScrollView, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useRef, useContext } from 'react'
 import colors from '../../../Utils/colors'
 import CommonText from '../../../Component/Text/CommonText'
 import Textinput from '../../../Component/Textinput/Textinput'
@@ -10,11 +10,13 @@ import Header from '../../../Component/Header/Header'
 import routes from '../../../Utils/routes'
 import CommonView from '../../../Component/CommonView'
 import { useSelector } from 'react-redux'
-import { sentKycOtp } from '../../../Services/Api'
+import { sentKycOtp, resendPinelabOtp, validatePinelabOtp } from '../../../Services/Api'
+import SnackContext from '../../../Utils/context/SnackbarContext'
 
 const ActivateCard = () => {
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+    const { setOpenCommonModal } = useContext(SnackContext);
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
@@ -24,10 +26,24 @@ const ActivateCard = () => {
     const [nameError, setNameError] = useState('')
     const [lNameError, setLNameError] = useState('')
     const [loadingSign, setLoadingSign] = useState(false)
+    const [disable, setDisable] = useState(true)
+    const [otpError, setOtpError] = useState('')
 
-    const proceedToKycHandler = () => {
-        navigation.navigate(routes.CompleteKYC)
-    }
+    const otpField1 = useRef(null);
+    const otpField2 = useRef(null);
+    const otpField3 = useRef(null);
+    const otpField4 = useRef(null);
+    const otpField5 = useRef(null);
+    const otpField6 = useRef(null);
+
+    const [userInput1, setUserInput1] = useState('')
+    const [userInput2, setUserInput2] = useState('')
+    const [userInput3, setUserInput3] = useState('')
+    const [userInput4, setUserInput4] = useState('')
+    const [userInput5, setUserInput5] = useState('')
+    const [userInput6, setUserInput6] = useState('')
+
+    let otpConcatData = userInput1.concat(userInput2).concat(userInput3).concat(userInput4).concat(userInput5).concat(userInput6)
 
     const otpSend = async () => {
         if (name.length < 1) {
@@ -54,17 +70,89 @@ const ActivateCard = () => {
             const result = await sentKycOtp(payload)
             if (result.data?.message) {
                 if (result.data?.message === "RequestId Generated successfully") {
-                    setSnack({ message: "OTP sent successfully", open: true, color: 'success' })
                     setDisable(false)
                 } else {
-                    setSnack({ message: result.data?.message, open: true, color: 'success' })
+                    setOpenCommonModal({
+                        isVisible: true, message: result.data?.message, onOkPress: () => {
+                            console.log("OKPressed")
+                        }
+                    })
                 }
             }
-            console.log("Check the pinelab otp api response", result.data)
             setLoadingSign(false)
         } catch (error) {
             setLoadingSign(false)
             console.log("Check the pinelab otp api error", error)
+        }
+    }
+
+    const onResendOtp = async () => {
+        if (name.length < 1) {
+            setNameError("Please enter the first name.")
+            return
+        } else {
+            setNameError("")
+        }
+
+        if (lName.length < 1) {
+            setLNameError("Please enter the last name.")
+            return
+        } else {
+            setLNameError("")
+        }
+
+        try {
+            const payload = {
+                email: mUserDetails?.username
+            }
+            const result = await resendPinelabOtp(payload)
+            console.log("On Resend OTP Result", result.data)
+            if (!result.data?.success) {
+                setOpenCommonModal({
+                    isVisible: true, message: result.data?.message, onOkPress: () => {
+                        console.log("OKPressed")
+                    }
+                })
+            }
+        } catch (error) {
+            console.log("On Resend OTP error", error)
+        }
+    }
+
+    const otpValidation = async () => {
+
+        if (userInput1 == '' || userInput2 == '' || userInput3 == '' || userInput4 == '' || userInput5 == '' || userInput6 == '') {
+            setOtpError("Please Enter Valid Otp.")
+            return;
+        }
+
+        try {
+            setLoadingSign(true)
+            const payload = {
+                email: mUserDetails?.username,
+                otp: otpConcatData
+            }
+            const result = await validatePinelabOtp(payload)
+            if (result.data?.message) {
+                if (result.data?.message?.responseMessage == "Min Kyc OTP Verified Successfully") {
+                    navigation.navigate(routes.CompleteKYC, {
+                        fName: name,
+                        lName: lName,
+                        email: mUserDetails?.username,
+                        mobileNumber: mUserDetails?.phone_number
+                    })
+                }
+            } else {
+                setOpenCommonModal({
+                    isVisible: true, message: result.data?.message?.responseMessage || result.data?.message, onOkPress: () => {
+                        console.log("OKPressed")
+                    }
+                })
+            }
+            setLoadingSign(false)
+        } catch (error) {
+            setLoadingSign(false)
+            console.log("OTP Verification error", error)
         }
     }
 
@@ -81,7 +169,7 @@ const ActivateCard = () => {
 
                 {
                     nameError !== '' &&
-                    <CommonText customstyles={styles.errorText} showText={nameError} />
+                    <CommonText customstyles={styles.errorText} showText={nameError} regular fontSize={12} />
                 }
 
                 <View style={styles.textinputConatiner}>
@@ -91,7 +179,7 @@ const ActivateCard = () => {
 
                 {
                     lNameError !== '' &&
-                    <CommonText customstyles={styles.errorText} showText={lNameError} />
+                    <CommonText customstyles={styles.errorText} showText={lNameError} regular fontSize={12} />
                 }
 
                 <View style={styles.textinputConatiner}>
@@ -110,22 +198,66 @@ const ActivateCard = () => {
 
                 <CommonText showText={'Enter OTP'} />
                 <View style={styles.otpContainer}>
-                    <OtpTextinput />
-                    <OtpTextinput />
-                    <OtpTextinput />
-                    <OtpTextinput />
+                    <OtpTextinput refData={otpField1} value={userInput1} onChange={(pin1) => {
+                        setUserInput1(pin1);
+                        if (pin1 !== '') {
+                            otpField2.current.focus();
+                        }
+                    }} />
+                    <OtpTextinput refData={otpField2} value={userInput2} onChange={(pin2) => {
+                        setUserInput2(pin2);
+                        if (pin2 !== '') {
+                            otpField3.current.focus();
+                        }
+                    }} />
+                    <OtpTextinput refData={otpField3} value={userInput3} onChange={(pin3) => {
+                        setUserInput3(pin3);
+                        if (pin3 !== '') {
+                            otpField4.current.focus();
+                        }
+                    }} />
+                    <OtpTextinput refData={otpField4} value={userInput4} onChange={(pin4) => {
+                        setUserInput4(pin4);
+                        if (pin4 !== '') {
+                            otpField5.current.focus();
+                        }
+                    }} />
+                    <OtpTextinput refData={otpField5} value={userInput5} onChange={(pin5) => {
+                        setUserInput5(pin5);
+                        if (pin5 !== '') {
+                            otpField6.current.focus();
+                        }
+                    }} />
+                    <OtpTextinput refData={otpField6} value={userInput6} onChange={(pin6) => {
+                        setUserInput6(pin6);
+                        if (pin6 !== '') {
+                            otpField6.current.focus();
+                        }
+                    }} />
                 </View>
 
-                <View style={styles.bottomText}>
-                    <CommonText showText={'Didn’t receive the code? '} regular fontSize={14} />
-                    <TouchableOpacity>
-                        <CommonText showText={'Resend'} fontSize={14} />
-                    </TouchableOpacity>
-                </View>
+                {
+                    otpError !== '' &&
+                    <CommonText customstyles={styles.errorText} showText={otpError} regular fontSize={12} />
+                }
 
-                <TouchableOpacity style={styles.button} >
-                    <Button showText={'Proceed to KYC'} onPress={proceedToKycHandler} />
-                </TouchableOpacity>
+                {
+                    !disable &&
+                    <View style={styles.bottomText}>
+                        <CommonText showText={'Didn’t receive the code? '} regular fontSize={14} />
+                        <TouchableOpacity onPress={onResendOtp}>
+                            <CommonText showText={'Resend'} fontSize={14} />
+                        </TouchableOpacity>
+                    </View>
+                }
+
+                <Button
+                    showText={'Proceed to KYC'}
+                    onPress={otpValidation}
+                    disable={!disable ? true : false}
+                    onLoading={loadingSign}
+                    bg={!disable && colors.lightGray}
+                />
 
             </ScrollView>
         </CommonView>
