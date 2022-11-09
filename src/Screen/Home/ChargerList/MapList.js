@@ -35,6 +35,8 @@ const MapList = ({ data, setOpenFilterModal, isRefetching }) => {
     })
   }
 
+  console.log("render Map list")
+
   return (
     <View style={[styles.container]}>
 

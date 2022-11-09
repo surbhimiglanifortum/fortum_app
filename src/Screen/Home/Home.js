@@ -1,5 +1,5 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme,FlatList } from 'react-native'
+import React, { useEffect, useContext, useState, useRef, useCallback } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme, FlatList } from 'react-native'
 import colors from '../../Utils/colors';
 import MapList from './ChargerList/MapList';
 import IconCardWithoutBg from '../../Component/Card/IconCardWithoutBg';
@@ -79,7 +79,7 @@ export default Home = () => {
     getLocationAndAnimate()
   }
   const chargingBtnHandler = () => {
-  
+
     setSelectedCharger(true)
   }
   const chargingCardHandler = () => {
@@ -100,9 +100,8 @@ export default Home = () => {
 
   const chargerLocations = async () => {
     try {
-      // let location = {}
+      
       const res = await ApiAction.getLocation(locationsPayload)
-
       var locationsArray = res.data?.locations[0];
       if (!location.coords) {
         return locationsArray
@@ -113,7 +112,7 @@ export default Home = () => {
             data?.longitude,
           ])
         })
-        locationsArray.sort(function (a, b) { return a.distance - b.distance })
+        locationsArray?.sort(function (a, b) { return a.distance - b.distance })
         return locationsArray;
       }
 
@@ -144,15 +143,15 @@ export default Home = () => {
     }
   }
 
-  const onFilterClick = (filterByConnectorCategories, onlyAvailableConnectors) => {
+  const onFilterClick = useCallback((filterByConnectorCategories, onlyAvailableConnectors) => {
 
     let tlocationsPayload = {
       onlyAvailableConnectors: onlyAvailableConnectors,
       filterByConnectorCategories: filterByConnectorCategories
     }
-    console.log("tlocationsPayload", tlocationsPayload)
+
     setLocationsPayload(tlocationsPayload)
-  }
+  }, [locationsPayload])
 
   return (
     <View style={styles.container}>
@@ -185,7 +184,7 @@ export default Home = () => {
         {selectedTab == 'List' && <TouchableOpacity onPress={filterButtonHandler}
           style={{ position: 'absolute', right: -70 }}>
           <CommonCard>
-            <FilterSvg fill={scheme == 'dark' ? colors.white:colors.black} />
+            <FilterSvg fill={scheme == 'dark' ? colors.white : colors.black} />
           </CommonCard>
         </TouchableOpacity>}
 
@@ -228,17 +227,17 @@ export default Home = () => {
         </View>}
 
         {selectedTab != 'List' && selectedCharger &&
-         <FlatList
-         horizontal={true}
-         data={data || []}
-         keyExtractor={item => item.id}
-         renderItem={({ item }) => {
-           return (
-             <DetailsCard chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
-           )
-         }
-         }
-       />
+          <FlatList
+            horizontal={true}
+            data={data || []}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => {
+              return (
+                <DetailsCard chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
+              )
+            }
+            }
+          />
 
         }
       </View>
