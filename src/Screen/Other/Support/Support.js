@@ -7,6 +7,12 @@ import CommonText from '../../../Component/Text/CommonText'
 import Charger from '../../../assests/svg/charger'
 import SettingCard from '../../../Component/Card/SettingCard'
 import WhatsAppSvg from '../../../assests/svg/WhatsAppSvg'
+import FAQSvg from '../../../assests/svg/FAQSvg'
+import TermAndCondtionSvg from '../../../assests/svg/TermAndCondtionSvg'
+import PrivacySvg from '../../../assests/svg/PrivacySvg'
+import CallSvg from '../../../assests/svg/CallSvg'
+import SupportSvg from '../../../assests/svg/SupportSvg'
+import WhatsSvg from '../../../assests/svg/WhatsSvg'
 
 const Support = () => {
 
@@ -22,15 +28,15 @@ const Support = () => {
                 <View style={styles.headerText}>
                     <CommonText showText={'Legal'} fontSize={18} />
                 </View>
-                <SettingCard Svg={Charger} showText={'FAQ'} fontSize={16} />
-                <SettingCard Svg={Charger} showText={'Terms and Condition'} fontSize={16} />
-                <SettingCard Svg={Charger} showText={'Privancy Plicy'} fontSize={16} />
+                <SettingCard Svg={FAQSvg} showText={'FAQ'} fontSize={16} />
+                <SettingCard Svg={TermAndCondtionSvg} showText={'Terms and Condition'} fontSize={16} />
+                <SettingCard Svg={PrivacySvg} showText={'Privancy Plicy'} fontSize={16} />
                 <View style={styles.headerText}>
                     <CommonText showText={'Contact Us'} fontSize={18} />
                 </View>
-                <SettingCard Svg={Charger} showText={'+91 1234567890'} fontSize={16} />
-                <SettingCard Svg={Charger} showText={'Support@gmail.com'} fontSize={16} />
-                <SettingCard Svg={WhatsAppSvg} showText={'Whatsapp'} fontSize={16} />
+                <SettingCard Svg={CallSvg} showText={'+91 1234567890'} fontSize={16} />
+                <SettingCard Svg={SupportSvg} showText={'Support@gmail.com'} fontSize={16} />
+                <SettingCard Svg={WhatsSvg} showText={'Whatsapp'} fontSize={16} />
             </View>
         </SafeAreaView>
     )
@@ -52,7 +58,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         marginTop: 25,
-
+paddingHorizontal:14
     }
 })
 
