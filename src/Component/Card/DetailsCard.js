@@ -1,14 +1,45 @@
 import { View, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native'
-import React from 'react'
+import React, { useMemo } from 'react'
 import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import { scale } from 'react-native-size-matters'
 import CommonText from '../Text/CommonText'
 import CommonCard from '../../Component/Card/CommonCard/index'
+import { useSelector, useDispatch } from 'react-redux'
+import * as ApiAction from '../../Services/Api'
+import { AddToRedux } from '../../Redux/AddToRedux'
+import * as Types from '../../Redux/Types'
 
 const DetailsCard = ({ chargerType, onPress, item, favourite }) => {
+
+    let favChargers = useSelector((state) => state.commonReducer.favCharger);
+    let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
     const scheme = useColorScheme()
+
+    const checkFav = useMemo(() => {
+
+        return favChargers?.findIndex(e => e.location_id === (item.location_id || item.id)) >= 0 ? true : false
+    });
+
+    const dispatch = useDispatch()
+
+    const addFav = async () => {
+
+        const result = await ApiAction.addFavouriteCharger(mUserDetails.username, item.location_id || item.id)
+
+        if (result.data.result == 'ok') {
+            dispatch(AddToRedux([...favChargers, { location_id: item.id, ...item }], Types.FAVCHARGER))
+        }
+    }
+
+    const removeFav = async () => {
+        const result = await ApiAction.deleteFavouriteCHarger(mUserDetails.username, item?.location_id || item?.id)
+        if (result.data.success == 'true') {
+            dispatch(AddToRedux(favChargers?.filter(e => e.location_id != (item.location_id || item.id)), Types.FAVCHARGER))
+        }
+    }
 
     return (
         <TouchableOpacity onPress={onPress}>
@@ -27,8 +58,9 @@ const DetailsCard = ({ chargerType, onPress, item, favourite }) => {
                         </View>
                         <View style={styles.leftContainer}>
                             <CommonCard margin={1} padding={8}>
-                                <TouchableOpacity >
-                                    <AntDesign name='hearto' color={scheme == 'dark' ? colors.svgColorDark : colors.svgColor} size={18} />
+                                <TouchableOpacity onPress={checkFav ? removeFav : addFav} >
+                                    {checkFav ? <AntDesign name='heart' color={scheme == 'dark' ? colors.svgColorDark : colors.red} size={18} /> : <AntDesign name='hearto' color={scheme == 'dark' ? colors.svgColorDark : colors.svgColor} size={18} />}
+
                                 </TouchableOpacity>
                             </CommonCard>
                             <CommonCard marginLeft={10} margin={1} padding={8} backgroundColor={'#3070CE'}>

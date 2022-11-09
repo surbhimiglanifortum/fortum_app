@@ -28,7 +28,6 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
 
     }, [location])
     
-
     return (
         <>
             
