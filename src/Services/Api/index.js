@@ -2,7 +2,8 @@ import { Auth } from 'aws-amplify';
 import appconfig from '../../Utils/appconfig';
 import axios from '../BaseUrl'
 import { generateSHA } from '../../Utils/HelperCommonFunctions'
-
+import { AddToRedux } from '../../Redux/AddToRedux';
+import * as Types from '../../Redux/Types'
 export const getUserDetails = async () => {
     const result = await Auth.currentAuthenticatedUser();
     if (result.signInUserSession) {
@@ -55,9 +56,20 @@ export const walletHistory = async (username, startDate, endDated) => {
     })
 }
 
-export const getFavouriteCHarger = async (username) => {
-    return await axios.get('/api_app/favouriteCharger/' + username);
+export const getFavouriteCHarger = async (username,dispatch) => {
+    const favData = await axios.get('/api_app/favouriteCharger/' + username);
+    // dispatch(AddToRedux(favData.data?.result,Types.FAVCHARGER, ))
+    return favData
+};
 
+
+export const deleteFavouriteCHarger = async (username, location_id) => {
+    return await axios.delete('/api_app/favouriteCharger/' + username + '/' + location_id);
+};
+
+
+export const addFavouriteCharger = async (username, location_id) => {
+    return await axios.post('/api_app/favouriteCharger',{username,location_id});
 };
 
 export const walletRecharge = async (username, payload) => {
