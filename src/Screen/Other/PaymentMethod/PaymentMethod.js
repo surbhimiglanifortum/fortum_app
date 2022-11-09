@@ -13,8 +13,10 @@ import WalletLight from '../../../assests/svg/Wallet_light'
 import RupeeLight from '../../../assests/svg/Ruppe_light'
 import CardLight from '../../../assests/svg/Card_light'
 import CommonView from '../../../Component/CommonView'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { walletBalanceEnquiry, getUserDetails } from '../../../Services/Api'
+import { AddToRedux } from '../../../Redux/AddToRedux'
+import * as Types from '../../../Redux/Types'
 import SettingCard from '../../../Component/Card/SettingCard'
 import PaymentSvg from '../../../assests/svg/PaymentSvg'
 
@@ -23,6 +25,7 @@ const PaymentMethod = () => {
   const navigation = useNavigation()
   const scheme = useColorScheme()
   const isFocused = useIsFocused()
+  const dispatch = useDispatch()
 
   const fortumChargeCardHandler = () => {
     navigation.navigate(routes.FortumChargeAndDriveCard)

@@ -248,7 +248,7 @@ const CompleteKYC = ({ route }) => {
 
                 <View style={{ marginTop: 25 }}>
                     <CommonText showText={'Document Type'} regular fontSize={14} />
-                    <DenseCard>
+                    <DenseCard padding={5}>
                         <Picker
                             selectedValue={documentType}
                             onValueChange={(itemValue, itemIndex) => setDocumentType(itemValue)}
