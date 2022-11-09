@@ -15,6 +15,7 @@ export const getUserDetails = async () => {
 }
 
 export const getLocation = async (payload) => {
+    console.log("getLocation",payload)
     return await axios.post("/api_app/locations/filter", payload)
 }
 
@@ -56,7 +57,7 @@ export const walletHistory = async (username, startDate, endDated) => {
     })
 }
 
-export const getFavouriteCHarger = async (username,dispatch) => {
+export const getFavouriteCHarger = async (username, dispatch) => {
     const favData = await axios.get('/api_app/favouriteCharger/' + username);
     // dispatch(AddToRedux(favData.data?.result,Types.FAVCHARGER, ))
     return favData
@@ -69,7 +70,7 @@ export const deleteFavouriteCHarger = async (username, location_id) => {
 
 
 export const addFavouriteCharger = async (username, location_id) => {
-    return await axios.post('/api_app/favouriteCharger',{username,location_id});
+    return await axios.post('/api_app/favouriteCharger', { username, location_id });
 };
 
 export const walletRecharge = async (username, payload) => {
