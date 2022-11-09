@@ -11,16 +11,16 @@ const ChangePassword = () => {
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
-    
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <ScrollView>
                 <View style={styles.innerContainer}>
-                   {/* <Header /> */}
-                   <View style={styles.header}>
+                    {/* <Header /> */}
+                    <View style={styles.header}>
                         <BackButton />
                         <View style={styles.headerText}>
-                           <CommonText showText={'ChangePassword'} fontSize={20} /> 
+                            <CommonText showText={'ChangePassword'} fontSize={20} />
                         </View>
                     </View>
                     <View style={{ marginVertical: 20 }}>
@@ -34,14 +34,14 @@ const ChangePassword = () => {
                         <Textinput />
                     </View>
                     <View style={styles.textinputConatiner}>
-                      <CommonText showText={'Confirm Password'} fontSize={12} /> 
+                        <CommonText showText={'Confirm Password'} fontSize={12} />
                         <Textinput />
                     </View>
-                    <TouchableOpacity style={styles.button} >
-                        <Button  showText={'Save'} />
-                    </TouchableOpacity>
                 </View>
             </ScrollView>
+            <TouchableOpacity style={styles.button} >
+                <Button showText={'Save'} />
+            </TouchableOpacity>
         </SafeAreaView>
     )
 }
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         marginVertical: 15
     },
     button: {
-        marginTop: 250
+       marginHorizontal:15
     },
 })
 

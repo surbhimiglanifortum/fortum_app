@@ -36,6 +36,7 @@ const routes = {
     RechargeDone: 'RechargeDone',
     PayInvoice: 'PayInvoice',
     ChargingKeyDetails:'ChargingKeyDetails',
+    FaqPage:'FaqPage',
 }
 
 export default routes
