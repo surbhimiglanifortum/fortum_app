@@ -38,13 +38,13 @@ const Order = () => {
             <View style={styles.innerContainer}>
                 {/* <Header /> */}
                 <Header showText={'Orders'} />
-                <View style={styles.headerText}>
+                {/* <View style={styles.headerText}>
                     <CommonText showText={'Today'} fontSize={16} />
                 </View>
                 <OrdersCard Svg={OrderSvg} showText={'8GDGBC57JG4GHDH'} fontSize={16} />
                 <View style={styles.headerText}>
                     <CommonText showText={'12/08/2022'} fontSize={16} />
-                </View>
+                </View> */}
                 {!loaderOpen && data?.length > 0 ?
                     <FlatList
                         data={data}

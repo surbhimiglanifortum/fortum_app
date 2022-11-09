@@ -11,7 +11,7 @@ import SnackContext from '../../../Utils/context/SnackbarContext'
 import CommonText from '../../../Component/Text/CommonText'
 import Loader from '../../../Component/Loader'
 
-const MapList = ({ data, setOpenFilterModal, isRefetching }) => {
+const MapList = ({ data, setOpenFilterModal, isRefetching ,location}) => {
 
   const navigation = useNavigation()
   const [listData, setListData] = useState([])

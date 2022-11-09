@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, FlatList } from 'react-native'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import colors from '../../Utils/colors'
 import Header from '../../Component/Header/Header'
@@ -7,24 +7,27 @@ import DetailsCard from '../../Component/Card/DetailsCard'
 import CommonView from '../../Component/CommonView'
 import * as ApiAction from '../../Services/Api'
 import { useQuery } from 'react-query'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { computeDistance } from '../../Utils/helperFuncations/computeDistance';
 import Loader from '../../Component/Loader'
 import CommonText from '../../Component/Text/CommonText'
+import * as Types from '../../Redux/Types'
+import { AddToRedux } from '../../Redux/AddToRedux'
 
 const Favoruite = ({ route }) => {
 
   const { location } = route.params
+  const dispatch = useDispatch()
   const navigation = useNavigation()
   const scheme = useColorScheme()
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
-console.log("SDJS",location)
-  const { data, isFetching } = useQuery("FavouriteData", async () => {
-    const result = await ApiAction.getFavouriteCHarger(mUserDetails.username)
-    var locationsArray = result.data?.result
+  let favChargers = useSelector((state) => state.commonReducer.favCharger);
 
-    console.log("adlisa")
-    console.log(location?.coords)
+  // console.log(dispatch)
+  const { data, isFetching } = useQuery("FavouriteCharger", async () => {
+    const result = await ApiAction.getFavouriteCHarger(mUserDetails.username, dispatch)
+
+    var locationsArray = result.data?.result
     if (location?.coords?.latitude) {
       locationsArray.map((item, index) => {
         locationsArray[index].distance = computeDistance([location.coords.latitude, location.coords.longitude], [
@@ -32,12 +35,14 @@ console.log("SDJS",location)
           item.coordinates.longitude,
         ])
       })
-
     }
-    console.log("locationsArray",locationsArray)
-    return locationsArray
 
+    dispatch(AddToRedux(locationsArray, Types.FAVCHARGER))
+    return locationsArray
   })
+
+
+
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
@@ -47,7 +52,7 @@ console.log("SDJS",location)
 
         <FlatList
           style={{ flex: 1 }}
-          data={data}
+          data={favChargers}
           renderItem={({ item }) => <DetailsCard item={item} favourite={true} />}
         />
       </CommonView>

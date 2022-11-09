@@ -14,7 +14,7 @@ import CommonView from '../../Component/CommonView'
 import Loader from '../../Component/Loader'
 import BackBtnTab from '../../Component/Button/BackBtnTab'
 import Charger from '../../assests/svg/charger'
-
+import DenseCard from '../../Component/Card/DenseCard/index'
 
 const Charging = ({ setSelectedTabs }) => {
 
@@ -65,12 +65,22 @@ const Charging = ({ setSelectedTabs }) => {
         <CommonView>
             <BackBtnTab onPress={backhandler} showText={"Charging"} />
             <View style={styles.tabContainer}>
-                <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'ongoing' ? colors.white : colors.greenBackground }]}>
-                    <CommonText customstyles={[{ color: selectedTab == 'ongoing' ? colors.black : colors.white }]} showText={'Ongoing'} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={completedBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'completed' ? '#FFF' : colors.greenBackground }]}>
-                    <CommonText customstyles={[{ color: selectedTab == 'completed' ? colors.black : '#FFF' }]} showText={'Compeleted'} />
-                </TouchableOpacity>
+                {selectedTab == 'ongoing' ? <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                    <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton,]}>
+                        <CommonText customstyles={[{ color: selectedTab == 'ongoing' ? colors.green : colors.white }]} showText={'Ongoing'} />
+                    </TouchableOpacity>
+                </DenseCard>
+                    : <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton,]}>
+                        <CommonText customstyles={[{ color: selectedTab == 'ongoing' ? colors.black : colors.white }]} showText={'Ongoing'} />
+                    </TouchableOpacity>}
+                {selectedTab == 'completed' ? <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                    <TouchableOpacity onPress={completedBtnHandler} style={[styles.tabButton,]}>
+                        <CommonText customstyles={[{ color: selectedTab == 'completed' ? colors.green : '#FFF' }]} showText={'Completed'} />
+                    </TouchableOpacity>
+                </DenseCard>
+                    : <TouchableOpacity onPress={completedBtnHandler} style={[styles.tabButton,]}>
+                        <CommonText customstyles={[{ color: selectedTab == 'completed' ? colors.black : '#FFF' }]} showText={'Completed'} />
+                    </TouchableOpacity>}
             </View>
             <View>
                 {selectedTab == 'ongoing' &&
@@ -145,19 +155,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: scale(15),
         backgroundColor: '#5AC37D',
-        paddingVertical: 8,
-        borderRadius: 5,
-        paddingHorizontal: 10,
+        paddingVertical: 2,
+        borderRadius: 10,
+        paddingHorizontal: 5,
         justifyContent: 'space-between',
         marginHorizontal: 10
     },
     tabButton: {
-        backgroundColor: '#FFF',
-        paddingVertical: 5,
         paddingHorizontal: 15,
-        borderRadius: 3,
-        width: '50%',
-        alignItems: 'center'
+        borderRadius: 6,
+        alignItems: 'center',
+        alignSelf: 'center',
+        paddingHorizontal: 30
     }
 })
 

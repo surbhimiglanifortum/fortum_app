@@ -1,5 +1,5 @@
 import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, NativeModules, useColorScheme } from 'react-native'
-import React, { useState ,memo} from 'react'
+import React, { useState, memo } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
@@ -43,7 +43,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
         setIsSwitchOn(!isSwitchOn)
     };
     const applyButtonHandler = () => {
-        onFilterClick({payloadConnectors:payloadConnectors, isSwitchOn:isSwitchOn})
+        onFilterClick(payloadConnectors, isSwitchOn)
         setOpenFilterModal(false)
     }
 
@@ -113,7 +113,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
 
     }
 
-console.log("render filter")
+    console.log("render filter")
 
 
     return (
@@ -125,7 +125,7 @@ console.log("render filter")
                         <View style={styles.header}>
                             <View>
                             </View>
-                            <View style={{  }}>
+                            <View style={{}}>
                                 <CommonText fontSize={16} >Filter</CommonText>
                             </View>
                             <View>

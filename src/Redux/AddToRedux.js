@@ -46,8 +46,15 @@ export const AddToRedux = (value, type) => {
             }
             break
         case Types.PINELABAUTH:
+
             return {
                 type: Types.PINELABAUTH,
+                payload: value
+            }
+
+        case Types.FAVCHARGER:
+            return {
+                type: Types.FAVCHARGER,
                 payload: value
             }
         default:

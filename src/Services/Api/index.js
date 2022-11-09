@@ -2,7 +2,8 @@ import { Auth } from 'aws-amplify';
 import appconfig from '../../Utils/appconfig';
 import axios from '../BaseUrl'
 import { generateSHA } from '../../Utils/HelperCommonFunctions'
-
+import { AddToRedux } from '../../Redux/AddToRedux';
+import * as Types from '../../Redux/Types'
 export const getUserDetails = async () => {
     const result = await Auth.currentAuthenticatedUser();
     if (result.signInUserSession) {
@@ -13,6 +14,7 @@ export const getUserDetails = async () => {
 }
 
 export const getLocation = async (payload) => {
+    console.log("getLocation",payload)
     return await axios.post("/api_app/locations/filter", payload)
 }
 
@@ -54,9 +56,20 @@ export const walletHistory = async (username, startDate, endDated) => {
     })
 }
 
-export const getFavouriteCHarger = async (username) => {
-    return await axios.get('/api_app/favouriteCharger/' + username);
+export const getFavouriteCHarger = async (username, dispatch) => {
+    const favData = await axios.get('/api_app/favouriteCharger/' + username);
+    // dispatch(AddToRedux(favData.data?.result,Types.FAVCHARGER, ))
+    return favData
+};
 
+
+export const deleteFavouriteCHarger = async (username, location_id) => {
+    return await axios.delete('/api_app/favouriteCharger/' + username + '/' + location_id);
+};
+
+
+export const addFavouriteCharger = async (username, location_id) => {
+    return await axios.post('/api_app/favouriteCharger', { username, location_id });
 };
 
 export const walletRecharge = async (username, payload) => {
@@ -145,6 +158,7 @@ export const getPinelabBalance = async (payload) => {
 
 export const sentKycOtp = async (payload) => {
     return await axios.post("/api_app/pinelabs/user/prepaid-card/start", payload);
+<<<<<<< HEAD
 }
 
 export const resendPinelabOtp = async (payload) => {
@@ -174,3 +188,15 @@ export const getEncryptData = async (payload) => {
 export const orderPinelabCard = async (payload) => {
     return await axios.post('/api_app/pinelabs/card/order/digital-to-physical-card', payload)
 }
+=======
+};
+
+export const getFaqService = async () => {
+    return await axios.get(appconfig.BASE_URL + '/api_app/faq/getfaq');
+}
+
+export const updateProfileService = async (username, fname,) => {
+    console.log(username, fname, '..............in serv')
+    return await axios.post(appconfig.BASE_URL + "/api_app/gist/" + username + "/first_name",{first_name: fname})
+};
+>>>>>>> c259bc7dad8ab129e9363ddcd94efffae6e41f88
