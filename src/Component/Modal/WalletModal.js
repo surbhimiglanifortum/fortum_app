@@ -4,36 +4,38 @@ import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import CommonText from '../Text/CommonText'
 import Feather from 'react-native-vector-icons/Feather'
+import CommonCard from '../../Component/Card/CommonCard/index'
 
 const WalletModals = ({ modalVisible, setModalVisible, showStartDatePicker, showEndDatePicker, startDate, endDate, showDateList }) => {
 
-    const showBtnhandler = () => {
-        setModalVisible(false)
-    }
 
     return (
         <Modal visible={modalVisible} statusBarTranslucent={true} transparent>
             <View style={styles.container}>
                 <View style={styles.innerContainer}>
-                    <TouchableOpacity style={styles.crossBtn} onPress={() => { setModalVisible(false) }}>
-                        <AntDesign name='close' size={20} />
-                    </TouchableOpacity>
-                    <View style={styles.centerText}>
-                        <CommonText showText={'Select Date'} fontSize={20} customstyles={{ color: colors.red }} />
-                    </View>
-                    <CommonText showText={'Start Date'} customstyles={{ color: colors.black }} />
-                    <TouchableOpacity style={styles.textinputCon} onPress={() => { showStartDatePicker() }}>
-                        <TextInput editable={false} placeholder='Please Select Start Date' value={startDate} />
-                        <Feather name='calendar' size={20} />
-                    </TouchableOpacity>
-                    <CommonText showText={'End Date'} customstyles={{ color: colors.black }} />
-                    <TouchableOpacity style={styles.textinputCon} onPress={() => { showEndDatePicker() }}>
-                        <TextInput editable={false} placeholder='Please Select End Date' value={endDate} />
-                        <Feather name='calendar' size={20} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { showDateList() }}>
-                        <CommonText showText={'Show'} customstyles={styles.greenText} />
-                    </TouchableOpacity>
+                    <CommonCard>
+                        <TouchableOpacity style={styles.crossBtn} onPress={() => { setModalVisible(false) }}>
+                            <CommonCard>
+                                <AntDesign name='close' size={20} />
+                            </CommonCard>
+                        </TouchableOpacity>
+                        <View style={styles.centerText}>
+                            <CommonText showText={'Select Date'} fontSize={20} customstyles={{ color: colors.red }} />
+                        </View>
+                        <CommonText showText={'Start Date'} />
+                        <TouchableOpacity style={styles.textinputCon} onPress={() => { showStartDatePicker() }}>
+                            <TextInput editable={false} placeholder='Please Select Start Date' value={startDate} />
+                            <Feather name='calendar' size={20} />
+                        </TouchableOpacity>
+                        <CommonText showText={'End Date'} />
+                        <TouchableOpacity style={styles.textinputCon} onPress={() => { showEndDatePicker() }}>
+                            <TextInput editable={false} placeholder='Please Select End Date' value={endDate} />
+                            <Feather name='calendar' size={20} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => { showDateList() }}>
+                            <CommonText showText={'Show'} customstyles={styles.greenText} />
+                        </TouchableOpacity>
+                    </CommonCard>
                 </View>
             </View>
 
@@ -49,19 +51,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     innerContainer: {
-        width: '85%',
-        backgroundColor: colors.white,
-        paddingHorizontal: 15,
-        borderRadius: 10
+        width: '95%',
     },
     crossBtn: {
-        backgroundColor: colors.white,
-        elevation: 5,
-        paddingVertical: 6,
-        paddingHorizontal: 6,
-        borderRadius: 6,
         alignSelf: 'flex-end',
-        marginVertical: 10
     },
     centerText: {
         marginBottom: 20

@@ -8,21 +8,25 @@ import Button from '../../Component/Button/Button'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useSelector } from 'react-redux'
+import { updateProfileService } from '../../Services/Api'
 
 const Profile = ({ route }) => {
 
     const userData = route.params;
     const { phone_number: prefillPhone_number, email: prefillEMail } = route.params;
 
-    console.log(userData.userDetailsData.userDetails.first_name, '..............user')
+    let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+    const username = mUserDetails?.username
+
     const navigation = useNavigation()
     const scheme = useColorScheme()
 
     const lazy_array = [
-        { name: 'First Name', value: "first_name", placeHolder: userData?.userDetailsData?.userDetails?.first_name },
-        { name: 'Last Name', value: "last_name", placeHolder: userData?.userDetailsData?.userDetails?.last_name },
-        { name: 'Email ID', value: "email_id", placeHolder: userData?.userDetailsData?.userDetails?.email },
-        { name: 'Mobile Number', value: "mobile_number", placeHolder: userData?.userDetailsData?.phone_number },
+        { name: 'First Name', value: "first_name",enable: false, },
+        { name: 'Last Name', value: "last_name",enable: false, },
+        { name: 'Email ID', value: "email_id", enable: false, },
+        { name: 'Mobile Number', value: "mobile_number", enable: false, },
 
     ]
     const SignupSchema = Yup.object().shape({
@@ -37,8 +41,11 @@ const Profile = ({ route }) => {
 
     });
 
-    const handleSignup = async (values, event) => {
+    const handleUpdate = async (values, event) => {
 
+        const res = await updateProfileService(username,values)
+
+        
     }
 
     return (
@@ -57,13 +64,13 @@ const Profile = ({ route }) => {
 
                     <Formik
                         initialValues={{
-                            first_name: '',
-                            last_name: "",
+                            first_name: userData?.userDetailsData?.userDetails?.first_name || '',
+                            last_name: userData?.userDetailsData?.userDetails?.last_name || '',
 
-                            email_id: prefillEMail || '',
-                            mobile_number: prefillPhone_number || ''
+                            email_id: userData?.userDetailsData?.userDetails?.email || '',
+                            mobile_number: userData?.userDetailsData?.phone_number || ''
                         }}
-                        onSubmit={handleSignup}
+                        onSubmit={handleUpdate}
                         validationSchema={SignupSchema}
                     >
                         {({ handleChange, handleBlur, handleSubmit, values, isSubmitting, errors, touched }) => (
@@ -71,15 +78,15 @@ const Profile = ({ route }) => {
                                 {lazy_array.map((e, i) => {
                                     return (
                                         <View key={i} style={styles.textinputConatiner}>
-                                            {scheme == 'dark' ? <CommonText showText={e.name} fontSize={14} /> : <CommonText showText={e.name} fontSize={14} />}
-                                            <Textinput value={values[e.value]} onChange={handleChange(e.value)} placeholderText={values[e.placeHolder]} />
+                                            <CommonText showText={e.name} fontSize={14} />
+                                            <Textinput value={values[e.value]} onChange={handleChange(e.value)} placeholder={e.name} editable={e.enable} />
                                             {errors[e.value] && touched[e.value] ? (
                                                 <CommonText showText={errors[e.value]} customstyles={{ color: colors.red }} fontSize={14} />
                                             ) : null}
                                         </View>
                                     )
                                 })}
-                                <View style={styles.btnConatiner}>
+                                <View style={styles.button}>
                                     <Button onPress={handleSubmit} showText={'Save'} onLoading={isSubmitting} />
                                 </View>
                             </>
@@ -109,7 +116,7 @@ const styles = StyleSheet.create({
         marginVertical: 15
     },
     button: {
-        marginTop: 130
+        marginTop: 20
     },
 })
 
