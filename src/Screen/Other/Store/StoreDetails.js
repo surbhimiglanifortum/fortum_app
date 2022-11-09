@@ -22,10 +22,10 @@ const StoreDetails = ({ route }) => {
     const navigateData = route.params.dataItem.item
 
     const cartData = useSelector((state) => state.AddToCartReducers.cartItem)
-    console.log(cartData, '..................cart')
+
     let cartCout = cartData.filter(e => {
-        return {...e}})
-    console.log(cartCout, '............cart cout')
+        return { ...e }
+    })
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
@@ -82,9 +82,9 @@ const StoreDetails = ({ route }) => {
                     </DenseCard>
                 </View>
 
-                {cartCount == 0 && <Button showText={'Add to Cart'} onPress={() => addCartBtn(navigateData)} />}
-                {cartCount >= 1 && <View style={styles.btnCon}>
-                    <AddRemoveCard cartCount={cartCount} addQty={addQty} removeQty={removeQty} />
+                {cartData.findIndex(e => e.id == navigateData.id) < 0 && <Button showText={'Add to Cart'} onPress={() => addCartBtn(navigateData)} />}
+                {cartData.findIndex(e => e.id == navigateData.id) >= 0 && <View style={styles.btnCon}>
+                    <AddRemoveCard cartCount={cartData[cartData.findIndex(e => e.id == navigateData.id)].cartItem} addQty={addQty} removeQty={removeQty} />
                     <View style={styles.addCartBtn}>
                         <Button showText={'Checkout'} onPress={cartHandler} />
                     </View>
