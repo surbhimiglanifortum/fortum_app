@@ -1,10 +1,13 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, TextInput } from 'react-native'
+import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import CommonText from '../Text/CommonText'
 import Feather from 'react-native-vector-icons/Feather'
 import CommonCard from '../../Component/Card/CommonCard/index'
+import moment from 'moment'
+import TextInput from '../Textinput/Textinput'
+import Button from '../Button/Button'
 
 const WalletModals = ({ modalVisible, setModalVisible, showStartDatePicker, showEndDatePicker, startDate, endDate, showDateList }) => {
 
@@ -20,20 +23,23 @@ const WalletModals = ({ modalVisible, setModalVisible, showStartDatePicker, show
                             </CommonCard>
                         </TouchableOpacity>
                         <View style={styles.centerText}>
-                            <CommonText showText={'Select Date'} fontSize={20} customstyles={{ color: colors.red }} />
+                            <CommonText showText={'Select Date'} fontSize={24} />
                         </View>
                         <CommonText showText={'Start Date'} />
                         <TouchableOpacity style={styles.textinputCon} onPress={() => { showStartDatePicker() }}>
-                            <TextInput editable={false} placeholder='Please Select Start Date' value={startDate} />
+                            <TextInput customStyles={{ flex: 1, marginHorizontal: 3 }} editable={false} placeholder='Please Select Start Date' value={moment(startDate).format('DD-MM-YYYY')} />
                             <Feather name='calendar' size={20} />
                         </TouchableOpacity>
                         <CommonText showText={'End Date'} />
                         <TouchableOpacity style={styles.textinputCon} onPress={() => { showEndDatePicker() }}>
-                            <TextInput editable={false} placeholder='Please Select End Date' value={endDate} />
+                            <TextInput customStyles={{ flex: 1, marginHorizontal: 3 }} editable={false} placeholder='Please Select End Date' value={moment(endDate).format('DD-MM-YYYY')} />
                             <Feather name='calendar' size={20} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => { showDateList() }}>
-                            <CommonText showText={'Show'} customstyles={styles.greenText} />
+
+                            <Button onPress={() => showDateList()} showText={'Show'} />
+
+
                         </TouchableOpacity>
                     </CommonCard>
                 </View>
