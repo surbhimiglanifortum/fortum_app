@@ -22,6 +22,8 @@ export default function index({ children, style, ref,margin,active,padding, back
                 marginLeft: marginLeft || margin || 10,
                 // marginVertical: 10,
                 padding: padding || 10,
+                ...style
+            
             }}
         >            
             {children}

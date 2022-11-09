@@ -18,8 +18,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import NoData from '../../Component/NoDataFound/NoData'
 import Loader from '../../Component/Loader'
 import BackBtnTab from '../../Component/Button/BackBtnTab'
+import CommonView from '../../Component/CommonView'
 
-const Wallet = ({setSelectedTab}) => {
+const Wallet = ({ setSelectedTab }) => {
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const dispatch = useDispatch()
@@ -56,8 +57,8 @@ const Wallet = ({setSelectedTab}) => {
   const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
-  const [techStart, setTechStart] = useState()
-  const [techEnd, setTechEnd] = useState('')
+  const [techStart, setTechStart] = useState(moment().subtract(30, 'days').format('YYYY-MM-DDT24:00:00'))
+  const [techEnd, setTechEnd] = useState(moment().format('YYYY-MM-DDT00:00:00'))
 
   const showStartDatePicker = () => {
     setStartDatePickerVisibility(!isStartDatePickerVisible);
@@ -76,32 +77,12 @@ const Wallet = ({setSelectedTab}) => {
   };
 
   const handleStartConfirm = (date) => {
-    let selectedDate = moment(date).format('LL')
-    setStartDate(selectedDate)
-    let year = new Date(date).getFullYear()
-    let month = new Date(date).getMonth() + 1
-    if (month <= 9) {
-      month = "0" + month
-    }
-    let d = new Date(date).getDate()
-    let srt = `${year}-${month}-${d}T00:00:00`
-    console.log("Check Hour start", srt)
-    setTechStart(srt)
+    setTechStart(moment(date).format('YYYY-MM-DDT00:00:00'))
     hideStartDatePicker();
   };
 
   const handleEndConfirm = (date) => {
-    let selectedDate = moment(date).format('LL')
-    setEndDate(selectedDate)
-    let year = new Date(date).getFullYear()
-    let month = new Date(date).getMonth() + 1
-    if (month <= 9) {
-      month = "0" + month
-    }
-    let d = new Date(date).getDate()
-    let end = `${year}-${month}-${d}T24:00:00`
-    console.log("Check Hour end", end)
-    setTechEnd(end)
+    setTechEnd(moment(date).format('YYYY-MM-DDT24:00:00'))
     hideEndDatePicker();
   };
 
@@ -127,67 +108,70 @@ const Wallet = ({setSelectedTab}) => {
 
 
   return (
-    <SafeAreaView style={styles.container}>
+    <CommonView style={styles.container}>
       <BackBtnTab onPress={backhandler} showText={"Wallet"} />
-      <View style={styles.innerContainer}>
 
-        {/* card */}
-        <WalletCard onPress={RechargeButtonHandler} title={`₹ ${balance}`} subTitle={'Your Prepaid Balance'} />
-        <View style={styles.text}>
-          <CommonText showText={'Transcation History'} />
-        </View>
 
-        <View>
-          {!loaderOpen && data?.length > 0 ?
-            <FlatList
-              data={data}
-              keyExtractor={item => item.id}
-              renderItem={(item) => {
-                return (
-                  <CardWallet dataItem={item} />
-                )
-              }}
-            /> :
-            !loaderOpen && <NoData showText={'No History Found'} />
-          }
-        </View>
+      {/* card */}
+      <WalletCard onPress={RechargeButtonHandler} title={`₹ ${balance}`} subTitle={'Your Prepaid Balance'} />
+      <View style={styles.text}>
+        <CommonText showText={`Transcation History(${data?.length || 0})`} />
       </View>
+
+
+      {!loaderOpen && data?.length > 0 ?
+        <FlatList
+          data={data}
+          keyExtractor={item => item.id}
+          renderItem={(item) => {
+            return (
+              <CardWallet dataItem={item} />
+            )
+          }}
+        /> :
+        !loaderOpen && <NoData showText={'No History Found'} />
+      }
+
+
       <TouchableOpacity style={styles.filterBtn} onPress={() => setModalVisible(true)}>
         <Fontisto name='equalizer' size={20} color={colors.white} />
       </TouchableOpacity>
       <DateTimePickerModal
         isVisible={isStartDatePickerVisible}
         mode="date"
+        date={new Date(techStart)}
         onConfirm={handleStartConfirm}
         onCancel={hideStartDatePicker}
-        maximumDate={new Date()}
+        maximumDate={new Date(techEnd)}
       />
 
       <DateTimePickerModal
         isVisible={isEndDatePickerVisible}
         mode="date"
+        date={new Date(techEnd)}
         onConfirm={handleEndConfirm}
         onCancel={hideEndDatePicker}
+        minimumDate={new Date(techStart)}
         maximumDate={new Date()}
       />
 
-      <WalletModals modalVisible={modalVisible} setModalVisible={setModalVisible} showStartDatePicker={showStartDatePicker} showEndDatePicker={showEndDatePicker} startDate={startDate} endDate={endDate} showDateList={showDateList} />
+      <WalletModals modalVisible={modalVisible} setModalVisible={setModalVisible} showStartDatePicker={showStartDatePicker} showEndDatePicker={showEndDatePicker} startDate={techStart} endDate={techEnd} showDateList={showDateList} />
       <Loader modalOpen={loaderOpen} />
-    </SafeAreaView>
+    </CommonView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 10
+
   },
   innerContainer: {
-    marginTop: 20,
+    flex: 1
+    // marginTop: 20,
   },
   text: {
     marginVertical: 15,
-    paddingHorizontal:12
+    paddingHorizontal: 12
   },
   card: {
     flexDirection: 'row',
