@@ -3,39 +3,26 @@ import React from 'react'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
 import CommonText from '../Text/CommonText'
+import CommonCard from '../../Component/Card/CommonCard/index'
 
 const PersonalCodeCard = ({ showText }) => {
 
     return (
-        <View style={styles.card}>
-            <View style={styles.container}>
-                <CommonText showText={showText} />
-                <TouchableOpacity style={styles.copyBtn}>
-                    <CommonText showText={'Copy'} />
-                </TouchableOpacity>
+        <CommonCard>
+            <View style={styles.card}>
+                <View style={styles.container}>
+                    <CommonText showText={showText} />
+                    <TouchableOpacity style={styles.copyBtn}>
+                        <CommonText showText={'Copy'} customstyles={{ color: 'white' }} />
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
+        </CommonCard>
     )
 }
 
 const styles = StyleSheet.create({
 
-    card: {
-        paddingVertical: scale(10),
-        paddingHorizontal: scale(10),
-        borderRadius: 5,
-        shadowColor: colors.black,
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 3.05,
-        elevation: 4,
-        marginVertical: 5,
-        backgroundColor: '#FFF'
-
-    },
     container: {
         flexDirection: 'row',
         alignItems: 'center',

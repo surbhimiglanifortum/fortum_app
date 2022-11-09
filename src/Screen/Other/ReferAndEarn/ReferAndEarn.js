@@ -9,23 +9,23 @@ import { scale } from 'react-native-size-matters'
 import WhatsAppSvg from '../../../assests/svg/WhatsAppSvg'
 import SmallButton from '../../../Component/Button/SmallButton'
 import MessengerSvg from '../../../assests/svg/MessengerSvg'
-
+import CommonCard from '../../../Component/Card/CommonCard/index'
+import CommonView from '../../../Component/CommonView/index'
 const ReferAndEarn = () => {
     const navigation = useNavigation()
     const scheme = useColorScheme()
 
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
-            <View style={styles.innerContainer}>
-                {/* <Header /> */}
-                <Header showText={'Refer & Earn'} />
 
+        <CommonView>
+            <View style={styles.innerContainer}>
+                <Header showText={'Refer & Earn'} />
                 <View style={styles.headerText}>
-                    <CommonText showText={'Copy your code, share it with your friends to earn rewards'} fontSize={15} />
+                    <CommonText showText={'Copy your code, share it with your friends to earn rewards'} fontSize={15} customstyles={{paddingHorizontal:12}} />
                 </View>
                 <View style={styles.headerText}>
-                    <CommonText showText={'Your personal code'} fontSize={13} />
+                    <CommonText showText={'Your personal code'} fontSize={13} customstyles={{paddingHorizontal:12}} />
                     <PersonalCodeCard showText={'HDAB78992'} />
                 </View>
                 <View style={styles.centerView}>
@@ -37,41 +37,41 @@ const ReferAndEarn = () => {
                     <SmallButton Svg={WhatsAppSvg} />
                 </View>
                 <View style={styles.bottomContainer}>
-                    <CommonText showText={'How it works?'} />
-                    <View style={styles.card}>
-                        <View style={styles.cardInner}>
-                            <View style={styles.numberContainer}>
-                                <CommonText showText={'1'} fontSize={15} customstyles={{color:colors.green}}  />
+                    <CommonText showText={'How it works?'} customstyles={{paddingHorizontal:12}} />
+                    <CommonCard>
+                        <View style={styles.card}>
+                            <View style={styles.cardInner}>
+                                <View style={styles.numberContainer}>
+                                    <CommonText showText={'1'} fontSize={15} customstyles={{ color: colors.green }} />
+                                </View>
+                                <CommonText showText={'Invite your friends '} />
                             </View>
-                            <CommonText showText={'Invite your friends '} />
-                        </View>
-                        <View style={styles.cardInner}>
-                            <View style={styles.numberContainer}>
-                                <CommonText showText={'2'} fontSize={15} customstyles={{color:colors.green}}  />
+                            <View style={styles.cardInner}>
+                                <View style={styles.numberContainer}>
+                                    <CommonText showText={'2'} fontSize={15} customstyles={{ color: colors.green }} />
+                                </View>
+                                <CommonText showText={'They hit the road with ₹100 off '} />
                             </View>
-                            <CommonText showText={'They hit the road with ₹100 off '} />
-                        </View>
-                        <View style={styles.cardInner}>
-                            <View style={styles.numberContainer}>
-                                <CommonText showText={'3'} fontSize={15} customstyles={{color:colors.green}}  />
+                            <View style={styles.cardInner}>
+                                <View style={styles.numberContainer}>
+                                    <CommonText showText={'3'} fontSize={15} customstyles={{ color: colors.green }} />
+                                </View>
+                                <CommonText showText={'You make saving! '} />
                             </View>
-                            <CommonText showText={'You make saving! '} />
                         </View>
-                    </View>
+                    </CommonCard>
+
                 </View>
 
             </View>
-        </SafeAreaView>
+        </CommonView>
+
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
+
     innerContainer: {
-        width: '90%',
-        alignSelf: 'center',
         marginTop: 20
     },
     button: {
@@ -99,11 +99,11 @@ const styles = StyleSheet.create({
         marginTop: scale(80)
     },
     card: {
-        backgroundColor: colors.white,
-        marginTop: 10,
-        paddingVertical: 20,
-        paddingHorizontal: 10,
-        borderRadius: 6
+        // backgroundColor: colors.white,
+        // marginTop: 10,
+        // paddingVertical: 20,
+        // paddingHorizontal: 10,
+        // borderRadius: 6
     },
     cardInner: {
         flexDirection: 'row',

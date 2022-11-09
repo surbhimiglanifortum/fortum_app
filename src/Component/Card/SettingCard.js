@@ -30,7 +30,7 @@ const SettingCard = ({ showText, fontSize, Svg, onPress }) => {
                         <CommonText showText={showText} fontSize={fontSize} customstyles={{ width: scale(180) }} />
                     </View>
                 </View>
-                <AntDesign name='right' color={colors.black} size={18} />
+                <AntDesign name='right' color={scheme == 'dark' ? colors.white : colors.black} size={18} />
             </TouchableOpacity>
         </CommonCard>
 
