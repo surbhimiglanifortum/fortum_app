@@ -16,7 +16,6 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
     const scheme = useColorScheme()
 
     useEffect(() => {
-        console.log("lcation change in home")
         if (location?.coords) {
             mapRef.current.animateToRegion({
                 latitude: location?.coords.latitude,

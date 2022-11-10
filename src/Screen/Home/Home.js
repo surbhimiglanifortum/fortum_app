@@ -27,9 +27,8 @@ import DenseCard from '../../Component/Card/DenseCard'
 
 let selectedMarker = {}
 
-export default Home = () => {
-
-
+export default Home = ({ navigatedata }) => {
+ 
   const mapRef = useRef();
   const navigation = useNavigation()
   const [location, setLocation] = useState({})
@@ -72,8 +71,21 @@ export default Home = () => {
     }).catch(err => { console.log(err); navigation.navigate("MakeChargingEasySplash") });
 
   }
+
+  const searchedLocation= (payload) =>{
+    setLocation({
+      coords:{
+        latitude:payload.lat,
+        longitude:payload.lng
+      }
+    })
+  }
+
   const searchBtnHandler = () => {
-    navigation.navigate(routes.SearchLocation,)
+    navigation.navigate(routes.SearchLocation, {
+      searchedLocation,
+      getLocationAndAnimate
+    })
   }
   const locationBtnHandler = () => {
     getLocationAndAnimate()
@@ -100,8 +112,8 @@ export default Home = () => {
 
   const chargerLocations = async () => {
     try {
-      
-      const res = await ApiAction.getLocation({...locationsPayload,username:mUserDetails?.username || ""})
+
+      const res = await ApiAction.getLocation({ ...locationsPayload, username: mUserDetails?.username || "" })
       var locationsArray = res.data?.locations[0];
       if (!location.coords) {
         return locationsArray
@@ -130,7 +142,7 @@ export default Home = () => {
     try {
       setLocationLoading(true)
       Geolocation.getCurrentPosition(info => {
-
+        
         setLocation(info)
         setLocationLoading(false)
       }, error => {
@@ -143,7 +155,7 @@ export default Home = () => {
     }
   }
 
-  
+
 
   const onFilterClick = useCallback((filterByConnectorCategories, onlyAvailableConnectors) => {
 
@@ -218,7 +230,7 @@ export default Home = () => {
         {true && selectedTab != 'List' &&
           <CommonCard padding={0} margin={1}>
             <View >
-              <CommonText showText={'Show charging station nearest to'} fontSize={17} customstyles={{marginVertical:8}} />
+              <CommonText showText={'Show charging station nearest to'} fontSize={17} customstyles={{ marginVertical: 8 }} />
               <View style={styles.searchInnerContainer}>
                 <View style={{ width: '80%' }}>
                   <DenseCard >

@@ -17,168 +17,128 @@ import CommonIconCard from '../../Component/Card/CommonIconCard/CommonIconCard'
 import appconfig from '../../Utils/appconfig'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 
-const SearchLocation = () => {
+const SearchLocation = ({ route }) => {
 
+
+    route.params.getLocationAndAnimate
     const navigation = useNavigation()
     const scheme = useColorScheme()
     const [showSearchText, setShowSearchText] = useState(false)
 
     const animateToRegionMap = (region) => {
-        // console.log("animate",region,region.lat)
-        mapRef.current.animateToRegion({
-            latitude: region.lat,
-            longitude: region.lng,
-            latitudeDelta: 0.025,
-            longitudeDelta: 0.025
-        }, 2000);
+        route.params.searchedLocation({ lat: JSON.parse(region).lat, lng: JSON.parse(region).lng })
     }
 
-    const [searchText, setSearchText] = useState('')
     const locationCardHandler = () => {
         navigation.navigate(routes.dashboard)
     }
+
+    const liveLocationHAndler = () => {
+        route.params.getLocationAndAnimate()
+        navigation.goBack()
+    }
+
     return (
         <CommonView>
-            <ScrollView>
-                <View style={styles.innerContainer}>
-                    <View style={styles.header}>
-                        <CommonCard>
-                            <TouchableOpacity style={styles.backBtn}
-                                onPress={() => { navigation.goBack() }}>
-                                <AntDesign name='left' size={22} color={scheme == 'dark' ? colors.white : colors.black} />
-                            </TouchableOpacity>
-                        </CommonCard>
-                        {/* <DenseCard padding={4}>
-                            <View style={styles.searchContainer} >
-                                <View style={styles.leftInner}>
-                                    <AntDesign name='search1' size={20} />
-                                    <TextInput placeholder='Your Location' value={searchText} onChangeText={(val) => { setSearchText(val) }} />
-                                </View>
-                                <TouchableOpacity onPress={() => { setSearchText('') }}>
-                                    <AntDesign name='close' size={20} />
-                                </TouchableOpacity>
-                            </View>
-                        </DenseCard> */}
-                        <View style={{ width: '80%' }}>
-                            <NeomorphFlex
-                                inner // <- enable shadow inside of neomorph
-                                swapShadows // <- change zIndex of each shadow color
-                                style={{
+            <View style={styles.innerContainer}>
+                <View style={styles.header}>
+                    <CommonCard>
+                        <TouchableOpacity style={styles.backBtn}
+                            onPress={() => { navigation.goBack() }}>
+                            <AntDesign name='left' size={22} color={scheme == 'dark' ? colors.white : colors.black} />
+                        </TouchableOpacity>
+                    </CommonCard>
 
-                                    shadowRadius: 3,
-                                    borderRadius: 12,
-                                    backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight,
-                                    // margin: 10,
-                                    marginVertical: 10,
-                                    padding: 5,
-                                }}
-                            >
-
-                                <View style={{ flex: 1, borderWidth: 1 }}>
-                                    <GooglePlacesAutocomplete
-                                        placeholder='Search'
-                                        onPress={(data, details = null) => console.log(data, details,'.........')}
-                                        onFail={error => console.log(error,'........err')}
-                                        onNotFound={() => console.log('no results')}
-                                        query={{
-                                            key: appconfig.MAPS_KEY,
-                                            language: 'en',
-                                        }}
-
-                                        styles={{
-                                            container: {
-                                                flex: 1,
-                                              },
-                                            textInput: {
-                                                height: 38,
-                                                color: '#5d5d5d',
-                                                fontSize: 16,
-                                            },
-                                            predefinedPlacesDescription: {
-                                                color: '#1faadb',
-                                            },
-                                            textInput: {
-                                                backgroundColor: '#fff',
-                                                height: 44,
-                                                borderRadius: 5,
-                                                paddingVertical: 5,
-                                                paddingHorizontal: 10,
-                                                fontSize: 15,
-                                                flex: 1,
-                                            },
-                                        }}
-                                    />
-
-
-                                    {/* <GooglePlacesAutocomplete
-                                        placeholder='Search'
-                                        fetchDetails={true}
-
-                                        renderRightButton={() =>
-                                            <TouchableOpacity onPress={() => { setSearchText('') }}>
-                                                <AntDesign name='close' size={20} />
-                                            </TouchableOpacity>
-                                        }
-                                        enablePoweredByContainer={false}
-                                        onPress={(data, details = null) => {
-                                            console.log(data, '..........data')
-                                            console.log(details, '..........details')
-                                            if (details && details.geometry && details.geometry.location) {
-                                                animateToRegionMap(details.geometry.location)
-                                            }
-                                        }}
-
-                                        query={{
-                                            key: appconfig.MAPS_KEY,
-                                            language: 'en',
-                                            components: 'country:in',
-                                        }}
-
-
-                                    /> */}
-                                </View>
-
-
-
-
-
-
-
-
-                                {/* <View style={styles.header}>
-                                    <View style={styles.leftInner}>
-                                        <AntDesign name='search1' size={20} />
-                                        <TextInput placeholder='Your Location' value={searchText} onChangeText={(val) => { setSearchText(val) }} />
-                                    </View>
-                                    <TouchableOpacity onPress={() => { setSearchText('') }}>
-                                        <AntDesign name='close' size={20} />
-                                    </TouchableOpacity>
-                                </View> */}
-                            </NeomorphFlex>
-                        </View>
-                    </View>
-                    <View style={styles.locationContainer}>
-                        <CommonCard>
-                            <TouchableOpacity>
-                                <LocationSvg fill={scheme == 'dark' ? 'white' : 'black'} />
-                            </TouchableOpacity>
-                        </CommonCard>
-                        <CommonText showText={'Current Location Using GPS'} fontSize={15} />
-                    </View>
-                    <View style={styles.searchList}>
-                        <CommonText showText={'Recent Searches'} fontSize={18} />
-                        <CommonCard>
-                            <TouchableOpacity style={styles.card} onPress={locationCardHandler}>
-                                <CommonIconCard Svg={Location1Svg} />
-                                <View style={styles.cardInner}>
-                                    <CommonText showText={'Shake Mafia'} fontSize={16} />
-                                    <CommonText showText={'Shake Mafia'} fontSize={13} />
-                                </View>
-                            </TouchableOpacity>
-                        </CommonCard>
-                    </View>
                 </View>
-            </ScrollView>
+
+                <View style={{ width: '80%', flex: 1, position: 'absolute', left: 60, zIndex: 999 }}>
+                    <NeomorphFlex
+                        inner // <- enable shadow inside of neomorph
+                        swapShadows // <- change zIndex of each shadow color
+                        style={{
+                            shadowRadius: 3,
+                            borderRadius: 12,
+                            backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight,
+                            marginVertical: 10,
+                            padding: 5,
+                        }}>
+                        <View style={{}}>
+                            <GooglePlacesAutocomplete
+                                placeholder='Search'
+                                GooglePlacesDetailsQuery={{ fields: "geometry" }}
+                                fetchDetails={true} // you need this to fetch the details object onPress
+                                clear={() => {}}
+                                renderRightButton={() =>{ <TouchableOpacity style={{ position: 'absolute', right: 10, top: 10 }} onPress={() => {}}>
+                                <AntDesign name='close' size={20} />
+                            </TouchableOpacity>} }
+
+                                onPress={(data, details = null) => {
+                                    if (details && details.geometry && details?.geometry?.location) {
+                                        animateToRegionMap(JSON.stringify(details?.geometry?.location))
+                                        navigation.goBack()
+                                    }
+                                }}
+                                onFail={error => console.log(error, '........err')}
+                                onNotFound={() => console.log('no results')}
+                                query={{
+                                    key: appconfig.MAPS_KEY,
+                                    language: 'en',
+                                }}
+                                styles={{
+                                    container: {
+                                        flex: 1,
+                                    },
+                                    textInput: {
+                                        height: 38,
+                                        color: '#5d5d5d',
+                                        fontSize: 16,
+                                    },
+                                    predefinedPlacesDescription: {
+                                        color: '#1faadb',
+                                    },
+                                    textInput: {
+                                        backgroundColor: colors.lightBackGround,
+                                        height: 44,
+                                        borderRadius: 5,
+                                        paddingVertical: 5,
+                                        paddingHorizontal: 10,
+                                        fontSize: 15,
+                                        flex: 1,
+                                    },
+                                    row: {
+                                        backgroundColor: colors.lightBackGround,
+                                        padding: 13,
+                                        height: 40,
+                                        flexDirection: 'row',
+                                    },
+                                }}
+                            />
+
+                        </View>
+                    </NeomorphFlex>
+                </View>
+                <View style={styles.locationContainer}>
+                    <CommonCard>
+                        <TouchableOpacity onPress={liveLocationHAndler}>
+                            <LocationSvg fill={scheme == 'dark' ? 'white' : 'black'} />
+                        </TouchableOpacity>
+                    </CommonCard>
+                    <CommonText showText={'Current Location Using GPS'} fontSize={15} />
+                </View>
+                <View style={styles.searchList}>
+                    <CommonText showText={'Recent Searches'} fontSize={18} customstyles={{ paddingHorizontal: 12 }} />
+                    <CommonCard>
+                        <TouchableOpacity style={styles.card} onPress={locationCardHandler}>
+                            <CommonIconCard Svg={Location1Svg} />
+                            <View style={styles.cardInner}>
+                                <CommonText showText={'Shake Mafia'} fontSize={16} />
+                                <CommonText showText={'Shake Mafia'} fontSize={13} />
+                            </View>
+                        </TouchableOpacity>
+                    </CommonCard>
+                </View>
+            </View>
+
         </CommonView>
     )
 }
@@ -229,12 +189,6 @@ const styles = StyleSheet.create({
     card: {
         flexDirection: 'row',
         alignItems: 'center',
-        // backgroundColor: colors.white,
-        // paddingVertical: 10,
-        // paddingHorizontal: 10,
-        // borderRadius: 6,
-        // marginTop: 10,
-        // elevation: 5
     },
     cardInner: {
         marginLeft: 10

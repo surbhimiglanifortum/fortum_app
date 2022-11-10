@@ -20,8 +20,9 @@ import routes from '../../Utils/routes';
 import DashboardCard from '../../Component/Card/DashboardCard'
 
 
-const Dashboard = ({ tabName, navigation }) => {
+const Dashboard = ({ tabName, navigation, route }) => {
 
+  const navigatedata = route?.params?.animateMap
   const [selectedTab, setSelectedTab] = useState('home')
 
   const homeButtonHandler = () => {
@@ -73,8 +74,8 @@ const Dashboard = ({ tabName, navigation }) => {
     <>
       <View style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
         <View style={styles.renderComponent}>
-          <View style={{ flex: 1}}>
-            {selectedTab == 'home' && <Home />}
+          <View style={{ flex: 1 }}>
+            {selectedTab == 'home' && <Home navigatedata={navigatedata} />}
             {selectedTab == 'wallet' && <Wallet setSelectedTab={setSelectedTab} />}
             {selectedTab == 'charging' && <Charging setSelectedTabs={setSelectedTab} />}
             {selectedTab == 'notification' && <Notification setSelectedTab={setSelectedTab} />}
@@ -82,7 +83,7 @@ const Dashboard = ({ tabName, navigation }) => {
           </View>
         </View>
         <View style={[styles.tabContainer, { backgroundColor: colors.greenBackground }]}>
-          
+
           <TouchableOpacity onPress={homeButtonHandler} style={[styles.tabButton]}>
             {selectedTab == 'home' ? <DashboardCard><View style={styles.tabButton}><HomeSvg color={colors.white} /><CommonText showText={'Home'} margin={6} customstyles={styles.tabText} /></View></DashboardCard> : <HomeSvg color={colors.white} />}
           </TouchableOpacity>
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
   tabContainer: { paddingVertical: scale(20), flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: scale(25) },
   tabButton: { flexDirection: 'row', alignItems: 'center', },
   text: { color: colors.white, fontFamily: commonFonts.bold, marginLeft: 7 },
-  renderComponent: { flex: 1},
+  renderComponent: { flex: 1 },
   tabText: {
     color: colors.white,
     marginLeft: 5,
