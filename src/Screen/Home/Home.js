@@ -28,7 +28,7 @@ import DenseCard from '../../Component/Card/DenseCard'
 let selectedMarker = {}
 
 export default Home = ({ navigatedata }) => {
- 
+
   const mapRef = useRef();
   const navigation = useNavigation()
   const [location, setLocation] = useState({})
@@ -72,11 +72,11 @@ export default Home = ({ navigatedata }) => {
 
   }
 
-  const searchedLocation= (payload) =>{
+  const searchedLocation = (payload) => {
     setLocation({
-      coords:{
-        latitude:payload.lat,
-        longitude:payload.lng
+      coords: {
+        latitude: payload.lat,
+        longitude: payload.lng
       }
     })
   }
@@ -142,7 +142,7 @@ export default Home = ({ navigatedata }) => {
     try {
       setLocationLoading(true)
       Geolocation.getCurrentPosition(info => {
-        
+
         setLocation(info)
         setLocationLoading(false)
       }, error => {
@@ -166,6 +166,16 @@ export default Home = ({ navigatedata }) => {
 
     setLocationsPayload(tlocationsPayload)
   }, [locationsPayload])
+
+
+  const cardDetailsHandler = (data) => {
+    navigation.navigate(routes.ChargingStation, {
+      data: data
+    })
+  }
+
+
+
 
   return (
     <View style={styles.container}>

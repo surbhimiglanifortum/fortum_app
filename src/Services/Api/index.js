@@ -18,6 +18,7 @@ export const getLocation = async (payload) => {
 }
 
 export const getEvses = async (locid, payload) => {
+    console.log("asdkasdkjdS",locid,payload)
     return await axios.post("/api_app/locations/gist/" + locid, payload)
 }
 

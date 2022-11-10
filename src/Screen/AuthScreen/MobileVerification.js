@@ -98,7 +98,7 @@ const MobileVerification = ({ route }) => {
                     setLoading(false)
 
                     // failed to verify OTP
-                    setOpenCommonModal({ isVisible: true, message: "Enter Valid OTP" })
+                    setOpenCommonModal({ isVisible: true, message: "OTP is wrong please re enter " })
                 }
             }).catch(err => {
                 setLoading(false)
