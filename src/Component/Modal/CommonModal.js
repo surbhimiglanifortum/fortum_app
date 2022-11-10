@@ -6,7 +6,7 @@ import Button from '../Button/Button'
 import CommonText from '../Text/CommonText'
 
 
-const CommonModal = ({ openCommonModal, setOpenCommonModal, showBtnText }) => {
+const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText }) => {
 
     const okayBtnHandler = () => {
         try {
@@ -14,7 +14,7 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, showBtnText }) => {
         } catch (error) {
         }
 
-        setOpenCommonModal({ isVisible: false, message: "" })
+        setOpenCommonModal({ isVisible: false, message: "", heading: '' })
     }
 
     return (
@@ -23,13 +23,13 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, showBtnText }) => {
                 <View style={styles.innerContainer}>
                     <View style={styles.wrapContainer}>
                         <View style={styles.header}>
-                            <CommonText showText={'Notifications'} fontSize={20} />
+                            <CommonText showText={openCommonModal.heading ? openCommonModal.heading : 'Notifications'} customstyles={styles.heading} />
                             <TouchableOpacity style={styles.crossBtn} onPress={() => { setOpenCommonModal({ isVisible: false, message: "" }) }}>
                                 <AntDesign name='close' size={20} />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.centerText}>
-                            <CommonText showText={openCommonModal?.message} fontSize={16} />
+                            <CommonText showText={openCommonModal?.message} fontSize={16} regular />
                         </View>
                         <View>
                             <Button showText={showBtnText ? showBtnText : 'Okay'} onPress={okayBtnHandler} />
@@ -63,9 +63,9 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: '70%',
         justifyContent: 'space-between',
-        alignSelf: 'flex-end'
+        alignSelf: 'center',
+        width: '100%'
     },
     crossBtn: {
         backgroundColor: colors.white,
@@ -77,6 +77,11 @@ const styles = StyleSheet.create({
     centerText: {
         marginVertical: 50,
         alignSelf: 'center'
+    },
+    heading: {
+        textAlign: 'center',
+        flex: 1,
+        marginLeft: 35
     }
 })
 

@@ -41,6 +41,7 @@ const PayMinimum = ({ route }) => {
     const [askPin, setAskPin] = useState(false)
     const [pin, setPin] = useState({ value: '', error: '' });
     const [prepaidCardBalance, setPrepaidCardBalance] = useState('')
+    const [colorText, setColorText] = useState('red')
 
     const checkWalletBalance = () => {
         setMode('CLOSED_WALLET')
@@ -50,8 +51,10 @@ const PayMinimum = ({ route }) => {
             setWalletBalance(userData?.balance)
             setWallet(false)
             setRefreshing(false)
+            setColorText(colors.red)
         } else {
-            setMsg('')
+            setColorText(colors.green)
+            setMsg('You are ready to charge')
             setWalletBalance(userData?.balance)
             setWallet(true)
             setRefreshing(false)
@@ -162,7 +165,11 @@ const PayMinimum = ({ route }) => {
     const handleClick = (mode) => {
         switch (mode) {
             case 'CLOSED_WALLET':
-                // checkWalletBalance()
+                navigation.navigate(routes.OngoingDetails, {
+                    locDetails: locDetails,
+                    evDetails: evDetails,
+                    paymentMethod: mode
+                })
                 break;
             case 'PAY_AS_U_GO':
                 payAsYouGoMode()
@@ -257,7 +264,7 @@ const PayMinimum = ({ route }) => {
 
                 {
                     msg != '' &&
-                    <CommonText showText={msg} customstyles={styles.text} fontSize={14} regular />
+                    <CommonText showText={msg} customstyles={[{ color: colorText }, styles.text]} fontSize={14} regular />
                 }
 
             </View>
@@ -282,7 +289,6 @@ const styles = StyleSheet.create({
         left: 12
     },
     text: {
-        color: colors.red,
         textAlign: 'center',
         marginTop: 30
     },
