@@ -37,7 +37,7 @@ const Order = () => {
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <View style={styles.innerContainer}>
                 {/* <Header /> */}
-                <Header showText={'Orders'} />
+                <Header showText={`Orders(${data?.length})`} />
                 {/* <View style={styles.headerText}>
                     <CommonText showText={'Today'} fontSize={16} />
                 </View>

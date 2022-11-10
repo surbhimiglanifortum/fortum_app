@@ -13,12 +13,9 @@ let eventListener;
 let clientId = "fortum"
 let merchantId = "fortum"
 let merchantKeyId = "10563"
-let amount = ''
-let orderId = ''
+
+
 let customerId = ''
-let mobile_number = ''
-let email_address = ''
-let return_url = ''
 let juspay_process_payload = {}
 let orderStatus
 
@@ -33,11 +30,6 @@ const PaymentScreenJuspay = (props) => {
     // params needed
     // amount, mobile,email
     customerId = props.route.params.email_address
-    mobile_number = props.route.params.mobile_number
-    email_address = props.route.params.email_address
-    return_url = props.route.params.callback_url
-    amount = props.route.params.amount
-    orderId = props.route.params.orderid
     juspay_process_payload = props.route.params.juspay_process_payload
     orderStatus = props.route?.params?.orderStatus
     // isWallet = props.route.params.isWallet
@@ -322,6 +314,9 @@ const PaymentScreenJuspay = (props) => {
                     props.navigation.pop(1)
                 } if (props.route.params?.callFrom === 'RechargerWallet') {
                     props.navigation.navigate(routes.RechargeDone)
+                } if (props.route.params?.callFrom === 'MyCart') {
+                    
+                    props.navigation.navigate(routes.OrderPlaced)
                 } else {
                     props.navigation.goBack()
                 }

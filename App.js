@@ -80,7 +80,7 @@ const App = () => {
         action: 'initiate',
         merchantId: 'fortum',
         clientId: 'fortum',
-        environment: 'production',
+        environment: 'sandbox',
       },
     };
     HyperSdkReact.createHyperServices();
