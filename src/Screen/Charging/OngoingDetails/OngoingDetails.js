@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Header from '../../../Component/Header/Header'
 import colors from '../../../Utils/colors'
 import CommonText from '../../../Component/Text/CommonText'
@@ -21,6 +21,8 @@ import axios from "axios"
 import { GetCouterTime } from '../../../Utils/utils'
 import PayAsUGoModal from '../../../Component/Modal/PayAsUGoModal'
 import { refundCloseLoopWallet, refundPayAsUGo } from '../../../Services/Api'
+import CommonView from '../../../Component/CommonView'
+import SnackContext from '../../../Utils/context/SnackbarContext'
 
 var mStoppedPressed = false;
 let sessionId = ''
@@ -33,9 +35,11 @@ const OngoingDetails = ({ route }) => {
   const navigation = useNavigation()
   const scheme = useColorScheme()
 
+  var counterinterval;
+
   console.log("Check Route Params", route?.params)
 
-  const [paymentMethod, setPaymentMethod] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState(route?.params?.paymentMethod)
   const [msg, setMsg] = useState('')
   const [goodToGo, setGoodToGo] = useState(false)
   const [isShow, setShow] = useState(true)
@@ -64,6 +68,8 @@ const OngoingDetails = ({ route }) => {
     navigation.navigate(routes.taxInvoice)
   }
 
+  const { setOpenCommonModal } = useContext(SnackContext);
+
   const locDetails = route?.params?.locDetails
   const evDetails = route.params?.evDetails
 
@@ -81,7 +87,7 @@ const OngoingDetails = ({ route }) => {
 
   const fetchLastSession = async () => {
     setRefreshing(true)
-    const response = await axios.get(appconfig.BASE_URL + "/sessions/allactive/" + username);
+    const response = await axios.get(appconfig.BASE_URL + "/api_app/sessions/allactive/" + username);
     setRefreshing(false)
     response.data.forEach((item, index) => {
       // console.log('Session Id')
@@ -217,7 +223,7 @@ const OngoingDetails = ({ route }) => {
       auth_id: authID
     }
 
-    axios.post(appconfig.BASE_URL + "/sessions/", data).then((r) => {
+    axios.post(appconfig.BASE_URL + "/api_app/sessions/", data).then((r) => {
       console.log("Check Auth Id", data)
       console.log("2 Response of session Api", r.data)
       console.log(r.data)
@@ -273,7 +279,7 @@ const OngoingDetails = ({ route }) => {
       uid: uid + ""
     }
     console.log("Check Command Auth", data)
-    axios.post(appconfig.BASE_URL + "/commands/", data).then((r) => {
+    axios.post(appconfig.BASE_URL + "/api_app/commands/", data).then((r) => {
       console.log("commandsCall")
       console.log(r.data.result)
       if (r.data.result === 'ACCEPTED') {
@@ -293,7 +299,7 @@ const OngoingDetails = ({ route }) => {
     setChargerState("STARTING")
     setChargerText("Starting...")
     console.log("Start PRessed")
-    axios.get(appconfig.BASE_URL + "/charging_keys/ids/" + username).then(resp => {
+    axios.get(appconfig.BASE_URL + "/api_app/charging_keys/ids/" + username).then(resp => {
       console.log("/charging_keys/ids/", resp.data)
       let vtoken = {}
       let vtoken_id = ''
@@ -302,7 +308,7 @@ const OngoingDetails = ({ route }) => {
         if (item.auth_id.startsWith("token_") || item.auth_id.startsWith("fleet")) {
           vtoken_id = item
           console.log(vtoken_id)
-          axios.get(appconfig.BASE_URL + "/tokens/" + vtoken_id.auth_id).then(token => {
+          axios.get(appconfig.BASE_URL + "/api_app/tokens/" + vtoken_id.auth_id).then(token => {
             vtoken = token.data
 
             let data = {
@@ -325,27 +331,31 @@ const OngoingDetails = ({ route }) => {
                 //existing bill
                 setChargerState("STOP")
                 setChargerText("Start")
-                setSnack({ message: 'You have existing bill, Please fill it first before charging', open: true, color: 'error' })
-                setShowRazorpay(true)
-                console.log("initiateJuspayr.data", r.data)
-                axios.get(appconfig.BASE_URL + "/sessions/initiateJuspay/" + userm + "/" + r.data[0].session_id).then((result) => {
-                  console.log("initiateJuspayresukt", result.data)
-                  if (result.data.success) {
-                    navigation.navigate(routes.PaymentScreenJuspay, {
-                      amount: 0,
-                      email_address: '',
-                      orderid: '',
-                      mobile_number: '',
-                      description: 'EV Charge Invoice',
-                      callback_url: '',
-                      juspay_process_payload: result.data.data.juspay_payload
+                setOpenCommonModal({
+                  isVisible: true, message: `You have existing bill, Please fill it first before charging`,
+                  onOkPress: () => {
+                    console.log("Anuj1111")
+                    axios.get(appconfig.BASE_URL + "/api_app/sessions/initiateJuspay/" + mUserDetails?.username + "/" + r.data[0].session_id).then((result) => {
+                      console.log("initiateJuspayresukt", result.data)
+                      if (result.data.success) {
+                        navigation.navigate(routes.PaymentScreenJuspay, {
+                          amount: 0,
+                          email_address: '',
+                          orderid: '',
+                          mobile_number: '',
+                          description: 'EV Charge Invoice',
+                          callback_url: '',
+                          juspay_process_payload: result.data.data.juspay_payload
+                        })
+                      } else {
+                        // manage exxception
+                      }
+                    }).catch((e) => {
+                      console.log("error", e)
                     })
-                  } else {
-                    // manage exxception
                   }
-                }).catch((e) => {
-                  console.log("error")
                 })
+                console.log("initiateJuspayr.data", r.data)
                 return
               }
               if (r.data.data.data.result === 'ACCEPTED') {
@@ -396,7 +406,7 @@ const OngoingDetails = ({ route }) => {
     startChargerCallWithToken()
   }
 
-  if (route.params.started) {
+  if (route.params?.started) {
     useEffect(() => {
       pollSessions(route.params.auth_id, 0, 0, 0)
     }, [])
@@ -406,7 +416,7 @@ const OngoingDetails = ({ route }) => {
     if (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') {
       return colors.blue;
     }
-    if (((evDetails?.status === "AVAILABLE" || route.params.started == true || isSessionActive == true) && (evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined)) || (evDetails?.status === "AVAILABLE" || route.params.started == true || isSessionActive == true) && (payAsYouGoOrderStatus == 'CHARGED' || goodToGo)) {
+    if (((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true) && (evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined)) || (evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true) && (payAsYouGoOrderStatus == 'CHARGED' || goodToGo)) {
       return null;
     } else {
       return colors.grey
@@ -462,37 +472,35 @@ const OngoingDetails = ({ route }) => {
 
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
+    <CommonView>
+      <Header showText={'Charging'} />
       <ScrollView>
-        <View style={styles.innerContainer}>
-          <Header showText={'Charging'} />
+        <View style={styles.textCon}>
+          <CommonText showText={locDetails?.name} customstyles={{ marginBottom: 7 }} regular fontSize={14} />
+          <CommonText showText={`${locDetails?.address?.city} ${locDetails?.address?.street} ${locDetails?.address?.postalCode}`} bold />
+        </View>
 
-          <View style={styles.textCon}>
-            <CommonText showText={locDetails?.name} customstyles={{ marginBottom: 7 }} regular fontSize={14} />
-            <CommonText showText={`${locDetails?.address?.city} ${locDetails?.address?.street} ${locDetails?.address?.postalCode}`} bold />
-          </View>
-
-          <DenseCard>
-            <View style={styles.topCard}>
-              <Charger1 height={40} width={40} />
-              <View>
-                <CommonText
-                  showText={getChargerMapObject(evDetails?.connectors[0]?.standard).name + ' - ' + (evDetails?.connectors[0]?.amperage * evDetails?.connectors[0]?.voltage / 1000).toFixed(2) + 'kW'}
-                  fontSize={15}
-                  customstyles={{ marginLeft: 10 }}
-                  bold
-                />
-                <CommonText
-                  showText={'₹ ' + parseFloat(evDetails?.connectors[0]?.pricing?.price).toFixed(2) + ' / ' + (evDetails?.connectors[0]?.pricing?.type === "TIME" ? "min" : evDetails?.connectors[0]?.pricing?.type === "FLAT" ? "flat" : "kWh+GST")}
-                  fontSize={15}
-                  customstyles={{ marginLeft: 10, marginTop: 5 }}
-                  regular
-                />
-              </View>
+        <DenseCard>
+          <View style={styles.topCard}>
+            <Charger1 height={40} width={40} />
+            <View>
+              <CommonText
+                showText={getChargerMapObject(evDetails?.connectors[0]?.standard).name + ' - ' + (evDetails?.connectors[0]?.amperage * evDetails?.connectors[0]?.voltage / 1000).toFixed(2) + 'kW'}
+                fontSize={15}
+                customstyles={{ marginLeft: 10 }}
+                bold
+              />
+              <CommonText
+                showText={'₹ ' + parseFloat(evDetails?.connectors[0]?.pricing?.price).toFixed(2) + ' / ' + (evDetails?.connectors[0]?.pricing?.type === "TIME" ? "min" : evDetails?.connectors[0]?.pricing?.type === "FLAT" ? "flat" : "kWh+GST")}
+                fontSize={15}
+                customstyles={{ marginLeft: 10, marginTop: 5 }}
+                regular
+              />
             </View>
-          </DenseCard>
+          </View>
+        </DenseCard>
 
-          <DenseCard>
+        {/* <DenseCard>
             <SelectPaymentMode
               min_balance={evDetails?.connectors[0]?.pricing?.min_balance}
               addMoneyPress={() => navigation.navigate(routes.RechargeWallet, {
@@ -513,119 +521,109 @@ const OngoingDetails = ({ route }) => {
               msg != '' &&
               <CommonText showText={msg} regular fontSize={13} customstyles={{ color: colors.red, textAlign: 'center', paddingHorizontal: 10 }} />
             }
+          </DenseCard> */}
 
-          </DenseCard>
-          {
-            chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ?
-              <DenseCard>
-                <View style={styles.middleCard}>
-                  <View style={styles.middleInner}>
-                    <CommonText showText={'Time'} fontSize={18} />
-                  </View>
-                  <View style={styles.timeContainer}>
-                    <View>
-                      <DenseCard>
-                        <CommonText showText={chargeTime?.hours} customstyles={{ textAlign: 'center' }} />
-                      </DenseCard>
-                      <CommonText showText={'  Hours'} />
-                    </View>
-                    <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
-                    <View>
-                      <DenseCard>
-                        <CommonText showText={chargeTime?.minutes} customstyles={{ textAlign: 'center' }} />
-                      </DenseCard>
-                      <CommonText showText={' Minutes'} />
-                    </View>
-                    <View>
-                      <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
-                    </View>
-                    <View>
-                      <DenseCard>
-                        <CommonText showText={chargeTime?.seconds} customstyles={{ textAlign: 'center' }} />
-                      </DenseCard>
-                      <CommonText showText={' Seconds'} />
-                    </View>
-                  </View>
-                </View>
-              </DenseCard> :
-              null
-          }
 
-          <PayAsUGoModal
-            modalVisible={showRestart}
-            bgStyle={'rgba(0,0,0,0.5)'}
-            chargingCost={chargingCost}
-            remainingCost={remainingCost}
-            loadingRefund={loadingRefund}
-            loadingWallet={loadingWallet}
-            cancelClick={() => {
-              console.log("cancelClick")
-              setShowRestart(!showRestart)
-            }}
-            onRestartClick={() => {
-              setShowRestart(!showRestart)
-              navigation.goBack()
-            }}
-            onRefundClick={() => {
-              console.log("Refund Click", sessionId)
-              initiateRefund(sessionId)
-              navigation.goBack()
-            }}
-            onWalletClick={() => {
-              console.log("Refund In Wallet Click", sessionId)
-              initiateWalletRefund(sessionId)
-              navigation.goBack()
-            }}
-          />
-
-          <CommonCard>
-            <TouchableOpacity style={styles.topCard}>
-              <IconCardWithoutBg Svg={ReportLight} />
-              <CommonText showText={'Report'} customstyles={{ color: colors.lightRed, alignSelf: 'center' }} />
-            </TouchableOpacity>
-          </CommonCard >
-
-          <CommonCard>
-            <TouchableOpacity style={styles.topCard}>
-              <IconCard Svg={SupportLight} />
-              <CommonText showText={'Support'} customstyles={{ alignSelf: 'center' }} />
-            </TouchableOpacity>
-          </CommonCard>
-
-          <View style={styles.bottomButon}>
-            <Button showText={chargerText}
-              onPress={() => {
-                console.log('my state', chargerState)
-                if (chargerState === "STOP") {
-                  startChargerFlow()
-                } else if (chargerState === 'CHARGING') {
-                  console.log("chargeSessionID")
-                  console.log(chargeSessionID)
-                  stopChargeSession(chargeSessionID)
-                } else if (isSessionActive == true && chargerState === 'CHARGING') {
-                  console.log("chargeSessionID")
-                  console.log(chargeSessionID)
-                  stopChargeSession(chargeSessionID)
-                }
-              }}
-              disable={chargerText == 'Stop' || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true) && (evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined)) || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true || evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined) && (payAsYouGoOrderStatus === "CHARGED" && paymentMethod === 'PAY_AS_U_GO') || goodToGo && !disableButton) ? false : true}
-              bg={getButtonColor("")}
-            />
+        {/* chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? */}
+        <DenseCard>
+          <View style={styles.middleCard}>
+            <View style={styles.middleInner}>
+              <CommonText showText={'Time'} fontSize={18} />
+            </View>
+            <View style={styles.timeContainer}>
+              <View>
+                <DenseCard>
+                  <CommonText showText={chargeTime?.hours || '00'} customstyles={{ textAlign: 'center' }} />
+                </DenseCard>
+                <CommonText showText={'  Hours'} />
+              </View>
+              <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
+              <View>
+                <DenseCard>
+                  <CommonText showText={chargeTime?.minutes || '00'} customstyles={{ textAlign: 'center' }} />
+                </DenseCard>
+                <CommonText showText={' Minutes'} />
+              </View>
+              <View>
+                <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
+              </View>
+              <View>
+                <DenseCard>
+                  <CommonText showText={chargeTime?.seconds || '00'} customstyles={{ textAlign: 'center' }} />
+                </DenseCard>
+                <CommonText showText={' Seconds'} />
+              </View>
+            </View>
           </View>
-        </View>
+        </DenseCard>
+
+        <PayAsUGoModal
+          modalVisible={showRestart}
+          bgStyle={'rgba(0,0,0,0.5)'}
+          chargingCost={chargingCost}
+          remainingCost={remainingCost}
+          loadingRefund={loadingRefund}
+          loadingWallet={loadingWallet}
+          cancelClick={() => {
+            console.log("cancelClick")
+            setShowRestart(!showRestart)
+          }}
+          onRestartClick={() => {
+            setShowRestart(!showRestart)
+            navigation.goBack()
+          }}
+          onRefundClick={() => {
+            console.log("Refund Click", sessionId)
+            initiateRefund(sessionId)
+            navigation.goBack()
+          }}
+          onWalletClick={() => {
+            console.log("Refund In Wallet Click", sessionId)
+            initiateWalletRefund(sessionId)
+            navigation.goBack()
+          }}
+        />
+
+        <CommonCard>
+          <TouchableOpacity style={styles.topCard}>
+            <IconCardWithoutBg Svg={ReportLight} />
+            <CommonText showText={'Report'} customstyles={{ color: colors.lightRed, alignSelf: 'center' }} />
+          </TouchableOpacity>
+        </CommonCard >
+
+        <CommonCard>
+          <TouchableOpacity style={styles.topCard}>
+            <IconCard Svg={SupportLight} />
+            <CommonText showText={'Support'} customstyles={{ alignSelf: 'center' }} />
+          </TouchableOpacity>
+        </CommonCard>
       </ScrollView>
-    </SafeAreaView>
+
+      <View style={styles.bottomButon}>
+        <Button showText={chargerText}
+          onPress={() => {
+            console.log('my state', chargerState)
+            if (chargerState === "STOP") {
+              startChargerFlow()
+            } else if (chargerState === 'CHARGING') {
+              console.log("chargeSessionID")
+              console.log(chargeSessionID)
+              stopChargeSession(chargeSessionID)
+            } else if (isSessionActive == true && chargerState === 'CHARGING') {
+              console.log("chargeSessionID")
+              console.log(chargeSessionID)
+              stopChargeSession(chargeSessionID)
+            }
+          }}
+          disable={chargerText == 'Stop' || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true) && (evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined)) || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true || evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined) && (payAsYouGoOrderStatus === "CHARGED" && paymentMethod === 'PAY_AS_U_GO') || goodToGo && !disableButton) ? false : true}
+          bg={getButtonColor("")}
+        />
+      </View>
+    </CommonView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10
-  },
-  innerContainer: {
-    marginVertical: 15
-  },
   textCon: {
     marginTop: 60,
     marginBottom: 20
@@ -645,6 +643,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start'
   },
+  bottomButon: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    left: 10
+  }
 })
 
 export default OngoingDetails

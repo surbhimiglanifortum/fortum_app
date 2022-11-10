@@ -27,9 +27,15 @@ const ChargingStation = ({ route }) => {
     const locDetails = route.params?.data
 
     const chargerCardHandler = (evDetails) => {
-        navigation.navigate(routes.PayMinimum, {
-            locDetails: locDetails,
-            evDetails: evDetails
+        setOpenCommonModal({
+            isVisible: true, message: `Minimum Balance of ₹ ${evDetails?.connectors[0]?.pricing?.min_balance} to start charging` || result.data?.message,
+            heading: 'Payment',
+            onOkPress: () => {
+                navigation.navigate(routes.PayMinimum, {
+                    locDetails: locDetails,
+                    evDetails: evDetails
+                })
+            }
         })
     }
 
@@ -61,7 +67,6 @@ const ChargingStation = ({ route }) => {
                 <DetailsCard item={locDetails} />
                 <View style={styles.searchList}>
                     <CommonText showText={'Charger'} fontSize={18} />
-                    {loading && <ActivityIndicator />}
                     {
                         data?.evses.map((item, index) => {
                             return (

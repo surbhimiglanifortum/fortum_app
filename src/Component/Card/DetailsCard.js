@@ -19,7 +19,6 @@ const DetailsCard = ({ chargerType, onPress, item, favourite }) => {
     const scheme = useColorScheme()
 
     const checkFav = useMemo(() => {
-
         return favChargers?.findIndex(e => e.location_id === (item.location_id || item.id)) >= 0 ? true : false
     });
 
@@ -60,7 +59,6 @@ const DetailsCard = ({ chargerType, onPress, item, favourite }) => {
                             <CommonCard margin={1} padding={8}>
                                 <TouchableOpacity onPress={checkFav ? removeFav : addFav} >
                                     {checkFav ? <AntDesign name='heart' color={scheme == 'dark' ? colors.svgColorDark : colors.red} size={18} /> : <AntDesign name='hearto' color={scheme == 'dark' ? colors.svgColorDark : colors.svgColor} size={18} />}
-
                                 </TouchableOpacity>
                             </CommonCard>
                             <CommonCard marginLeft={10} margin={1} padding={8} backgroundColor={'#3070CE'}>
