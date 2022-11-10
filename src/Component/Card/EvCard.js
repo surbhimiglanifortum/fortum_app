@@ -8,8 +8,9 @@ import CHADEMO from '../../../src/assests/svg/CHADEMO'
 import IEC_62196_T1_COMBO from '../../../src/assests/svg/IEC_62196_T1_COMBO'
 import IEC_62196_T2 from '../../../src/assests/svg/IEC_62196_T2'
 
-const EvCard = ({ onPress, title, subTitle, rightText, backgroundColor, rightTitleColor }) => {
+const EvCard = ({item, onPress, title, subTitle, rightText, backgroundColor, rightTitleColor }) => {
 
+    console.log(item)
     const getFile = (key) => {
         console.log(key)
         switch (key) {
@@ -43,7 +44,7 @@ const EvCard = ({ onPress, title, subTitle, rightText, backgroundColor, rightTit
                 <View style={styles.container}>
                     <View style={styles.centerView}>
                         <TouchableWithoutFeedback style={styles.card}>
-                            {getFile(title)}
+                            {getFile(item?.standard)}
                         </TouchableWithoutFeedback>
                         <View style={styles.cardInner}>
                             <CommonText showText={title} fontSize={16} />
