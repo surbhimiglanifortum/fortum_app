@@ -1,4 +1,4 @@
-import { View, Text, useColorScheme, StyleSheet, FlatList, TouchableOpacity, UIManager, LayoutAnimation } from 'react-native'
+import { View, Text, useColorScheme, StyleSheet, FlatList, TouchableOpacity, UIManager, LayoutAnimation, RefreshControl } from 'react-native'
 import React, { useState } from 'react'
 import { getFaqService } from '../../../Services/Api'
 import { useQuery } from 'react-query'
@@ -50,6 +50,7 @@ const FaqPage = () => {
             {!loaderOpen && data?.length > 0 ?
                 <FlatList
                     data={faqData}
+                    refreshControl={<RefreshControl onRefresh={refetch} />}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => {
                         return (

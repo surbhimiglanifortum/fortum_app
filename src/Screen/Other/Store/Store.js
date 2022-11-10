@@ -1,4 +1,4 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, FlatList, } from 'react-native'
+import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, FlatList, RefreshControl, } from 'react-native'
 import React, { useState } from 'react'
 import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
@@ -44,6 +44,7 @@ const Store = () => {
                 {!loaderOpen && data?.length > 0 ?
                     <FlatList
                         data={data}
+                        refreshControl={<RefreshControl onRefresh={refetch} />}
                         keyExtractor={item => item.id}
                         renderItem={(item) => {
                             return (

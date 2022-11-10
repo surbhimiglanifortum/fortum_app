@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
 import React, { useState } from 'react'
 import { scale } from 'react-native-size-matters'
 import Card from '../../Component/Card/Card'
@@ -88,6 +88,7 @@ const Charging = ({ setSelectedTabs }) => {
                         {!loaderOpen && data?.length > 0 ?
                             <FlatList
                                 data={data}
+                                refreshControl={<RefreshControl onRefresh={refetch} />}
                                 keyExtractor={item => item.id}
                                 renderItem={(item) => {
                                     return (
@@ -105,6 +106,7 @@ const Charging = ({ setSelectedTabs }) => {
                     <>{!loaderOpen && completedData?.length > 0 ?
                         <FlatList
                             data={completedData}
+                            refreshControl={<RefreshControl onRefresh={completedreFetch} />}
                             keyExtractor={item => item.id}
                             renderItem={(item) => {
                                 return (
