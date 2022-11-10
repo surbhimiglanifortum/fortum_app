@@ -40,7 +40,7 @@ import RechargeDone from '../Screen/Wallet/RechargeDone'
 import PayInvoice from '../Screen/Charging/PayInvoice'
 import ChargingKeyDetails from '../Screen/Other/ChargingKey/ChargingKeyDetails';
 import FaqPage from '../Screen/Other/Support/FaqPage';
-
+import DeliveryAddress from '../Screen/Other/DeliveryAddress'
 const Stack = createNativeStackNavigator();
 
 const Routes = ({ loggedin }) => {
@@ -84,6 +84,7 @@ const Routes = ({ loggedin }) => {
             <Stack.Screen name={routes.PayInvoice} component={PayInvoice} options={{ headerShown: false }} />
             <Stack.Screen name={routes.ChargingKeyDetails} component={ChargingKeyDetails} options={{ headerShown: false }} />
             <Stack.Screen name={routes.FaqPage} component={FaqPage} options={{ headerShown: false }} />
+            <Stack.Screen name={routes.DeliveryAddress} component={DeliveryAddress} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 };

@@ -37,6 +37,7 @@ const routes = {
     PayInvoice: 'PayInvoice',
     ChargingKeyDetails:'ChargingKeyDetails',
     FaqPage:'FaqPage',
+    DeliveryAddress:"DeliveryAddress"
 }
 
 export default routes
