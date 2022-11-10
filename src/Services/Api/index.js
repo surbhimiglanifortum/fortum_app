@@ -158,7 +158,6 @@ export const getPinelabBalance = async (payload) => {
 
 export const sentKycOtp = async (payload) => {
     return await axios.post("/api_app/pinelabs/user/prepaid-card/start", payload);
-<<<<<<< HEAD
 }
 
 export const resendPinelabOtp = async (payload) => {
@@ -188,15 +187,12 @@ export const getEncryptData = async (payload) => {
 export const orderPinelabCard = async (payload) => {
     return await axios.post('/api_app/pinelabs/card/order/digital-to-physical-card', payload)
 }
-=======
-};
+
 
 export const getFaqService = async () => {
     return await axios.get(appconfig.BASE_URL + '/api_app/faq/getfaq');
 }
 
 export const updateProfileService = async (username, fname,) => {
-    console.log(username, fname, '..............in serv')
     return await axios.post(appconfig.BASE_URL + "/api_app/gist/" + username + "/first_name",{first_name: fname})
 };
->>>>>>> c259bc7dad8ab129e9363ddcd94efffae6e41f88
