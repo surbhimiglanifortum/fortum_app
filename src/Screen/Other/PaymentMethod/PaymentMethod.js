@@ -32,7 +32,8 @@ const PaymentMethod = () => {
   }
 
   const walletCardHandler = (tabName) => {
-    navigation.navigate(routes.dashboard, { tabName })
+    console.log("Pressed Wallet")
+    navigation.navigate(routes.RechargeWallet, { tabName })
   }
 
   const [tabName, setTabName] = useState('wallet')
@@ -115,8 +116,8 @@ const PaymentMethod = () => {
           </TouchableOpacity>
         </CommonCard>
 
-        <CommonCard onPress={() => { walletCardHandler(tabName) }}>
-          <TouchableOpacity>
+        <CommonCard>
+          <TouchableOpacity onPress={() => { walletCardHandler(tabName) }}>
             <View style={styles.card}>
               <View style={styles.card}>
                 <IconCardLarge Svg={WalletLight} />

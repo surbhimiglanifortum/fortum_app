@@ -35,9 +35,10 @@ const routes = {
     StoreDetails: 'StoreDetails',
     RechargeDone: 'RechargeDone',
     PayInvoice: 'PayInvoice',
-    ChargingKeyDetails:'ChargingKeyDetails',
-    FaqPage:'FaqPage',
-    DeliveryAddress:"DeliveryAddress"
+    ChargingKeyDetails: 'ChargingKeyDetails',
+    FaqPage: 'FaqPage',
+    DeliveryAddress: "DeliveryAddress",
+    PayMinimum: 'PayMinimum'
 }
 
 export default routes

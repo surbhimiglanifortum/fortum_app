@@ -15,14 +15,14 @@ import CommonView from '../../../Component/CommonView'
 import moment from 'moment'
 import { useSelector } from 'react-redux'
 import SnackContext from '../../../Utils/context/SnackbarContext'
-import { pinelabDocVerify, createPinelabWallet, createPinelabDigitalCard } from '../../../Services/Api'
+import { pinelabDocVerify, createPinelabWallet, createPinelabDigitalCard, getStateList } from '../../../Services/Api'
+import { useQuery } from 'react-query'
 
 const KYCLIST = [
-    { value: 1, name: 'Passport' },
-    { value: 2, name: 'Driving Licence' },
-    { value: 3, name: 'Aadhaar Card' },
-    { value: 4, name: "Voter's Identity Card" },
-    { value: 5, name: "PAN Card" },
+    { value: 2, name: "Pan Card" },
+    { value: 3, name: 'Passport' },
+    { value: 4, name: 'Driving Licence' },
+    { value: 5, name: "Voter's ID" },
 ]
 
 const CompleteKYC = ({ route }) => {
@@ -39,6 +39,7 @@ const CompleteKYC = ({ route }) => {
     const [docDate, setDocDate] = useState('')
     const [isAcceptCheck, setIsAcceptCheck] = useState(false)
     const [isAcceptCheck2, setIsAcceptCheck2] = useState(false)
+    const [stateName, setStateName] = useState('')
 
     const [docTypeError, setDocTypeError] = useState('')
     const [docNumberError, setDocNumberError] = useState('')
@@ -48,6 +49,7 @@ const CompleteKYC = ({ route }) => {
     const [isAcceptCheckError, setIsAcceptCheckError] = useState('')
     const [isAcceptCheck2Error, setIsAcceptCheck2Error] = useState('')
     const [loadingSign, setLoadingSign] = useState(false)
+    const [stateNameError, setStateNameError] = useState('')
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [docDatePickerVisible, setDocDatePickerVisibility] = useState(false);
@@ -98,6 +100,11 @@ const CompleteKYC = ({ route }) => {
         docHideDatePicker();
     };
 
+    const { data: stateData, status, isLoading, refetch } = useQuery('StateData', async () => {
+        const result = await getStateList()
+        return result?.data
+    })
+
     const onDocumentVerify = async () => {
         if (documentType == "") {
             setDocTypeError('Please select a document type.')
@@ -143,6 +150,19 @@ const CompleteKYC = ({ route }) => {
         } else {
             setIsAcceptCheck2Error('')
         }
+        if (documentType == "") {
+            setDocTypeError('Please select a document type.')
+            return
+        } else {
+            setDocTypeError('')
+        }
+
+        if (documentType == 5 && stateName == "") {
+            setStateNameError('Please select a state.')
+            return
+        } else {
+            setStateNameError('')
+        }
 
         const payload = {
             username: mUserDetails?.username,
@@ -150,7 +170,8 @@ const CompleteKYC = ({ route }) => {
             nameOnDocument: name,
             documentNumber: docNumber,
             dateOfBirth: dobTech,
-            issueDate: docDateTech
+            issueDate: docDateTech,
+            state: stateName
         }
 
         console.log("ALL WELL", payload)
@@ -300,6 +321,32 @@ const CompleteKYC = ({ route }) => {
                         <CommonText customstyles={styles.errorText} showText={docIssueError} regular fontSize={12} />
                     }
                 </TouchableOpacity>
+
+                {
+                    documentType == 5 &&
+                    <View>
+                        <CommonText showText={'State'} regular fontSize={14} />
+                        <DenseCard padding={5}>
+                            <Picker
+                                selectedValue={stateName}
+                                onValueChange={(itemValue, itemIndex) => setStateName(itemValue)}
+                                mode={'dropdown'}
+                            >
+                                <Picker.Item label={'Select State'} value={''} />
+                                {
+                                    stateData.map((item, index) => {
+                                        return (
+                                            <Picker.Item label={item.name} value={item.value} />
+                                        )
+                                    })
+                                }
+                            </Picker>
+                        </DenseCard>
+                        {stateNameError !== '' &&
+                            <CommonText customstyles={styles.errorText} showText={stateNameError} regular fontSize={12} />
+                        }
+                    </View>
+                }
 
                 <View style={styles.bottomText}>
                     <Checkbox

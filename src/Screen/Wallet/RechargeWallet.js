@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { StyleSheet, useColorScheme, View, TouchableOpacity, ScrollView } from 'react-native'
 import CommonView from '../../Component/CommonView'
 import DenseCard from '../../Component/Card/DenseCard'
@@ -14,12 +14,14 @@ import { Picker } from '@react-native-community/picker';
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import routes from '../../Utils/routes'
-import { useQuery } from 'react-query'
+import SnackContext from '../../Utils/context/SnackbarContext'
 
 const RechargeWallet = ({ route }) => {
 
   const scheme = useColorScheme()
   const navigation = useNavigation()
+
+  const { setOpenCommonModal } = useContext(SnackContext)
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
@@ -89,8 +91,11 @@ const RechargeWallet = ({ route }) => {
         })
         setLoadingSign(false)
       } else {
-        // setSnack({ message: 'Something Went Wrong Please Try After Some Time.', open: true, color: 'success' })
-        alert('Something Went Wrong Please Try After Some Time.')
+        setOpenCommonModal({
+          isVisible: true, message: 'Something Went Wrong Please Try After Some Time.', onOkPress: () => {
+            console.log("OKPRESSED")
+          }
+        })
         setLoadingSign(false)
       }
     } catch (error) {

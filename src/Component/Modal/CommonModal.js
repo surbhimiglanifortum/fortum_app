@@ -6,7 +6,7 @@ import Button from '../Button/Button'
 import CommonText from '../Text/CommonText'
 
 
-const CommonModal = ({ openCommonModal, setOpenCommonModal }) => {
+const CommonModal = ({ openCommonModal, setOpenCommonModal, showBtnText }) => {
 
     const okayBtnHandler = () => {
         try {
@@ -32,7 +32,7 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal }) => {
                             <CommonText showText={openCommonModal?.message} fontSize={16} />
                         </View>
                         <View>
-                            <Button showText={'Okay'} onPress={okayBtnHandler} />
+                            <Button showText={showBtnText ? showBtnText : 'Okay'} onPress={okayBtnHandler} />
                         </View>
                     </View>
                 </View>
