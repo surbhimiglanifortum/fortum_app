@@ -42,6 +42,8 @@ import ChargingKeyDetails from '../Screen/Other/ChargingKey/ChargingKeyDetails';
 import FaqPage from '../Screen/Other/Support/FaqPage';
 import DeliveryAddress from '../Screen/Other/DeliveryAddress'
 import PayMinimum from '../Screen/Charging/PayMinimum';
+import OrderPlaced from '../Screen/Other/Store/OrderPlaced'
+
 
 const Stack = createNativeStackNavigator();
 
@@ -88,6 +90,7 @@ const Routes = ({ loggedin }) => {
             <Stack.Screen name={routes.FaqPage} component={FaqPage} options={{ headerShown: false }} />
             <Stack.Screen name={routes.DeliveryAddress} component={DeliveryAddress} options={{ headerShown: false }} />
             <Stack.Screen name={routes.PayMinimum} component={PayMinimum} options={{ headerShown: false }} />
+            <Stack.Screen name={routes.OrderPlaced} component={OrderPlaced} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 };

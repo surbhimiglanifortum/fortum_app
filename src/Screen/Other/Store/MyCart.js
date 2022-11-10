@@ -1,5 +1,5 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView, Text, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
+import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView, Text, TouchableOpacity } from 'react-native'
+import React, { useContext } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import DenseCard from '../../../Component/Card/DenseCard/index'
@@ -15,15 +15,17 @@ import CommonView from '../../../Component/CommonView/index'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 import * as ApiAction from '../../../Services/Api'
 import routes from '../../../Utils/routes'
-
+import SnackContext from '../../../Utils/context/SnackbarContext'
 
 const MyCart = ({ route }) => {
 
     const scheme = useColorScheme()
     const dispatch = useDispatch()
+    const { setOpenCommonModal } = useContext(SnackContext);
 
     const navigation = useNavigation()
     const [cartCount, setCartCount] = useState(0);
+    const [loading, setLoading] = useState(false)
     const cartData = useSelector((state) => state.AddToCartReducers.cartItem)
     const cartDataDetails = useSelector((state) => state.AddToCartReducers)
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
@@ -60,17 +62,40 @@ const MyCart = ({ route }) => {
     }
 
     const ProceedToPayHadnler = async () => {
-        if(!deliveryAddress || !deliveryAddress?.address){
+        if (!deliveryAddress || !deliveryAddress?.address) {
             // please slect delivery address
+            setOpenCommonModal({ isVisible: true, message: "Please Select Delivery Address" })
             return
         }
+
+        setLoading(true)
+        
+        const cartObj = {}
+        cartDataDetails?.cartItem.map(e => {
+            cartObj[e.id] = e.cartItem
+        })
+        
         const payload = {
-            username: mUserDetails.username, cartObj: cartDataDetails?.cartItem.map(e => {
-                return { [e.id]: e.cartItem }
-            }), deliveryAddress
+            username: mUserDetails.username, cartObj: cartObj, deliveryAddress
         }
-        console.log(payload)
-        // const result = await ApiAction.placeOrder()
+
+        try {
+            const result = await ApiAction.placeOrder(payload)
+            if (result.data.result === 'ok') {
+                setOpenCommonModal({ isVisible: true, message: 'Order placed successfully' })
+            } else {
+                navigation.navigate(routes.PaymentScreenJuspay, {
+                    callFrom: 'MyCart',
+                    description: 'Add Money In Wallet',
+                    callback_url: '',
+                    juspay_process_payload: result.data.juspay_sdk_payload
+                })
+            }
+        } catch (error) {
+            setOpenCommonModal({ isVisible: true, message: error.message })
+        }
+
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -155,7 +180,7 @@ const MyCart = ({ route }) => {
                 </View>
             </ScrollView>
 
-            <Button showText={'Proceed to Pay'} onPress={ProceedToPayHadnler} />
+            <Button onLoading={loading} showText={'Proceed to Pay'} onPress={ProceedToPayHadnler} />
 
         </CommonView>
     )
