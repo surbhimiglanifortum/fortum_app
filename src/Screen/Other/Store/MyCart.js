@@ -1,23 +1,21 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView, Text, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
-import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import DenseCard from '../../../Component/Card/DenseCard/index'
 import CommonText from '../../../Component/Text/CommonText'
 import commonFonts from '../../../Utils/fonts/fonts'
-import IconCardLarge from '../../../Component/Card/IconCardLarge'
 import StoreSvg from '../../../assests/svg/StoreSvg'
 import AddRemoveCard from '../../../Component/Card/AddRemoveCard'
 import { useState } from 'react'
 import Button from '../../../Component/Button/Button'
 import { useDispatch, useSelector } from 'react-redux'
-import routes from '../../../Utils/routes'
 import { useEffect } from 'react'
 import CommonView from '../../../Component/CommonView/index'
-import LightBgColor from '../../../assests/svg/LightBgColor'
-import StoreGreenSvg from '../../../assests/svg/StoreGreenSvg'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
+import * as ApiAction from '../../../Services/Api'
+import routes from '../../../Utils/routes'
+
 
 const MyCart = ({ route }) => {
 
@@ -28,6 +26,12 @@ const MyCart = ({ route }) => {
     const [cartCount, setCartCount] = useState(0);
     const cartData = useSelector((state) => state.AddToCartReducers.cartItem)
     const cartDataDetails = useSelector((state) => state.AddToCartReducers)
+    let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
+    console.log(mUserDetails)
+    const [deliveryAddress, setDeliveryAddress] = useState((mUserDetails?.delivery_addresses && mUserDetails.delivery_addresses.length > 0) ? mUserDetails.delivery_addresses[0] : '');
+
+
     let cartlength = cartData?.length
 
     const addQty = async (item) => {
@@ -55,13 +59,33 @@ const MyCart = ({ route }) => {
         return cost
     }
 
-    const ProceedToPayHadnler = () => {
-
+    const ProceedToPayHadnler = async () => {
+        if(!deliveryAddress || !deliveryAddress?.address){
+            // please slect delivery address
+            return
+        }
+        const payload = {
+            username: mUserDetails.username, cartObj: cartDataDetails?.cartItem.map(e => {
+                return { [e.id]: e.cartItem }
+            }), deliveryAddress
+        }
+        console.log(payload)
+        // const result = await ApiAction.placeOrder()
     }
 
     useEffect(() => {
         setCartCount(cartlength)
     }, [cartlength])
+
+
+    const handleChangeDeliveryAddress = () => {
+        navigation.navigate(routes.DeliveryAddress, { callbackSelectAddress })
+    }
+
+    const callbackSelectAddress = (address) => {
+        setDeliveryAddress(address)
+
+    }
 
 
     return (
@@ -92,6 +116,17 @@ const MyCart = ({ route }) => {
                             )
                         })}
                     </View>
+                    <TouchableOpacity onPress={handleChangeDeliveryAddress}>
+                        <DenseCard>
+                            <CommonText showText={'Delivery Address'} />
+                            {!deliveryAddress?.address && <CommonText regular fontSize={14}>Add Delivery Address</CommonText>}
+                            <CommonText regular fontSize={14}>
+                                {deliveryAddress?.first_name + " " + deliveryAddress?.last_name}
+                            </CommonText>
+                            <CommonText regular fontSize={14}>{(deliveryAddress?.address || "") + " " + (deliveryAddress?.address_line_2 || "") + " " + (deliveryAddress?.city || "") + " " + (deliveryAddress?.country || "") + " " + (deliveryAddress?.postal_code || "")}</CommonText>
+                        </DenseCard>
+                    </TouchableOpacity>
+
                     {cartDataDetails?.cartItem.length > 0 && <View style={styles.topCard}>
                         <CommonText showText={'Order Summary'} customstyles={{ marginLeft: 10 }} />
                         <DenseCard>
@@ -99,7 +134,7 @@ const MyCart = ({ route }) => {
                                 <CommonText showText={'Price'} regular />
                                 <CommonText showText={`₹ ${getTotalCartValue()}`} />
                             </View>
-                            <View style={styles.innerCard}>
+                            {/* <View style={styles.innerCard}>
                                 <CommonText showText={'Cost'} regular />
                                 <CommonText showText={`₹ ${'1200'}`} />
                             </View>
@@ -110,7 +145,7 @@ const MyCart = ({ route }) => {
                             <View style={styles.innerCard}>
                                 <CommonText showText={'Amount of SGST (9%)'} regular />
                                 <CommonText showText={`₹ ${'100'}`} />
-                            </View>
+                            </View> */}
                             <View style={styles.innerCard}>
                                 <CommonText showText={'Total '} customstyles={{ marginTop: 20 }} />
                                 <CommonText showText={`₹ ${getTotalCartValue()}`} customstyles={{ marginTop: 20, fontFamily: commonFonts.bold }} />
