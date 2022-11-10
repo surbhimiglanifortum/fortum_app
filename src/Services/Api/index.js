@@ -14,7 +14,7 @@ export const getUserDetails = async () => {
 }
 
 export const getLocation = async (payload) => {
-    console.log("getLocation",payload)
+    console.log("getLocation", payload)
     return await axios.post("/api_app/locations/filter", payload)
 }
 
@@ -47,6 +47,11 @@ export const blockAmount = async (payload) => {
 }
 
 export const walletHistory = async (username, startDate, endDated) => {
+    console.log("walletHistory", {
+        username: username,
+        startDate: startDate,
+        endDate: endDated
+    })
     return await axios.get(appconfig.BASE_URL + "/api_app/users/get-transactions/", {
         params: {
             username: username,
@@ -188,11 +193,10 @@ export const orderPinelabCard = async (payload) => {
     return await axios.post('/api_app/pinelabs/card/order/digital-to-physical-card', payload)
 }
 
-
 export const getFaqService = async () => {
     return await axios.get(appconfig.BASE_URL + '/api_app/faq/getfaq');
 }
 
 export const updateProfileService = async (username, fname,) => {
-    return await axios.post(appconfig.BASE_URL + "/api_app/gist/" + username + "/first_name",{first_name: fname})
+    return await axios.post(appconfig.BASE_URL + "/api_app/gist/" + username + "/first_name", { first_name: fname })
 };

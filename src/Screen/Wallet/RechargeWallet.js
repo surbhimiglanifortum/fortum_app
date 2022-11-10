@@ -23,7 +23,7 @@ const RechargeWallet = ({ route }) => {
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
-  const [amount, setAmount] = useState({ value: '', error: '' });
+  const [amount, setAmount] = useState({ value: '0', error: '' });
   const [gstState, setGstState] = useState('')
   const [gstData, setGstData] = useState([])
   const [loadingSign, setLoadingSign] = useState(false)
@@ -98,16 +98,19 @@ const RechargeWallet = ({ route }) => {
       setLoadingSign(false)
     }
   }
-
+  let lazyAmount = [50, 100, 120, 150]
+  let lazyAmount2 = [200, 300, 400, 500]
   return (
     <CommonView>
       <ScrollView >
         <Header showText={'Recharge Wallet'} />
         <DenseCard style={{ marginTop: 20 }}>
           <View style={styles.row}>
-            <CommonCard style={{ padding: 20 }}>
-              <CommonText showText={'-'} customstyles={[{ color: colors.greyText }]} fontSize={20} bold />
-            </CommonCard>
+            <TouchableOpacity onPress={() => setAmount({ value: (parseInt(amount.value) - 50).toString(), error: '' })}>
+              <CommonCard style={{ padding: 10, height: 50, width: 50, alignItems: 'center', }}>
+                <CommonText showText={'-'} customstyles={[{ color: colors.greyText }]} fontSize={20} bold />
+              </CommonCard>
+            </TouchableOpacity>
             <View style={[styles.row, { flex: 1, justifyContent: 'center' }]}>
               <CommonText showText={'₹'} customstyles={styles.rupeeText} fontSize={25} />
               <LinearInput
@@ -118,83 +121,49 @@ const RechargeWallet = ({ route }) => {
                 keyboardType={'number-pad'}
               />
             </View>
-            <CommonCard style={{ padding: 20, backgroundColor: colors.green }} >
-              <CommonText showText={'+'} customstyles={[{ color: colors.white }]} fontSize={20} bold />
-            </CommonCard>
+
+            <TouchableOpacity onPress={() => setAmount({ value: (parseInt(amount.value) + 50).toString(), error: '' })}>
+              <CommonCard style={{ padding: 10, backgroundColor: colors.green, height: 50, width: 50, alignItems: 'center' }} >
+                <CommonText showText={'+'} customstyles={[{ color: colors.white }]} fontSize={20} bold />
+              </CommonCard>
+            </TouchableOpacity>
+
           </View>
           {amount.error != '' && <CommonText showText={amount.error} fontSize={14} customstyles={{ color: colors.red, marginLeft: 15, marginVertical: 10 }} />}
         </DenseCard>
 
 
+
         <View style={styles.row}>
-          <TouchableOpacity onPress={() => {
-            setAmount({ value: '50', error: '' })
-          }}>
-            <CommonCard style={styles.column}>
-              <CommonText showText={'₹ 50'} />
-            </CommonCard>
-          </TouchableOpacity>
+          {lazyAmount.map((e) => {
+            return (
+              <TouchableOpacity onPress={() => {
+                setAmount({ value: e.toString(), error: '' })
+              }}>
+                <CommonCard style={styles.column}>
+                  <CommonText showText={`₹ ${e}`} />
+                </CommonCard>
+              </TouchableOpacity>
+            )
+          })}
 
-          <TouchableOpacity onPress={() => {
-            setAmount({ value: '100', error: '' })
-          }}>
-            <CommonCard style={styles.column}>
-              <CommonText showText={'₹ 100'} />
-            </CommonCard>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {
-            setAmount({ value: '120', error: '' })
-          }}>
-            <CommonCard style={styles.column}>
-              <CommonText showText={'₹ 120'} />
-            </CommonCard>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {
-            setAmount({ value: '150', error: '' })
-          }}>
-            <CommonCard style={styles.column}>
-              <CommonText showText={'₹ 150'} />
-            </CommonCard>
-          </TouchableOpacity>
         </View>
 
         <View style={styles.row}>
-          <TouchableOpacity onPress={() => {
-            setAmount({ value: '200', error: '' })
-          }}>
-            <CommonCard style={styles.column}>
-              <CommonText showText={'₹ 200'} />
-            </CommonCard>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {
-            setAmount({ value: '300', error: '' })
-          }}>
-            <CommonCard style={styles.column}>
-              <CommonText showText={'₹ 300'} />
-            </CommonCard>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {
-            setAmount({ value: '400', error: '' })
-          }}>
-            <CommonCard style={styles.column}>
-              <CommonText showText={'₹ 400'} />
-            </CommonCard>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {
-            setAmount({ value: '500', error: '' })
-          }}>
-            <CommonCard style={styles.column}>
-              <CommonText showText={'₹ 500'} />
-            </CommonCard>
-          </TouchableOpacity>
+          {lazyAmount2.map((e) => {
+            return (
+              <TouchableOpacity onPress={() => {
+                setAmount({ value: e.toString(), error: '' })
+              }}>
+                <CommonCard style={styles.column}>
+                  <CommonText showText={`₹ ${e}`} />
+                </CommonCard>
+              </TouchableOpacity>
+            )
+          })}
         </View>
 
-        <DenseCard>
+        <DenseCard padding={5}>
           <Picker
             style={styles.pickerStyle}
             selectedValue={gstState}
@@ -220,8 +189,8 @@ const RechargeWallet = ({ route }) => {
 
       </ScrollView>
       <View style={[styles.row, { justifyContent: 'space-evenly' }]}>
-        <WhiteButton showText={'Cancel'} style={{ flex: 1, marginRight: 5 }} />
-        <Button showText={'Recharge'} style={{ flex: 1, marginLeft: 5 }} onPress={rechargeWallet} onLoading={loadingSign} />
+        <WhiteButton showText={'Cancel'} style={{ flex: 1, marginHorizontal: 10 }} onPress={() => navigation.goBack()} />
+        <Button showText={'Recharge'} style={{ flex: 1, marginHorizontal: 10 }} onPress={rechargeWallet} onLoading={loadingSign} />
       </View>
     </CommonView>
   )
@@ -235,15 +204,13 @@ const styles = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: "center"
   },
   column: {
     paddingHorizontal: 20,
     paddingVertical: 20
   },
   rupeeText: {
-    marginTop: -5
+    marginTop: 13
   }
 })
 

@@ -12,7 +12,7 @@ const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
     stateReconciler: autoMergeLevel2,
-    whitelist: ['userTypeReducer','commonReducer'], // save
+    whitelist: ['userTypeReducer','commonReducer','AddToCartReducers'], // save
     blacklist: ['chargingStationReservReducer'] //Temporary 
 }
 
