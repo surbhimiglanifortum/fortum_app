@@ -7,12 +7,13 @@ import ChargingStationReservReducer from './reducers/ChargingStationReservReduce
 import CommonReducer from "./reducers/CommonReducers";
 import { LOGOUT } from "./Types";
 import AddToCartReducers from "./reducers/AddToCartreducer";
+import AddSearchLocationReducer from "./reducers/AddSearchLocation";
 
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
     stateReconciler: autoMergeLevel2,
-    whitelist: ['userTypeReducer','commonReducer','AddToCartReducers'], // save
+    whitelist: ['userTypeReducer','commonReducer','AddToCartReducers','addSearchLocationReducer'], // save
     blacklist: ['chargingStationReservReducer'] //Temporary 
 }
 
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
     userTypeReducer: UserTypeReducer,
     chargingStationReservReducer: ChargingStationReservReducer,
     commonReducer:CommonReducer,
-    AddToCartReducers:AddToCartReducers
+    AddToCartReducers:AddToCartReducers,
+    addSearchLocationReducer:AddSearchLocationReducer
 });
 
 const removeReducer = (state, action) => {

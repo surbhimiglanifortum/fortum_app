@@ -26,7 +26,7 @@ const Login = () => {
     setLoading(true)
     try {
       let user
-      
+
       // console.log(userInput)
       if (validatePhone(userInput)) {
         console.log('phone', ("+91" + userInput).toString())
@@ -135,8 +135,10 @@ const Login = () => {
           </View>
         </View>
         <View style={styles.bottomText}>
-          <CommonText showText={'Don’t have account? '} fontSize={12} />
-          <TextButton>Signup</TextButton>
+          <CommonText showText={'Don’t have account ? '} fontSize={12} />
+          <TouchableOpacity onPress={signupHandler}>
+            <CommonText showText={'Signup'} customstyles={{ color: colors.green }} />
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -176,7 +178,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: 50
+    // marginTop: 50
   },
   imageContainer: {
     marginVertical: 25
