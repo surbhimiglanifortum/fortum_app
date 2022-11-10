@@ -73,7 +73,7 @@ export default Home = () => {
 
   }
   const searchBtnHandler = () => {
-    navigation.navigate(routes.SearchLocation)
+    navigation.navigate(routes.SearchLocation,)
   }
   const locationBtnHandler = () => {
     getLocationAndAnimate()
@@ -143,13 +143,15 @@ export default Home = () => {
     }
   }
 
+  
+
   const onFilterClick = useCallback((filterByConnectorCategories, onlyAvailableConnectors) => {
 
     let tlocationsPayload = {
       onlyAvailableConnectors: onlyAvailableConnectors,
       filterByConnectorCategories: filterByConnectorCategories
     }
-  
+
     setLocationsPayload(tlocationsPayload)
   }, [locationsPayload])
 
@@ -213,18 +215,28 @@ export default Home = () => {
           </CommonCard>
         </View>}
 
-        {false && selectedTab != 'List' && <View style={styles.searchContainer}>
-          <CommonText showText={'Show charging station nearest to'} fontSize={17} />
-          <View style={styles.searchInnerContainer}>
-            <TouchableOpacity style={styles.searchBox} onPress={searchBtnHandler}>
-              <AntDesign name='search1' size={20} />
-              <CommonText showText={'Your Location'} margin={6} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.locationBtn} onPress={locationBtnHandler}>
-              <LocationSvg />
-            </TouchableOpacity>
-          </View>
-        </View>}
+        {true && selectedTab != 'List' &&
+          <CommonCard padding={0} margin={1}>
+            <View >
+              <CommonText showText={'Show charging station nearest to'} fontSize={17} customstyles={{marginVertical:8}} />
+              <View style={styles.searchInnerContainer}>
+                <View style={{ width: '80%' }}>
+                  <DenseCard >
+                    <TouchableOpacity style={styles.searchBox} onPress={searchBtnHandler}>
+                      <AntDesign name='search1' size={20} />
+                      <CommonText showText={'Your Location'} margin={6} />
+                    </TouchableOpacity>
+                  </DenseCard>
+                </View>
+                <CommonCard>
+                  <TouchableOpacity style={styles.locationBtn} onPress={locationBtnHandler}>
+                    <LocationSvg fill={scheme == 'dark' ? 'white' : 'black'} />
+                  </TouchableOpacity>
+                </CommonCard>
+              </View>
+            </View>
+          </CommonCard>
+        }
 
         {selectedTab != 'List' && selectedCharger &&
           <FlatList
@@ -291,39 +303,20 @@ const styles = StyleSheet.create({
     marginRight: 20,
     alignSelf: 'flex-end'
   },
-  searchContainer: {
-    backgroundColor: colors.lightblue,
-    paddingVertical: 15,
-    paddingHorizontal: 15
-  },
+
   searchInnerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
 
   searchBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    marginVertical: 15,
-    borderRadius: 5,
-    elevation: 5,
-    backgroundColor: colors.white,
-    overflow: 'hidden',
-    width: '85%'
-  },
-  locationBtn: {
-    backgroundColor: colors.white,
-    paddingVertical: 8,
-    paddingHorizontal: 8,
-    borderRadius: 5,
-    elevation: 5,
-    overflow: 'hidden'
-  },
-  chargerIcon: {
 
+  },
+
+  chargerIcon: {
     position: 'absolute',
     backgroundColor: colors.green,
     top: 100,
