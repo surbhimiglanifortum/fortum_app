@@ -9,7 +9,11 @@ import CommonText from '../Text/CommonText'
 const CommonModal = ({ openCommonModal, setOpenCommonModal }) => {
 
     const okayBtnHandler = () => {
-        openCommonModal?.onOkPress()
+        try {
+            openCommonModal?.onOkPress()
+        } catch (error) {
+        }
+
         setOpenCommonModal({ isVisible: false, message: "" })
     }
 
