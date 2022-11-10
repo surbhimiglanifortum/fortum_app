@@ -62,12 +62,13 @@ const ChargingStation = ({ route }) => {
                 <View style={styles.searchList}>
                     <CommonText showText={'Charger'} fontSize={18} />
                     {loading && <ActivityIndicator />}
+                   
                     {
                         data?.evses.map((item, index) => {
                             return (
                                 item?.connectors.map((i, n) => {
                                     return (
-                                        <EvCard onPress={() => chargerCardHandler(item)}
+                                        <EvCard item={i} onPress={() => chargerCardHandler(item)}
                                             backgroundColor={item?.status === 'AVAILABLE' ? colors.green : item.status === 'CHARGING' ? "#4373B5" : colors.matteRed}
                                             title={item?.evse_id.replace("IN*CNK*", "").replace(/\*/g, '\-')}
                                             subTitle={'₹ ' + parseFloat(i?.pricing?.price).toFixed(2) + '/' + (i?.pricing?.type === "TIME" ? "min" : i?.pricing?.type === "FLAT" ? "flat" : "kWh+GST")}

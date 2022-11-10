@@ -130,11 +130,11 @@ const Signup = ({ route }) => {
 
                     <Formik
                         initialValues={{
-                            first_name: "ANuj",
-                            last_name: "Yadav",
+                            first_name: "",
+                            last_name: "",
                             referral_code: "",
                             email_id: prefillEMail || '',
-                            mobile_number: prefillPhone_number || '7532078797'
+                            mobile_number: prefillPhone_number || ''
                         }}
                         onSubmit={handleSignup}
                         validationSchema={SignupSchema}

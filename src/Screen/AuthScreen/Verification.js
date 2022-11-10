@@ -63,7 +63,7 @@ const Verification = ({ route }) => {
                     } else {
                         loginSuccess(false)
                         // enter valid OTP   
-                        setOpenCommonModal({ isVisible: true, message: "Enter Valid OTP" })
+                        setOpenCommonModal({ isVisible: true, message: "OTP is wrong please re enter " })
                     }
                 }).catch(error => {
                     // Somethong went wrong
@@ -79,12 +79,12 @@ const Verification = ({ route }) => {
         } else {
             try {
                 Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
-                    console.log("Valid otp", success)
+                
                     if (success.signInUserSession) {
                         loginSuccess()
                     } else {
                         // enter valid OTP
-                        setOpenCommonModal({ isVisible: true, message: "Enter Valid OTP" })
+                        setOpenCommonModal({ isVisible: true, message: "OTP is wrong please re enter " })
                     }
                     loginSuccess(false)
                 }).catch(error => {
