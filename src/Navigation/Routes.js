@@ -41,6 +41,8 @@ import PayInvoice from '../Screen/Charging/PayInvoice'
 import ChargingKeyDetails from '../Screen/Other/ChargingKey/ChargingKeyDetails';
 import FaqPage from '../Screen/Other/Support/FaqPage';
 import DeliveryAddress from '../Screen/Other/DeliveryAddress'
+import PayMinimum from '../Screen/Charging/PayMinimum';
+
 const Stack = createNativeStackNavigator();
 
 const Routes = ({ loggedin }) => {
@@ -85,6 +87,7 @@ const Routes = ({ loggedin }) => {
             <Stack.Screen name={routes.ChargingKeyDetails} component={ChargingKeyDetails} options={{ headerShown: false }} />
             <Stack.Screen name={routes.FaqPage} component={FaqPage} options={{ headerShown: false }} />
             <Stack.Screen name={routes.DeliveryAddress} component={DeliveryAddress} options={{ headerShown: false }} />
+            <Stack.Screen name={routes.PayMinimum} component={PayMinimum} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 };

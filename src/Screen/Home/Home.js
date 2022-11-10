@@ -100,8 +100,8 @@ export default Home = () => {
 
   const chargerLocations = async () => {
     try {
-      
-      const res = await ApiAction.getLocation({...locationsPayload,username:mUserDetails?.username || ""})
+
+      const res = await ApiAction.getLocation({ ...locationsPayload, username: mUserDetails?.username || "" })
       var locationsArray = res.data?.locations[0];
       if (!location.coords) {
         return locationsArray
@@ -143,7 +143,7 @@ export default Home = () => {
     }
   }
 
-  
+
 
   const onFilterClick = useCallback((filterByConnectorCategories, onlyAvailableConnectors) => {
 
@@ -189,10 +189,8 @@ export default Home = () => {
             <FilterSvg fill={scheme == 'dark' ? colors.white : colors.black} />
           </CommonCard>
         </TouchableOpacity>}
-
-
-
       </View>
+
       {/* Fillter ,favrouite,scan ,search Button  */}
       <View style={styles.iconContainer}>
         {selectedTab != 'List' && <View style={styles.iconContainer1}>
@@ -218,7 +216,7 @@ export default Home = () => {
         {true && selectedTab != 'List' &&
           <CommonCard padding={0} margin={1}>
             <View >
-              <CommonText showText={'Show charging station nearest to'} fontSize={17} customstyles={{marginVertical:8}} />
+              <CommonText showText={'Show charging station nearest to'} fontSize={17} customstyles={{ marginVertical: 8 }} />
               <View style={styles.searchInnerContainer}>
                 <View style={{ width: '80%' }}>
                   <DenseCard >
