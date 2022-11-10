@@ -101,7 +101,7 @@ export default Home = () => {
   const chargerLocations = async () => {
     try {
       
-      const res = await ApiAction.getLocation({...locationsPayload,username:mUserDetails.username})
+      const res = await ApiAction.getLocation({...locationsPayload,username:mUserDetails?.username || ""})
       var locationsArray = res.data?.locations[0];
       if (!location.coords) {
         return locationsArray

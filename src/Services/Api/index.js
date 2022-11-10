@@ -105,6 +105,10 @@ export const getStoreDataService = async (username) => {
     return await axios.get('/api_app/store/' + username);
 };
 
+export const placeOrder = async (payload) => {
+    return await axios.post('/api_app/orders/', payload);
+};
+
 export const sendOTP = async (phone) => {
     const dateIso = new Date().toISOString()
     const counter = Math.floor(Math.random() * (999 - 100)) + 100
