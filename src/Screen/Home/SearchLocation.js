@@ -1,4 +1,4 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, Text, TextInput, ScrollView } from 'react-native'
+import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, Text, TextInput, ScrollView, RefreshControl, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import colors from '../../Utils/colors'
@@ -16,14 +16,16 @@ import { NeomorphFlex } from 'react-native-neomorph-shadows'
 import CommonIconCard from '../../Component/Card/CommonIconCard/CommonIconCard'
 import appconfig from '../../Utils/appconfig'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import { useDispatch, useSelector } from 'react-redux'
+import NoData from '../../Component/NoDataFound/NoData'
 
 const SearchLocation = ({ route }) => {
-
-
+    const serachData = useSelector((state) => state.addSearchLocationReducer.searchItem)
+    const dispatch = useDispatch()
     route.params.getLocationAndAnimate
     const navigation = useNavigation()
     const scheme = useColorScheme()
-    const [showSearchText, setShowSearchText] = useState(false)
+    const [showSearchText, setShowSearchText] = useState('')
 
     const animateToRegionMap = (region) => {
         route.params.searchedLocation({ lat: JSON.parse(region).lat, lng: JSON.parse(region).lng })
@@ -48,31 +50,28 @@ const SearchLocation = ({ route }) => {
                             <AntDesign name='left' size={22} color={scheme == 'dark' ? colors.white : colors.black} />
                         </TouchableOpacity>
                     </CommonCard>
-
                 </View>
-
                 <View style={{ width: '80%', flex: 1, position: 'absolute', left: 60, zIndex: 999 }}>
                     <NeomorphFlex
                         inner // <- enable shadow inside of neomorph
                         swapShadows // <- change zIndex of each shadow color
                         style={{
-                            shadowRadius: 3,
-                            borderRadius: 12,
-                            backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight,
-                            marginVertical: 10,
-                            padding: 5,
+                            shadowRadius: 3, borderRadius: 12, backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, marginVertical: 10, padding: 5,
                         }}>
                         <View style={{}}>
                             <GooglePlacesAutocomplete
                                 placeholder='Search'
                                 GooglePlacesDetailsQuery={{ fields: "geometry" }}
                                 fetchDetails={true} // you need this to fetch the details object onPress
-                                clear={() => {}}
-                                renderRightButton={() =>{ <TouchableOpacity style={{ position: 'absolute', right: 10, top: 10 }} onPress={() => {}}>
-                                <AntDesign name='close' size={20} />
-                            </TouchableOpacity>} }
 
+                                textInputProps={{
+                                    onChangeText: (text) => { }
+                                }}
                                 onPress={(data, details = null) => {
+                                    dispatch({
+                                        type: 'ADD_TO_SEARCH',
+                                        payload: { data }
+                                    })
                                     if (details && details.geometry && details?.geometry?.location) {
                                         animateToRegionMap(JSON.stringify(details?.geometry?.location))
                                         navigation.goBack()
@@ -85,57 +84,49 @@ const SearchLocation = ({ route }) => {
                                     language: 'en',
                                 }}
                                 styles={{
-                                    container: {
-                                        flex: 1,
-                                    },
-                                    textInput: {
-                                        height: 38,
-                                        color: '#5d5d5d',
-                                        fontSize: 16,
-                                    },
-                                    predefinedPlacesDescription: {
-                                        color: '#1faadb',
-                                    },
-                                    textInput: {
-                                        backgroundColor: colors.lightBackGround,
-                                        height: 44,
-                                        borderRadius: 5,
-                                        paddingVertical: 5,
-                                        paddingHorizontal: 10,
-                                        fontSize: 15,
-                                        flex: 1,
-                                    },
-                                    row: {
-                                        backgroundColor: colors.lightBackGround,
-                                        padding: 13,
-                                        height: 40,
-                                        flexDirection: 'row',
-                                    },
+                                    container: { flex: 1, },
+                                    textInput: { height: 38, color: '#5d5d5d', fontSize: 16, },
+                                    predefinedPlacesDescription: { color: '#1faadb', },
+                                    textInput: { backgroundColor: colors.lightBackGround, height: 44, borderRadius: 5, paddingVertical: 5, paddingHorizontal: 10, fontSize: 15, flex: 1, },
+                                    row: { backgroundColor: colors.lightBackGround, padding: 13, height: 40, flexDirection: 'row', }
                                 }}
                             />
-
                         </View>
                     </NeomorphFlex>
                 </View>
-                <View style={styles.locationContainer}>
+                <TouchableOpacity onPress={liveLocationHAndler} style={styles.locationContainer}>
                     <CommonCard>
-                        <TouchableOpacity onPress={liveLocationHAndler}>
+                        <TouchableOpacity >
                             <LocationSvg fill={scheme == 'dark' ? 'white' : 'black'} />
                         </TouchableOpacity>
                     </CommonCard>
                     <CommonText showText={'Current Location Using GPS'} fontSize={15} />
-                </View>
-                <View style={styles.searchList}>
+                </TouchableOpacity>
+                <View style={[styles.searchList, {flex:1}]}>
                     <CommonText showText={'Recent Searches'} fontSize={18} customstyles={{ paddingHorizontal: 12 }} />
-                    <CommonCard>
-                        <TouchableOpacity style={styles.card} onPress={locationCardHandler}>
-                            <CommonIconCard Svg={Location1Svg} />
-                            <View style={styles.cardInner}>
-                                <CommonText showText={'Shake Mafia'} fontSize={16} />
-                                <CommonText showText={'Shake Mafia'} fontSize={13} />
-                            </View>
-                        </TouchableOpacity>
-                    </CommonCard>
+                    {serachData?.length > 0 ?
+                        <FlatList
+                            data={serachData}
+                            // refreshControl={<RefreshControl onRefresh={refetch} />}
+                            keyExtractor={item => item.id}
+                            renderItem={(item) => {
+                                return (
+                                    <CommonCard>
+                                        <TouchableOpacity style={styles.card} onPress={locationCardHandler}>
+                                            <CommonIconCard Svg={Location1Svg} />
+                                            <View style={styles.cardInner}>
+                                                <CommonText showText={item?.item?.data?.structured_formatting?.main_text} fontSize={16} />
+                                                {/* <CommonText showText={'Shake Mafia'} fontSize={13} /> */}
+                                            </View>
+                                        </TouchableOpacity>
+                                    </CommonCard>
+                                )
+                            }
+                            }
+                        /> :
+                        <NoData showText={'No Search Found'} />
+                    }
+
                 </View>
             </View>
 
@@ -148,7 +139,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     innerContainer: {
-        marginVertical: 15
+        marginVertical: 15,
+        flex:1
     },
     header: {
         flexDirection: 'row',

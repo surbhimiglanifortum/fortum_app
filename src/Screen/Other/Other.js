@@ -82,7 +82,7 @@ const Other = ({ setSelectedTab }) => {
               <ProfileSvg fill={scheme == 'dark' ? colors.darkIcon : colors.lightIcon} />
             </TouchableOpacity>
             <View style={styles.leftConatainer}>
-              <CommonText showText={`${userDetailsData.userDetails.first_name} ${userDetailsData.userDetails.last_name
+              <CommonText showText={`${userDetailsData?.userDetails?.first_name} ${userDetailsData?.userDetails?.last_name
                 }`} fontSize={20} />
               <TouchableOpacity style={[styles.editButton, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, }]} onPress={EditProfileHandler} >
                 <CommonText showText={'Edit Profile'} fontSize={18} />
