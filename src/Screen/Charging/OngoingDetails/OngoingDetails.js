@@ -424,13 +424,6 @@ const OngoingDetails = ({ route }) => {
 
   console.log("setPaymentMethod", paymentMethod, "setPayAsYouGoOrderId", payAsYouGoOrderId)
 
-  const switchToMapScreen = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'MapStack' }],
-    });
-  }
-
   const initiateRefund = async (sessionId) => {
     setLoadingRefund(true)
     try {

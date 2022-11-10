@@ -1,5 +1,5 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, ActivityIndicator, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { View, StyleSheet, useColorScheme, ActivityIndicator, ScrollView } from 'react-native'
+import React, { useState, useContext } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import colors from '../../Utils/colors'
 import Header from '../../Component/Header/Header'
@@ -10,11 +10,15 @@ import EvCard from '../../Component/Card/EvCard'
 import { getEvses } from '../../Services/Api'
 import { useSelector } from 'react-redux'
 import { useQuery } from 'react-query'
+import CommonView from '../../Component/CommonView'
+import SnackContext from '../../Utils/context/SnackbarContext'
 
 const ChargingStation = ({ route }) => {
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
+
+    const { setOpenCommonModal } = useContext(SnackContext);
 
     const [loading, setLoading] = useState(false)
 
@@ -23,7 +27,7 @@ const ChargingStation = ({ route }) => {
     const locDetails = route.params?.data
 
     const chargerCardHandler = (evDetails) => {
-        navigation.navigate(routes.OngoingDetails, {
+        navigation.navigate(routes.PayMinimum, {
             locDetails: locDetails,
             evDetails: evDetails
         })
@@ -51,7 +55,7 @@ const ChargingStation = ({ route }) => {
 
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
+        <CommonView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <Header showText={'Charging Station'} />
             <ScrollView>
                 <DetailsCard item={locDetails} />
@@ -77,7 +81,7 @@ const ChargingStation = ({ route }) => {
                     }
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </CommonView>
     )
 }
 

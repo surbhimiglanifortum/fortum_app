@@ -201,10 +201,8 @@ export default Home = ({ navigatedata }) => {
             <FilterSvg fill={scheme == 'dark' ? colors.white : colors.black} />
           </CommonCard>
         </TouchableOpacity>}
-
-
-
       </View>
+
       {/* Fillter ,favrouite,scan ,search Button  */}
       <View style={styles.iconContainer}>
         {selectedTab != 'List' && <View style={styles.iconContainer1}>

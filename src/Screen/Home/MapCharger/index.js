@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet,useColorScheme } from 'react-native'
+import { View, Text, StyleSheet, useColorScheme } from 'react-native'
 import React, { useState, useRef, useEffect } from 'react'
 import MapView from "react-native-map-clustering";
 import { Marker } from 'react-native-maps';
@@ -26,15 +26,15 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
         }
 
     }, [location])
-    
+
     return (
         <>
-            
+
             <MapView
                 ref={mapRef}
                 provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 toolbarEnabled={false}
-                customMapStyle={scheme=='dark'?DarkMap:LighMapView}
+                customMapStyle={scheme == 'dark' ? DarkMap : LighMapView}
                 onRegionChangeComplete={(r) => {
                     const getBoundingBox = (region) => ([
                         region.longitude - region.longitudeDelta / 2, // westLng - min lng
@@ -46,7 +46,7 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                 }}
                 showsMyLocationButton={false}
                 onMarkerPress={(e) => {
-                                       
+
                     if (locationLoading) {
                         return false;
                     }
@@ -60,10 +60,10 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                         }
                     })
                     if (marker) {
-                       
+
                         selectedMarker = marker
                         chargingBtnHandler()
-                       
+
                     }
                 }}
                 showsCompass={false}
@@ -76,7 +76,7 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                     longitudeDelta: 0.0521,
                 }}
             >
-                { 
+                {
                     data?.map((item, index) => {
                         const boxCheck = (cordx, cordy, lx, ly, rx, ry) => {
                             if (lx <= cordx && ly <= cordy && cordx <= rx && cordy <= ry)
