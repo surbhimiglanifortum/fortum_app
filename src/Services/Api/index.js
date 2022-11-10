@@ -2,8 +2,7 @@ import { Auth } from 'aws-amplify';
 import appconfig from '../../Utils/appconfig';
 import axios from '../BaseUrl'
 import { generateSHA } from '../../Utils/HelperCommonFunctions'
-import { AddToRedux } from '../../Redux/AddToRedux';
-import * as Types from '../../Redux/Types'
+
 export const getUserDetails = async () => {
     const result = await Auth.currentAuthenticatedUser();
     if (result.signInUserSession) {
@@ -199,4 +198,8 @@ export const getFaqService = async () => {
 
 export const updateProfileService = async (username, fname,) => {
     return await axios.post(appconfig.BASE_URL + "/api_app/gist/" + username + "/first_name", { first_name: fname })
-};
+}
+
+export const getStateList = async () => {
+    return await axios.get('/api_app/pinelabs/misc/state')
+}

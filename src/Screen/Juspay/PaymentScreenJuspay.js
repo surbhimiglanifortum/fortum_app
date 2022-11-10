@@ -68,7 +68,11 @@ const PaymentScreenJuspay = (props) => {
     }
 
     const paymentFail = (message) => {
-        setOpenCommonModal({ isVisible: true, message: message })
+        setOpenCommonModal({
+            isVisible: true, message: message, onOkPress: () => {
+                props.navigation.goBack()
+            }
+        })
     }
 
     useEffect(() => {
@@ -308,18 +312,10 @@ const PaymentScreenJuspay = (props) => {
             case 'backpressed':
                 // user back-pressed from PP without initiating any txn
                 paymentFail('Transaction cancelled, please retry the payment.')
-                props.navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'MapStack' }],
-                });
                 break;
 
             case 'charged':
                 paymentSuccess()
-                // props.navigation.reset({
-                //     index: 0,
-                //     routes: [{ name: 'MapStack' }],
-                // });
                 if (props.route.params?.callFrom === 'payPendingInvoice') {
                     props.navigation.pop(1)
                 } if (props.route.params?.callFrom === 'SelectPaymentMode') {
@@ -337,52 +333,28 @@ const PaymentScreenJuspay = (props) => {
                 console.log("ONE")
                 paymentFail('Transaction cancelled, please retry the payment.')
                 poll_session()
-                // props.navigation.reset({
-                //     index: 0,
-                //     routes: [{ name: 'MapStack' }],
-                // });
                 props.navigation.goBack()
                 break;
 
             case 'pending_vbv':
                 paymentFail('Authentication is in progress')
-                props.navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'MapStack' }],
-                });
                 break;
 
             case 'pending_vbv':
                 paymentFail('Authentication is in progress')
-                props.navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'MapStack' }],
-                });
                 break;
             case 'authorizing':
                 // txn in pending state
                 // poll order status until backend says fail or success
                 paymentFail('Transaction status is pending from bank')
-                props.navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'MapStack' }],
-                });
                 break;
 
             case 'authorization_failed':
                 paymentFail('User completed authentication, but the bank refused the transaction')
-                props.navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'MapStack' }],
-                });
                 //block:end:display-payment-status
                 break;
             case 'authentication_failed':
                 paymentFail('User did not complete authentication')
-                props.navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'MapStack' }],
-                });
                 //block:end:display-payment-status
                 break;
             case 'api_failure':
@@ -390,10 +362,6 @@ const PaymentScreenJuspay = (props) => {
                 // poll orderStatus to verify (false negatives)
                 //block:start:display-payment-status
                 paymentFail('Bank Refused the transaction')
-                // props.navigation.reset({
-                //     index: 0,
-                //     routes: [{ name: 'MapStack' }],
-                // });
                 props.navigation.goBack()
                 //block:end:display-payment-status
                 break;
@@ -403,10 +371,6 @@ const PaymentScreenJuspay = (props) => {
                 // poll orderStatus to verify (false negatives)
                 //block:start:display-payment-status
                 paymentFail('Transaction not created')
-                props.navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'MapStack' }],
-                });
                 //block:end:display-payment-status
                 break;
 
