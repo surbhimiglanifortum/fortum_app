@@ -92,7 +92,7 @@ export default Home = ({ navigatedata }) => {
   }
   const chargingBtnHandler = () => {
 
-    setSelectedCharger(true)
+    setSelectedCharger(!selectedCharger)
   }
   const chargingCardHandler = () => {
     navigation.navigate(routes.ChargingStation)

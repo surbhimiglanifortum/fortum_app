@@ -147,7 +147,9 @@ const MobileVerification = ({ route }) => {
         } else {
             //  signed in 
             route.params.user = await Auth.signIn(("+91" + mobile_number).trim());
+            setOpenCommonModal({ isVisible: true, message: "OTP Sent!!!" })
         }
+
         setLoading(false)
     }
     return (
