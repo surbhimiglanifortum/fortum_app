@@ -14,7 +14,7 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText
         } catch (error) {
         }
 
-        setOpenCommonModal({ isVisible: false, message: "", heading: '' })
+        setOpenCommonModal({ isVisible: false, message: "", heading: '', showBtnText: "" })
     }
 
     return (
@@ -23,7 +23,7 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText
                 <View style={styles.innerContainer}>
                     <View style={styles.wrapContainer}>
                         <View style={styles.header}>
-                            <CommonText showText={openCommonModal.heading ? openCommonModal.heading : 'Notifications'} customstyles={styles.heading} />
+                            <CommonText showText={openCommonModal.heading ? openCommonModal?.heading : 'Notifications'} customstyles={styles.heading} />
                             <TouchableOpacity style={styles.crossBtn} onPress={() => { setOpenCommonModal({ isVisible: false, message: "" }) }}>
                                 <AntDesign name='close' size={20} />
                             </TouchableOpacity>
@@ -32,7 +32,7 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText
                             <CommonText showText={openCommonModal?.message} fontSize={16} regular />
                         </View>
                         <View>
-                            <Button showText={showBtnText ? showBtnText : 'Okay'} onPress={okayBtnHandler} />
+                            <Button showText={openCommonModal.showBtnText ? openCommonModal?.showBtnText : 'Okay'} onPress={okayBtnHandler} />
                         </View>
                     </View>
                 </View>

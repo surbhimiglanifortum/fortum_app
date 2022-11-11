@@ -10,9 +10,7 @@ import IEC_62196_T2 from '../../../src/assests/svg/IEC_62196_T2'
 
 const EvCard = ({item, onPress, title, subTitle, rightText, backgroundColor, rightTitleColor }) => {
 
-    console.log(item)
     const getFile = (key) => {
-        console.log(key)
         switch (key) {
             case 'IEC_62196_T1':
                 return <IEC_62196_T1 />

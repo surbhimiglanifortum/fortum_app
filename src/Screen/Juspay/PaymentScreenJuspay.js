@@ -316,12 +316,13 @@ const PaymentScreenJuspay = (props) => {
                 } if (props.route.params?.callFrom === 'RechargerWallet') {
                     props.navigation.navigate(routes.RechargeDone)
                 } if (props.route.params?.callFrom === 'MyCart') {
-                    
                     props.navigation.navigate(routes.OrderPlaced)
+                } if (props.route.params?.callFrom === 'PaymentOption') {
+                    props.navigation.navigate(routes.OngoingDetails)
                 } else {
                     // props.navigation.goBack()
                 }
-                
+
                 break;
 
             case 'user_aborted':
