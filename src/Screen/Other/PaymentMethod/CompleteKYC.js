@@ -206,11 +206,10 @@ const CompleteKYC = ({ route }) => {
                 Email: mUserDetails?.username
             }
             const result = await createPinelabWallet(payload)
-            console.log('Result of Create Wallet', result.data)
             if (result.data.success) {
                 createDigitalCard()
                 navigation.navigate(routes.FortumChargeAndDriveCard, {
-                    response: result.data.redsponse,
+                    response: result.data.response,
                     name: route.params?.fName
                 })
             }
@@ -232,30 +231,29 @@ const CompleteKYC = ({ route }) => {
                 username: mUserDetails?.username
             }
             const result = await createPinelabDigitalCard(payload)
-            console.log('Response of Create Digital Card', result.data)
         } catch (error) {
             console.log("Error of Create Digital Card", error)
         }
     }
 
-    useEffect(() =>
-        navigation.addListener('beforeRemove', (e) => {
-            e.preventDefault()
-            Alert.alert(
-                'Discard changes?',
-                'Do you really want to quit process ?',
-                [
-                    { text: "Cancel", style: 'cancel', onPress: () => { } },
-                    {
-                        text: 'Discard',
-                        style: 'destructive',
-                        onPress: () => navigation.dispatch(e.data.action)
-                    },
-                ]
-            );
-        }),
-        [navigation]
-    );
+    // useEffect(() =>
+    //     navigation.addListener('beforeRemove', (e) => {
+    //         e.preventDefault()
+    //         Alert.alert(
+    //             'Discard changes?',
+    //             'Do you really want to quit process ?',
+    //             [
+    //                 { text: "Cancel", style: 'cancel', onPress: () => { } },
+    //                 {
+    //                     text: 'Discard',
+    //                     style: 'destructive',
+    //                     onPress: () => navigation.dispatch(e.data.action)
+    //                 },
+    //             ]
+    //         );
+    //     }),
+    //     [navigation]
+    // );
 
     return (
         <CommonView >
