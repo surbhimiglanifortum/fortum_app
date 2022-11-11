@@ -67,11 +67,9 @@ export const getFavouriteCHarger = async (username, dispatch) => {
     return favData
 };
 
-
 export const deleteFavouriteCHarger = async (username, location_id) => {
     return await axios.delete('/api_app/favouriteCharger/' + username + '/' + location_id);
 };
-
 
 export const addFavouriteCharger = async (username, location_id) => {
     return await axios.post('/api_app/favouriteCharger', { username, location_id });
@@ -154,7 +152,7 @@ export const getSessionDetails = async (session_id) => {
 }
 
 export const getEvModalService = async () => {
-    return await axios.get(appconfig.BASE_URL + '/api_app/ev');
+    return await axios.get('/api_app/ev');
 }
 
 export const getPinelabHistroy = async (payload) => {
@@ -198,17 +196,25 @@ export const orderPinelabCard = async (payload) => {
 }
 
 export const getFaqService = async () => {
-    return await axios.get(appconfig.BASE_URL + '/api_app/faq/getfaq');
+    return await axios.get('/api_app/faq/getfaq');
 }
 
 export const updateProfileService = async (username, fname,) => {
-    return await axios.post(appconfig.BASE_URL + "/api_app/gist/" + username + "/first_name", { first_name: fname })
+    return await axios.post("/api_app/gist/" + username + "/first_name", { first_name: fname })
 }
 
 export const getStateList = async () => {
     return await axios.get('/api_app/pinelabs/misc/state')
 }
-export const addAddressService = async (object, username) => {
-    return await axios.post(appconfig.BASE_URL + "/api_app/users/gist/" + username + "/address", object)
 
+export const addAddressService = async (object, username) => {
+    return await axios.post("/api_app/users/gist/" + username + "/address", object)
+}
+
+export const getTncVersion = async (username) => {
+    return await axios.get("/api_app/tncversion/" + username)
+}
+
+export const acceptTnc = async (username) => {
+    return await axios.put("/api_app/tncversion/" + username)
 }
