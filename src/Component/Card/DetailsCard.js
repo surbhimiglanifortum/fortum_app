@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, useColorScheme, Platform, Linking } from 'react-native'
 import React, { useMemo } from 'react'
 import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -11,7 +11,7 @@ import * as ApiAction from '../../Services/Api'
 import { AddToRedux } from '../../Redux/AddToRedux'
 import * as Types from '../../Redux/Types'
 
-const DetailsCard = ({ chargerType, onPress, item, favourite }) => {
+const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
 
     let favChargers = useSelector((state) => state.commonReducer.favCharger);
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
@@ -40,6 +40,30 @@ const DetailsCard = ({ chargerType, onPress, item, favourite }) => {
         }
     }
 
+    const navigateToGoogleMap = () => {
+        if (location?.coords?.latitude) {
+            const lat = {
+                lat: parseFloat(location?.coords?.latitude),
+                long: parseFloat(location?.coords?.longitude),
+            }.lat;
+            const lng = {
+                lat: parseFloat(location?.coords?.latitude),
+                long: parseFloat(location?.coords?.longitude),
+            }.long;
+            const scheme = Platform.select({
+                ios: "maps:0,0?q=",
+                android: "geo:0,0?q=",
+            });
+            const latLng = `${lat},${lng}`;
+            const label = item.name;
+            const url = Platform.select({
+                ios: `${scheme}${label}@${latLng}`,
+                android: `${scheme}${latLng}(${label})`,
+            });
+            Linking.openURL(url);
+        }
+
+    }
     return (
         <TouchableOpacity onPress={onPress}>
             <CommonCard>
@@ -62,7 +86,7 @@ const DetailsCard = ({ chargerType, onPress, item, favourite }) => {
                                 </TouchableOpacity>
                             </CommonCard>
                             <CommonCard marginLeft={10} margin={1} padding={8} backgroundColor={'#3070CE'}>
-                                <TouchableOpacity style={styles.leftIcon}>
+                                <TouchableOpacity style={styles.leftIcon} onPress={navigateToGoogleMap}>
                                     <Feather name='corner-up-right' size={18} color={colors.white} />
                                 </TouchableOpacity>
                             </CommonCard>

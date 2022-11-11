@@ -45,7 +45,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
 
     try {
       const result = await Auth.currentAuthenticatedUser();
-      console.log("asdjhfbahbfafhjbdshjf", tab)
+
       if (result?.signInUserSession) {
         if (true || result.attributes.phone_number && result.attributes.phone_number != '') {
           setSelectedTab(tab)

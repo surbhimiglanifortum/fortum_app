@@ -266,7 +266,7 @@ export default Home = ({ navigatedata }) => {
             keyExtractor={item => item.id}
             renderItem={({ item }) => {
               return (
-                <DetailsCard chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
+                <DetailsCard location={location} chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
               )
             }
             }
