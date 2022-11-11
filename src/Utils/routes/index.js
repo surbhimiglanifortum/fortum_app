@@ -39,11 +39,13 @@ const routes = {
     FaqPage: 'FaqPage',
     DeliveryAddress: "DeliveryAddress",
     PayMinimum: 'PayMinimum',
-    ChargingKeyDetails:'ChargingKeyDetails',
-    FaqPage:'FaqPage',
-    DeliveryAddress:"DeliveryAddress",
-    OrderPlaced:"OrderPlaced",
-    AddAddress:'AddAddress'
+    ChargingKeyDetails: 'ChargingKeyDetails',
+    FaqPage: 'FaqPage',
+    DeliveryAddress: "DeliveryAddress",
+    OrderPlaced: "OrderPlaced",
+    AddAddress: 'AddAddress',
+    CardDetails: 'CardDetails',
+    AddPinelabMoney: 'AddPinelabMoney'
 }
 
 export default routes

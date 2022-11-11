@@ -75,17 +75,19 @@ const FortumChargeAndDriveCard = () => {
                     <>
                         <View style={{ marginTop: 20 }}>
                             <CommonCard>
-                                <TouchableOpacity style={styles.card}>
+                                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(routes.CardDetails)}>
                                     <IconCardLarge Svg={CardLight} />
                                     <CommonText showText={'View Card Details'} black customstyles={{ marginLeft: 10 }} />
                                 </TouchableOpacity>
                             </CommonCard>
+
                             <CommonCard>
-                                <TouchableOpacity style={styles.card}>
+                                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(routes.AddPinelabMoney)}>
                                     <IconCardLarge Svg={RupeeLight} />
                                     <CommonText showText={'Add Money'} black customstyles={{ marginLeft: 10 }} />
                                 </TouchableOpacity>
                             </CommonCard>
+
                             <CommonCard>
                                 <TouchableOpacity style={styles.card} onPress={passbookButtonHAndler}>
                                     <IconCardLarge Svg={WalletLight} />

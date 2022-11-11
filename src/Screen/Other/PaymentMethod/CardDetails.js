@@ -1,8 +1,10 @@
-import { SafeAreaView, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import { initialize, PinePerksCardView, setPinePerksSecrets } from 'react-native-pine-perks'
 import { getEncryptData } from '../../../Services/Api'
 import { useSelector } from 'react-redux';
+import CommonView from '../../../Component/CommonView'
+import Header from '../../../Component/Header/Header';
+import { StyleSheet } from 'react-native'
 
 const CardDetails = () => {
     let encyptKey = ''
@@ -16,12 +18,13 @@ const CardDetails = () => {
             try {
                 const payload = {
                     response_key: encyptKey,
-                    username: mUserDetails.username
+                    username: mUserDetails?.username,
+                    card_ref: mUserDetails?.pinelabs_card_conf?.referenceNumber
                 }
                 console.log("SDOJASD", payload)
                 const result = await getEncryptData(payload)
                 console.log('Result in encryptedData', result.data)
-                const res = setPinePerksSecrets(result.data.encrypt_response_key, result.data.encrypt_reference, "WttVcvlC5uKxlHeRKNP34g==")
+                const res = setPinePerksSecrets(result.data.encrypt_response_key, result.data.encrypt_reference, result.data.username)
                 console.log("Result after setPinePerksSecrets", res)
             } catch (error) {
                 console.log("Error in encryptedData", error)
@@ -30,7 +33,8 @@ const CardDetails = () => {
     }, [])
 
     return (
-        <SafeAreaView style={styles.container}>
+        <CommonView style={styles.container}>
+            <Header showText={'Card Details'} />
             <PinePerksCardView
                 cardContainerStyle={{ display: 'flex', flexDirection: "column" }}
                 cardBackgroundImage={require('../../../assests/prepaidCard.jpg')}
@@ -39,15 +43,13 @@ const CardDetails = () => {
                 expiryTextStyle={{ marginTop: -5, marginLeft: 19, fontSize: 12 }}
                 cvvTextStyle={{ marginTop: -5, fontSize: 12, textAlign: 'center' }}
             />
-        </SafeAreaView>
+        </CommonView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        padding: 10,
-        backgroundColor: '#fff',
+        
     }
 })
 
