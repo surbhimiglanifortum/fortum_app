@@ -15,8 +15,8 @@ import { userExist } from '../../Utils/HelperCommonFunctions'
 export default function MobileInput({ navigation, route }) {
 
 
-    // const { email_id } = route.params;
-    const email_id = 'anuj.yadav@mfilterit.com'
+    const { email_id } = route.params;
+    // const email_id = 'anuj.yadav@mfilterit.com'
 
     const [input, setInput] = useState('7532078797')
     const [showError, setShowError] = useState('')

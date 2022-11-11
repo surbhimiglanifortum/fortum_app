@@ -110,7 +110,6 @@ const App = () => {
 
   return (
     <>
-
       <SnackContext.Provider value={{ currentLocation, setCurrentLocation, mLocationsPayload, mSetLocationsPayload, setOpenCommonModal, openCommonModal }}>
         <Provider store={configureStore}>
           <PersistGate persistor={persistor} loading={null}>
