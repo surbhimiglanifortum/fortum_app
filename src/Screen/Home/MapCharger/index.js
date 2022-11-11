@@ -6,6 +6,8 @@ import { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE i
 import AvailMarker from '../../../assests/svg/AvailMarker'
 import DarkMap from '../../../Utils/DarkMapView.json'
 import LighMapView from '../../../Utils/LighMapView.json'
+import colors from '../../../Utils/colors';
+
 
 export default function index({ data, locationLoading, isLoading, chargingBtnHandler, location }) {
     const [visibleRegion, setVisibleRegion] = useState([0, 0, 0, 0])
@@ -26,6 +28,27 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
         }
 
     }, [location])
+    const getMarkerColorCode = (status) => {
+
+        switch (status) {
+            case "UNKOWN":
+                return colors.markerOutOfOrder
+                break;
+            case "OUTOFORDER":
+                return colors.markerOutOfOrder
+                break;
+            case "OCCUPIED":
+                return colors.markerCharging
+                break;
+            case "AVAILABLE":
+                return colors.markerDefault
+                break;
+
+            default:
+                return colors.markerOutOfOrder
+                break;
+        }
+    }
 
     return (
         <>
@@ -95,7 +118,7 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                                         longitude: parseFloat(item.longitude)
                                     }}
                                 >
-                                    <AvailMarker />
+                                    <AvailMarker color={getMarkerColorCode(item?.summary?.aggregatedStatus)} />
                                 </Marker>
                             )
                     })
