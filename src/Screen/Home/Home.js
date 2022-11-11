@@ -6,7 +6,7 @@ import IconCardWithoutBg from '../../Component/Card/IconCardWithoutBg';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FilterSvg from '../../assests/svg/FilterSvg';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import routes from '../../Utils/routes';
 import FilterModal from '../../Component/Modal/FilterModal';
 import LocationSvg from '../../assests/svg/LocationSvg';
@@ -23,12 +23,13 @@ import CommonText from '../../Component/Text/CommonText';
 import { useSelector } from 'react-redux'
 import CommonCard from '../../Component/Card/CommonCard'
 import DenseCard from '../../Component/Card/DenseCard'
+import TTNCNotificationDialog from '../../Component/Modal/TNCNotificationDialog'
 
 
 let selectedMarker = {}
 
 export default Home = ({ navigatedata }) => {
-
+  const isFocused = useIsFocused()
   const mapRef = useRef();
   const navigation = useNavigation()
   const [location, setLocation] = useState({})
@@ -39,6 +40,7 @@ export default Home = ({ navigatedata }) => {
   const [locationsPayload, setLocationsPayload] = useState({
     onlyAvailableConnectors: false,
   })
+  const [tncNotification, setTncNotification] = useState(false)
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
@@ -109,6 +111,11 @@ export default Home = ({ navigatedata }) => {
     getLocationAndAnimate()
   }, [])
 
+  useEffect(() => {
+    setTncNotification(!tncNotification)
+  }, [isFocused])
+
+
 
   const chargerLocations = async () => {
     try {
@@ -155,8 +162,6 @@ export default Home = ({ navigatedata }) => {
     }
   }
 
-
-
   const onFilterClick = useCallback((filterByConnectorCategories, onlyAvailableConnectors) => {
 
     let tlocationsPayload = {
@@ -167,15 +172,11 @@ export default Home = ({ navigatedata }) => {
     setLocationsPayload(tlocationsPayload)
   }, [locationsPayload])
 
-
   const cardDetailsHandler = (data) => {
     navigation.navigate(routes.ChargingStation, {
       data: data
     })
   }
-
-
-
 
   return (
     <View style={styles.container}>
@@ -276,6 +277,7 @@ export default Home = ({ navigatedata }) => {
       {/* Render List Component */}
 
       <FilterModal openFilterModal={openFilterModal} setOpenFilterModal={setOpenFilterModal} onFilterClick={onFilterClick} />
+      <TTNCNotificationDialog tncNotification={tncNotification} />
     </View>
   )
 };
