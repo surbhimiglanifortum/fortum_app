@@ -308,6 +308,7 @@ const PaymentScreenJuspay = (props) => {
 
             case 'charged':
                 paymentSuccess()
+                props.navigation.goBack()
                 if (props.route.params?.callFrom === 'payPendingInvoice') {
                     props.navigation.pop(1)
                 } if (props.route.params?.callFrom === 'SelectPaymentMode') {
@@ -318,8 +319,9 @@ const PaymentScreenJuspay = (props) => {
                     
                     props.navigation.navigate(routes.OrderPlaced)
                 } else {
-                    props.navigation.goBack()
+                    // props.navigation.goBack()
                 }
+                
                 break;
 
             case 'user_aborted':
