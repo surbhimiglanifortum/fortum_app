@@ -42,7 +42,8 @@ const routes = {
     ChargingKeyDetails:'ChargingKeyDetails',
     FaqPage:'FaqPage',
     DeliveryAddress:"DeliveryAddress",
-    OrderPlaced:"OrderPlaced"
+    OrderPlaced:"OrderPlaced",
+    AddAddress:'AddAddress'
 }
 
 export default routes

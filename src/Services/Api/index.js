@@ -18,7 +18,7 @@ export const getLocation = async (payload) => {
 }
 
 export const getEvses = async (locid, payload) => {
-    console.log("asdkasdkjdS",locid,payload)
+    console.log("asdkasdkjdS", locid, payload)
     return await axios.post("/api_app/locations/gist/" + locid, payload)
 }
 
@@ -207,4 +207,8 @@ export const updateProfileService = async (username, fname,) => {
 
 export const getStateList = async () => {
     return await axios.get('/api_app/pinelabs/misc/state')
+}
+export const addAddressService = async (object, username) => {
+    return await axios.post(appconfig.BASE_URL + "/api_app/users/gist/" + username + "/address", object)
+
 }
