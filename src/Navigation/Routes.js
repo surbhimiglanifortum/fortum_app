@@ -43,56 +43,58 @@ import FaqPage from '../Screen/Other/Support/FaqPage';
 import DeliveryAddress from '../Screen/Other/DeliveryAddress'
 import PayMinimum from '../Screen/Charging/PayMinimum';
 import OrderPlaced from '../Screen/Other/Store/OrderPlaced'
+import AddAddress from '../Screen/Other/AddAddress';
 
 
 const Stack = createNativeStackNavigator();
 
 const Routes = ({ loggedin }) => {
-    return (
-        <Stack.Navigator initialRouteName={routes.dashboard} >
-            <Stack.Screen name={routes.dashboard} component={Dashboard} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.MobileInput} component={MobileInput} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.onboarding} component={OnboardingScreen} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.OngoingDetails} component={OngoingDetails} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.taxInvoice} component={TaxInvoice} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.login} component={Login} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.Signup} component={Signup} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.Verification} component={Verification} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.MobileVerification} component={MobileVerification} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.RechargeWallet} component={RechargeWallet} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.Profile} component={Profile} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.EvModal} component={EvModal} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.AddEvModal} component={AddEvModal} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.SelectVehicle} component={SelectVehicle} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.Preference} component={Preference} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.Favoruite} component={Favoruite} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.SearchLocation} component={SearchLocation} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.ChargingStation} component={ChargingStation} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.ChargingStationList} component={ChargingStationList} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.Support} component={Support} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.ChangePassword} component={ChangePassword} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.ReferAndEarn} component={ReferAndEarn} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.PaymentMethod} component={PaymentMethod} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.Order} component={Order} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.ChargingKey} component={ChargingKey} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.Store} component={Store} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.OrderDetails} component={OrderDetails} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.FortumChargeAndDriveCard} component={FortumChargeAndDriveCard} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.ActivateCard} component={ActivateCard} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.CompleteKYC} component={CompleteKYC} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.Passbook} component={Passbook} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.MyCart} component={MyCart} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.PaymentScreenJuspay} component={PaymentScreenJuspay} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.StoreDetails} component={StoreDetails} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.RechargeDone} component={RechargeDone} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.PayInvoice} component={PayInvoice} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.ChargingKeyDetails} component={ChargingKeyDetails} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.FaqPage} component={FaqPage} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.DeliveryAddress} component={DeliveryAddress} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.PayMinimum} component={PayMinimum} options={{ headerShown: false }} />
-            <Stack.Screen name={routes.OrderPlaced} component={OrderPlaced} options={{ headerShown: false }} />
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator initialRouteName={routes.dashboard} >
+      <Stack.Screen name={routes.dashboard} component={Dashboard} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.MobileInput} component={MobileInput} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.onboarding} component={OnboardingScreen} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.OngoingDetails} component={OngoingDetails} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.taxInvoice} component={TaxInvoice} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.login} component={Login} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.Signup} component={Signup} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.Verification} component={Verification} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.MobileVerification} component={MobileVerification} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.RechargeWallet} component={RechargeWallet} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.Profile} component={Profile} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.EvModal} component={EvModal} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.AddEvModal} component={AddEvModal} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.SelectVehicle} component={SelectVehicle} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.Preference} component={Preference} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.Favoruite} component={Favoruite} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.SearchLocation} component={SearchLocation} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.ChargingStation} component={ChargingStation} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.ChargingStationList} component={ChargingStationList} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.Support} component={Support} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.ChangePassword} component={ChangePassword} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.ReferAndEarn} component={ReferAndEarn} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.PaymentMethod} component={PaymentMethod} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.Order} component={Order} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.ChargingKey} component={ChargingKey} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.Store} component={Store} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.OrderDetails} component={OrderDetails} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.FortumChargeAndDriveCard} component={FortumChargeAndDriveCard} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.ActivateCard} component={ActivateCard} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.CompleteKYC} component={CompleteKYC} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.Passbook} component={Passbook} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.MyCart} component={MyCart} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.PaymentScreenJuspay} component={PaymentScreenJuspay} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.StoreDetails} component={StoreDetails} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.RechargeDone} component={RechargeDone} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.PayInvoice} component={PayInvoice} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.ChargingKeyDetails} component={ChargingKeyDetails} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.FaqPage} component={FaqPage} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.DeliveryAddress} component={DeliveryAddress} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.PayMinimum} component={PayMinimum} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.OrderPlaced} component={OrderPlaced} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.AddAddress} component={AddAddress} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  );
 };
 
 
