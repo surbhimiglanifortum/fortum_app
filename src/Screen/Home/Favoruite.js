@@ -53,7 +53,7 @@ const Favoruite = ({ route }) => {
         <FlatList
           style={{ flex: 1 }}
           data={favChargers}
-          renderItem={({ item }) => <DetailsCard item={item} favourite={true} />}
+          renderItem={({ item }) => <DetailsCard location={location} item={item} favourite={true} />}
         />
       </CommonView>
     </SafeAreaView>

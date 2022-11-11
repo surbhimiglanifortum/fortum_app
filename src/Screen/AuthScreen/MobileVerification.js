@@ -33,6 +33,9 @@ const MobileVerification = ({ route }) => {
     const [userInput3, setUserInput3] = useState('')
     const [userInput4, setUserInput4] = useState('')
 
+ 
+
+
     let otpConcatData = userInput1.concat(userInput2).concat(userInput3).concat(userInput4)
 
     const { setOpenCommonModal } = useContext(SnackContext);
@@ -143,7 +146,11 @@ const MobileVerification = ({ route }) => {
         setLoading(true)
         if (!signin) {
             // not signed
-
+            ApiAction.sendOTP(mobile_number.replace('+91', '')).then(e => {
+                setOpenCommonModal({ isVisible: true, message: "OTP Sent!!!" })
+            }).catch(err => {
+                setOpenCommonModal({ isVisible: true, message: err.message })
+            })
         } else {
             //  signed in 
             route.params.user = await Auth.signIn(("+91" + mobile_number).trim());
@@ -151,6 +158,10 @@ const MobileVerification = ({ route }) => {
         }
 
         setLoading(false)
+    }
+
+    const onPhoneEdit = () => {
+        navigation.goBack()
     }
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
@@ -163,12 +174,13 @@ const MobileVerification = ({ route }) => {
                         <CommonText showText={'Mobile Verification'} fontSize={20} />
                     </View>
                     <View style={styles.textinputConatiner}>
-                        <CommonText showText={'Please enter the verification code sent to '} fontSize={15} />
+                        <CommonText regular showText={'Please enter the verification code sent to '} fontSize={15} />
                         <View style={styles.centerText}>
-                            <CommonText showText={mobile_number} fontSize={15} />
-                            <TouchableOpacity >
+                            <CommonText regular showText={mobile_number} fontSize={15} />
+                            {signin && <TouchableOpacity onPress={onPhoneEdit} >
                                 <CommonText showText={' Edit'} fontSize={15} />
-                            </TouchableOpacity>
+                            </TouchableOpacity>}
+
                         </View>
                         <View style={styles.otpContainer}>
                             <OtpTextinput refData={otpField1} value={userInput1} onChange={(pin1) => {
@@ -199,7 +211,7 @@ const MobileVerification = ({ route }) => {
                         <View style={styles.resendContainer}>
                             <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
                             <TouchableOpacity onPress={onResendClick} >
-                                <CommonText showText={'Resend'} fontSize={14} />
+                                <CommonText showText={`Resend`} fontSize={14} />
                             </TouchableOpacity>
                         </View>
                     </View>

@@ -5,7 +5,7 @@ import { differenceInDays } from 'date-fns'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import * as TYPES from '../../Redux/Types'
 import colors from '../../Utils/colors';
-import GlobalDefines from '../../Utils/globalDefines';
+import GlobalDefines from '../../Utils/GlobalDefines';
 import { getTncVersion, acceptTnc } from '../../Services/Api'
 import CommonText from '../Text/CommonText';
 import Button from '../Button/Button';
@@ -71,7 +71,7 @@ const TNCNotificationDialog = (props) => {
             visible={isVisible}
             style={{ flex: 1, zIndex: 99999 }}
         >
-            <View style={[styles.centeredView, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
+            <View style={[styles.centeredView]}>
                 <CommonView style={styles.modalView} isFlex={false}>
                     <View style={styles.wrapper}>
                         <CommonText style={styles.heading} showText={'Terms & Conditions'} fontSize={18} />
@@ -95,11 +95,9 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 20,
-        backgroundColor: "white",
         borderRadius: 20,
         padding: 15,
         paddingTop: 10,
-        shadowColor: "rgba(0,0,0,0.1)",
         shadowOffset: {
             width: 0,
             height: 2

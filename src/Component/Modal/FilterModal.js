@@ -150,7 +150,8 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
                                     connectorTypes?.map((item, ind) => {
                                         return (
                                             <View>
-                                                <CommonCard active={item?.active ? true : false} key={ind} style={[styles.cardInner]}>
+                                                
+                                                <CommonCard active={item?.active ? true : false} key={item?.active?`${ind}mc`:`${ind}bc`} style={[styles.cardInner]}>
                                                     <TouchableOpacity style={{ width: 59, height: 49, alignItems: 'center', justifyContent: 'center' }} onPress={() => onItemPress(item.title)} >
                                                         {getFile(item.title)}
                                                     </TouchableOpacity>

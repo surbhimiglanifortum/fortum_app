@@ -180,7 +180,7 @@ export default Home = ({ navigatedata }) => {
 
   return (
     <View style={styles.container}>
-      {selectedTab == 'List' ? <MapList data={data} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
+      {selectedTab == 'List' ? <MapList data={data} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
@@ -266,7 +266,7 @@ export default Home = ({ navigatedata }) => {
             keyExtractor={item => item.id}
             renderItem={({ item }) => {
               return (
-                <DetailsCard chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
+                <DetailsCard location={location} chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
               )
             }
             }
