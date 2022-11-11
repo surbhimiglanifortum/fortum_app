@@ -38,7 +38,8 @@ const MobileVerification = ({ route }) => {
     const { setOpenCommonModal } = useContext(SnackContext);
     // OTP
     const [loading, setLoading] = useState(false)
-    const { mobile_number, email_id, signin, user } = route.params;
+    let { mobile_number, email_id, signin } = route.params;
+    let user = route.params?.user
 
     async function verifyOTP(number, otp) {
 
@@ -108,18 +109,18 @@ const MobileVerification = ({ route }) => {
             try {
                 await Auth.sendCustomChallengeAnswer(user, otpConcatData)
                     .then(e => {
-                        console.log("response", e)
                         loginSuccess()
                     }).catch(e => {
-                        console.log("Error", e)
+                        console.log("ERROR", e)
+                        setOpenCommonModal({ isVisible: true, message: e })
                     });
                 setLoading(false)
 
             } catch (e) {
                 // Handle 3 error thrown for 3 incorrect attempts. 
-                console.log("response", e)
+                console.log("ERROR", e)
+                setOpenCommonModal({ isVisible: true, message: e })
                 setLoading(false)
-
             }
         }
 
@@ -138,7 +139,17 @@ const MobileVerification = ({ route }) => {
         setOpenCommonModal({ isVisible: true, message: "Something Went wrong!!!" })
     }
 
+    const onResendClick = async () => {
+        setLoading(true)
+        if (!signin) {
+            // not signed
 
+        } else {
+            //  signed in 
+            route.params.user = await Auth.signIn(("+91" + mobile_number).trim());
+        }
+        setLoading(false)
+    }
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <ScrollView>
@@ -184,9 +195,9 @@ const MobileVerification = ({ route }) => {
                             }} />
                         </View>
                         <View style={styles.resendContainer}>
-                            <CommonText showText={'Didn’t receive the code?  '} fontSize={15} />
-                            <TouchableOpacity >
-                                <CommonText showText={'Resend'} fontSize={15} />
+                            <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
+                            <TouchableOpacity onPress={onResendClick} >
+                                <CommonText showText={'Resend'} fontSize={14} />
                             </TouchableOpacity>
                         </View>
                     </View>
