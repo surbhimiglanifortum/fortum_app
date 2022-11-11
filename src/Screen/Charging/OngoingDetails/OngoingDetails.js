@@ -37,13 +37,11 @@ const OngoingDetails = ({ route }) => {
 
   var counterinterval;
 
-  console.log("Check Route Params", route?.params)
-
   const [paymentMethod, setPaymentMethod] = useState(route?.params?.paymentMethod)
   const [msg, setMsg] = useState('')
   const [goodToGo, setGoodToGo] = useState(false)
   const [isShow, setShow] = useState(true)
-  const [payAsYouGoOrderId, setPayAsYouGoOrderId] = useState('')
+  const [payAsYouGoOrderId, setPayAsYouGoOrderId] = useState(route?.params?.payAsYouGoOrderId)
   const [unpaid, setUnpaid] = useState([])
   const [unpaidVisible, setUnpaidVisible] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
@@ -63,6 +61,7 @@ const OngoingDetails = ({ route }) => {
   const [isChargerStart, setChargerStart] = useState(false)
   const [stopPressed, setStopPressed] = useState(false)
   const [payAsYouGoOrderStatus, setPayAsYouGoOrderStatus] = useState('')
+  const [isVisible, setIsVisible] = useState(false)
 
   const stopButtonHandler = () => {
     navigation.navigate(routes.taxInvoice)
@@ -90,7 +89,6 @@ const OngoingDetails = ({ route }) => {
     const response = await axios.get(appconfig.BASE_URL + "/api_app/sessions/allactive/" + username);
     setRefreshing(false)
     response.data.forEach((item, index) => {
-      // console.log('Session Id')
       if (!item) {
         return;
       }
@@ -130,6 +128,7 @@ const OngoingDetails = ({ route }) => {
           setSessionActive(false)
         }
       })
+
       // checking if active session is not more than 24 hours
       if (new Date() - new Date(item.start_datetime) > 86400000) {
         const activeConnectors = item.location.evses[0].connectors
@@ -155,7 +154,7 @@ const OngoingDetails = ({ route }) => {
   }
 
   useEffect(() => {
-    checkIfUnpaid()
+    //  checkIfUnpaid()
     if (evDetails?.status === "CHARGING") {
       fetchLastSession()
     }
@@ -172,8 +171,26 @@ const OngoingDetails = ({ route }) => {
       setChargerText("Start")
       setChargerState("STOP")
       if (paymentMethod === 'CLOSED_WALLET') {
-        setIsVisible(true)
+        setOpenCommonModal({
+          isVisible: true,
+          message: 'Charging Completed. Are You Ready To Drive ?',
+          showBtnText: 'Yes',
+          onOkPress: () => {
+            navigation.navigate(routes.dashboard)
+            console.log("Charging Completed")
+          }
+        })
       }
+      // counterinterval = setChargeTime({
+      //   hours: '00',
+      //   minutes: '00',
+      //   seconds: '00'
+      // })
+      // setChargeTime({
+      //   hours: '00',
+      //   minutes: '00',
+      //   seconds: '00'
+      // })
       try {
         clearInterval(counterinterval)
       } catch (error) {
@@ -198,7 +215,16 @@ const OngoingDetails = ({ route }) => {
             setShowRestart(true)
             setRefreshing(false)
           } else {
-            setIsVisible(true)
+            // setIsVisible(true)
+            setOpenCommonModal({
+              isVisible: true,
+              message: 'Charging Completed. Are You Ready To Drive ?',
+              showBtnText: 'Yes',
+              onOkPress: () => {
+                navigation.navigate(routes.dashboard)
+                console.log("Charging Completed")
+              }
+            })
             setRefreshing(false)
           }
         }).catch(error => {
@@ -432,8 +458,6 @@ const OngoingDetails = ({ route }) => {
     }
   }
 
-  console.log("setPaymentMethod", paymentMethod, "setPayAsYouGoOrderId", payAsYouGoOrderId)
-
   const initiateRefund = async (sessionId) => {
     setLoadingRefund(true)
     try {
@@ -525,6 +549,7 @@ const OngoingDetails = ({ route }) => {
 
 
         {/* chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? */}
+
         <DenseCard>
           <View style={styles.middleCard}>
             <View style={styles.middleInner}>
@@ -533,14 +558,14 @@ const OngoingDetails = ({ route }) => {
             <View style={styles.timeContainer}>
               <View>
                 <DenseCard>
-                  <CommonText showText={chargeTime?.hours || '00'} customstyles={{ textAlign: 'center' }} />
+                  <CommonText showText={chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? chargeTime?.hours : '00'} customstyles={{ textAlign: 'center' }} />
                 </DenseCard>
                 <CommonText showText={'  Hours'} />
               </View>
               <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
               <View>
                 <DenseCard>
-                  <CommonText showText={chargeTime?.minutes || '00'} customstyles={{ textAlign: 'center' }} />
+                  <CommonText showText={chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? chargeTime?.minutes : '00'} customstyles={{ textAlign: 'center' }} />
                 </DenseCard>
                 <CommonText showText={' Minutes'} />
               </View>
@@ -549,7 +574,10 @@ const OngoingDetails = ({ route }) => {
               </View>
               <View>
                 <DenseCard>
-                  <CommonText showText={chargeTime?.seconds || '00'} customstyles={{ textAlign: 'center' }} />
+                  <CommonText
+                    showText={chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? chargeTime?.seconds : '00'}
+                    customstyles={{ textAlign: 'center' }}
+                  />
                 </DenseCard>
                 <CommonText showText={' Seconds'} />
               </View>

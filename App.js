@@ -55,7 +55,7 @@ const App = () => {
   const queryClient = new QueryClient();
   const [loading, setLoading] = useState(true)
   const [loggedin, setloggedin] = useState(false)
-  const [openCommonModal, setOpenCommonModal] = useState({isVisible:false,message:""})
+  const [openCommonModal, setOpenCommonModal] = useState({ isVisible: false, message: "" })
 
   useEffect(() => {
     const loginCheck = async () => {
@@ -80,7 +80,7 @@ const App = () => {
         action: 'initiate',
         merchantId: 'fortum',
         clientId: 'fortum',
-        environment: 'sandbox',
+        environment: 'production',
       },
     };
     HyperSdkReact.createHyperServices();
@@ -111,7 +111,7 @@ const App = () => {
   return (
     <>
 
-      <SnackContext.Provider value={{ currentLocation, setCurrentLocation, mLocationsPayload, mSetLocationsPayload,setOpenCommonModal,openCommonModal }}>
+      <SnackContext.Provider value={{ currentLocation, setCurrentLocation, mLocationsPayload, mSetLocationsPayload, setOpenCommonModal, openCommonModal }}>
         <Provider store={configureStore}>
           <PersistGate persistor={persistor} loading={null}>
             <QueryClientProvider client={queryClient} contextSharing={true}>

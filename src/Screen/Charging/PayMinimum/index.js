@@ -8,7 +8,7 @@ import CommonText from '../../../Component/Text/CommonText'
 import { useSelector, useDispatch } from 'react-redux'
 import { AddToRedux } from '../../../Redux/AddToRedux'
 import * as Types from '../../../Redux/Types'
-import { getUserDetails, getPaymentOption, payAsYouGo, walletBalanceEnquiry } from '../../../Services/Api'
+import { getUserDetails, getPaymentOption, payAsYouGo, walletBalanceEnquiry, checkOrderId } from '../../../Services/Api'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import CommonCard from '../../../Component/Card/CommonCard'
 import RadioBtn from '../../../Component/Button/RadioButton'
@@ -42,6 +42,9 @@ const PayMinimum = ({ route }) => {
     const [pin, setPin] = useState({ value: '', error: '' });
     const [prepaidCardBalance, setPrepaidCardBalance] = useState('')
     const [colorText, setColorText] = useState('red')
+    const [orderExist, setOrderExist] = useState(false)
+
+    const [isShow, setShow] = useState(true)
 
     const checkWalletBalance = () => {
         setMode('CLOSED_WALLET')
@@ -52,12 +55,14 @@ const PayMinimum = ({ route }) => {
             setWallet(false)
             setRefreshing(false)
             setColorText(colors.red)
+            setGoodToGo(false)
         } else {
             setColorText(colors.green)
             setMsg('You are ready to charge')
             setWalletBalance(userData?.balance)
             setWallet(true)
             setRefreshing(false)
+            setGoodToGo(true)
         }
     }
 
@@ -82,6 +87,29 @@ const PayMinimum = ({ route }) => {
         }
     }
 
+    const checkOrderIdStatus = async () => {
+        setGoodToGo(false)
+        setMode('PAY_AS_U_GO')
+        setMsg('')
+        setWallet(true)
+        const payload = {
+            evses_uid: evDetails?.uid
+        }
+        try {
+            const isOrderExist = await checkOrderId(mUserDetails?.username, payload)
+            console.log("isOrderExist", isOrderExist.data)
+            if (isOrderExist.data.response.success) {
+                setPayAsYouGoOrderId(isOrderExist.data.response.order_id)
+                setGoodToGo(true)
+                setMsg('You are ready to charge')
+                setColorText(colors.green)
+            }
+            setOrderExist(isOrderExist.data.response.success)
+        } catch (error) {
+            console.log("isOrderExist catch block", error)
+        }
+    }
+
     const userDetails = async () => {
         const result = await getUserDetails()
         if (result.data) {
@@ -92,6 +120,7 @@ const PayMinimum = ({ route }) => {
 
     useEffect(() => {
         userDetails()
+        checkOrderIdStatus()
     }, [isFocused])
 
     useEffect(() => {
@@ -125,6 +154,7 @@ const PayMinimum = ({ route }) => {
         if (data === "CHARGED") {
             setShow(false)
             setMsg("You are ready to charge.")
+            setColorText(colors.green)
         }
     }
 
@@ -145,6 +175,10 @@ const PayMinimum = ({ route }) => {
             if (result.data) {
                 setPayAsYouGoOrderId(result.data.JusPayCallback.order_id)
                 navigation.navigate(routes.PaymentScreenJuspay, {
+                    callFrom: 'PaymentOption',
+                    locDetails: locDetails,
+                    evDetails: evDetails,
+                    paymentMethod: mode,
                     amount: 0,
                     email_address: '',
                     orderid: '',
@@ -225,7 +259,7 @@ const PayMinimum = ({ route }) => {
                         <RadioBtn
                             value="PAY_AS_U_GO"
                             status={mode === 'PAY_AS_U_GO' ? 'checked' : 'unchecked'}
-                            onPress={payAsYouGoMode}
+                            onPress={checkOrderIdStatus}
                         />
                     </CommonCard>
                 }
@@ -269,8 +303,18 @@ const PayMinimum = ({ route }) => {
 
             </View>
 
+            {console.log("Check Pay As you go order id", payAsYouGoOrderId)}
+
             <View style={styles.fixedContainer}>
-                <Button showText={'Make Payment'} onPress={() => handleClick(mode)} />
+                <Button showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() =>
+                    goodToGo ? navigation.navigate(routes.OngoingDetails, {
+                        locDetails: locDetails,
+                        evDetails: evDetails,
+                        paymentMethod: mode,
+                        payAsYouGoOrderId: payAsYouGoOrderId
+                    }) :
+                        handleClick(mode)}
+                />
             </View>
         </CommonView>
     )
