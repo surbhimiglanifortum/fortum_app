@@ -120,7 +120,7 @@ const Login = () => {
           </View>
           <View style={styles.textinputConatiner}>
             <CommonText showText={'Please enter your mobile number or email id'} fontSize={12} />
-            <Textinput on value={userInput} onChange={(e) => setuserInput(e.toLowerCase())} placeholder={'Mobile Number / email id'} />
+            <Textinput  value={userInput} onChange={(e) => setuserInput(e.toLowerCase())} placeholder={'Mobile Number / email id'} />
           </View>
           <Button showText={"Continue"} onPress={continueButtonHandler} onLoading={loading} ></Button>
 

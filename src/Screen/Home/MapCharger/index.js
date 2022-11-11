@@ -49,8 +49,6 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                 break;
         }
     }
-console.log("map page refresh")
-    
     return (
         <>
 

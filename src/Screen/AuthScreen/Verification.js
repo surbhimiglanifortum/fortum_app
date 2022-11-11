@@ -47,7 +47,7 @@ const Verification = ({ route }) => {
 
                 Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
                     if (success.signInUserSession) {
-                        
+
                         ApiAction.sendOTP(mobile_number.replace('+91', '')).then(e => {
                             loginSuccess(false)
                             if (e.data.sent) {
@@ -79,7 +79,7 @@ const Verification = ({ route }) => {
         } else {
             try {
                 Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
-                
+
                     if (success.signInUserSession) {
                         loginSuccess()
                     } else {
@@ -100,7 +100,7 @@ const Verification = ({ route }) => {
                 console.log("Something went wrong", error)
             }
         }
-        
+
     }
 
     const loginSuccess = async (navigateToDashboard = true) => {
@@ -127,6 +127,17 @@ const Verification = ({ route }) => {
         }
     }
 
+    const onResendClick = async () => {
+
+
+        setLoading(true)
+
+        //  signed in 
+        route.params.user = await Auth.signIn((email_id).trim());
+        setOpenCommonModal({ isVisible: true, message: "OTP Sent!!!" })
+
+        setLoading(false)
+    }
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
@@ -175,9 +186,9 @@ const Verification = ({ route }) => {
 
                         </View>
                         <View style={styles.resendContainer}>
-                            <CommonText showText={'Didn’t receive the code?  '} fontSize={15} />
-                            <TouchableOpacity >
-                                <CommonText showText={'Resend'} fontSize={15} />
+                            <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
+                            <TouchableOpacity onPress={onResendClick}  >
+                                <CommonText showText={'Resend'} fontSize={14} />
                             </TouchableOpacity>
                         </View>
                     </View>

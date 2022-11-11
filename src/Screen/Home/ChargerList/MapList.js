@@ -10,8 +10,10 @@ import routes from '../../../Utils/routes'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import CommonText from '../../../Component/Text/CommonText'
 import Loader from '../../../Component/Loader'
+import CommonCard from '../../../Component/Card/CommonCard'
+import DensCard from '../../../Component/Card/DenseCard'
 
-const MapList = ({ data, setOpenFilterModal, isRefetching ,location}) => {
+const MapList = ({ data, setOpenFilterModal, isRefetching, location, searchBtnHandler }) => {
 
   const navigation = useNavigation()
   const [listData, setListData] = useState([])
@@ -24,7 +26,7 @@ const MapList = ({ data, setOpenFilterModal, isRefetching ,location}) => {
     setOpenFilterModal(true)
   }
   const searchButtonHandler = () => {
-    navigation.navigate(routes.SearchLocation)
+    searchBtnHandler()
   }
   const favoruiteButtonHandler = () => {
     navigation.navigate(routes.Favoruite, { location: location })
@@ -35,8 +37,6 @@ const MapList = ({ data, setOpenFilterModal, isRefetching ,location}) => {
     })
   }
 
-  console.log("render Map list")
-
   return (
     <View style={[styles.container]}>
 
@@ -44,14 +44,24 @@ const MapList = ({ data, setOpenFilterModal, isRefetching ,location}) => {
       <View style={styles.innerContainer}>
 
         <View style={styles.searchContainer}>
-          <TouchableOpacity onPress={searchButtonHandler} style={styles.searchInner}>
-            <AntDesign name='search1' size={20} style={{ marginRight: 5 }} />
-            <CommonText showText={'Random Location'} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={favoruiteButtonHandler} style={styles.favContainer}>
-            <AntDesign name='hearto' color={colors.red} size={20} />
-          </TouchableOpacity>
+          <CommonCard padding={1} style={{ flex: 1 }}>
+            <TouchableOpacity onPress={searchButtonHandler} style={styles.searchInner}>
+              <DensCard padding={10} margin={1} marginVertical={1}>
+                <AntDesign name='search1' size={16} />
+              </DensCard>
+              <CommonText regular showText={'    Random Location'} />
+            </TouchableOpacity>
+          </CommonCard>
+
+
+          <CommonCard padding={16}>
+            <TouchableOpacity onPress={favoruiteButtonHandler} style={styles.favContainer}>
+              <AntDesign name='hearto' color={colors.red} size={20} />
+            </TouchableOpacity>
+          </CommonCard>
         </View>
+
+
 
         {isRefetching && <Loader />}
 
@@ -99,22 +109,13 @@ const styles = StyleSheet.create({
   },
   searchInner: {
     width: '85%',
-    elevation: 5,
     paddingVertical: 10,
     paddingHorizontal: 6,
-    backgroundColor: colors.white,
     borderRadius: 6,
     flexDirection: 'row',
     alignItems: 'center'
   },
   favContainer: {
-    width: '13%',
-    backgroundColor: colors.white,
-    elevation: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    borderRadius: 6,
-    alignItems: 'center'
   }
 })
 
