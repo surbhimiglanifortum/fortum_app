@@ -236,24 +236,24 @@ const CompleteKYC = ({ route }) => {
         }
     }
 
-    // useEffect(() =>
-    //     navigation.addListener('beforeRemove', (e) => {
-    //         e.preventDefault()
-    //         Alert.alert(
-    //             'Discard changes?',
-    //             'Do you really want to quit process ?',
-    //             [
-    //                 { text: "Cancel", style: 'cancel', onPress: () => { } },
-    //                 {
-    //                     text: 'Discard',
-    //                     style: 'destructive',
-    //                     onPress: () => navigation.dispatch(e.data.action)
-    //                 },
-    //             ]
-    //         );
-    //     }),
-    //     [navigation]
-    // );
+    useEffect(() =>
+        navigation.addListener('beforeRemove', (e) => {
+            e.preventDefault()
+            Alert.alert(
+                'Discard changes?',
+                'Do you really want to quit process ?',
+                [
+                    { text: "Cancel", style: 'cancel', onPress: () => { } },
+                    {
+                        text: 'Discard',
+                        style: 'destructive',
+                        onPress: () => navigation.dispatch(e.data.action)
+                    },
+                ]
+            );
+        }),
+        [navigation]
+    );
 
     return (
         <CommonView >

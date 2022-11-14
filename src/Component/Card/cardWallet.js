@@ -12,6 +12,8 @@ import { NeuButton } from '../../NeuElement/index'
 import CommonIconCard from './CommonIconCard/CommonIconCard'
 import WalletSvg from '../../assests/svg/wallet'
 import Charger from '../../assests/svg/charger'
+
+
 const CardWallet = ({ navigationHandler, Svg, dataItem, }) => {
 
     return (

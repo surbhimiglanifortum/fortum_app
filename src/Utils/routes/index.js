@@ -45,7 +45,8 @@ const routes = {
     OrderPlaced: "OrderPlaced",
     AddAddress: 'AddAddress',
     CardDetails: 'CardDetails',
-    AddPinelabMoney: 'AddPinelabMoney'
+    AddPinelabMoney: 'AddPinelabMoney',
+    Pinelab: 'Pinelab'
 }
 
 export default routes
