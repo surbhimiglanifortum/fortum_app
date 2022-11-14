@@ -63,15 +63,16 @@ const OngoingDetails = ({ route }) => {
   const [payAsYouGoOrderStatus, setPayAsYouGoOrderStatus] = useState('')
   const [isVisible, setIsVisible] = useState(false)
 
+  let pollsessnioCalls = 0
   const stopButtonHandler = () => {
     navigation.navigate(routes.taxInvoice)
   }
 
-  const { setOpenCommonModal } = useContext(SnackContext);
+  const { setOpenCommonModal, setShowFeedbackModel } = useContext(SnackContext);
 
   const locDetails = route?.params?.locDetails
   const evDetails = route.params?.evDetails
-
+console.log("ONGPOIN", evDetails)
   let lastPaidSession = {}
 
   const checkIfUnpaid = () => {
@@ -166,76 +167,60 @@ const OngoingDetails = ({ route }) => {
   }, [])
 
   const pollSessions = (authID, contSucc, active, failcounter) => {
-    console.log("Poll seessions")
+    console.log("Poll seessions count", pollsessnioCalls)
+    pollsessnioCalls = pollsessnioCalls + 1
     if (contSucc > 3) {
       setChargerText("Start")
       setChargerState("STOP")
-      if (paymentMethod === 'CLOSED_WALLET') {
-        setOpenCommonModal({
-          isVisible: true,
-          message: 'Charging Completed. Are You Ready To Drive ?',
-          showBtnText: 'Yes',
-          onOkPress: () => {
-            navigation.navigate(routes.dashboard)
-            console.log("Charging Completed")
-          }
-        })
-      }
-      // counterinterval = setChargeTime({
-      //   hours: '00',
-      //   minutes: '00',
-      //   seconds: '00'
-      // })
-      // setChargeTime({
-      //   hours: '00',
-      //   minutes: '00',
-      //   seconds: '00'
-      // })
+
       try {
         clearInterval(counterinterval)
       } catch (error) {
         console.log("Error in PollSession", error)
       }
-
-
       setRefreshing(true)
-      axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/allunpaid/' + username + '?app_version=' + appconfig.APP_VERSION_NUMBER).then((r) => {
-        console.log("get all unpaid session")
-        console.log(r.data)
-        console.log('Session Id Check Here', sessionId)
-        setRefreshing(true)
-        console.log("Check Payment Method in Poll Session", paymentMethod)
-        // amountDeductionProcess(paymentMethod)
-        console.log("Check Refund API URL", appconfig.TOTAL_BASE_URL + '/api_app/sessions/showRefundDialog/' + sessionId + '/' + username)
-        axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/showRefundDialog/' + sessionId + '/' + username).then(res => {
-          console.log("Response Restart API", res.data.data)
-          if (res.data.success) {
-            setChargingCost(res.data.data.chargingCost / 100)
-            setRemainingCost(res.data.data.remainingAmount / 100)
-            setShowRestart(true)
-            setRefreshing(false)
-          } else {
-            // setIsVisible(true)
-            setOpenCommonModal({
-              isVisible: true,
-              message: 'Charging Completed. Are You Ready To Drive ?',
-              showBtnText: 'Yes',
-              onOkPress: () => {
-                navigation.navigate(routes.dashboard)
-                console.log("Charging Completed")
-              }
-            })
-            setRefreshing(false)
-          }
-        }).catch(error => {
-          console.log("Error Restart API", error)
+      console.log('Session Id Check Here', sessionId)
+      setRefreshing(true)
+      console.log("Check Payment Method in Poll Session", paymentMethod)
+      // amountDeductionProcess(paymentMethod)
+      console.log("Check Refund API URL", appconfig.TOTAL_BASE_URL + '/api_app/sessions/showRefundDialog/' + sessionId + '/' + username)
+      axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/showRefundDialog/' + sessionId + '/' + username).then(res => {
+        console.log("Response Restart API", res.data.data)
+        if (res.data.success) {
+          setChargingCost(res.data.data.chargingCost / 100)
+          setRemainingCost(res.data.data.remainingAmount / 100)
+          setShowRestart(true)
           setRefreshing(false)
-        })
-
+        } else {
+          // setIsVisible(true)
+          setShowFeedbackModel({ "isVisible": true, "locid": locDetails?.id, "evseid": evDetails?.uid })
+          navigation.reset({
+            index: 0,
+            routes: [{ name: routes.dashboard }],
+          });
+          // setOpenCommonModal({
+          //   isVisible: true,
+          //   message: 'Charging Completed. Are You Ready To Drive ?',
+          //   showBtnText: 'Yes',
+          //   onOkPress: () => {
+          //     navigation.navigate(routes.dashboard)
+          //     console.log("Charging Completed")
+          //   }
+          // })
+          setRefreshing(false)
+        }
       }).catch(error => {
-        console.log("All Unpaid API Catch", error)
+        console.log("Error Restart API", error)
         setRefreshing(false)
       })
+
+      // axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/allunpaid/' + username + '?app_version=' + appconfig.APP_VERSION_NUMBER).then((r) => {
+
+
+      // }).catch(error => {
+      //   console.log("All Unpaid API Catch", error)
+      //   setRefreshing(false)
+      // })
       return
     }
 
@@ -509,7 +494,7 @@ const OngoingDetails = ({ route }) => {
             <Charger1 height={40} width={40} />
             <View>
               <CommonText
-                showText={getChargerMapObject(evDetails?.connectors[0]?.standard).name + ' - ' + (evDetails?.connectors[0]?.amperage * evDetails?.connectors[0]?.voltage / 1000).toFixed(2) + 'kW'}
+                showText={getChargerMapObject(evDetails?.connectors[0]?.standard)?.name + ' - ' + (evDetails?.connectors[0]?.amperage * evDetails?.connectors[0]?.voltage / 1000)?.toFixed(2) + 'kW'}
                 fontSize={15}
                 customstyles={{ marginLeft: 10 }}
                 bold

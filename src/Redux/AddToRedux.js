@@ -57,6 +57,11 @@ export const AddToRedux = (value, type) => {
                 type: Types.FAVCHARGER,
                 payload: value
             }
+        case Types.CHECKACTIVESESSION:
+            return {
+                type: Types.CHECKACTIVESESSION,
+                payload: value
+            }
         default:
             return '';
     }

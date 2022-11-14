@@ -4,7 +4,8 @@ import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Button from '../Button/Button'
 import CommonText from '../Text/CommonText'
-
+import CommonView from '../CommonView'
+import WhiteButton from '../Button/WhiteButton'
 
 const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText }) => {
 
@@ -20,7 +21,7 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText
     return (
         <Modal visible={openCommonModal?.isVisible} statusBarTranslucent={true} transparent>
             <View style={styles.container}>
-                <View style={styles.innerContainer}>
+                <CommonView style={styles.innerContainer}>
                     <View style={styles.wrapContainer}>
                         <View style={styles.header}>
                             <CommonText showText={openCommonModal.heading ? openCommonModal?.heading : 'Notifications'} customstyles={styles.heading} />
@@ -31,11 +32,21 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText
                         <View style={styles.centerText}>
                             <CommonText showText={openCommonModal?.message} fontSize={16} regular />
                         </View>
-                        <View>
-                            <Button showText={openCommonModal.showBtnText ? openCommonModal?.showBtnText : 'Okay'} onPress={okayBtnHandler} />
+                        <View style={{ display: 'flex', flexDirection: 'row' }}>
+                            {openCommonModal.secondButton && <WhiteButton onPress={() => {
+                                try {
+                                    openCommonModal?.secondButton?.onPress()
+                                } catch (error) {
+
+                                }
+                                setOpenCommonModal({ isVisible: false, message: "", heading: '', showBtnText: "" })
+
+                            }} style={{ flex: 1, marginHorizontal: 4 }} showText={openCommonModal.secondButton?.title}></WhiteButton>
+                            }
+                            <Button style={{ flex: 1, marginHorizontal: 4 }} showText={openCommonModal.showBtnText ? openCommonModal?.showBtnText : 'Okay'} onPress={okayBtnHandler} />
                         </View>
                     </View>
-                </View>
+                </CommonView>
             </View>
         </Modal>
     )
@@ -49,10 +60,9 @@ const styles = StyleSheet.create({
     innerContainer: {
         width: '100%',
         alignSelf: 'center',
-        backgroundColor: colors.white,
         position: 'absolute',
         bottom: 0,
-        borderRadius: 6
+
     },
     wrapContainer: {
         width: '90%',

@@ -14,6 +14,8 @@ import { configureStore, persistor } from "./src/Redux/store";
 import { Provider, connect, ReactReduxContext } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import HyperSdkReact from 'hyper-sdk-react';
+import RatingModal from './src/Component/Modal/RatingModal'
+
 
 Amplify.configure(awsconfig)
 
@@ -56,6 +58,9 @@ const App = () => {
   const [loading, setLoading] = useState(true)
   const [loggedin, setloggedin] = useState(false)
   const [openCommonModal, setOpenCommonModal] = useState({ isVisible: false, message: "" })
+  const [showFeedBackModal, setShowFeedbackModel] = useState({ "isVisible": false, "locid": "", "evseid": "" ,onPress:()=>{}})
+
+
 
   useEffect(() => {
     const loginCheck = async () => {
@@ -110,19 +115,23 @@ const App = () => {
 
   return (
     <>
-      <SnackContext.Provider value={{ currentLocation, setCurrentLocation, mLocationsPayload, mSetLocationsPayload, setOpenCommonModal, openCommonModal }}>
+      <SnackContext.Provider value={{ currentLocation, setCurrentLocation, mLocationsPayload, mSetLocationsPayload, setOpenCommonModal, openCommonModal, setShowFeedbackModel }}>
         <Provider store={configureStore}>
           <PersistGate persistor={persistor} loading={null}>
             <QueryClientProvider client={queryClient} contextSharing={true}>
               <PaperProvider theme={scheme === 'dark' ? darkTheme : lightTheme}>
                 <StatusBar backgroundColor={scheme === 'dark' ? colors.backgroundDark : colors.lightBackGround} barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} />
                 <NavigationContainer>
-                  {!loading && <Routes loggedin={loggedin} />}
+                <RatingModal isModalVisible={showFeedBackModal} setShowFeedbackModel={setShowFeedbackModel}/>
+             
+                 {!loading && <Routes loggedin={loggedin} />}
+             
                 </NavigationContainer>
               </PaperProvider>
             </QueryClientProvider>
           </PersistGate>
         </Provider>
+    
       </SnackContext.Provider>
       <CommonModal openCommonModal={openCommonModal} setOpenCommonModal={setOpenCommonModal} />
     </>
