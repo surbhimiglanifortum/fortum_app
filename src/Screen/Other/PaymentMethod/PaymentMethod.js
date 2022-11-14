@@ -22,13 +22,18 @@ import PaymentSvg from '../../../assests/svg/PaymentSvg'
 
 const PaymentMethod = () => {
 
+  let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
   const navigation = useNavigation()
   const scheme = useColorScheme()
   const isFocused = useIsFocused()
   const dispatch = useDispatch()
 
   const fortumChargeCardHandler = () => {
-    navigation.navigate(routes.FortumChargeAndDriveCard)
+    if (mUserDetails?.pinelabs_account)
+      navigation.navigate(routes.Pinelab)
+    else
+      navigation.navigate(routes.FortumChargeAndDriveCard)
   }
 
   const walletCardHandler = (tabName) => {
@@ -41,8 +46,8 @@ const PaymentMethod = () => {
   const [gstState, setGstState] = useState('')
   const [pinelabData, setPineLabData] = useState({})
   const [refreshing, setRefreshing] = useState(false)
+  const [isAccount, setAccount] = useState()
 
-  let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
   const getWalletBalance = async () => {
     setRefreshing(true)
@@ -61,6 +66,11 @@ const PaymentMethod = () => {
   useEffect(() => {
     getDetails()
     getWalletBalance()
+  }, [])
+
+  useEffect(() => {
+    getDetails()
+    getWalletBalance()
   }, [isFocused])
 
   const getDetails = async () => {
@@ -70,7 +80,6 @@ const PaymentMethod = () => {
       dispatch(AddToRedux(result.data, Types.USERDETAILS))
     }
   }
-
 
   return (
     <CommonView>
@@ -105,9 +114,9 @@ const PaymentMethod = () => {
                 <View style={{ marginLeft: 10, flex: 0.9 }}>
                   <CommonText showText={'Fortum Charge & Drive Card'} fontSize={14} black />
                   {
-                    !mUserDetails?.pinelab_account ?
-                      <CommonText showText={'Activate your prepaid card'} fontSize={12} regular /> :
-                      <CommonText showText={`Card Balance : ₹ ${pinelabData?.Balance}`} fontSize={12} regular />
+                    mUserDetails?.pinelabs_account ?
+                      <CommonText showText={`Card Balance : ₹ ${pinelabData?.Balance}`} fontSize={12} regular /> :
+                      <CommonText showText={'Activate your prepaid card'} fontSize={12} regular />
                   }
                 </View>
               </View>

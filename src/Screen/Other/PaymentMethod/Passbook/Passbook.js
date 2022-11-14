@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
@@ -7,19 +7,21 @@ import Header from '../../../../Component/Header/Header'
 import CommonText from '../../../../Component/Text/CommonText'
 import SmallButton from '../../../../Component/Button/SmallButton'
 import FilterSvg from '../../../../assests/svg/FilterSvg'
-import Card from '../../../../Component/Card/Card'
 import WalletSvg from '../../../../assests/svg/wallet'
 import Button from '../../../../Component/Button/Button'
-import IconCard from '../../../../Component/Card/IconCard'
 import CommonView from '../../../../Component/CommonView'
 import DenseCard from '../../../../Component/Card/DenseCard'
-import WalletLight from '../../../../assests/svg/Wallet_light'
 import { useSelector } from 'react-redux'
 import { getPinelabHistroy } from '../../../../Services/Api'
 import PinelabPassbookFilter from '../../../../Component/Modal/PinelabPassbookFilter'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import moment from 'moment'
 import { getPinelabBalance } from '../../../../Services/Api'
+import { useQuery } from 'react-query'
+import PinelabTransactionCard from '../../../../Component/Card/PinelabTransactionCard'
+import Charger from '../../../../assests/svg/charger'
+import CommonIconCard from '../../../../Component/Card/CommonIconCard/CommonIconCard'
+import NoData from '../../../../Component/NoDataFound/NoData'
 
 const Passbook = () => {
     const navigation = useNavigation()
@@ -49,11 +51,12 @@ const Passbook = () => {
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     useEffect(() => {
-        getWalletHistory()
+        // getWalletHistory()
         getWalletBalance()
     }, [])
 
     const getWalletHistory = async () => {
+        console.log("Pressed")
         setRefreshing(true)
         const payload = {
             username: mUserDetails?.username,
@@ -66,13 +69,17 @@ const Passbook = () => {
         try {
             const result = await getPinelabHistroy(payload)
             console.log("Pinelab Wallet History Response", result.data)
-            setData(result.data)
+            // setData(result.data)
             setRefreshing(false)
+            setModalVisible(false)
+            return result?.data
         } catch (error) {
             console.log("Pinelab Wallet History Error", error)
             setRefreshing(false)
         }
     }
+
+    const { data: passbookData, status, isLoading, refetch } = useQuery('PassbookData', getWalletHistory)
 
     const getWalletBalance = async () => {
         try {
@@ -133,9 +140,98 @@ const Passbook = () => {
         hideEndDatePicker();
     };
 
+    const ShowTab = ({ tabName }) => {
+        switch (tabName) {
+            case 'all':
+                return <AllTransaction />
+                break;
+
+            case 'sent':
+                return <SentTransaction />
+                break;
+
+            case 'receive':
+                return <RecievedTransaction />
+                break;
+        }
+    }
+
+    const AllTransaction = () => {
+        return (
+            passbookData?.response?.Transactions?.length >= 1 ?
+                <FlatList
+                    data={passbookData?.response?.Transactions}
+                    refreshControl={<RefreshControl onRefresh={refetch} />}
+                    keyExtractor={item => item.id}
+                    renderItem={(item) => {
+                        return (
+                            <PinelabTransactionCard
+                                Svg={item?.item?.TransactionType === 'GIFT CARD RELOAD' ? WalletSvg : Charger}
+                                date={item?.item?.TransactionDate}
+                                title={item?.item?.MerchantName}
+                            />
+                        )
+                    }
+                    }
+                />
+                :
+                <NoData showText={'No data found.'} />
+        )
+    }
+
+    const SentTransaction = () => {
+        return (
+            passbookData?.response?.Transactions?.length >= 1 ?
+                <FlatList
+                    style={{ flex: 1 }}
+                    data={passbookData?.response?.Transactions}
+                    refreshControl={<RefreshControl onRefresh={refetch} />}
+                    keyExtractor={item => item.id}
+                    renderItem={(item) => {
+                        return (
+                            item?.item?.TransactionType !== 'GIFT CARD RELOAD' ?
+                                <PinelabTransactionCard
+                                    Svg={Charger}
+                                    date={item?.item?.TransactionDate}
+                                    title={item?.item?.MerchantName}
+                                /> :
+                                null
+                        )
+                    }
+                    }
+                />
+                :
+                <NoData showText={'No data found.'} />
+        )
+    }
+
+    const RecievedTransaction = () => {
+        return (
+            passbookData?.response?.Transactions?.length >= 1 ?
+                <FlatList
+                    data={passbookData?.response?.Transactions}
+                    refreshControl={<RefreshControl onRefresh={refetch} />}
+                    keyExtractor={item => item.id}
+                    renderItem={(item) => {
+                        return (
+                            item?.item?.TransactionType === 'GIFT CARD RELOAD' ?
+                                <PinelabTransactionCard
+                                    Svg={WalletSvg}
+                                    date={item?.item?.TransactionDate}
+                                    title={item?.item?.MerchantName}
+                                /> :
+                                null
+                        )
+                    }
+                    }
+                />
+                :
+                <NoData showText={'No data found.'} />
+        )
+    }
 
     return (
-        <CommonView>
+        <CommonView style={{ position: 'relative' }}>
             <View style={styles.innerHeader}>
                 <View style={{ flex: 1 }}>
                     <Header showText={'Passbook'} />
@@ -143,10 +239,10 @@ const Passbook = () => {
                 <SmallButton Svg={FilterSvg} onPress={() => setModalVisible(true)} />
             </View>
 
-            <DenseCard>
+            <DenseCard padding={10}>
                 <View style={styles.innerHeader}>
                     <View style={[styles.innerHeader, { flex: 1 }]}>
-                        <IconCard Svg={WalletLight} />
+                        <CommonIconCard Svg={WalletSvg} />
                         <CommonText showText={'Balance'} fontSize={14} regular customstyles={{ marginLeft: 10 }} />
                     </View>
                     <CommonText showText={'₹1400'} fontSize={14} />
@@ -154,57 +250,76 @@ const Passbook = () => {
             </DenseCard>
 
             <View style={styles.tabContainer}>
-                <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'all' ? colors.white : colors.greenBackground }]}>
-                    <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'sent' ? colors.white : colors.greenBackground }]}>
-                    <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton, { backgroundColor: selectedTab == 'receive' ? colors.white : colors.greenBackground }]}>
-                    <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Receive</Text>
-                </TouchableOpacity>
+
+                {selectedTab == 'all' ?
+                    <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                        <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton]}>
+                            <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
+                        </TouchableOpacity>
+                    </DenseCard> :
+                    <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton]}>
+                        <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
+                    </TouchableOpacity>
+                }
+
+                {selectedTab == 'sent' ?
+                    <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                        <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton]}>
+                            <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
+                        </TouchableOpacity>
+                    </DenseCard> :
+                    <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton]}>
+                        <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
+                    </TouchableOpacity>
+                }
+
+                {selectedTab == 'receive' ?
+                    <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                        <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
+                            <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Receive</Text>
+                        </TouchableOpacity>
+                    </DenseCard> :
+                    <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
+                        <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Receive</Text>
+                    </TouchableOpacity>
+                }
             </View>
 
-            <View style={{ height: 500, marginTop: 15 }}>
-                <ScrollView>
-                    {selectedTab == 'all' && <Card tabName={"all"} Svg={WalletLight} />}
+            <ShowTab tabName={selectedTab} />
 
-                    {selectedTab == 'sent' && <Card tabName={'sent'} Svg={WalletLight} />}
+            <PinelabPassbookFilter
+                isVisible={modalVisible}
+                bgStyle={'rgba(0,0,0,0.5)'}
+                startDate={startDate}
+                endDate={endDate}
+                showStartDatePicker={showStartDatePicker}
+                showEndDatePicker={showEndDatePicker}
+                noTrans={noTrans}
+                setNoTrans={setNoTrans}
+                onClosePress={() => setModalVisible(false)}
+                onPress={refetch}
+            />
 
-                    {selectedTab == 'receive' && <Card tabName={'receive'} Svg={WalletLight} />}
-                </ScrollView>
+            <DateTimePickerModal
+                isVisible={isStartDatePickerVisible}
+                mode="date"
+                onConfirm={handleStartConfirm}
+                onCancel={hideStartDatePicker}
+                maximumDate={new Date()}
+            />
 
-                <PinelabPassbookFilter
-                    isVisible={modalVisible}
-                    bgStyle={'rgba(0,0,0,0.5)'}
-                    startDate={startDate}
-                    endDate={endDate}
-                    showStartDatePicker={showStartDatePicker}
-                    showEndDatePicker={showEndDatePicker}
-                    noTrans={noTrans}
-                    setNoTrans={setNoTrans}
-                    onClosePress={() => setModalVisible(false)}
-                />
+            <DateTimePickerModal
+                isVisible={isEndDatePickerVisible}
+                mode="date"
+                onConfirm={handleEndConfirm}
+                onCancel={hideEndDatePicker}
+                maximumDate={new Date()}
+            />
 
-                <DateTimePickerModal
-                    isVisible={isStartDatePickerVisible}
-                    mode="date"
-                    onConfirm={handleStartConfirm}
-                    onCancel={hideStartDatePicker}
-                    maximumDate={new Date()}
-                />
 
-                <DateTimePickerModal
-                    isVisible={isEndDatePickerVisible}
-                    mode="date"
-                    onConfirm={handleEndConfirm}
-                    onCancel={hideEndDatePicker}
-                    maximumDate={new Date()}
-                />
-
+            <View style={styles.fixedBtn}>
+                <Button showText={'Download Passbook'} />
             </View>
-
-            <Button showText={'Download Passbook'} />
         </CommonView>
     )
 }
@@ -232,26 +347,32 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: scale(15),
-        backgroundColor: colors.green,
-        paddingVertical: 8,
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        justifyContent: 'space-between'
+        marginTop: 15,
+        backgroundColor: '#5AC37D',
+        paddingVertical: 2,
+        borderRadius: 10,
+        paddingHorizontal: 5,
+        justifyContent: 'space-between',
+        marginHorizontal: 10,
     },
     tabButton: {
-        backgroundColor: '#FFF',
-        paddingVertical: 5,
         paddingHorizontal: 15,
-        borderRadius: 3,
-        width: '33%',
-        alignItems: 'center'
+        borderRadius: 6,
+        alignItems: 'center',
+        alignSelf: 'center',
+        paddingHorizontal: 30
     },
     innerHeader: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center'
     },
+    fixedBtn: {
+        position: 'absolute',
+        bottom: 0,
+        left: 10,
+        width: '100%'
+    }
 })
 
 

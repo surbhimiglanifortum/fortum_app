@@ -19,8 +19,6 @@ const TNCNotificationDialog = (props) => {
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
     const tnc_last_called = useSelector((state) => state.commonReducer.tnc_last_called);
 
-    console.log("Check Props", props.tncNotification, mUserDetails?.username)
-
     useEffect(() => {
         refreshTNC()
     }, [props.tncNotification])
@@ -32,7 +30,6 @@ const TNCNotificationDialog = (props) => {
 
     const refreshTNC = () => {
         setTimeout(async () => {
-            console.log("tnc_last_called", tnc_last_called)
             if (mUserDetails?.username) {
                 let refershTnc = false
                 if (!tnc_last_called) {
@@ -46,7 +43,6 @@ const TNCNotificationDialog = (props) => {
                 if (refershTnc) {
                     // refetch TNC 
                     const result = await getTncVersion(mUserDetails?.username)
-                    console.log("tncversion", result.data)
                     if (result.data?.showdialog) {
                         // show accept Alert
                         showVisible(true)
