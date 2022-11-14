@@ -7,7 +7,7 @@ import DetailsCard from '../../Component/Card/DetailsCard'
 import CommonText from '../../Component/Text/CommonText'
 import routes from '../../Utils/routes'
 import EvCard from '../../Component/Card/EvCard'
-import { getEvses } from '../../Services/Api'
+import { getEvses, chargingList } from '../../Services/Api'
 import { useSelector } from 'react-redux'
 import { useQuery } from 'react-query'
 import CommonView from '../../Component/CommonView'
@@ -26,18 +26,55 @@ const ChargingStation = ({ route }) => {
 
     const locDetails = route.params?.data
 
-    const chargerCardHandler = (evDetails) => {
-        setOpenCommonModal({
-            isVisible: true, message: `Minimum Balance of ₹ ${evDetails?.connectors[0]?.pricing?.min_balance} to start charging` || result.data?.message,
-            heading: 'Payment',
-            onOkPress: () => {
-                navigation.navigate(routes.PayMinimum, {
-                    locDetails: locDetails,
-                    evDetails: evDetails
-                })
+    const fetchLastSession = async (evseid) => {
+        const response = await chargingList(mUserDetails.username)
+        console.log("SKSKAH", response)
+        let activeSession 
+        response?.data?.forEach((item, index) => {
+            // console.log('Session Id')
+            if (!item) {
+                return;
             }
+
+            const activeConnectors = item.location.evses[0].connectors
+
+            activeConnectors.forEach(i => {
+                if (i.id === evseid) {
+                    activeSession=  item
+                    console.log(true)
+                }
+            })
+
         })
+        return activeSession
     }
+    const chargerCardHandler = async (evDetails) => {
+        console.log(evDetails)
+        if (evDetails?.status) { }
+        const response = await fetchLastSession(evDetails?.uid)
+        console.log("charfa", response)
+        if (response) {
+            navigation.navigate(routes.OngoingDetails, {
+                locDetails: locDetails,
+                evDetails: evDetails,
+                paymentMethod: response?.payments?.payment_method
+            })
+        } else {
+            setOpenCommonModal({
+                isVisible: true, message: `Minimum Balance of ₹ ${evDetails?.connectors[0]?.pricing?.min_balance} to start charging` || result.data?.message,
+                heading: 'Payment',
+                onOkPress: () => {
+                    navigation.navigate(routes.PayMinimum, {
+                        locDetails: locDetails,
+                        evDetails: evDetails
+                    })
+                }
+            })
+        }
+
+    }
+
+
 
     const evsesData = async () => {
         setLoading(true)

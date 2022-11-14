@@ -307,7 +307,7 @@ const PayMinimum = ({ route }) => {
 
             <View style={styles.fixedContainer}>
                 <Button showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() =>
-                    goodToGo ? navigation.navigate(routes.OngoingDetails, {
+                    goodToGo && mode=='PAY_AS_U_GO' ? navigation.navigate(routes.OngoingDetails, {
                         locDetails: locDetails,
                         evDetails: evDetails,
                         paymentMethod: mode,
