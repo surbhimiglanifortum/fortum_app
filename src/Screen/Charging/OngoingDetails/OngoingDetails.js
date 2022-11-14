@@ -72,7 +72,7 @@ const OngoingDetails = ({ route }) => {
 
   const locDetails = route?.params?.locDetails
   const evDetails = route.params?.evDetails
-console.log("ONGPOIN", evDetails)
+  console.log("ONGPOIN", evDetails)
   let lastPaidSession = {}
 
   const checkIfUnpaid = () => {
@@ -605,7 +605,7 @@ console.log("ONGPOIN", evDetails)
         </CommonCard >
 
         <CommonCard>
-          <TouchableOpacity style={styles.topCard}>
+          <TouchableOpacity style={styles.topCard} onPress={() => navigation.navigate(routes.Support)}>
             <IconCard Svg={SupportLight} />
             <CommonText showText={'Support'} customstyles={{ alignSelf: 'center' }} />
           </TouchableOpacity>
