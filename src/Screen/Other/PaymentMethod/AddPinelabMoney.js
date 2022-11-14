@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { StyleSheet, useColorScheme, View, TouchableOpacity, ScrollView } from 'react-native'
 import CommonView from '../../../Component/CommonView'
 import DenseCard from '../../../Component/Card/DenseCard'
 import Header from '../../../Component/Header/Header'
-import LinearInput from '../../../Component/Textinput/linearInput'
 import CommonCard from '../../../Component/Card/CommonCard'
 import CommonText from '../../../Component/Text/CommonText'
-import colors from '../../../Utils/colors'
 import WhiteButton from '../../../Component/Button/WhiteButton'
 import Button from '../../../Component/Button/Button'
-import { loadWalletMoney } from '../../../Services/Api'
-import { Picker } from '@react-native-community/picker';
+import { loadWalletMoney, walletBalanceEnquiry } from '../../../Services/Api'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import routes from '../../../Utils/routes'
 import SnackContext from '../../../Utils/context/SnackbarContext'
+import Textinput from '../../../Component/Textinput/Textinput'
+import { useQuery } from 'react-query'
 
 const AddPinelabMoney = ({ route }) => {
 
@@ -68,39 +67,34 @@ const AddPinelabMoney = ({ route }) => {
         }
     }
 
+    const { data, status, isLoading, refetch } = useQuery('FatchPinelabBalance', async () => {
+        const res = await walletBalanceEnquiry({ username: mUserDetails.username })
+        return res.data
+    })
+
+    useEffect(() => {
+        refetch()
+    }, [isFocused])
+
+
     return (
         <CommonView>
             <ScrollView >
-                <Header showText={'Recharge Wallet'} />
-                <DenseCard style={{ marginTop: 20 }}>
+                <Header showText={'Recharge Pinelab Card'} />
+                <DenseCard margin={1}>
                     <View style={styles.row}>
-                        <TouchableOpacity onPress={() => setAmount({ value: (parseInt(amount.value) - 50).toString(), error: '' })}>
-                            <CommonCard style={{ padding: 10, height: 50, width: 50, alignItems: 'center', }}>
-                                <CommonText showText={'-'} customstyles={[{ color: colors.greyText }]} fontSize={20} bold />
-                            </CommonCard>
-                        </TouchableOpacity>
-                        <View style={[styles.row, { flex: 1, justifyContent: 'center' }]}>
-                            <CommonText showText={'₹'} customstyles={styles.rupeeText} fontSize={25} />
-                            <LinearInput
-                                value={amount.value}
-                                onChange={(text) => { setAmount({ value: text, error: '' }) }}
-                                placeholderText={'50'}
-                                style={styles.input}
-                                keyboardType={'number-pad'}
-                            />
-                        </View>
-
-                        <TouchableOpacity onPress={() => setAmount({ value: (parseInt(amount.value) + 50).toString(), error: '' })}>
-                            <CommonCard style={{ padding: 10, backgroundColor: colors.green, height: 50, width: 50, alignItems: 'center' }} >
-                                <CommonText showText={'+'} customstyles={[{ color: colors.white }]} fontSize={20} bold />
-                            </CommonCard>
-                        </TouchableOpacity>
-
+                        <CommonText showText={'Wallet Balance'} regular fontSize={14} customstyles={{ flex: 1 }} />
+                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)}`} />
                     </View>
-                    {amount.error != '' && <CommonText showText={amount.error} fontSize={14} customstyles={{ color: colors.red, marginLeft: 15, marginVertical: 10 }} />}
                 </DenseCard>
 
+                <CommonText showText={'Add Money in Wallet'} regular fontSize={14} />
+                <View style={{ position: 'relative' }}>
+                    <CommonText showText={'₹'} customstyles={styles.rupeeText} />
+                    <Textinput paddingHorizontal={25} placeholder={'Enter Amount'} value={amount.value} onChange={(text) => { setAmount({ value: text, error: '' }) }} />
+                </View>
 
+                <CommonText showText={'Quick Recommendation'} fontSize={14} customstyles={{ marginVertical: 15 }} />
 
                 <View style={styles.row}>
                     {lazyAmount.map((e) => {
@@ -148,13 +142,17 @@ const styles = StyleSheet.create({
     row: {
         display: 'flex',
         flexDirection: 'row',
+        alignItems: 'center'
     },
     column: {
         paddingHorizontal: 20,
         paddingVertical: 20
     },
     rupeeText: {
-        marginTop: 13
+        position: 'absolute',
+        zIndex: 9,
+        top: 27,
+        left: 15
     }
 })
 

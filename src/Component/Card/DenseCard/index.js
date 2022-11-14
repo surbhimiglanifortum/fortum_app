@@ -4,7 +4,7 @@ import colors from '../../../Utils/colors'
 import LinearGradient from 'react-native-linear-gradient';
 import { NeomorphFlex } from 'react-native-neomorph-shadows'
 
-export default function index({ children, style, padding, customStyle, backgroundColor, paddingRight, paddingLeft,paddingTop ,paddingBottom, marginVertical,margin}) {
+export default function index({ children, style, padding, customStyle, backgroundColor, paddingRight, paddingLeft, paddingTop, paddingBottom, marginVertical, margin }) {
 
     const scheme = useColorScheme()
     return (
@@ -15,7 +15,7 @@ export default function index({ children, style, padding, customStyle, backgroun
                 shadowRadius: 3,
                 borderRadius: 12,
                 backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight,
-                margin:margin || 10,
+                margin: margin || 10,
                 marginVertical: marginVertical || 10,
                 padding: padding || 15,
                 paddingLeft: paddingLeft || padding || 15,

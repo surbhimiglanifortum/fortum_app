@@ -65,23 +65,29 @@ const Charging = ({ setSelectedTabs }) => {
         <CommonView>
             <BackBtnTab onPress={backhandler} showText={"Charging"} />
             <View style={styles.tabContainer}>
-                {selectedTab == 'ongoing' ? <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
-                    <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton,]}>
-                        <CommonText customstyles={[{ color: selectedTab == 'ongoing' ? colors.green : colors.white }]} showText={'Ongoing'} />
-                    </TouchableOpacity>
-                </DenseCard>
+                {selectedTab == 'ongoing' ?
+                    <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                        <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton,]}>
+                            <CommonText customstyles={[{ color: selectedTab == 'ongoing' ? colors.green : colors.white }]} showText={'Ongoing'} />
+                        </TouchableOpacity>
+                    </DenseCard>
                     : <TouchableOpacity onPress={ongoingBtnHandler} style={[styles.tabButton,]}>
                         <CommonText customstyles={[{ color: selectedTab == 'ongoing' ? colors.black : colors.white }]} showText={'Ongoing'} />
-                    </TouchableOpacity>}
-                {selectedTab == 'completed' ? <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
-                    <TouchableOpacity onPress={completedBtnHandler} style={[styles.tabButton,]}>
-                        <CommonText customstyles={[{ color: selectedTab == 'completed' ? colors.green : '#FFF' }]} showText={'Completed'} />
                     </TouchableOpacity>
-                </DenseCard>
+                }
+
+                {selectedTab == 'completed' ?
+                    <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                        <TouchableOpacity onPress={completedBtnHandler} style={[styles.tabButton,]}>
+                            <CommonText customstyles={[{ color: selectedTab == 'completed' ? colors.green : '#FFF' }]} showText={'Completed'} />
+                        </TouchableOpacity>
+                    </DenseCard>
                     : <TouchableOpacity onPress={completedBtnHandler} style={[styles.tabButton,]}>
                         <CommonText customstyles={[{ color: selectedTab == 'completed' ? colors.black : '#FFF' }]} showText={'Completed'} />
-                    </TouchableOpacity>}
+                    </TouchableOpacity>
+                }
             </View>
+            
             <View>
                 {selectedTab == 'ongoing' &&
                     <>
