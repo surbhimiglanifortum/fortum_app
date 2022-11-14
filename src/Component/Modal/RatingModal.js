@@ -1,39 +1,101 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, useColorScheme, ScrollView } from 'react-native'
-import React from 'react'
-import colors from '../../Utils/colors'
+import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, useColorScheme } from 'react-native'
+import React, { useState,useContext } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Button from '../Button/Button'
 import CommonText from '../Text/CommonText'
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import Textinput from '../Textinput/Textinput'
+import CommonView from '../../Component/CommonView'
+import CommonCard from '../../Component/Card/CommonCard'
+import { useSelector } from 'react-redux'
+import * as ApiAction from '../../Services/Api'
+import SnackContext from '../../Utils/context/SnackbarContext'
 
-const RatingModal = ({ openCommonModal, setOpenCommonModal }) => {
+var ratings = 3
+
+const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
     const scheme = useColorScheme()
+    const [review, setReview] = useState("");
+    const [loadingSign, setLoadingSign] = useState(false)
 
-    const okayBtnHandler = () => {
-        openCommonModal?.onOkPress()
-        setOpenCommonModal({ isVisible: false, message: "" })
+    const mUserDetails = useSelector((state) => state.userTypeReducer.userDetails)
+
+    const { setOpenCommonModal } = useContext(SnackContext);
+
+
+    const okayBtnHandler = async () => {
+        // openCommonModal?.onOkPress()
+        // setShowFeedbackModel({ "isVisible": false, "locid": "", "evseid": "", onPress: () => { } })
+        if (review == '') {
+            setOpenCommonModal({
+                isVisible: true, message: "Please add your feedback!!!", onOkPress: () => { }
+            })
+            return
+        }
+
+
+        const payload = {
+            "locid": isModalVisible.locid || "SDS",
+            "evseid": isModalVisible.evseid || "SDS",
+            "stars": ratings || 3,
+            "desc": review || "SADSDSD",
+            "user": mUserDetails?.username || "res2GMAIL.COM"
+        }
+        setLoadingSign(true)
+        try {
+            const response = await ApiAction.feedback(payload)
+
+            console.log("Req saved", response.data)
+            if (response.data.result == "ok") {
+                setOpenCommonModal({
+                    isVisible: true, message: "Your feedback has been saved", onOkPress: () => { }
+                })
+                setShowFeedbackModel({ "isVisible": false, "locid": "", "evseid": "" })
+                setLoadingSign(false)
+            } else {
+                setShowFeedbackModel({ "isVisible": false, "locid": "", "evseid": "" })
+                setLoadingSign(false)
+                setOpenCommonModal({
+                    isVisible: true, message: "Failed to save Feedback", onOkPress: () => { }
+                })
+            }
+        } catch (error) {
+            setLoadingSign(false)
+            setOpenCommonModal({
+                isVisible: true, message: error, onOkPress: () => { }
+            })
+        }
+       
     }
 
+    const onFinishRating = (data) => {
+        ratings = data
+
+    }
+
+
+
     return (
-        <Modal visible={false} statusBarTranslucent={true} transparent>
+        <Modal visible={isModalVisible.isVisible} statusBarTranslucent={true} transparent>
             <View style={styles.container}>
-                <View style={[styles.innerContainer, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.lightBackGround }]}>
+                <CommonView style={[styles.innerContainer]}>
                     <View style={styles.wrapContainer}>
                         <View style={styles.header}>
-                            <CommonText showText={'Notifications'} fontSize={20} />
-                            <TouchableOpacity style={styles.crossBtn} onPress={() => { setOpenCommonModal({ isVisible: false, message: "" }) }}>
-                                <AntDesign name='close' size={20} />
+                            <CommonText showText={'How was your charging exprerience today?'} fontSize={20} />
+                            <TouchableOpacity style={styles.crossBtn} onPress={() => { setShowFeedbackModel({ "isVisible": false, "locid": "", "evseid": "" }) }}>
+                                <CommonCard >
+                                    <AntDesign name='close' size={20} />
+                                </CommonCard>
                             </TouchableOpacity>
                         </View>
-                        <AirbnbRating />
+                        <AirbnbRating onFinishRating={onFinishRating} defaultRating={ratings} />
                         <CommonText showText={'Tell us more'} />
-                        <Textinput />
+                        <Textinput value={review} onChange={setReview} />
                         <View>
-                            <Button showText={'Okay'} onPress={okayBtnHandler} />
+                            <Button onLoading={loadingSign} showText={'Submit'} onPress={okayBtnHandler} />
                         </View>
                     </View>
-                </View>
+                </CommonView>
             </View>
         </Modal>
     )
@@ -47,7 +109,6 @@ const styles = StyleSheet.create({
     innerContainer: {
         width: '100%',
         alignSelf: 'center',
-        backgroundColor: colors.white,
         position: 'absolute',
         bottom: 0,
         borderRadius: 6
@@ -66,11 +127,6 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end'
     },
     crossBtn: {
-        backgroundColor: colors.white,
-        elevation: 5,
-        paddingVertical: 8,
-        paddingHorizontal: 8,
-        borderRadius: 6
     },
     centerText: {
         marginVertical: 50,

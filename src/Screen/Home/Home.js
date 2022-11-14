@@ -13,10 +13,9 @@ import LocationSvg from '../../assests/svg/LocationSvg';
 import DetailsCard from '../../Component/Card/DetailsCard';
 import Geolocation from '@react-native-community/geolocation';
 import { computeDistance } from '../../Utils/helperFuncations/computeDistance';
-import { postListService } from '../../Services/HomeTabService/HomeTabService';
 import SnackContext from '../../Utils/context/SnackbarContext';
 import { useQuery } from 'react-query'
-import { Auth } from 'aws-amplify'
+import { API, Auth } from 'aws-amplify'
 import * as ApiAction from '../../Services/Api'
 import MapCharger from '../Home/MapCharger'
 import CommonText from '../../Component/Text/CommonText';
@@ -24,7 +23,9 @@ import { useSelector } from 'react-redux'
 import CommonCard from '../../Component/Card/CommonCard'
 import DenseCard from '../../Component/Card/DenseCard'
 import TTNCNotificationDialog from '../../Component/Modal/TNCNotificationDialog'
-
+import { useDispatch } from 'react-redux'
+import { AddToRedux } from '../../Redux/AddToRedux';
+import * as Types from '../../Redux/Types'
 
 let selectedMarker = {}
 
@@ -42,7 +43,12 @@ export default Home = ({ navigatedata }) => {
   })
   const [tncNotification, setTncNotification] = useState(false)
 
+  const dispatch = useDispatch()
+
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
+  const checkActiveSession = useSelector((state) => state.TempStore.checkActiveSession);
+
 
   const scheme = useColorScheme()
 
@@ -100,10 +106,48 @@ export default Home = ({ navigatedata }) => {
     navigation.navigate(routes.ChargingStation)
   }
 
-  const { currentLocation, setCurrentLocation, } = useContext(SnackContext)
+  const { setOpenCommonModal } = useContext(SnackContext)
+
+  const CallCheckActiveSession = async () => {
+    console.log(checkActiveSession)
+    if (checkActiveSession) {
+      console.log("CHECK actove session")
+      if (mUserDetails?.username) {
+        const response = await ApiAction.chargingList(mUserDetails.username)
+        console.log(response.data)
+        if (response.data && response.data.length > 0) {
+
+          setOpenCommonModal({
+            isVisible: true, message: `You have an ongoing charging session at Charger ${response.data[0]?.location?.name} please stop the session if you have done charging!`,
+            heading: "Ongoing Session",
+            secondButton: {
+              onPress: () => {
+
+              },
+              title: "Ignore"
+            },
+            onOkPress: () => {
+              navigation.navigate(routes.OngoingDetails, {
+                locDetails: response.data[0]?.location,
+                evDetails: response.data[0]?.location?.evses[0],
+                paymentMethod: response?.payments?.payment_method
+              })
+            }
+          })
+        }
+        dispatch(AddToRedux(false, Types.CHECKACTIVESESSION))
+
+      }
+    } else {
+      console.log("dont CHECK actove session")
+    }
+
+
+  }
 
   useEffect(() => {
     refetch()
+    CallCheckActiveSession()
   }, [location, locationsPayload])
 
 

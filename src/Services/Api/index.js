@@ -222,3 +222,8 @@ export const acceptTnc = async (username) => {
 export const loadWalletMoney = async (payload) => {
     return await axios.post("/api_app/juspay/initiate_payment/stored-value-account", payload);
 };
+
+
+export const feedback = async (payload) => {
+    return await axios.post("/api_app/feedback", payload);
+};

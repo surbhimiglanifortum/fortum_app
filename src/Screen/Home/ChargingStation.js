@@ -28,8 +28,7 @@ const ChargingStation = ({ route }) => {
 
     const fetchLastSession = async (evseid) => {
         const response = await chargingList(mUserDetails.username)
-        console.log("SKSKAH", response)
-        let activeSession 
+         let activeSession 
         response?.data?.forEach((item, index) => {
             // console.log('Session Id')
             if (!item) {
@@ -52,7 +51,6 @@ const ChargingStation = ({ route }) => {
         console.log(evDetails)
         if (evDetails?.status) { }
         const response = await fetchLastSession(evDetails?.uid)
-        console.log("charfa", response)
         if (response) {
             navigation.navigate(routes.OngoingDetails, {
                 locDetails: locDetails,
