@@ -11,8 +11,9 @@ import PrivacySvg from '../../../assests/svg/PrivacySvg'
 import CallSvg from '../../../assests/svg/CallSvg'
 import SupportSvg from '../../../assests/svg/SupportSvg'
 import WhatsSvg from '../../../assests/svg/WhatsSvg'
-import GlobalDefines from '../../../Component/GlobalDefines'
+import GlobalDefines from '../../../Utils/globalDefines'
 import routes from '../../../Utils/routes'
+import CommonView from '../../../Component/CommonView'
 
 const Support = () => {
 
@@ -71,41 +72,22 @@ const Support = () => {
     };
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
-            <View style={styles.innerContainer}>
-                {/* <Header /> */}
-                <Header showText={'Support'} />
-                <View style={styles.headerText}>
-                    <CommonText showText={'Legal'} fontSize={18} />
-                </View>
-                <SettingCard Svg={FAQSvg} showText={'FAQ'} fontSize={16} onPress={faqHandler} />
-                <SettingCard Svg={TermAndCondtionSvg} showText={'Terms and Condition'} fontSize={16} onPress={_onPresstermsCondition} />
-                <SettingCard Svg={PrivacySvg} showText={'Privancy Plicy'} fontSize={16} onPress={_onPressPrivacy} />
-                <View style={styles.headerText}>
-                    <CommonText showText={'Contact Us'} fontSize={18} />
-                </View>
-                <SettingCard Svg={CallSvg} showText={'+91 1234567890'} fontSize={16} onPress={onPressMobileNumberClick} />
-                <SettingCard Svg={SupportSvg} showText={'Support@gmail.com'} fontSize={16} onPress={_onpressEmail} />
-                <SettingCard Svg={WhatsSvg} showText={'Whatsapp'} fontSize={16} onPress={sendWhatsApp} />
-            </View>
-        </SafeAreaView>
+        <CommonView>
+            <Header showText={'Support'} />
+            <CommonText showText={'Legal'} fontSize={14} customstyles={styles.headerText} />
+            <SettingCard Svg={FAQSvg} showText={'FAQ'} fontSize={16} onPress={faqHandler} />
+            <SettingCard Svg={TermAndCondtionSvg} showText={'Terms and Condition'} fontSize={16} onPress={_onPresstermsCondition} />
+            <SettingCard Svg={PrivacySvg} showText={'Privacy Policy'} fontSize={16} onPress={_onPressPrivacy} />
+            <CommonText showText={'Contact Us'} fontSize={14} customstyles={styles.headerText} />
+            <SettingCard Svg={CallSvg} showText={'18001203578'} fontSize={16} onPress={onPressMobileNumberClick} />
+            <SettingCard Svg={SupportSvg} showText={'support@chargedrive.in'} fontSize={16} onPress={_onpressEmail} />
+            {/* <SettingCard Svg={WhatsSvg} showText={'Whatsapp'} fontSize={16} onPress={sendWhatsApp} /> */}
+        </CommonView>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    innerContainer: {
-        width: '90%',
-        alignSelf: 'center',
-        marginTop: 20
-    },
-    button: {
-        marginVertical: 20,
-        paddingHorizontal: 20
 
-    },
     headerText: {
         marginTop: 25,
         paddingHorizontal: 14
