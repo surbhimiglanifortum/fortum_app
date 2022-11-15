@@ -46,7 +46,10 @@ const routes = {
     AddAddress: 'AddAddress',
     CardDetails: 'CardDetails',
     AddPinelabMoney: 'AddPinelabMoney',
-    Pinelab: 'Pinelab'
+    Pinelab: 'Pinelab',
+    AddMoneyDone: 'AddMoneyDone',
+    OrderCard: 'OrderCard',
+    CardOrderConfirmed: 'CardOrderConfirmed'
 }
 
 export default routes

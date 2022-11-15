@@ -8,8 +8,8 @@ import Charger from '../../assests/svg/charger'
 import { getFormatedDate } from '../../Services/CommonServices'
 import CommonIconCard from './CommonIconCard/CommonIconCard'
 
-const PinelabTransactionCard = ({ navigationHandler, Svg, title, date, topUpBalance }) => {
-    
+const PinelabTransactionCard = ({ navigationHandler, Svg, title, date, amount, transactionType }) => {
+
     return (
         <CommonCard   >
             <TouchableOpacity style={styles.card} onPress={navigationHandler} >
@@ -22,10 +22,7 @@ const PinelabTransactionCard = ({ navigationHandler, Svg, title, date, topUpBala
                         </View>
                     </View>
                 </View>
-                {/* <View>
-                    <CommonText showText={`${type ? ` + ₹ ${parseFloat(topUpBalance.toFixed(2))}` : `₹ ${dataItem?.item?.consumedAmount ? dataItem?.item?.consumedAmount : '0'}`}`} fontSize={16} customstyles={{ color: dataItem?.item?.topUpBalance ? colors.green : colors.red }} />
-                    <CommonText regular showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '120'} Min`} fontSize={14} />
-                </View> */}
+                <CommonText showText={transactionType === 'GIFT CARD RELOAD' ? `+ ₹ ${amount}` : `₹ ${amount}`} fontSize={16} customstyles={transactionType === 'GIFT CARD RELOAD' ? { color: colors.green } : { color: colors.red }} />
             </TouchableOpacity>
         </CommonCard>
     )

@@ -28,7 +28,7 @@ const ChargingStation = ({ route }) => {
 
     const fetchLastSession = async (evseid) => {
         const response = await chargingList(mUserDetails.username)
-         let activeSession 
+        let activeSession
         response?.data?.forEach((item, index) => {
             // console.log('Session Id')
             if (!item) {
@@ -39,7 +39,7 @@ const ChargingStation = ({ route }) => {
 
             activeConnectors.forEach(i => {
                 if (i.id === evseid) {
-                    activeSession=  item
+                    activeSession = item
                     console.log(true)
                 }
             })
@@ -49,26 +49,29 @@ const ChargingStation = ({ route }) => {
     }
     const chargerCardHandler = async (evDetails) => {
         console.log(evDetails)
-        if (evDetails?.status) { }
-        const response = await fetchLastSession(evDetails?.uid)
-        if (response) {
-            navigation.navigate(routes.OngoingDetails, {
-                locDetails: locDetails,
-                evDetails: evDetails,
-                paymentMethod: response?.payments?.payment_method
-            })
-        } else {
-            setOpenCommonModal({
-                isVisible: true, message: `Minimum Balance of ₹ ${evDetails?.connectors[0]?.pricing?.min_balance} to start charging` || result.data?.message,
-                heading: 'Payment',
-                onOkPress: () => {
-                    navigation.navigate(routes.PayMinimum, {
-                        locDetails: locDetails,
-                        evDetails: evDetails
-                    })
-                }
-            })
+        if (evDetails?.status === "CHARGING") {
+            const response = await fetchLastSession(evDetails?.uid)
+            if (response) {
+                navigation.navigate(routes.OngoingDetails, {
+                    locDetails: locDetails,
+                    evDetails: evDetails,
+                    paymentMethod: response?.payments?.payment_method
+                })
+            }
+            return
         }
+
+        setOpenCommonModal({
+            isVisible: true, message: `Minimum Balance of ₹ ${evDetails?.connectors[0]?.pricing?.min_balance} to start charging` || result.data?.message,
+            heading: 'Payment',
+            onOkPress: () => {
+                navigation.navigate(routes.PayMinimum, {
+                    locDetails: locDetails,
+                    evDetails: evDetails
+                })
+            }
+        })
+
 
     }
 
