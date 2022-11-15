@@ -53,7 +53,14 @@ const ChargingStation = ({ route }) => {
             const response = await fetchLastSession(evDetails?.uid)
             if (response) {
                 navigation.navigate(routes.OngoingDetails, {
-                    locDetails: locDetails,
+                    locDetails: {
+                        ...response.data[0]?.location, address: {
+                            "city": response.data[0]?.location?.city,
+                            "street": response.data[0]?.location?.address,
+                            "countryIsoCode": "IND",
+                            "postalCode": "11112"
+                        }
+                    },
                     evDetails: evDetails,
                     paymentMethod: response?.payments?.payment_method
                 })
