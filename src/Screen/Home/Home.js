@@ -110,7 +110,7 @@ export default Home = ({ navigatedata }) => {
 
   const CallCheckActiveSession = async () => {
     console.log(checkActiveSession)
-    if (checkActiveSession) {
+    if (true || checkActiveSession) {
       console.log("CHECK actove session")
       if (mUserDetails?.username) {
         const response = await ApiAction.chargingList(mUserDetails.username)
@@ -128,7 +128,12 @@ export default Home = ({ navigatedata }) => {
             },
             onOkPress: () => {
               navigation.navigate(routes.OngoingDetails, {
-                locDetails: response.data[0]?.location,
+                locDetails: {...response.data[0]?.location, address: {
+                  "city": response.data[0]?.location?.city,
+                  "street": response.data[0]?.location?.address,
+                  "countryIsoCode": "IND",
+                  "postalCode": "11112"
+              }}  ,
                 evDetails: response.data[0]?.location?.evses[0],
                 paymentMethod: response?.payments?.payment_method
               })

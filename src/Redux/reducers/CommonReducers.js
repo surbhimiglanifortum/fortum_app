@@ -2,7 +2,8 @@ import * as Types from '../Types'
 const initialState = {
     tnc_last_called: null,
     favCharger: null,
-    checkActiveSession: true
+    checkActiveSession: true,
+    locations: []
 }
 
 const CommonReducer = (state = initialState, action) => {
@@ -22,6 +23,11 @@ const CommonReducer = (state = initialState, action) => {
             return {
                 ...state,
                 checkActiveSession: action.payload
+            };
+        case Types.LOCATIONS:
+            return {
+                ...state,
+                locations: action.payload
             };
         default:
             return state;

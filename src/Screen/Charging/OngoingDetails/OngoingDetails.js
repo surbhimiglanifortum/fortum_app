@@ -72,7 +72,7 @@ const OngoingDetails = ({ route }) => {
 
   const locDetails = route?.params?.locDetails
   const evDetails = route.params?.evDetails
-console.log("ONGPOIN", evDetails)
+  console.log("ONGPOIN", evDetails)
   let lastPaidSession = {}
 
   const checkIfUnpaid = () => {
@@ -499,12 +499,12 @@ console.log("ONGPOIN", evDetails)
                 customstyles={{ marginLeft: 10 }}
                 bold
               />
-              <CommonText
+              {evDetails?.connectors[0]?.pricing?.price && <CommonText
                 showText={'₹ ' + parseFloat(evDetails?.connectors[0]?.pricing?.price).toFixed(2) + ' / ' + (evDetails?.connectors[0]?.pricing?.type === "TIME" ? "min" : evDetails?.connectors[0]?.pricing?.type === "FLAT" ? "flat" : "kWh+GST")}
                 fontSize={15}
                 customstyles={{ marginLeft: 10, marginTop: 5 }}
                 regular
-              />
+              />}
             </View>
           </View>
         </DenseCard>
