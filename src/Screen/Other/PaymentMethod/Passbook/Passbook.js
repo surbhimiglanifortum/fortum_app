@@ -87,6 +87,7 @@ const Passbook = () => {
                 username: mUserDetails?.username
             }
             const result = await getPinelabBalance(payload)
+            setData(result?.data)
             console.log("Get Pinelab Balance Error", result?.data)
         } catch (error) {
             console.log("Get Pinelab Balance Error", error)
@@ -169,6 +170,8 @@ const Passbook = () => {
                                 Svg={item?.item?.TransactionType === 'GIFT CARD RELOAD' ? WalletSvg : Charger}
                                 date={item?.item?.TransactionDate}
                                 title={item?.item?.MerchantName}
+                                amount={item?.item?.TransactionAmount}
+                                transactionType={item?.item?.TransactionType}
                             />
                         )
                     }
@@ -245,7 +248,7 @@ const Passbook = () => {
                         <CommonIconCard Svg={WalletSvg} />
                         <CommonText showText={'Balance'} fontSize={14} regular customstyles={{ marginLeft: 10 }} />
                     </View>
-                    <CommonText showText={'₹1400'} fontSize={14} />
+                    <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)}`} fontSize={14} />
                 </View>
             </DenseCard>
 

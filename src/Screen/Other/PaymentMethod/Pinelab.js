@@ -23,7 +23,7 @@ const FortumChargeAndDriveCard = () => {
     const navigation = useNavigation()
     const scheme = useColorScheme()
     const dispatch = useDispatch();
-    
+
     const passbookButtonHAndler = () => {
         navigation.navigate(routes.Passbook)
     }
@@ -77,6 +77,10 @@ const FortumChargeAndDriveCard = () => {
                 <PinelabCard width={'100%'} />
 
             </ScrollView>
+
+            <Button showText={'Order Card'} onPress={() => {
+                navigation.navigate(routes.OrderCard)
+            }} />
 
         </CommonView>
     )

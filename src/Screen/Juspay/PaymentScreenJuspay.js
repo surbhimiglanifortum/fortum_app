@@ -315,6 +315,8 @@ const PaymentScreenJuspay = (props) => {
                     props.navigation.pop(1)
                 } if (props.route.params?.callFrom === 'RechargerWallet') {
                     props.navigation.navigate(routes.RechargeDone)
+                } if (props.route.params?.callFrom === 'RechargePinelab') {
+                    props.navigation.navigate(routes.AddMoneyDone)
                 } if (props.route.params?.callFrom === 'MyCart') {
                     props.navigation.navigate(routes.OrderPlaced)
                 } if (props.route.params?.callFrom === 'PaymentOption') {
