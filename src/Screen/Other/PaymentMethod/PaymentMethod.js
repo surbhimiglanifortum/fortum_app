@@ -142,9 +142,9 @@ const PaymentMethod = () => {
 
       </ScrollView>
 
-      <View style={styles.btnContainer}>
+      {/* <View style={styles.btnContainer}>
         <Button showText={'Add Payment Method'} />
-      </View>
+      </View> */}
     </CommonView>
   )
 }

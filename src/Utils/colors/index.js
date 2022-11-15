@@ -32,6 +32,7 @@ const colors = {
     highlightedBackground: '#86A8FF',
     darkIcon:'#1D9C71',
     lightIcon:'#C4E1D9',
+    reportBackground:'#FAE1E1'
 }
 
 export default colors

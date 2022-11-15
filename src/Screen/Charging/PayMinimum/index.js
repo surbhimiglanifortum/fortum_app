@@ -8,7 +8,7 @@ import CommonText from '../../../Component/Text/CommonText'
 import { useSelector, useDispatch } from 'react-redux'
 import { AddToRedux } from '../../../Redux/AddToRedux'
 import * as Types from '../../../Redux/Types'
-import { getUserDetails, getPaymentOption, payAsYouGo, walletBalanceEnquiry, checkOrderId } from '../../../Services/Api'
+import { getUserDetails, getPaymentOption, payAsYouGo, walletBalanceEnquiry, checkOrderId, blockAmount } from '../../../Services/Api'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import CommonCard from '../../../Component/Card/CommonCard'
 import RadioBtn from '../../../Component/Button/RadioButton'
@@ -67,7 +67,6 @@ const PayMinimum = ({ route }) => {
     }
 
     const checkPrepaidCardBalance = async () => {
-        // setModalVisible(true)
         setGoodToGo(false)
         setRefreshing(true)
         try {
@@ -86,6 +85,40 @@ const PayMinimum = ({ route }) => {
             setRefreshing(false)
         }
     }
+
+    const blockMinBalance = async () => {
+        if (pin.value.length < 6) {
+            setPin({ value: pin.value, error: "Please enter correct card pin." })
+            return
+        }
+        try {
+            setMsg('')
+            const payload = {
+                username: mUserDetails?.username,
+                CardPin: pin.value,
+                Amount: evDetails?.connectors[0]?.pricing?.min_balance
+            }
+            const res = await blockAmount(payload);
+            console.log("Check Response from blockMinBalance", res.data)
+            if (res.data.success) {
+                dispatch(AddToRedux(res.data, Types.PINELABAUTH))
+                setAskPin(false)
+                setMsg('You are ready to charge')
+                setGoodToGo(true)
+                navigation.navigate(routes.OngoingDetails, {
+                    locDetails: locDetails,
+                    evDetails: evDetails,
+                    paymentMethod: mode
+                })
+            } else {
+                setMsg(res.data.message)
+                setGoodToGo(false)
+            }
+        } catch (error) {
+            console.log("Check Response from blockMinBalance error", error)
+        }
+    }
+
 
     const checkOrderIdStatus = async () => {
         setGoodToGo(false)
@@ -138,6 +171,7 @@ const PayMinimum = ({ route }) => {
         setRefreshing(true)
         try {
             const result = await getPaymentOption(mUserDetails?.username)
+            console.log("Check Payment Method", result?.data)
             if (result.data.result?.allPaymentOptions.length > 0) {
                 setAllowMode(result.data.result?.allPaymentOptions)
                 setMode(result.data.result?.customerPaymentOption)
@@ -210,6 +244,7 @@ const PayMinimum = ({ route }) => {
                 break;
             case 'PREPAID_CARD':
                 console.log("Check Prepaid Card Selection")
+                blockMinBalance()
                 setLoadingSign(false)
                 break;
             default:
@@ -265,7 +300,7 @@ const PayMinimum = ({ route }) => {
                 }
 
                 {
-                    !allowMode.includes('PREPAID_CARD') &&
+                    allowMode.includes('PREPAID_CARD') &&
                     <CommonCard style={styles.wrapper}>
                         <View style={{ flex: 1 }}>
                             <CommonText showText={'Prepaid Card'} customstyles={{ flex: 1 }} />
@@ -307,7 +342,7 @@ const PayMinimum = ({ route }) => {
 
             <View style={styles.fixedContainer}>
                 <Button showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() =>
-                    goodToGo && mode=='PAY_AS_U_GO' ? navigation.navigate(routes.OngoingDetails, {
+                    goodToGo && mode == 'PAY_AS_U_GO' ? navigation.navigate(routes.OngoingDetails, {
                         locDetails: locDetails,
                         evDetails: evDetails,
                         paymentMethod: mode,

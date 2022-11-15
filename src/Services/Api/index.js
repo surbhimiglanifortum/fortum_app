@@ -13,7 +13,6 @@ export const getUserDetails = async () => {
 }
 
 export const getLocation = async (payload) => {
-    console.log("getLocation", payload)
     return await axios.post("/api_app/locations/filter", payload)
 }
 
@@ -192,6 +191,10 @@ export const getEncryptData = async (payload) => {
 
 export const orderPinelabCard = async (payload) => {
     return await axios.post('/api_app/pinelabs/card/order/digital-to-physical-card', payload)
+}
+
+export const checkCardOrderStatus = async (payload) => {
+    return await axios.post('/api_app/pinelabs/card/order/get-status', payload)
 }
 
 export const getFaqService = async () => {

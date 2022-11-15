@@ -128,12 +128,14 @@ export default Home = ({ navigatedata }) => {
             },
             onOkPress: () => {
               navigation.navigate(routes.OngoingDetails, {
-                locDetails: {...response.data[0]?.location, address: {
-                  "city": response.data[0]?.location?.city,
-                  "street": response.data[0]?.location?.address,
-                  "countryIsoCode": "IND",
-                  "postalCode": "11112"
-              }}  ,
+                locDetails: {
+                  ...response.data[0]?.location, address: {
+                    "city": response.data[0]?.location?.city,
+                    "street": response.data[0]?.location?.address,
+                    "countryIsoCode": "IND",
+                    "postalCode": "11112"
+                  }
+                },
                 evDetails: response.data[0]?.location?.evses[0],
                 paymentMethod: response?.payments?.payment_method
               })
@@ -141,13 +143,10 @@ export default Home = ({ navigatedata }) => {
           })
         }
         dispatch(AddToRedux(false, Types.CHECKACTIVESESSION))
-
       }
     } else {
       console.log("dont CHECK actove session")
     }
-
-
   }
 
   useEffect(() => {

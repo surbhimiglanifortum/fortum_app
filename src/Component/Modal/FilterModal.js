@@ -113,9 +113,6 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
 
     }
 
-    console.log("render filter")
-
-
     return (
         <Modal animationType={'slide'} visible={openFilterModal} statusBarTranslucent={false} >
             <CommonView style={styles.container}>

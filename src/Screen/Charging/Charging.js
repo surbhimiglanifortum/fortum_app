@@ -15,6 +15,7 @@ import Loader from '../../Component/Loader'
 import BackBtnTab from '../../Component/Button/BackBtnTab'
 import Charger from '../../assests/svg/charger'
 import DenseCard from '../../Component/Card/DenseCard/index'
+import ChargerRed from '../../assests/svg/chargerRed'
 
 const Charging = ({ setSelectedTabs }) => {
 
@@ -87,7 +88,7 @@ const Charging = ({ setSelectedTabs }) => {
                     </TouchableOpacity>
                 }
             </View>
-            
+
             <View>
                 {selectedTab == 'ongoing' &&
                     <>
@@ -114,9 +115,10 @@ const Charging = ({ setSelectedTabs }) => {
                             data={completedData}
                             refreshControl={<RefreshControl onRefresh={completedreFetch} />}
                             keyExtractor={item => item.id}
+
                             renderItem={(item) => {
                                 return (
-                                    <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={Charger} dataItem={item} />
+                                    <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={item?.item?.paid ? Charger : ChargerRed} dataItem={item} />
                                 )
                             }
                             }
