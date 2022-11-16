@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import CommonView from '../../../Component/CommonView'
 import Button from '../../../Component/Button/Button'
 import DenseCard from '../../../Component/Card/DenseCard'
@@ -105,7 +105,7 @@ const PayMinimum = ({ route }) => {
                 setAskPin(false)
                 setMsg('You are ready to charge')
                 setGoodToGo(true)
-                navigation.navigate(routes.OngoingDetails, {
+                navigation.replace(routes.OngoingDetails, {
                     locDetails: locDetails,
                     evDetails: evDetails,
                     paymentMethod: mode
@@ -206,6 +206,9 @@ const PayMinimum = ({ route }) => {
         try {
             const result = await payAsYouGo(username, payload)
             console.log("payAsYouGoMode try block", result.data)
+            const paymentSuccess = () => {
+
+            }
             if (result.data) {
                 setPayAsYouGoOrderId(result.data.JusPayCallback.order_id)
                 navigation.navigate(routes.PaymentScreenJuspay, {
@@ -220,7 +223,8 @@ const PayMinimum = ({ route }) => {
                     description: 'Pay as you go',
                     callback_url: '',
                     juspay_process_payload: result.data.JusPayCallback,
-                    orderStatus: orderStatus
+                    orderStatus: orderStatus,
+                    paymentSuccess: paymentSuccess
                 })
             }
             setLoadingSign(false)
@@ -233,7 +237,7 @@ const PayMinimum = ({ route }) => {
     const handleClick = (mode) => {
         switch (mode) {
             case 'CLOSED_WALLET':
-                navigation.navigate(routes.OngoingDetails, {
+                navigation.replace(routes.OngoingDetails, {
                     locDetails: locDetails,
                     evDetails: evDetails,
                     paymentMethod: mode
@@ -289,13 +293,15 @@ const PayMinimum = ({ route }) => {
 
                 {
                     allowMode.includes('PAY_AS_U_GO') &&
-                    <CommonCard style={styles.wrapper}>
-                        <CommonText showText={'Debit Card / Credit Card / UPI'} customstyles={{ flex: 1 }} />
-                        <RadioBtn
-                            value="PAY_AS_U_GO"
-                            status={mode === 'PAY_AS_U_GO' ? 'checked' : 'unchecked'}
-                            onPress={checkOrderIdStatus}
-                        />
+                    <CommonCard >
+                        <TouchableOpacity style={styles.wrapper} onPress={checkOrderIdStatus}>
+                            <CommonText showText={'Debit Card / Credit Card / UPI'} customstyles={{ flex: 1 }} />
+                            <RadioBtn
+                                value="PAY_AS_U_GO"
+                                status={mode === 'PAY_AS_U_GO' ? 'checked' : 'unchecked'}
+                                onPress={checkOrderIdStatus}
+                            />
+                        </TouchableOpacity>
                     </CommonCard>
                 }
 
@@ -341,14 +347,16 @@ const PayMinimum = ({ route }) => {
             {console.log("Check Pay As you go order id", payAsYouGoOrderId)}
 
             <View style={styles.fixedContainer}>
-                <Button showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() =>
-                    goodToGo && mode == 'PAY_AS_U_GO' ? navigation.navigate(routes.OngoingDetails, {
+                <Button showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() => {
+                    goodToGo && mode == 'PAY_AS_U_GO' ? navigation.replace(routes.OngoingDetails, {
                         locDetails: locDetails,
                         evDetails: evDetails,
                         paymentMethod: mode,
                         payAsYouGoOrderId: payAsYouGoOrderId
                     }) :
-                        handleClick(mode)}
+                        handleClick(mode)
+                }
+                }
                 />
             </View>
         </CommonView>

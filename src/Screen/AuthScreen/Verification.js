@@ -51,10 +51,10 @@ const Verification = ({ route }) => {
                         ApiAction.sendOTP(mobile_number.replace('+91', '')).then(e => {
                             loginSuccess(false)
                             if (e.data.sent) {
-                                navigation.navigate(routes.MobileVerification, { ...route.params })
+                                navigation.replace(routes.MobileVerification, { ...route.params })
                             } else {
                                 setOpenCommonModal({
-                                    isVisible: true, message: e.data.message, onOkPress: () => navigation.navigate(routes.MobileInput,{email_id:email_id})
+                                    isVisible: true, message: e.data.message, onOkPress: () => navigation.replace(routes.MobileInput,{email_id:email_id})
                                 })
 
                             }
@@ -115,7 +115,7 @@ const Verification = ({ route }) => {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
                 if (navigateToDashboard) {
 
-                    navigation.navigate(routes.dashboard)
+                    navigation.replace(routes.dashboard)
                 }
             } else {
                 // show wrong otp message

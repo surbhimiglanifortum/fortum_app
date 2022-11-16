@@ -131,7 +131,7 @@ const MobileVerification = ({ route }) => {
             const result = await ApiAction.getUserDetails()
             if (result.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
-                navigation.navigate(routes.dashboard)
+                navigation.replace(routes.dashboard)
                 return
             }
         }

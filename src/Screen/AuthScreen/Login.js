@@ -34,7 +34,6 @@ const Login = () => {
       } else {
         user = await Auth.signIn(userInput);
       }
-      console.log(user)
       if (user) {
         if (validatePhone(userInput)) {
           // navigate to mobile input

@@ -33,7 +33,19 @@ const Charging = ({ setSelectedTabs }) => {
 
     const navigationHandler = (item) => {
         if (selectedTab == 'ongoing') {
-            navigation.navigate(routes.OngoingDetails)
+            console.log(item.item)
+            navigation.navigate(routes.OngoingDetails, {
+                locDetails: {
+                    ...item.item.location, address: {
+                        "city": item.item?.location?.city,
+                        "street": item.item?.location?.address,
+                        "countryIsoCode": "IND",
+                        "postalCode": "11112"
+                    }
+                },
+                evDetails: item.item?.location?.evses[0],
+                paymentMethod: item.item?.payments?.payment_method
+            })
         }
         else if (selectedTab == 'completed') {
             navigation.navigate(routes.taxInvoice, {
