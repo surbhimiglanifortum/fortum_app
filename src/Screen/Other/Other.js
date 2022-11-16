@@ -25,6 +25,7 @@ import RatingModal from '../../Component/Modal/RatingModal'
 import { getUserDetails } from '../../Services/Api'
 import { AddToRedux } from '../../Redux/AddToRedux'
 import * as Types from '../../Redux/Types'
+import Header from '../../Component/Header/Header'
 
 const Other = ({ setSelectedTab }) => {
 
@@ -90,21 +91,23 @@ const Other = ({ setSelectedTab }) => {
     userDetailsUpdated()
   }, [isFocused])
 
+
   return (
     <CommonView >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.innerContainer}>
-          <BackBtnTab onPress={backhandler} showText={"More Settings"} />
+          <Header showText={"More Settings"} onPress={backhandler} />
           <View style={styles.profileContainer}>
-            <TouchableOpacity style={[styles.imgContainer, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, }]}>
+            {/* <TouchableOpacity style={[styles.imgContainer, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, }]}>
               <ProfileSvg fill={scheme == 'dark' ? colors.darkIcon : colors.lightIcon} />
+            </TouchableOpacity> */}
+
+            {/* <View style={styles.leftConatainer}> */}
+            {(userDetailsData?.userDetails?.first_name || userDetailsData?.userDetails?.first_name) && <CommonText showText={`${userDetailsData?.userDetails?.first_name} ${userDetailsData?.userDetails?.last_name}`} fontSize={18} semibold />}
+            <TouchableOpacity style={[styles.editButton, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, }]} onPress={EditProfileHandler} >
+              <CommonText showText={'Edit Profile'} customstyles={styles.editText} />
             </TouchableOpacity>
-            <View style={styles.leftConatainer}>
-              <CommonText showText={`${userDetailsData?.userDetails?.first_name} ${userDetailsData?.userDetails?.last_name}`} fontSize={20} />
-              <TouchableOpacity style={[styles.editButton, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, }]} onPress={EditProfileHandler} >
-                <CommonText showText={'Edit Profile'} fontSize={18} />
-              </TouchableOpacity>
-            </View>
+            {/* </View> */}
           </View>
           <View>
             {/* <SettingCard showText={'Ev Modals'} fontSize={15} Svg={ElectricCarSvg} onPress={evModalHandler} /> */}
@@ -131,7 +134,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 30,
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
+    justifyContent: 'space-between'
   },
   imgContainer: {
     width: 100,
@@ -140,23 +144,25 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.white,
     alignItems: 'center',
-    justifyContent: 'center'
-
+    justifyContent: 'center',
+    elevation: 5
   },
   leftConatainer: {
     marginLeft: 10
   },
   editButton: {
     borderWidth: 1,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 15,
-
-    borderColor: colors.green,
+    padding: 5,
+    paddingHorizontal: 15,
+    borderRadius: 12,
+    borderColor: colors.borderGreen,
     marginTop: 10,
-    elevation: 5
+    elevation: 5,
   },
-  header: { flexDirection: 'row', alignItems: 'center', width: '65%', justifyContent: 'space-between' },
+  editText: {
+    textAlign: 'center',
+    fontSize: 14
+  },
 })
 
 export default Other

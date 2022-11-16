@@ -5,9 +5,7 @@ import { scale } from "react-native-size-matters";
 
 const Loader = ({ modalOpen }) => {
   return (
-
     modalOpen && <ActivityIndicator />
-
   );
 };
 
