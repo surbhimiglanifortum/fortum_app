@@ -18,12 +18,28 @@ import DenseCard from '../../Component/Card/DenseCard/index'
 import { Auth } from 'aws-amplify'
 import routes from '../../Utils/routes';
 import DashboardCard from '../../Component/Card/DashboardCard'
-
-
+import * as ApiAction from '../../Services/Api'
+import { useDispatch } from 'react-redux';
+import { AddToRedux } from '../../Redux/AddToRedux'
+import * as  Types from '../../Redux/Types'
 const Dashboard = ({ tabName, navigation, route }) => {
 
   const navigatedata = route?.params?.animateMap
   const [selectedTab, setSelectedTab] = useState('home')
+const dispatch = useDispatch()
+  useEffect(() => {
+    ApiAction.getUserDetails().then(result => {
+      console.log("User Details", result)
+      if (result?.data) {
+        dispatch(AddToRedux(result.data, Types.USERDETAILS))
+    
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+
+  }, [])
+
 
   const homeButtonHandler = () => {
     setSelectedTab('home')
@@ -47,10 +63,10 @@ const Dashboard = ({ tabName, navigation, route }) => {
       const result = await Auth.currentAuthenticatedUser();
 
       if (result?.signInUserSession) {
-        if ( result.attributes.phone_number && result.attributes.phone_number != '') {
+        if (result.attributes.phone_number && result.attributes.phone_number != '') {
           setSelectedTab(tab)
         } else {
-          navigation.navigate(routes.MobileInput,{email_id:result.attributes.email})
+          navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
         }
 
       }

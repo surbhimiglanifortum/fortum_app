@@ -73,7 +73,7 @@ const OngoingDetails = ({ route }) => {
 
   const locDetails = route?.params?.locDetails
   const evDetails = route.params?.evDetails
-  console.log("ONGPOIN", evDetails)
+  console.log("ONGPOIN", evDetails, locDetails)
   let lastPaidSession = {}
 
   const checkIfUnpaid = () => {
@@ -235,7 +235,7 @@ const OngoingDetails = ({ route }) => {
       auth_id: authID
     }
 
-    axios.post(appconfig.BASE_URL + "/api_app/sessions/", data).then((r) => {
+    axios.post(appconfig.BASE_URL + "/api_app/sessions/", data).then((r) => { 
       console.log("Check Auth Id", data)
       console.log("2 Response of session Api", r.data)
       console.log(r.data)
@@ -346,9 +346,7 @@ const OngoingDetails = ({ route }) => {
                 setOpenCommonModal({
                   isVisible: true, message: `You have existing bill, Please fill it first before charging`,
                   onOkPress: () => {
-                    console.log("Anuj1111")
                     axios.get(appconfig.BASE_URL + "/api_app/sessions/initiateJuspay/" + mUserDetails?.username + "/" + r.data[0].session_id).then((result) => {
-                      console.log("initiateJuspayresukt", result.data)
                       if (result.data.success) {
                         navigation.navigate(routes.PaymentScreenJuspay, {
                           amount: 0,

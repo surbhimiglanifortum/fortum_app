@@ -55,7 +55,7 @@ const PaymentScreenJuspay = (props) => {
             props.route.params.showYouSavedFunction()
         } else {
             // setSnack({ message: 'Payment Successful!', open: true, color: 'success' })
-            alert('Payment Successful!')
+            // alert('Payment Successful!')
         }
     }
 
@@ -309,6 +309,11 @@ const PaymentScreenJuspay = (props) => {
             case 'charged':
                 paymentSuccess()
                 props.navigation.goBack()
+                try {
+                    props?.route?.params?.paymentSuccess()
+                } catch (error) {
+                    
+                }
                 if (props.route.params?.callFrom === 'payPendingInvoice') {
                     props.navigation.pop(1)
                 } if (props.route.params?.callFrom === 'SelectPaymentMode') {
@@ -319,9 +324,7 @@ const PaymentScreenJuspay = (props) => {
                     props.navigation.navigate(routes.AddMoneyDone)
                 } if (props.route.params?.callFrom === 'MyCart') {
                     props.navigation.navigate(routes.OrderPlaced)
-                } if (props.route.params?.callFrom === 'PaymentOption') {
-                    props.navigation.navigate(routes.OngoingDetails)
-                } else {
+                }  else {
                     // props.navigation.goBack()
                 }
 

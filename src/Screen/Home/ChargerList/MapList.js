@@ -76,7 +76,7 @@ const MapList = ({ data, setOpenFilterModal, isRefetching, location, searchBtnHa
             </CommonCard>
           </View>
 
-
+<CommonText>{JSON.stringify(isRefetching)}</CommonText>
 
           {isRefetching && <Loader />}
 
@@ -117,6 +117,7 @@ const MapList = ({ data, setOpenFilterModal, isRefetching, location, searchBtnHa
       alignSelf: 'flex-end'
     },
     searchContainer: {
+      width:'100%',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',

@@ -101,7 +101,7 @@ export default Home = ({ navigatedata }) => {
   const chargingBtnHandler = () => {
     setSelectedCharger(!selectedCharger)
   }
-  
+
   const chargingCardHandler = () => {
     navigation.navigate(routes.ChargingStation)
   }
@@ -157,7 +157,7 @@ export default Home = ({ navigatedata }) => {
   }
 
   useEffect(() => {
-    refetch()
+    refetch({jhsgd:"SLJ"})
     CallCheckActiveSession()
   }, [location, locationsPayload])
 
@@ -173,7 +173,14 @@ export default Home = ({ navigatedata }) => {
   const chargerLocations = async () => {
     try {
 
-      const res = await ApiAction.getLocation({ ...locationsPayload, username: mUserDetails?.username || "" })
+      const payload = { ...locationsPayload, username: mUserDetails?.username || "" }
+      if (payload?.filterByConnectorCategories) {
+        Object.keys(payload?.filterByConnectorCategories)?.length <= 0 ? delete payload.filterByConnectorCategories : null
+      }
+
+      console.log("final payload_____", payload)
+      const res = await ApiAction.getLocation(payload)
+      console.log("dskjsajbd",res.data)
       var locationsArray = res.data?.locations[0];
       if (!location.coords) {
         return locationsArray
@@ -194,7 +201,7 @@ export default Home = ({ navigatedata }) => {
     }
   }
 
-  const { data, status, isLoading, isRefetching, refetch } = useQuery('MapData', chargerLocations, {
+  const { data, status, isLoading, isRefetching, refetch,  } = useQuery('MapData', chargerLocations, {
     refetchInterval: 15000,
   })
 
@@ -216,7 +223,7 @@ export default Home = ({ navigatedata }) => {
   }
 
   const onFilterClick = useCallback((filterByConnectorCategories, onlyAvailableConnectors) => {
-
+    console.log("onFilterClick", filterByConnectorCategories, onlyAvailableConnectors)
     let tlocationsPayload = {
       onlyAvailableConnectors: onlyAvailableConnectors,
       filterByConnectorCategories: filterByConnectorCategories
