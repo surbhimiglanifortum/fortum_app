@@ -33,9 +33,6 @@ const MobileVerification = ({ route }) => {
     const [userInput3, setUserInput3] = useState('')
     const [userInput4, setUserInput4] = useState('')
 
- 
-
-
     let otpConcatData = userInput1.concat(userInput2).concat(userInput3).concat(userInput4)
 
     const { setOpenCommonModal } = useContext(SnackContext);
@@ -60,7 +57,6 @@ const MobileVerification = ({ route }) => {
         }
 
     }
-
 
     const VerifyButtonHandler = async () => {
         setLoading(true)

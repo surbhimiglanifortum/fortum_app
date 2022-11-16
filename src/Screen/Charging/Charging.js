@@ -15,7 +15,7 @@ import Loader from '../../Component/Loader'
 import BackBtnTab from '../../Component/Button/BackBtnTab'
 import Charger from '../../assests/svg/charger'
 import DenseCard from '../../Component/Card/DenseCard/index'
-import ChargerRed from '../../assests/svg/chargerRed'
+import ChargerRed from '../../assests/svg/ChargerRed'
 
 const Charging = ({ setSelectedTabs }) => {
 

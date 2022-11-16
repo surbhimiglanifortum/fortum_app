@@ -12,7 +12,7 @@ import routes from '../../../Utils/routes'
 import { getSessionDetails } from '../../../Services/Api'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 import Charger from '../../../assests/svg/charger'
-import ChargerRed from '../../../assests/svg/chargerRed'
+import ChargerRed from '../../../assests/svg/ChargerRed'
 
 const TaxInvoice = ({ route }) => {
 

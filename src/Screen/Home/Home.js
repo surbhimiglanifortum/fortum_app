@@ -49,7 +49,6 @@ export default Home = ({ navigatedata }) => {
 
   const checkActiveSession = useSelector((state) => state.TempStore.checkActiveSession);
 
-
   const scheme = useColorScheme()
 
   const mapButtonHandler = () => {
@@ -77,7 +76,6 @@ export default Home = ({ navigatedata }) => {
         }
       }
     }).catch(err => { console.log(err); navigation.navigate("MakeChargingEasySplash") });
-
   }
 
   const searchedLocation = (payload) => {
@@ -95,13 +93,15 @@ export default Home = ({ navigatedata }) => {
       getLocationAndAnimate
     })
   }
+
   const locationBtnHandler = () => {
     getLocationAndAnimate()
   }
-  const chargingBtnHandler = () => {
 
+  const chargingBtnHandler = () => {
     setSelectedCharger(!selectedCharger)
   }
+  
   const chargingCardHandler = () => {
     navigation.navigate(routes.ChargingStation)
   }
@@ -149,21 +149,26 @@ export default Home = ({ navigatedata }) => {
     }
   }
 
+  const userDetailsUpdated = async () => {
+    const result = await ApiAction.getUserDetails()
+    if (result.data) {
+      dispatch(AddToRedux(result.data, Types.USERDETAILS))
+    }
+  }
+
   useEffect(() => {
     refetch()
     CallCheckActiveSession()
   }, [location, locationsPayload])
 
-
   useEffect(() => {
     getLocationAndAnimate()
+    userDetailsUpdated()
   }, [])
 
   useEffect(() => {
     setTncNotification(!tncNotification)
   }, [isFocused])
-
-
 
   const chargerLocations = async () => {
     try {
