@@ -9,6 +9,7 @@ import CommonCard from '../../Component/Card/CommonCard/index'
 import CommonIconCard from '../../Component/Card/CommonIconCard/CommonIconCard'
 import StoreSvg from '../../assests/svg/StoreSvg'
 import NoData from '../../Component/NoDataFound/NoData'
+import Header from '../../Component/Header/Header'
 
 const Notification = ({ setSelectedTab }) => {
 
@@ -18,7 +19,7 @@ const Notification = ({ setSelectedTab }) => {
 
   return (
     <CommonView>
-      <BackBtnTab onPress={backhandler} showText={"Notifications"} />
+      <Header onPress={backhandler} showText={"Notifications"} />
       <NoData showText={'No data found.'} />
       {/* <View style={styles.innerContainer}>
         <View style={styles.cardContainer}>

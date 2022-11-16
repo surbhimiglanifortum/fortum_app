@@ -3,7 +3,7 @@ import React from 'react'
 import BackButton from '../Button/BackButton'
 import CommonText from '../Text/CommonText'
 
-const Header = ({ showText, backButton = true, style ,onPress}) => {
+const Header = ({ onPress, showText, backButton = true, style }) => {
     const scheme = useColorScheme()
     return (
         <View style={[styles.header]}>
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingBottom: 10,
-        paddingHorizontal:12
+        paddingHorizontal: 12
     },
     headerText: {
         textAlign: 'center',

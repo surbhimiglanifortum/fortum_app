@@ -17,7 +17,6 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import { useDispatch, useSelector } from 'react-redux'
 import NoData from '../../Component/NoDataFound/NoData'
 import Loader from '../../Component/Loader'
-import BackBtnTab from '../../Component/Button/BackBtnTab'
 import CommonView from '../../Component/CommonView'
 
 const Wallet = ({ setSelectedTab }) => {
@@ -109,7 +108,7 @@ const Wallet = ({ setSelectedTab }) => {
 
   return (
     <CommonView style={styles.container}>
-      <BackBtnTab onPress={backhandler} showText={"Wallet"} />
+      <Header onPress={backhandler} showText={"Wallet"} />
 
 
       {/* card */}
