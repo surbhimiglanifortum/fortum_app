@@ -28,11 +28,10 @@ const MyCart = ({ route }) => {
     const [loading, setLoading] = useState(false)
     const cartData = useSelector((state) => state.AddToCartReducers.cartItem)
     const cartDataDetails = useSelector((state) => state.AddToCartReducers)
+
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
-    console.log(mUserDetails)
     const [deliveryAddress, setDeliveryAddress] = useState((mUserDetails?.delivery_addresses && mUserDetails.delivery_addresses.length > 0) ? mUserDetails.delivery_addresses[0] : '');
-
 
     let cartlength = cartData?.length
 

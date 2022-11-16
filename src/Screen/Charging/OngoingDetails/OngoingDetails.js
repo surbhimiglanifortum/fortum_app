@@ -605,7 +605,7 @@ const OngoingDetails = ({ route }) => {
         </CommonCard >
 
         <CommonCard>
-          <TouchableOpacity style={styles.topCard}>
+          <TouchableOpacity style={styles.topCard} onPress={() => navigation.navigate(routes.Support)}>
             <IconCard Svg={SupportLight} />
             <CommonText showText={'Support'} customstyles={{ alignSelf: 'center' }} />
           </TouchableOpacity>

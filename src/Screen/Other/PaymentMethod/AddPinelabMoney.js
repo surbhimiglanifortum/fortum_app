@@ -47,7 +47,7 @@ const AddPinelabMoney = ({ route }) => {
             console.log("Check Pinelab Load Money Response", result.data.JusPayCallback)
             if (result.data?.JusPayCallback?.sdk_payload) {
                 navigation.navigate(routes.PaymentScreenJuspay, {
-                    callFrom: 'rechargePinelab',
+                    callFrom: 'RechargePinelab',
                     amount: 0,
                     email_address: '',
                     orderid: '',
