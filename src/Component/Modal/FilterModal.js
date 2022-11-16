@@ -1,5 +1,5 @@
 import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, NativeModules, useColorScheme } from 'react-native'
-import React, { useState, memo } from 'react'
+import React, { useState, memo ,useEffect} from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
@@ -41,9 +41,13 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
     const [connectorTypes, setConnectorTypes] = useState([])
 
     const onToggleSwitch = () => {
-        mSwitchOn = !mSwitchOn
         setIsSwitchOn(!isSwitchOn)
     };
+    useEffect(() => {
+      mSwitchOn = isSwitchOn
+    
+    }, [isSwitchOn])
+    
     const applyButtonHandler = () => {
         onFilterClick(payloadConnectors, mSwitchOn)
         setOpenFilterModal(false)
