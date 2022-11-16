@@ -51,7 +51,7 @@ const ChargingStation = ({ route }) => {
         console.log(evDetails)
         if (evDetails?.status) { }
         const response = await fetchLastSession(evDetails?.uid)
-        if (response) {
+        if (response) { 
             navigation.navigate(routes.OngoingDetails, {
                 locDetails: {...response.data[0]?.location, address: {
                     "city": response.data[0]?.location?.city,

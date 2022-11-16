@@ -8,12 +8,12 @@ import Textinput from '../../Component/Textinput/Textinput';
 import SmallButton from '../../Component/Button/SmallButton';
 import { useNavigation } from '@react-navigation/native';
 import routes from '../../Utils/routes';
-import { Auth } from 'aws-amplify';
+import { Auth, API } from 'aws-amplify';
 import FaceBookSvg from '../../assests/svg/FaceBookSvg';
 import GoogleSvg from '../../assests/svg/GoogleSvg';
 import { validatePhone, validateEmail } from '../../Utils/HelperCommonFunctions'
 import Button from '../../Component/Button/Button';
-
+import * as APIAction from '../../Services/Api'
 const Login = () => {
 
   const [userInput, setuserInput] = useState('')
@@ -34,6 +34,7 @@ const Login = () => {
       } else {
         user = await Auth.signIn(userInput);
       }
+      console.log(user)
       if (user) {
         if (validatePhone(userInput)) {
           // navigate to mobile input
@@ -53,13 +54,21 @@ const Login = () => {
       }
     } catch (error) {
       console.log("error---------------", error.message)
+
       switch (error.code) {
         case 'UserNotFoundException':
-          HandleUserNotFound();
+          //check for migration
+          const response = await APIAction.userMigration({ email: userInput })
+          if (response?.data?.status === true) {
+            // try sign in once again
+            continueButtonHandler()
+          } else {
+            HandleUserNotFound();
+          }
           break;
 
         case 'UserNotConfirmedException':
-          handleUserComfirmation()
+          // handleUserComfirmation()
           break;
 
 
@@ -120,7 +129,7 @@ const Login = () => {
           </View>
           <View style={styles.textinputConatiner}>
             <CommonText showText={'Please enter your mobile number or email id'} fontSize={12} />
-            <Textinput  value={userInput} onChange={(e) => setuserInput(e.toLowerCase())} placeholder={'Mobile Number / email id'} />
+            <Textinput value={userInput} onChange={(e) => setuserInput(e.toLowerCase())} placeholder={'Mobile Number / email id'} />
           </View>
           <Button showText={"Continue"} onPress={continueButtonHandler} onLoading={loading} ></Button>
 
@@ -137,7 +146,7 @@ const Login = () => {
         <View style={styles.bottomText}>
           <CommonText showText={'Don’t have account ? '} fontSize={12} />
           <TouchableOpacity onPress={signupHandler}>
-            <CommonText showText={'Signup'} customstyles={{ color: colors.green }} />
+            <CommonText showText={'Sign Up'} customstyles={{ color: colors.green }} />
           </TouchableOpacity>
         </View>
       </ScrollView>
