@@ -53,8 +53,12 @@ const Verification = ({ route }) => {
                             if (e.data.sent) {
                                 navigation.navigate(routes.MobileVerification, { ...route.params })
                             } else {
-                                setOpenCommonModal({ isVisible: true, message: e.data.message })
+                                setOpenCommonModal({
+                                    isVisible: true, message: e.data.message, onOkPress: () => navigation.navigate(routes.MobileInput,{email_id:email_id})
+                                })
+
                             }
+                            setLoading(false)
                         }).catch(err => {
                             setOpenCommonModal({ isVisible: true, message: err })
                             loginSuccess(false)
@@ -150,7 +154,7 @@ const Verification = ({ route }) => {
                         <CommonText showText={'Email Verification'} fontSize={20} />
                     </View>
                     <View style={styles.textinputConatiner}>
-                        <CommonText showText={'Please enter the verification code sent to '} fontSize={15} />
+                        <CommonText regular showText={'Please enter the verification code sent to '} fontSize={15} />
                         <View style={styles.centerText}>
                             <CommonText showText={email_id} fontSize={15} />
                             <TouchableOpacity >

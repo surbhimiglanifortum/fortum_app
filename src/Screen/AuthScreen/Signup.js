@@ -153,7 +153,7 @@ const Signup = ({ route }) => {
                                     )
                                 })}
                                 <View style={styles.btnConatiner}>
-                                    <Button onPress={handleSubmit} showText={'SignUp'} onLoading={isSubmitting} />
+                                    <Button onPress={handleSubmit} showText={'Sign Up'} onLoading={isSubmitting} />
                                 </View>
                             </>
                         )}

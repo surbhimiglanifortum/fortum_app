@@ -50,6 +50,7 @@ const ChargingStation = ({ route }) => {
 
     const chargerCardHandler = async (evDetails) => {
         console.log(evDetails)
+
         if (evDetails?.status === "CHARGING") {
             const response = await fetchLastSession(evDetails?.uid)
             console.log("respo",response)

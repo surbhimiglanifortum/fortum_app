@@ -44,7 +44,7 @@ const MapList = ({ data, setOpenFilterModal, isRefetching, location, searchBtnHa
             data: data
           })
         } else {
-          navigation.navigate(routes.MobileInput)
+          navigation.navigate(routes.MobileInput,{email_id:result.attributes.email})
         }
     } catch (error) {
       
