@@ -47,10 +47,10 @@ const Dashboard = ({ tabName, navigation, route }) => {
       const result = await Auth.currentAuthenticatedUser();
 
       if (result?.signInUserSession) {
-        if (true || result.attributes.phone_number && result.attributes.phone_number != '') {
+        if ( result.attributes.phone_number && result.attributes.phone_number != '') {
           setSelectedTab(tab)
         } else {
-          navigation.navigate(routes.MobileInput)
+          navigation.navigate(routes.MobileInput,{email_id:result.attributes.email})
         }
 
       }
