@@ -9,22 +9,22 @@ import CommonCard from '../../Component/Card/CommonCard/index'
 import CommonIconCard from './CommonIconCard/CommonIconCard'
 
 const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard }) => {
-
+    console.log("Check data item", dataItem)
     return (
         <CommonCard>
             <TouchableOpacity style={styles.card} onPress={navigationHandler} disabled={disabledCard}>
                 <View style={styles.leftContainer}>
                     <CommonIconCard Svg={Svg} />
                     <View style={styles.middleContainer}>
-                        <CommonText showText={dataItem?.item?.location?.name} fontSize={14} />
+                        <CommonText showText={dataItem?.item?.location?.name} fontSize={16} black />
                         <View style={styles.leftContainer}>
-                            <CommonText showText={getFormatedDate(dataItem?.item?.start_datetime)} fontSize={14} />
+                            <CommonText showText={getFormatedDate(dataItem?.item?.start_datetime)} fontSize={12} regular />
                         </View>
                     </View>
                 </View>
                 {tabName != 'ongoing' && <View >
-                    <CommonText showText={`₹ ${dataItem?.item?.order?.amount / 100 ? dataItem?.item?.order?.amount / 100 : '0'}`} fontSize={14} />
-                    <CommonText showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '0'} Kwh`} fontSize={14} />
+                    <CommonText showText={`₹ ${dataItem?.item?.order?.amount / 100 ? dataItem?.item?.order?.amount / 100 : '0'}`} fontSize={14} customstyles={{ color: !dataItem?.item?.paid && colors.red, textAlign: 'right' }} />
+                    <CommonText showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '0'} Kwh`} fontSize={12} regular />
                 </View>}
             </TouchableOpacity>
         </CommonCard>

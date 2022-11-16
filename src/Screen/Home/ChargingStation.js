@@ -47,21 +47,16 @@ const ChargingStation = ({ route }) => {
         })
         return activeSession
     }
+
     const chargerCardHandler = async (evDetails) => {
         console.log(evDetails)
 
         if (evDetails?.status === "CHARGING") {
             const response = await fetchLastSession(evDetails?.uid)
+            console.log("respo",response)
             if (response) {
                 navigation.navigate(routes.OngoingDetails, {
-                    locDetails: {
-                        ...response.data[0]?.location, address: {
-                            "city": response.data[0]?.location?.city,
-                            "street": response.data[0]?.location?.address,
-                            "countryIsoCode": "IND",
-                            "postalCode": "11112"
-                        }
-                    },
+                    locDetails:locDetails,
                     evDetails: evDetails,
                     paymentMethod: response?.payments?.payment_method
                 })

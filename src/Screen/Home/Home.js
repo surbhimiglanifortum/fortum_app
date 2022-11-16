@@ -49,7 +49,6 @@ export default Home = ({ navigatedata }) => {
 
   const checkActiveSession = useSelector((state) => state.TempStore.checkActiveSession);
 
-
   const scheme = useColorScheme()
 
   const mapButtonHandler = () => {
@@ -77,7 +76,6 @@ export default Home = ({ navigatedata }) => {
         }
       }
     }).catch(err => { console.log(err); navigation.navigate("MakeChargingEasySplash") });
-
   }
 
   const searchedLocation = (payload) => {
@@ -95,13 +93,15 @@ export default Home = ({ navigatedata }) => {
       getLocationAndAnimate
     })
   }
+
   const locationBtnHandler = () => {
     getLocationAndAnimate()
   }
-  const chargingBtnHandler = () => {
 
+  const chargingBtnHandler = () => {
     setSelectedCharger(!selectedCharger)
   }
+  
   const chargingCardHandler = () => {
     navigation.navigate(routes.ChargingStation)
   }
@@ -128,12 +128,14 @@ export default Home = ({ navigatedata }) => {
             },
             onOkPress: () => {
               navigation.navigate(routes.OngoingDetails, {
-                locDetails: {...response.data[0]?.location, address: {
-                  "city": response.data[0]?.location?.city,
-                  "street": response.data[0]?.location?.address,
-                  "countryIsoCode": "IND",
-                  "postalCode": "11112"
-              }}  ,
+                locDetails: {
+                  ...response.data[0]?.location, address: {
+                    "city": response.data[0]?.location?.city,
+                    "street": response.data[0]?.location?.address,
+                    "countryIsoCode": "IND",
+                    "postalCode": "11112"
+                  }
+                },
                 evDetails: response.data[0]?.location?.evses[0],
                 paymentMethod: response?.payments?.payment_method
               })
@@ -141,13 +143,17 @@ export default Home = ({ navigatedata }) => {
           })
         }
         dispatch(AddToRedux(false, Types.CHECKACTIVESESSION))
-
       }
     } else {
       console.log("dont CHECK actove session")
     }
+  }
 
-
+  const userDetailsUpdated = async () => {
+    const result = await ApiAction.getUserDetails()
+    if (result.data) {
+      dispatch(AddToRedux(result.data, Types.USERDETAILS))
+    }
   }
 
   useEffect(() => {
@@ -155,16 +161,14 @@ export default Home = ({ navigatedata }) => {
     CallCheckActiveSession()
   }, [location, locationsPayload])
 
-
   useEffect(() => {
     getLocationAndAnimate()
+    userDetailsUpdated()
   }, [])
 
   useEffect(() => {
     setTncNotification(!tncNotification)
   }, [isFocused])
-
-
 
   const chargerLocations = async () => {
     try {

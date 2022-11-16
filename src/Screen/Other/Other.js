@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, useColorScheme, ScrollView } from 'react-native'
-import React from 'react'
+import { View, StyleSheet, TouchableOpacity, useColorScheme, ScrollView } from 'react-native'
+import React, { useEffect } from 'react'
 import SettingCard from '../../Component/Card/SettingCard'
 import ElectricCarSvg from '../../assests/svg/ElectricCarSvg'
 import StoreSvg from '../../assests/svg/StoreSvg'
@@ -13,21 +13,27 @@ import PrefrenceSvg from '../../assests/svg/PrefrenceSvg'
 import LogoutSvg from '../../assests/svg/LogoutSvg'
 import colors from '../../Utils/colors'
 import CommonText from '../../Component/Text/CommonText'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
 import routes from '../../Utils/routes'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Auth } from 'aws-amplify'
 import CommonView from '../../Component/CommonView'
 import BackBtnTab from '../../Component/Button/BackBtnTab'
 import ProfileSvg from '../../assests/svg/ProfileSvg'
 import YouSavedModal from '../../Component/Modal/YouSavedModal'
 import RatingModal from '../../Component/Modal/RatingModal'
+import { getUserDetails } from '../../Services/Api'
+import { AddToRedux } from '../../Redux/AddToRedux'
+import * as Types from '../../Redux/Types'
 
 const Other = ({ setSelectedTab }) => {
 
   const userDetailsData = useSelector((state) => state.userTypeReducer)
   const scheme = useColorScheme()
   const navigation = useNavigation()
+  const dispatch = useDispatch()
+  const isFocused = useIsFocused()
+
   const EditProfileHandler = () => {
     navigation.navigate(routes.Profile, { userDetailsData: userDetailsData })
   }
@@ -72,6 +78,18 @@ const Other = ({ setSelectedTab }) => {
     setSelectedTab('home')
   }
 
+  const userDetailsUpdated = async () => {
+    const result = await getUserDetails()
+    if (result.data) {
+      dispatch(AddToRedux(result.data, Types.USERDETAILS))
+      console.log("Called")
+    }
+  }
+
+  useEffect(() => {
+    userDetailsUpdated()
+  }, [isFocused])
+
   return (
     <CommonView >
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -82,8 +100,7 @@ const Other = ({ setSelectedTab }) => {
               <ProfileSvg fill={scheme == 'dark' ? colors.darkIcon : colors.lightIcon} />
             </TouchableOpacity>
             <View style={styles.leftConatainer}>
-              <CommonText showText={`${userDetailsData?.userDetails?.first_name} ${userDetailsData?.userDetails?.last_name
-                }`} fontSize={20} />
+              <CommonText showText={`${userDetailsData?.userDetails?.first_name} ${userDetailsData?.userDetails?.last_name}`} fontSize={20} />
               <TouchableOpacity style={[styles.editButton, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, }]} onPress={EditProfileHandler} >
                 <CommonText showText={'Edit Profile'} fontSize={18} />
               </TouchableOpacity>

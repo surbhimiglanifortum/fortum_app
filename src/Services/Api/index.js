@@ -13,7 +13,6 @@ export const getUserDetails = async () => {
 }
 
 export const getLocation = async (payload) => {
-    console.log("getLocation", payload)
     return await axios.post("/api_app/locations/filter", payload)
 }
 
@@ -194,12 +193,20 @@ export const orderPinelabCard = async (payload) => {
     return await axios.post('/api_app/pinelabs/card/order/digital-to-physical-card', payload)
 }
 
+export const checkCardOrderStatus = async (payload) => {
+    return await axios.post('/api_app/pinelabs/card/order/get-status', payload)
+}
+
 export const getFaqService = async () => {
     return await axios.get('/api_app/faq/getfaq');
 }
 
-export const updateProfileService = async (username, fname,) => {
-    return await axios.post("/api_app/gist/" + username + "/first_name", { first_name: fname })
+export const updateFirstName = async (username, fname) => {
+    return await axios.post("/api_app/users/gist/" + username + "/first_name", { first_name: fname })
+}
+
+export const updateLastName = async (username, lname) => {
+    return await axios.post("/api_app/users/gist/" + username + "/last_name", { last_name: lname })
 }
 
 export const getStateList = async () => {

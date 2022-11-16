@@ -14,7 +14,7 @@ import RupeeLight from '../../../assests/svg/Ruppe_light'
 import CommonView from '../../../Component/CommonView'
 import PinelabCard from '../../../assests/svg/PinelabCard'
 import { useSelector, useDispatch } from 'react-redux'
-import { getUserDetails } from '../../../Services/Api'
+import { getUserDetails, checkCardOrderStatus } from '../../../Services/Api'
 import { AddToRedux } from '../../../Redux/AddToRedux'
 import * as Types from '../../../Redux/Types'
 
@@ -23,6 +23,10 @@ const FortumChargeAndDriveCard = () => {
     const navigation = useNavigation()
     const scheme = useColorScheme()
     const dispatch = useDispatch();
+
+    const [status, setStatus] = useState('')
+    const [btnText, setBtnText] = useState('Order Card')
+    const [loading, setLoading] = useState(false)
 
     const passbookButtonHAndler = () => {
         navigation.navigate(routes.Passbook)
@@ -42,6 +46,33 @@ const FortumChargeAndDriveCard = () => {
     useEffect(() => {
         getDetails()
     }, [isFocused])
+
+    useEffect(() => {
+        orderStatus()
+    }, [])
+
+
+    const orderStatus = async () => {
+        setLoading(true)
+        try {
+            const payload = {
+                username: mUserDetails?.username
+            }
+            const result = await checkCardOrderStatus(payload)
+            console.log("Card Order Status", result?.data)
+            if (result.data?.success) {
+                setBtnText('Check Status')
+                if (result.data?.response?.orderStatus == 6)
+                    setStatus('PROCESSED')
+                if (result.data?.response?.orderStatus == 2)
+                    setStatus('CREATED')
+            }
+            setLoading(false)
+        } catch (error) {
+            console.log("Card Order Status Error", error)
+            setLoading(false)
+        }
+    }
 
     return (
         <CommonView >
@@ -76,11 +107,15 @@ const FortumChargeAndDriveCard = () => {
 
                 <PinelabCard width={'100%'} />
 
+                <CommonText showText={`Card Status : ${status}`} customstyles={{ marginVertical: 10, textAlign: 'center' }} />
             </ScrollView>
 
-            <Button showText={'Order Card'} onPress={() => {
-                navigation.navigate(routes.OrderCard)
-            }} />
+            {
+                btnText !== 'Check Status' &&
+                <Button showText={btnText} onLoading={loading} onPress={() => {
+                    navigation.navigate(routes.OrderCard)
+                }} />
+            }
 
         </CommonView>
     )

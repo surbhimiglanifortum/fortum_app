@@ -7,13 +7,12 @@ import Button from '../../../Component/Button/Button'
 import { getFormatedDate } from '../../../Services/CommonServices'
 import DenseCard from '../../../Component/Card/DenseCard/index'
 import CommonView from '../../../Component/CommonView'
-import ChargerLight from '../../../assests/svg/Charger_light'
-import IconCard from '../../../Component/Card/IconCard'
 import Divider from '../../../Component/Divider'
 import routes from '../../../Utils/routes'
 import { getSessionDetails } from '../../../Services/Api'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 import Charger from '../../../assests/svg/charger'
+import ChargerRed from '../../../assests/svg/ChargerRed'
 
 const TaxInvoice = ({ route }) => {
 
@@ -50,7 +49,7 @@ const TaxInvoice = ({ route }) => {
                 <DenseCard >
                     <View style={styles.row}>
                         <View>
-                            <CommonIconCard Svg={Charger} />
+                            <CommonIconCard Svg={paramData.item?.paid ? Charger : ChargerRed} />
                         </View>
 
                         <View style={{}}>
@@ -82,7 +81,7 @@ const TaxInvoice = ({ route }) => {
                     </View>
                 </DenseCard>
                 <View style={styles.InvoiceDetails}>
-                    <CommonText showText={'Tax Invoice Details'}  customstyles={{paddingHorizontal:12}}/>
+                    <CommonText showText={'Tax Invoice Details'} customstyles={{ paddingHorizontal: 12 }} />
                     <DenseCard>
                         <View >
                             <View style={styles.innerCard1}>

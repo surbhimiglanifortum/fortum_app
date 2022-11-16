@@ -10,9 +10,9 @@ import Button from '../../../Component/Button/Button'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../../Utils/routes'
 import { getChargerMapObject } from '../../../Utils/HelperCommonFunctions'
-import ReportLight from "../../../assests/svg/Report_light"
+import Report from "../../../assests/svg/Report"
 import CommonCard from "../../../Component/Card/CommonCard"
-import SupportLight from '../../../assests/svg/Support_light'
+import SupportSvg from '../../../assests/svg/SupportSvg'
 import DenseCard from "../../../Component/Card/DenseCard"
 import SelectPaymentMode from '../../../Component/MajorComponents/SelectPaymentMode'
 import { useSelector } from 'react-redux'
@@ -23,6 +23,7 @@ import PayAsUGoModal from '../../../Component/Modal/PayAsUGoModal'
 import { refundCloseLoopWallet, refundPayAsUGo } from '../../../Services/Api'
 import CommonView from '../../../Component/CommonView'
 import SnackContext from '../../../Utils/context/SnackbarContext'
+import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 
 var mStoppedPressed = false;
 let sessionId = ''
@@ -105,17 +106,17 @@ const OngoingDetails = ({ route }) => {
           setSessionActive(true)
           setStopColor(colors.blue)
 
-          axios.post(appconfig.TOTAL_BASE_URL + '/api_app/sessions/last', { username }).then(res => {
-            if (res.data[0].payments[0].payment_method === 'CLOSED_WALLET') {
-              setOptionOpt('Prepaid Wallet')
-            } else if (res.data[0].payments[0].payment_method === 'PAY_AS_U_GO') {
-              setOptionOpt('Pay As You Go')
-            } else if (res.data[0].payments[0].payment_method === 'PREPAID_CARD') {
-              setOptionOpt('Prepaid Card')
-            }
-          }).catch(err => {
-            console.log("Error From Last Session API", err)
-          })
+          // axios.post(appconfig.TOTAL_BASE_URL + '/api_app/sessions/last', { username }).then(res => {
+          //   if (res.data[0].payments[0].payment_method === 'CLOSED_WALLET') {
+          //     setOptionOpt('Prepaid Wallet')
+          //   } else if (res.data[0].payments[0].payment_method === 'PAY_AS_U_GO') {
+          //     setOptionOpt('Pay As You Go')
+          //   } else if (res.data[0].payments[0].payment_method === 'PREPAID_CARD') {
+          //     setOptionOpt('Prepaid Card')
+          //   }
+          // }).catch(err => {
+          //   console.log("Error From Last Session API", err)
+          // })
           if (item.auth_id.startsWith("fleet") || item.auth_id.startsWith("token_")) {
             setButtonDisable(false)
           }
@@ -599,15 +600,15 @@ const OngoingDetails = ({ route }) => {
 
         <CommonCard>
           <TouchableOpacity style={styles.topCard}>
-            <IconCardWithoutBg Svg={ReportLight} />
-            <CommonText showText={'Report'} customstyles={{ color: colors.lightRed, alignSelf: 'center' }} />
+            <CommonIconCard Svg={Report} />
+            <CommonText showText={'Report'} customstyles={{ color: colors.lightRed, alignSelf: 'center', marginLeft: 10 }} />
           </TouchableOpacity>
         </CommonCard >
 
         <CommonCard>
           <TouchableOpacity style={styles.topCard} onPress={() => navigation.navigate(routes.Support)}>
-            <IconCard Svg={SupportLight} />
-            <CommonText showText={'Support'} customstyles={{ alignSelf: 'center' }} />
+            <CommonIconCard Svg={SupportSvg} />
+            <CommonText showText={'Support'} customstyles={{ alignSelf: 'center', marginLeft: 10 }} />
           </TouchableOpacity>
         </CommonCard>
       </ScrollView>
