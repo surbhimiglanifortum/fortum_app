@@ -12,10 +12,10 @@ import { useSelector } from 'react-redux'
 import NoData from '../../Component/NoDataFound/NoData'
 import CommonView from '../../Component/CommonView'
 import Loader from '../../Component/Loader'
-import BackBtnTab from '../../Component/Button/BackBtnTab'
 import Charger from '../../assests/svg/charger'
 import DenseCard from '../../Component/Card/DenseCard/index'
 import ChargerRed from '../../assests/svg/ChargerRed'
+import Header from '../../Component/Header/Header'
 
 const Charging = ({ setSelectedTabs }) => {
 
@@ -76,7 +76,7 @@ const Charging = ({ setSelectedTabs }) => {
 
     return (
         <CommonView>
-            <BackBtnTab onPress={backhandler} showText={"Charging"} />
+            <Header onPress={backhandler} showText={"Charging"} />
             <View style={styles.tabContainer}>
                 {selectedTab == 'ongoing' ?
                     <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>

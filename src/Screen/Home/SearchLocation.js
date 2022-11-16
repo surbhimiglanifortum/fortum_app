@@ -30,7 +30,7 @@ const SearchLocation = ({ route }) => {
   }
 
   const locationCardHandler = (region) => {
-    console.log(region,'...................region card')
+    console.log(region, '...................region card')
     route.params.searchedLocation({ lat: JSON.parse(region).lat, lng: JSON.parse(region).lng })
     navigation.goBack()
   }
@@ -93,6 +93,7 @@ const SearchLocation = ({ route }) => {
             </View>
           </NeomorphFlex>
         </View>
+
         <TouchableOpacity onPress={liveLocationHAndler} style={styles.locationContainer}>
           <CommonCard>
             <TouchableOpacity >
@@ -101,6 +102,7 @@ const SearchLocation = ({ route }) => {
           </CommonCard>
           <CommonText showText={'Current Location Using GPS'} fontSize={15} />
         </TouchableOpacity>
+        
         <View style={[styles.searchList, { flex: 1 }]}>
           <CommonText showText={'Recent Searches'} fontSize={18} customstyles={{ paddingHorizontal: 12 }} />
           {serachData?.length > 0 ?
@@ -109,7 +111,6 @@ const SearchLocation = ({ route }) => {
               // refreshControl={<RefreshControl onRefresh={refetch} />}
               keyExtractor={item => item.id}
               renderItem={(item) => {
-                console.log(item,'--------------item------')
                 return (
                   <CommonCard>
                     <TouchableOpacity style={styles.card} onPress={() => { locationCardHandler(item?.item?.details) }}>

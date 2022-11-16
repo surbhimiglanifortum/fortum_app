@@ -3,13 +3,13 @@ const colors = {
     black: '#000',
     green: '#5AC37D',
     red: '#FE6A6A',
-    svgColor:'#D8E3EF',
-    svgColorDark:'#787878',
-    markerDefault:'#10BA66',
-    markerOutOfOrder:"#BCBCBC",
-    markerCharging:'#EA7000',
-    'mapTitle':"#10284E",
-    ligthIcon:"#002449",
+    svgColor: '#D8E3EF',
+    svgColorDark: '#787878',
+    markerDefault: '#10BA66',
+    markerOutOfOrder: "#BCBCBC",
+    markerCharging: '#EA7000',
+    'mapTitle': "#10284E",
+    ligthIcon: "#002449",
     backgroundLight: '#ECF4FC',
     backgroundDark: '#202020',
     greenBackground: '#5AC37D',
@@ -30,9 +30,10 @@ const colors = {
     lightGray: '#3C3C3C',
     divider: '#EEEEEE',
     highlightedBackground: '#86A8FF',
-    darkIcon:'#1D9C71',
-    lightIcon:'#C4E1D9',
-    reportBackground:'#FAE1E1'
+    darkIcon: '#1D9C71',
+    lightIcon: '#C4E1D9',
+    reportBackground: '#FAE1E1',
+    borderGreen: '#9FD7C8'
 }
 
 export default colors
