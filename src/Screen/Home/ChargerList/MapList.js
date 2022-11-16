@@ -19,6 +19,9 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler }) => {
   const [loading, setLoading] = useState(isRefetching)
   const [mapData, setMapData] = useState(data)
   const [search, setSearch] = useState('')
+  useEffect(() => {
+    setMapData(data)
+  }, [data])
 
   const searchButtonHandler = () => {
     searchBtnHandler()

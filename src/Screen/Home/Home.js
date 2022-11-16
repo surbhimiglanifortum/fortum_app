@@ -28,7 +28,7 @@ import { AddToRedux } from '../../Redux/AddToRedux';
 import * as Types from '../../Redux/Types'
 
 let selectedMarker = {}
-
+let mLocationPayload = {}
 export default Home = ({ navigatedata }) => {
   const isFocused = useIsFocused()
   const mapRef = useRef();
@@ -42,7 +42,7 @@ export default Home = ({ navigatedata }) => {
     onlyAvailableConnectors: false,
   })
   const [tncNotification, setTncNotification] = useState(false)
-
+  const [mLocation, setMLocation] = useState([])
   const dispatch = useDispatch()
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
@@ -157,7 +157,9 @@ export default Home = ({ navigatedata }) => {
   }
 
   useEffect(() => {
-    refetch({jhsgd:"SLJ"})
+    console.log("begore refeth", locationsPayload)
+    mLocationPayload = locationsPayload
+    refetch({ jhsgd: "SLJ" })
     CallCheckActiveSession()
   }, [location, locationsPayload])
 
@@ -169,39 +171,43 @@ export default Home = ({ navigatedata }) => {
   useEffect(() => {
     setTncNotification(!tncNotification)
   }, [isFocused])
+ 
 
-  const chargerLocations = async () => {
-    try {
+  const { data, status, isLoading, isRefetching, refetch, refetc } = useQuery('MapData', async () => {
+    {
+      // console.log("SDKS", context)
+      try {
 
-      const payload = { ...locationsPayload, username: mUserDetails?.username || "" }
-      if (payload?.filterByConnectorCategories) {
-        Object.keys(payload?.filterByConnectorCategories)?.length <= 0 ? delete payload.filterByConnectorCategories : null
-      }
+        const payload = { ...mLocationPayload, username: mUserDetails?.username || "" }
+        if (payload?.filterByConnectorCategories) {
+          Object.keys(payload?.filterByConnectorCategories)?.length <= 0 ? delete payload.filterByConnectorCategories : null
+        }
 
-      console.log("final payload_____", payload)
-      const res = await ApiAction.getLocation(payload)
-      console.log("dskjsajbd",res.data)
-      var locationsArray = res.data?.locations[0];
-      if (!location.coords) {
-        return locationsArray
-      } else {
-        locationsArray.map((data, index) => {
-          locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
-            data?.latitude,
-            data?.longitude,
-          ])
-        })
-        locationsArray?.sort(function (a, b) { return a.distance - b.distance })
+        console.log("final payload_____", payload)
+        const res = await ApiAction.getLocation(payload)
+        console.log("dskjsajbd", res.data)
+        var locationsArray = res.data?.locations[0];
+        if (!location.coords) {
+
+        } else {
+          if (locationsArray.length > 0) {
+            locationsArray.map((data, index) => {
+              locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
+                data?.latitude,
+                data?.longitude,
+              ])
+            })
+            locationsArray?.sort(function (a, b) { return a.distance - b.distance })
+
+          }
+        }
+        setMLocation(locationsArray)
         return locationsArray;
+      } catch (error) {
+        console.log("Charger Location Error", error)
       }
-
-      return [];
-    } catch (error) {
-      console.log("Charger Location Error", error)
     }
-  }
-
-  const { data, status, isLoading, isRefetching, refetch,  } = useQuery('MapData', chargerLocations, {
+  }, {
     refetchInterval: 15000,
   })
 
@@ -240,7 +246,8 @@ export default Home = ({ navigatedata }) => {
 
   return (
     <View style={styles.container}>
-      {selectedTab == 'List' ? <MapList data={data} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
+      <CommonText>{JSON.stringify(mLocation?.length)}</CommonText>
+      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
