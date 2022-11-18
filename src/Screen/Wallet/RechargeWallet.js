@@ -111,7 +111,7 @@ const RechargeWallet = ({ route }) => {
         <Header showText={'Recharge Wallet'} />
         <DenseCard style={{ marginTop: 20 }}>
           <View style={styles.row}>
-            <TouchableOpacity onPress={() => setAmount({ value: (parseInt(amount.value) - 50).toString(), error: '' })}>
+            <TouchableOpacity onPress={() => setAmount({ value: ((parseInt(amount.value) - 50) >= 0 ? parseInt(amount.value) - 50 : amount.value).toString(), error: '' })}>
               <CommonCard style={{ padding: 10, height: 50, width: 50, alignItems: 'center', }}>
                 <CommonText showText={'-'} customstyles={[{ color: colors.greyText }]} fontSize={20} bold />
               </CommonCard>
