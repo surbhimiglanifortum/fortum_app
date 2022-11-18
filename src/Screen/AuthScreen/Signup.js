@@ -107,7 +107,9 @@ const Signup = ({ route }) => {
                 navigation.navigate(routes.Verification, {
                     user: user,
                     email_id: values.email_id,
-                    mobile_number: values.mobile_number
+                    mobile_number: values.mobile_number,
+                    first_name:values.first_name,
+                    last_name:values.last_name
                 })
             }
         }
@@ -119,7 +121,7 @@ const Signup = ({ route }) => {
                 <View style={styles.innerContainer}>
                     {/* <Header /> */}
                     <View style={styles.header}>
-                        <BackButton />
+                        <BackButton onPress={()=>navigation.goBack()} />
                         <View style={styles.headerText}>
                             <CommonText showText={'Sign Up'} fontSize={25} />
                         </View>

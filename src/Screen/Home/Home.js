@@ -29,9 +29,11 @@ import * as Types from '../../Redux/Types'
 
 let selectedMarker = {}
 let mLocationPayload = {}
+let flatListBottomList
 export default Home = ({ navigatedata }) => {
   const isFocused = useIsFocused()
   const mapRef = useRef();
+  flatListBottomList = useRef();
   const navigation = useNavigation()
   const [location, setLocation] = useState({})
   const [selectedTab, setSelectedTab] = useState('Map')
@@ -58,6 +60,7 @@ export default Home = ({ navigatedata }) => {
     setSelectedTab('List')
   }
   const favButtonHandler = () => {
+
     navigation.navigate(routes.Favoruite, { location: location })
   }
   const filterButtonHandler = () => {
@@ -98,8 +101,16 @@ export default Home = ({ navigatedata }) => {
     getLocationAndAnimate()
   }
 
-  const chargingBtnHandler = () => {
+  const chargingBtnHandler = (e) => {
     setSelectedCharger(!selectedCharger)
+    setTimeout(() => {
+      try {
+        flatListBottomList?.current?.scrollToIndex({ index: e })
+      } catch (error) {
+        console.log("SDKJBS", error)
+      }
+    }, 2000);
+
   }
 
   const chargingCardHandler = () => {
@@ -171,7 +182,7 @@ export default Home = ({ navigatedata }) => {
   useEffect(() => {
     setTncNotification(!tncNotification)
   }, [isFocused])
- 
+
 
   const { data, status, isLoading, isRefetching, refetch, refetc } = useQuery('MapData', async () => {
     {
@@ -246,7 +257,6 @@ export default Home = ({ navigatedata }) => {
 
   return (
     <View style={styles.container}>
-      <CommonText>{JSON.stringify(mLocation?.length)}</CommonText>
       {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
@@ -265,10 +275,10 @@ export default Home = ({ navigatedata }) => {
 
           {selectedTab == 'List' ? <DenseCard paddingLeft={40} paddingRight={40} padding={7} marginVertical={2} margin={2}>
             <TouchableOpacity onPress={listButtonHandler} >
-              <CommonText showText={'List'} fontSize={16} customstyles={{ color: scheme == 'dark' ? selectedTab == 'List' ? colors.green : colors.white : selectedTab == 'List' ? colors.mapTitle : colors.white }} />
+              <CommonText showText={`List`} fontSize={16} customstyles={{ color: scheme == 'dark' ? selectedTab == 'List' ? colors.green : colors.white : selectedTab == 'List' ? colors.mapTitle : colors.white }} />
             </TouchableOpacity>
           </DenseCard> : <TouchableOpacity onPress={listButtonHandler} style={[styles.tabContainer]}>
-            <CommonText showText={'List'} fontSize={16} customstyles={{ color: scheme == 'dark' ? selectedTab == 'List' ? colors.green : colors.white : selectedTab == 'List' ? colors.mapTitle : colors.white }} />
+            <CommonText showText={`List`} fontSize={16} customstyles={{ color: scheme == 'dark' ? selectedTab == 'List' ? colors.green : colors.white : selectedTab == 'List' ? colors.mapTitle : colors.white }} />
           </TouchableOpacity>
           }
         </View>
@@ -303,10 +313,11 @@ export default Home = ({ navigatedata }) => {
           </CommonCard>
         </View>}
 
-        {true && selectedTab != 'List' &&
+        {selectedTab != 'List' && !selectedCharger &&
+
           <CommonCard padding={0} margin={1}>
             <View >
-              <CommonText showText={'Show charging station nearest to'} fontSize={17} customstyles={{ marginVertical: 8 }} />
+              <CommonText showText={'Showing Chargers nearest to'} fontSize={17} customstyles={{ marginVertical: 8 }} />
               <View style={styles.searchInnerContainer}>
                 <View style={{ width: '80%' }}>
                   <DenseCard >
@@ -326,18 +337,21 @@ export default Home = ({ navigatedata }) => {
           </CommonCard>
         }
 
-        {selectedTab != 'List' && selectedCharger &&
-          <FlatList
-            horizontal={true}
-            data={data || []}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => {
-              return (
-                <DetailsCard location={location} chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
-              )
-            }
-            }
-          />
+        {true && selectedTab != 'List' && selectedCharger &&
+          <View>
+            <FlatList
+              ref={flatListBottomList}
+              horizontal={true}
+              data={data || []}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => {
+                return (
+                  <DetailsCard location={location} chargerType={1} item={item} onPress={() => cardDetailsHandler(item)} />
+                )
+              }
+              }
+            />
+          </View>
 
         }
       </View>
