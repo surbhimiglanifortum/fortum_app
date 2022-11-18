@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import colors from "../../Utils/colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getPaymentOption } from '../../Services/Api'
 import { useSelector } from 'react-redux'
 
