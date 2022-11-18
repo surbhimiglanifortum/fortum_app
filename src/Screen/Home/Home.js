@@ -101,8 +101,13 @@ export default Home = ({ navigatedata }) => {
     getLocationAndAnimate()
   }
 
-  const chargingBtnHandler = (e) => {
-    setSelectedCharger(!selectedCharger)
+  const chargingBtnHandler = (e,marker_id) => {
+    if(selectedMarker.id === marker_id){
+      setSelectedCharger(false)
+    }else{
+      setSelectedCharger(!selectedCharger)
+    }
+  
     setTimeout(() => {
       try {
         flatListBottomList?.current?.scrollToIndex({ index: e })
