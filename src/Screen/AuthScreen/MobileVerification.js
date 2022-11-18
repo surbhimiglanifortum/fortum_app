@@ -207,7 +207,7 @@ const MobileVerification = ({ route }) => {
                         <View style={styles.resendContainer}>
                             <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
                             <TouchableOpacity onPress={onResendClick} >
-                                <CommonText showText={`Resend`} fontSize={14} />
+                                <CommonText customstyles={{textDecorationLine:'underline'}} showText={`Resend`} fontSize={14} />
                             </TouchableOpacity>
                         </View>
                     </View>

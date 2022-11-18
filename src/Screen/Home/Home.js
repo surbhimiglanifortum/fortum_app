@@ -27,7 +27,7 @@ import { useDispatch } from 'react-redux'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import * as Types from '../../Redux/Types'
 
-let selectedMarker = {}
+let selectedMarker = ""
 let mLocationPayload = {}
 let flatListBottomList
 export default Home = ({ navigatedata }) => {
@@ -101,20 +101,39 @@ export default Home = ({ navigatedata }) => {
     getLocationAndAnimate()
   }
 
-  const chargingBtnHandler = (e,marker_id) => {
-    if(selectedMarker.id === marker_id){
-      setSelectedCharger(false)
-    }else{
-      setSelectedCharger(!selectedCharger)
+  const chargingBtnHandler = (e, marker_id) => {
+    console.log("chargingBtnHandler", marker_id, selectedMarker)
+    if (selectedMarker === marker_id) {
+      if (selectedCharger) {
+        setSelectedCharger(false)
+      } else {
+        setSelectedCharger(true)
+      }
+      // setSelectedCharger(false)
+    } else {
+      setSelectedCharger(true)
+
     }
-  
-    setTimeout(() => {
+
+    selectedMarker = marker_id
+
+    if (selectedCharger) {
       try {
         flatListBottomList?.current?.scrollToIndex({ index: e })
       } catch (error) {
         console.log("SDKJBS", error)
       }
-    }, 2000);
+    } else {
+
+      setTimeout(() => {
+        try {
+          flatListBottomList?.current?.scrollToIndex({ index: e })
+        } catch (error) {
+          console.log("SDKJBS", error)
+        }
+      }, 2000);
+    }
+
 
   }
 
@@ -262,7 +281,7 @@ export default Home = ({ navigatedata }) => {
 
   return (
     <View style={styles.container}>
-      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
+      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
