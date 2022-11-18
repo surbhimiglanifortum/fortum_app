@@ -161,7 +161,7 @@ const Verification = ({ route }) => {
                         <View style={styles.centerText}>
                             <CommonText regular showText={email_id} fontSize={15} />
                             <TouchableOpacity onPress={() => navigation.goBack()} >
-                                <CommonText showText={' Edit'} fontSize={15} />
+                                <CommonText customstyles={{textDecorationLine:'underline',marginLeft:2}} showText={'Edit'} fontSize={15} />
                             </TouchableOpacity>
                         </View>
                         {/* <Textinput value={userInput} onChange={setUserInput} /> */}
@@ -195,7 +195,7 @@ const Verification = ({ route }) => {
                         <View style={styles.resendContainer}>
                             <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
                             <TouchableOpacity onPress={onResendClick}  >
-                                <CommonText showText={'Resend'} fontSize={14} />
+                                <CommonText customstyles={{textDecorationLine:'underline'}} showText={'Resend'} fontSize={14} />
                             </TouchableOpacity>
                         </View>
                     </View>
