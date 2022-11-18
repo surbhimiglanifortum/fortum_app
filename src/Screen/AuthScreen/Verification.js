@@ -46,6 +46,7 @@ const Verification = ({ route }) => {
             try {
 
                 Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
+                    console.log("sendCustomChallengeAnswer", success)
                     if (success.signInUserSession) {
 
                         ApiAction.sendOTP(mobile_number.replace('+91', '')).then(e => {
@@ -65,25 +66,27 @@ const Verification = ({ route }) => {
                             console.log("errror", err)
                         })
                     } else {
-                        loginSuccess(false)
+                        setLoading(false)
                         // enter valid OTP   
                         setOpenCommonModal({ isVisible: true, message: "OTP is wrong please re enter " })
                     }
                 }).catch(error => {
                     // Somethong went wrong
                     setOpenCommonModal({ isVisible: true, message: error.message })
+                    setLoading(false)
                     console.log("Something went wrong", error)
                 })
             } catch (error) {
                 console.log('Something went wrong', error);
                 // show error message
-                loginSuccess(false)
+                // loginSuccess(false)
+                setLoading(false)
                 setOpenCommonModal({ isVisible: true, message: "Something Went Wrong!!!" })
             }
         } else {
             try {
                 Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
-
+                    console.log(success)
                     if (success.signInUserSession) {
                         loginSuccess()
                     } else {
@@ -109,7 +112,8 @@ const Verification = ({ route }) => {
 
     const loginSuccess = async (navigateToDashboard = true) => {
         const data = await Auth.currentAuthenticatedUser();
-        if (data.signInUserSession) {
+        
+        if (data.SesssignInUserSessionion) {
             const result = await ApiAction.getUserDetails()
             if (result?.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
@@ -124,6 +128,11 @@ const Verification = ({ route }) => {
                 // show wrong otp message
                 try {
                     const result = await ApiAction.registerNoPhone(data.attributes.email, {}, { first_name, last_name })
+
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: routes.dashboard }],
+                    });
                     // user created at backend if not exisits
                 } catch (error) {
                     setOpenCommonModal({ isVisible: true, message: "Unable to Create User" })
@@ -161,7 +170,7 @@ const Verification = ({ route }) => {
                         <View style={styles.centerText}>
                             <CommonText regular showText={email_id} fontSize={15} />
                             <TouchableOpacity onPress={() => navigation.goBack()} >
-                                <CommonText customstyles={{textDecorationLine:'underline',marginLeft:2}} showText={'Edit'} fontSize={15} />
+                                <CommonText customstyles={{ textDecorationLine: 'underline', marginLeft: 2 }} showText={'Edit'} fontSize={15} />
                             </TouchableOpacity>
                         </View>
                         {/* <Textinput value={userInput} onChange={setUserInput} /> */}
@@ -195,13 +204,13 @@ const Verification = ({ route }) => {
                         <View style={styles.resendContainer}>
                             <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
                             <TouchableOpacity onPress={onResendClick}  >
-                                <CommonText customstyles={{textDecorationLine:'underline'}} showText={'Resend'} fontSize={14} />
+                                <CommonText customstyles={{ textDecorationLine: 'underline' }} showText={'Resend'} fontSize={14} />
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.button} >
+                    <View style={styles.button} >
                         <Button onPress={VerifyButtonHandler} showText={'Verify'} onLoading={loading} />
-                    </TouchableOpacity>
+                    </View>
 
                 </View>
             </ScrollView>
