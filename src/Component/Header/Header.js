@@ -2,12 +2,16 @@ import { View, StyleSheet, useColorScheme } from 'react-native'
 import React from 'react'
 import BackButton from '../Button/BackButton'
 import CommonText from '../Text/CommonText'
+import { useNavigation } from '@react-navigation/native';
 
 const Header = ({ onPress, showText, backButton = true, style }) => {
     const scheme = useColorScheme()
+    const navigation = useNavigation();
+
+
     return (
         <View style={[styles.header]}>
-            {backButton && <BackButton onPress={onPress} />}
+            {backButton && <BackButton onPress={()=>navigation.goBack()} />}
             <CommonText showText={showText} fontSize={16} bold customstyles={[styles.headerText, {
                 marginLeft: backButton ?
                     -25 : 0

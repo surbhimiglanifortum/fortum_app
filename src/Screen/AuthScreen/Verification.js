@@ -37,7 +37,7 @@ const Verification = ({ route }) => {
     const { setOpenCommonModal } = useContext(SnackContext);
 
 
-    const { email_id, signin, user, mobile_number } = route.params;
+    const { email_id, signin, user, mobile_number, first_name, last_name } = route.params;
 
     const VerifyButtonHandler = async () => {
         setLoading(true)
@@ -54,7 +54,7 @@ const Verification = ({ route }) => {
                                 navigation.replace(routes.MobileVerification, { ...route.params })
                             } else {
                                 setOpenCommonModal({
-                                    isVisible: true, message: e.data.message, onOkPress: () => navigation.replace(routes.MobileInput,{email_id:email_id})
+                                    isVisible: true, message: e.data.message, onOkPress: () => navigation.replace(routes.MobileInput, { email_id: email_id })
                                 })
 
                             }
@@ -115,12 +115,15 @@ const Verification = ({ route }) => {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
                 if (navigateToDashboard) {
 
-                    navigation.replace(routes.dashboard)
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: routes.dashboard }],
+                    });
                 }
             } else {
                 // show wrong otp message
                 try {
-                    const result = await ApiAction.registerNoPhone(data.attributes.email, {})
+                    const result = await ApiAction.registerNoPhone(data.attributes.email, {}, { first_name, last_name })
                     // user created at backend if not exisits
                 } catch (error) {
                     setOpenCommonModal({ isVisible: true, message: "Unable to Create User" })
@@ -156,8 +159,8 @@ const Verification = ({ route }) => {
                     <View style={styles.textinputConatiner}>
                         <CommonText regular showText={'Please enter the verification code sent to '} fontSize={15} />
                         <View style={styles.centerText}>
-                            <CommonText showText={email_id} fontSize={15} />
-                            <TouchableOpacity >
+                            <CommonText regular showText={email_id} fontSize={15} />
+                            <TouchableOpacity onPress={() => navigation.goBack()} >
                                 <CommonText showText={' Edit'} fontSize={15} />
                             </TouchableOpacity>
                         </View>

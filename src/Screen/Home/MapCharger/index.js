@@ -81,11 +81,12 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                             return true
                         }
                     })
+
+                    
                     if (marker) {
-
+                        console.log(data)
                         selectedMarker = marker
-                        chargingBtnHandler()
-
+                        chargingBtnHandler(data.findIndex((e)=>e.id===marker.id))
                     }
                 }}
                 showsCompass={false}
