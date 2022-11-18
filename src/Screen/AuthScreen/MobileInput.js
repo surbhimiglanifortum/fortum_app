@@ -81,7 +81,7 @@ export default function MobileInput({ navigation, route }) {
                         <View style={{
                             marginVertical: 15
                         }}>
-                            <Textinput keyboardType={'number-pad'} value={input} onChange={(e) => {
+                            <Textinput maxLength={10} keyboardType={'number-pad'} value={input}  onChange={(e) => {
                                 setInput(e)
                                 setShowError('')
                             }} />

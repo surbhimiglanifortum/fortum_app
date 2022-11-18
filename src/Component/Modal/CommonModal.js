@@ -24,7 +24,7 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText
                 <CommonView style={styles.innerContainer}>
                     <View style={styles.wrapContainer}>
                         <View style={styles.header}>
-                            <CommonText showText={openCommonModal.heading ? openCommonModal?.heading : 'Notifications'} customstyles={styles.heading} />
+                            <CommonText showText={openCommonModal.heading ? openCommonModal?.heading : 'Notification'} customstyles={styles.heading} />
                             <TouchableOpacity style={styles.crossBtn} onPress={() => { setOpenCommonModal({ isVisible: false, message: "" }) }}>
                                 <AntDesign name='close' size={20} />
                             </TouchableOpacity>

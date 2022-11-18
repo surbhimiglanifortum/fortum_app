@@ -319,11 +319,11 @@ const PaymentScreenJuspay = (props) => {
                 } if (props.route.params?.callFrom === 'SelectPaymentMode') {
                     props.navigation.pop(1)
                 } if (props.route.params?.callFrom === 'RechargerWallet') {
-                    props.navigation.navigate(routes.RechargeDone)
+                    props.navigation.replace(routes.RechargeDone)
                 } if (props.route.params?.callFrom === 'RechargePinelab') {
-                    props.navigation.navigate(routes.AddMoneyDone)
+                    props.navigation.replace(routes.AddMoneyDone)
                 } if (props.route.params?.callFrom === 'MyCart') {
-                    props.navigation.navigate(routes.OrderPlaced)
+                    props.navigation.replace(routes.OrderPlaced)
                 }  else {
                     // props.navigation.goBack()
                 }

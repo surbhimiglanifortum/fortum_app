@@ -175,7 +175,7 @@ const MobileVerification = ({ route }) => {
                         <View style={styles.centerText}>
                             <CommonText regular showText={mobile_number} fontSize={15} />
                             {signin && <TouchableOpacity onPress={onPhoneEdit} >
-                                <CommonText showText={' Edit'} fontSize={15} />
+                                <CommonText customstyles={{textDecorationLine:'underline'}} showText={' Edit'} fontSize={15} />
                             </TouchableOpacity>}
 
                         </View>
