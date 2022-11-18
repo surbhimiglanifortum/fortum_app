@@ -26,7 +26,8 @@ import TTNCNotificationDialog from '../../Component/Modal/TNCNotificationDialog'
 import { useDispatch } from 'react-redux'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import * as Types from '../../Redux/Types'
-
+import axios from "axios";
+import appConfig from '../../../appConfig'
 let selectedMarker = ""
 let mLocationPayload = {}
 let flatListBottomList
@@ -186,6 +187,7 @@ export default Home = ({ navigatedata }) => {
 
   const userDetailsUpdated = async () => {
     const result = await ApiAction.getUserDetails()
+
     if (result.data) {
       dispatch(AddToRedux(result.data, Types.USERDETAILS))
     }
@@ -198,9 +200,36 @@ export default Home = ({ navigatedata }) => {
     CallCheckActiveSession()
   }, [location, locationsPayload])
 
+
+
+  const addInterceptor = async () => {
+    const result = await Auth.currentAuthenticatedUser();
+    if (result.signInUserSession) {
+      console.log("add Intecept")
+      axios.interceptors.request.use(async (config) => {
+        // console.log("AUTH ",Auth)
+        const token = await Auth.currentSession().catch(err => { console.log(err) });
+        console.log("JWT token")
+        console.log(token.getIdToken().getJwtToken())
+        try {
+          if (token)
+            config.headers.Authorization = token.getIdToken().getJwtToken();
+        } catch (e) {
+          console.log(e)
+        }
+        config.headers['App_ver'] = appConfig.APP_VERSION;
+        // console.log("interceptror", config)
+        return config;
+      });
+    }
+  }
   useEffect(() => {
+    addInterceptor().then(r => {
+      userDetailsUpdated()
+    })
     getLocationAndAnimate()
-    userDetailsUpdated()
+
+
   }, [])
 
   useEffect(() => {

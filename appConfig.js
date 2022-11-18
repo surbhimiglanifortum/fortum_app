@@ -18,7 +18,7 @@ export const appConfig = {
 
 
     MAPS_KEY: 'AIzaSyD9gpI-YQJLgVecXH7O4Wz4HTa25GaX_NI',
-    APP_VERSION: 'PROD_11_06_2022',
+    APP_VERSION: 'stage_9.1.1',
     CLIENTID: 'fortum',
     MERCHANTID: 'fortum',
     MERCHANTKEYID: '6512',

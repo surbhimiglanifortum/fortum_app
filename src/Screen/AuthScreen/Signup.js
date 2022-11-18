@@ -66,7 +66,7 @@ const Signup = ({ route }) => {
             console.log("signup response", e)
         })
 
-        await userExist(values.mobile_number).then((e) => {
+        await userExist("+91"+values.mobile_number).then((e) => {
         }).catch(e => {
             if (e.code == 'UserNotFoundException') {
                 mobileSignupSuccess = true
@@ -92,7 +92,7 @@ const Signup = ({ route }) => {
                     email: values.email_id,          // optional
                 },
                 autoSignIn: { // optional - enables auto sign in after user is confirmed
-                    enabled: true,
+                    enabled: false,
                 }
             }).catch(e => {
                 console.log("error", e)
