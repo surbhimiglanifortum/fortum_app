@@ -229,7 +229,6 @@ export const loadWalletMoney = async (payload) => {
     return await axios.post("/api_app/juspay/initiate_payment/stored-value-account", payload);
 };
 
-
 export const feedback = async (payload) => {
     return await axios.post("/api_app/feedback", payload);
 };
@@ -238,3 +237,7 @@ export const userMigration = async (payload) => {
     // {"email":""}
     return await axios.post("/api_app/users/user-migration", payload);
 };
+
+export const updateCardStatus = async (payload) => {
+    return await axios.post("/api_app/pinelabs/card/update/status", payload);
+}

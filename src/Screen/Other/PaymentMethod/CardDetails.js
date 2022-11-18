@@ -5,11 +5,15 @@ import { useSelector } from 'react-redux';
 import CommonView from '../../../Component/CommonView'
 import Header from '../../../Component/Header/Header';
 import { StyleSheet } from 'react-native'
+import { updateCardStatus } from '../../../Services/Api'
+import SwitchButton from '../../../Component/Button/SwitchButton';
 
 const CardDetails = () => {
     let encyptKey = ''
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails)
+
+    const [isEnabled, setIsEnabled] = useState(true);
 
     useEffect(() => {
         initialize('https://apiuat.pineperks.in', async function (key) {
@@ -32,6 +36,19 @@ const CardDetails = () => {
         })
     }, [])
 
+    const cardStatusUpdate = async () => {
+        try {
+            setIsEnabled(previousState => !previousState)
+            const payload = {
+                username: mUserDetails?.username,
+                cardStatus: isEnabled ? "Active" : "Block"
+            }
+            const result = await updateCardStatus()
+        } catch (error) {
+
+        }
+    }
+
     return (
         <CommonView style={styles.container}>
             <Header showText={'Card Details'} />
@@ -43,13 +60,15 @@ const CardDetails = () => {
                 expiryTextStyle={{ marginTop: -5, marginLeft: 19, fontSize: 12 }}
                 cvvTextStyle={{ marginTop: -5, fontSize: 12, textAlign: 'center' }}
             />
+
+            <SwitchButton onValueChange={cardStatusUpdate} value={isEnabled} />
         </CommonView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        
+
     }
 })
 
