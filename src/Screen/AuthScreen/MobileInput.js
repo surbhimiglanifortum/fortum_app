@@ -77,7 +77,7 @@ export default function MobileInput({ navigation, route }) {
                     </View>
                     <View>
                         <CommonText showText={'Mobile Number'} fontSize={20} />
-                        <CommonText showText={`Please enter the Mobile number for email ${email_id}`} fontSize={15} />
+                        <CommonText regular showText={`Please enter the Mobile number for email ${email_id}`} fontSize={15} />
                         <View style={{
                             marginVertical: 15
                         }}>

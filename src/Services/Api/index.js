@@ -81,8 +81,8 @@ export const userGstList = async () => {
     return await axios.get("/api_app/gst_state_map/all-gst-state")
 }
 
-export const registerNoPhone = async (username, sub) => {
-    return await axios.post(`/api_app/users/registernophone/${username}/${sub}`)
+export const registerNoPhone = async (username, sub, payload) => {
+    return await axios.post(`/api_app/users/registernophone/${username}/${sub}`, payload)
 }
 
 export const updateUserPhone = async (username, payload) => {

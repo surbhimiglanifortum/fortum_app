@@ -1,5 +1,5 @@
 import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, NativeModules, useColorScheme } from 'react-native'
-import React, { useState, memo } from 'react'
+import React, { useState, memo, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
@@ -10,7 +10,6 @@ import WhiteButton from '../Button/WhiteButton'
 import Button from '../Button/Button'
 import CommonView from '../../Component/CommonView'
 import { useQuery } from 'react-query'
-import FontIcon from "../FortumIcons/FontIcon";
 import { getChargerMapObject } from '../../Utils/HelperCommonFunctions'
 // import * as ApiAction from '../../Services/Api'
 import CommonCard from '../../Component/Card/CommonCard'
@@ -41,9 +40,13 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
     const [connectorTypes, setConnectorTypes] = useState([])
 
     const onToggleSwitch = () => {
-        mSwitchOn = !mSwitchOn
         setIsSwitchOn(!isSwitchOn)
     };
+    useEffect(() => {
+        mSwitchOn = isSwitchOn
+
+    }, [isSwitchOn])
+
     const applyButtonHandler = () => {
         onFilterClick(payloadConnectors, mSwitchOn)
         setOpenFilterModal(false)
@@ -188,7 +191,8 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
                             <WhiteButton showText={'Reset'} onPress={() => {
                                 setConnectorTypes(filterData)
                                 setIsSwitchOn(false)
-                                payloadConnectors = filterData
+                                mSwitchOn = false
+                                payloadConnectors = {}
                                 applyButtonHandler()
                             }} />
                         </View>
