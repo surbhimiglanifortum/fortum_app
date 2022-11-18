@@ -8,10 +8,16 @@ const Header = ({ onPress, showText, backButton = true, style }) => {
     const scheme = useColorScheme()
     const navigation = useNavigation();
 
-
+    const onBackPress = () => {
+        if (onPress) {
+            onPress()
+        } else {
+            navigation.goBack()
+        }
+    }
     return (
         <View style={[styles.header]}>
-            {backButton && <BackButton onPress={()=>navigation.goBack()} />}
+            {backButton && <BackButton onPress={onBackPress} />}
             <CommonText showText={showText} fontSize={16} bold customstyles={[styles.headerText, {
                 marginLeft: backButton ?
                     -25 : 0
