@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, SafeAreaView, StyleSheet, ActivityIndicator } from 'react-native'
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getPaymentOption, payAsYouGo, checkOrderId, walletBalanceEnquiry, blockAmount, getUserDetails } from '../../Services/Api'
 import { Picker } from '@react-native-community/picker';
 import { useNavigation, useIsFocused } from '@react-navigation/native'
@@ -142,7 +141,6 @@ const SelectPaymentMode = ({ min_balance, addMoneyPress, orderStatus, isShow, se
         setMode('PAY_AS_U_GO')
         setMsg('')
         setWallet(true)
-        const username = await AsyncStorage.getItem("username")
         const payload = {
             evses_uid: evsesUid
         }
