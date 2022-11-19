@@ -27,7 +27,6 @@ const Dashboard = ({ tabName, navigation, route }) => {
   const navigatedata = route?.params?.animateMap
   const [selectedTab, setSelectedTab] = useState('home')
   const dispatch = useDispatch()
-
   useEffect(() => {
     ApiAction.getUserDetails().then(result => {
       if (result?.data) {
@@ -60,15 +59,16 @@ const Dashboard = ({ tabName, navigation, route }) => {
     try {
       const result = await Auth.currentAuthenticatedUser();
 
+      console.log(result)
       if (result?.signInUserSession) {
         if (result.attributes.phone_number && result.attributes.phone_number != '') {
           setSelectedTab(tab)
         } else {
           navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
         }
-
+        return
       }
-      return
+
     } catch (error) {
 
     }

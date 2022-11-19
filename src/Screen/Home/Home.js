@@ -26,8 +26,9 @@ import TTNCNotificationDialog from '../../Component/Modal/TNCNotificationDialog'
 import { useDispatch } from 'react-redux'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import * as Types from '../../Redux/Types'
-
-let selectedMarker = {}
+import axios from "axios";
+import appConfig from '../../../appConfig'
+let selectedMarker = ""
 let mLocationPayload = {}
 let flatListBottomList
 export default Home = ({ navigatedata }) => {
@@ -101,20 +102,39 @@ export default Home = ({ navigatedata }) => {
     getLocationAndAnimate()
   }
 
-  const chargingBtnHandler = (e,marker_id) => {
-    if(selectedMarker.id === marker_id){
-      setSelectedCharger(false)
-    }else{
-      setSelectedCharger(!selectedCharger)
+  const chargingBtnHandler = (e, marker_id) => {
+    console.log("chargingBtnHandler", marker_id, selectedMarker)
+    if (selectedMarker === marker_id) {
+      if (selectedCharger) {
+        setSelectedCharger(false)
+      } else {
+        setSelectedCharger(true)
+      }
+      // setSelectedCharger(false)
+    } else {
+      setSelectedCharger(true)
+
     }
-  
-    setTimeout(() => {
+
+    selectedMarker = marker_id
+
+    if (selectedCharger) {
       try {
         flatListBottomList?.current?.scrollToIndex({ index: e })
       } catch (error) {
         console.log("SDKJBS", error)
       }
-    }, 2000);
+    } else {
+
+      setTimeout(() => {
+        try {
+          flatListBottomList?.current?.scrollToIndex({ index: e })
+        } catch (error) {
+          console.log("SDKJBS", error)
+        }
+      }, 2000);
+    }
+
 
   }
 
@@ -167,6 +187,7 @@ export default Home = ({ navigatedata }) => {
 
   const userDetailsUpdated = async () => {
     const result = await ApiAction.getUserDetails()
+
     if (result.data) {
       dispatch(AddToRedux(result.data, Types.USERDETAILS))
     }
@@ -179,9 +200,36 @@ export default Home = ({ navigatedata }) => {
     CallCheckActiveSession()
   }, [location, locationsPayload])
 
+
+
+  const addInterceptor = async () => {
+    const result = await Auth.currentAuthenticatedUser();
+    if (result.signInUserSession) {
+      console.log("add Intecept")
+      axios.interceptors.request.use(async (config) => {
+        // console.log("AUTH ",Auth)
+        const token = await Auth.currentSession().catch(err => { console.log(err) });
+        console.log("JWT token")
+        console.log(token.getIdToken().getJwtToken())
+        try {
+          if (token)
+            config.headers.Authorization = token.getIdToken().getJwtToken();
+        } catch (e) {
+          console.log(e)
+        }
+        config.headers['App_ver'] = appConfig.APP_VERSION;
+        // console.log("interceptror", config)
+        return config;
+      });
+    }
+  }
   useEffect(() => {
+    addInterceptor().then(r => {
+      userDetailsUpdated()
+    })
     getLocationAndAnimate()
-    userDetailsUpdated()
+
+
   }, [])
 
   useEffect(() => {
@@ -262,7 +310,7 @@ export default Home = ({ navigatedata }) => {
 
   return (
     <View style={styles.container}>
-      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} selectedMarker={selectedMarker} />}
+      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
