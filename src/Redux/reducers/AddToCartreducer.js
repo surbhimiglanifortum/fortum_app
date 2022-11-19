@@ -4,7 +4,6 @@ const initialData = {
 }
 
 const AddToCartReducers = ((state = initialData, action) => {
-    console.log(action.payload, '------------------')
     switch (action.type) {
         case 'ADD_TO_CART':
             state.cartItem.push(action.payload)

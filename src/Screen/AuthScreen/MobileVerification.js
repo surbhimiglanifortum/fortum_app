@@ -127,6 +127,7 @@ const MobileVerification = ({ route }) => {
 
     const loginSuccess = async () => {
         const data = await Auth.currentAuthenticatedUser();
+        console.log("Login data", data)
         if (data.signInUserSession) {
             const result = await ApiAction.getUserDetails()
             if (result.data) {

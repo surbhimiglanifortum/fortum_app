@@ -33,6 +33,8 @@ const OngoingDetails = ({ route }) => {
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const username = mUserDetails?.username
 
+  console.log("Check Params", route?.params?.CardPin)
+
   const navigation = useNavigation()
   const scheme = useColorScheme()
 
@@ -235,7 +237,7 @@ const OngoingDetails = ({ route }) => {
       auth_id: authID
     }
 
-    axios.post(appconfig.BASE_URL + "/api_app/sessions/", data).then((r) => { 
+    axios.post(appconfig.BASE_URL + "/api_app/sessions/", data).then((r) => {
       console.log("Check Auth Id", data)
       console.log("2 Response of session Api", r.data)
       console.log(r.data)
@@ -322,18 +324,47 @@ const OngoingDetails = ({ route }) => {
           console.log(vtoken_id)
           axios.get(appconfig.BASE_URL + "/api_app/tokens/" + vtoken_id.auth_id).then(token => {
             vtoken = token.data
-
-            let data = {
-              token: vtoken,
-              location_id: locDetails?.id,
-              evse_uid: evDetails?.uid,
-              payment_method: paymentMethod,
-              order_id: payAsYouGoOrderId
+            let data = {}
+            if (paymentMethod === 'CLOSED_WALLET') {
+              data = {
+                token: vtoken,
+                location_id: locDetails?.id,
+                evse_uid: evDetails?.uid,
+                payment_method: paymentMethod,
+              }
+            } if (paymentMethod === 'PAY_AS_U_GO') {
+              data = {
+                token: vtoken,
+                location_id: locDetails?.id,
+                evse_uid: evDetails?.uid,
+                payment_method: paymentMethod,
+                order_id: payAsYouGoOrderId,
+              }
+            } if (paymentMethod === 'PREPAID_CARD') {
+              data = {
+                token: vtoken,
+                location_id: locDetails?.id,
+                evse_uid: evDetails?.uid,
+                payment_method: paymentMethod,
+                CardPin: route?.params?.CardPin,
+                minimum_balance: evDetails?.connectors[0]?.pricing?.min_balance
+              }
             }
-            if (payAsYouGoOrderId === '') {
-              delete data.order_id
-            }
-            console.log(data, "PUSH TO SERVER")
+            // data = {
+            //   token: vtoken,
+            //   location_id: locDetails?.id,
+            //   evse_uid: evDetails?.uid,
+            //   payment_method: paymentMethod,
+            //   order_id: payAsYouGoOrderId,
+            //   cardPin: route?.params?.CardPin
+            // }
+            // if (payAsYouGoOrderId === '' || paymentMethod === 'PREPAID_CARD') {
+            //   delete data.order_id
+            // }
+            // if (paymentMethod === 'CLOSED_WALLET' || paymentMethod === 'PAY_AS_U_GO') {
+            //   delete data.cardPin
+            // }
+            console.log("PUSH TO SERVER", data)
             axios.put(appconfig.TOTAL_BASE_URL + "/ocpi/emsp/2.1.1/commands/START_SESSION", data).then((r) => {
 
               console.log("commands/START_SESSION response")
@@ -368,7 +399,7 @@ const OngoingDetails = ({ route }) => {
                 console.log("initiateJuspayr.data", r.data)
                 return
               }
-              if (r.data.data.data.result === 'ACCEPTED') {
+              if (r.data?.data?.data?.result === 'ACCEPTED') {
                 console.log("ACCEPTED!!!", r.data)
                 commandsCall(r.data.uid, 0)
                 setChargerStart(true)
@@ -377,7 +408,7 @@ const OngoingDetails = ({ route }) => {
                 console.log("REJECTED")
               }
             }).catch(err => {
-              console.log("start serrsoin error", err)
+              console.log("start session error", err)
               setChargerState("STOP")
               setChargerText("Failed")
             })

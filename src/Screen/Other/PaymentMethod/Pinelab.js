@@ -59,7 +59,6 @@ const FortumChargeAndDriveCard = () => {
                 username: mUserDetails?.username
             }
             const result = await checkCardOrderStatus(payload)
-            console.log("Card Order Status", result?.data)
             if (result.data?.success) {
                 setBtnText('Check Status')
                 if (result.data?.response?.orderStatus == 6)
@@ -69,7 +68,6 @@ const FortumChargeAndDriveCard = () => {
             }
             setLoading(false)
         } catch (error) {
-            console.log("Card Order Status Error", error)
             setLoading(false)
         }
     }

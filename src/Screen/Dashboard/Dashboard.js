@@ -29,7 +29,6 @@ const Dashboard = ({ tabName, navigation, route }) => {
   const dispatch = useDispatch()
   useEffect(() => {
     ApiAction.getUserDetails().then(result => {
-      console.log("User Details", result)
       if (result?.data) {
         dispatch(AddToRedux(result.data, Types.USERDETAILS))
 
@@ -37,9 +36,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
     }).catch(err => {
       console.log(err)
     })
-
   }, [])
-
 
   const homeButtonHandler = () => {
     setSelectedTab('home')

@@ -18,9 +18,6 @@ const OrderDetails = ({ route }) => {
   const paramsData = route.params.dataItem.item
   const scheme = useColorScheme()
 
-  // console.log(paramsData, '------------------')
-
-
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
       <View style={styles.innerContainer}>

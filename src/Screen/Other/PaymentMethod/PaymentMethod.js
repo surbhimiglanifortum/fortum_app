@@ -53,12 +53,11 @@ const PaymentMethod = () => {
     setRefreshing(true)
     try {
       const result = await walletBalanceEnquiry({ username: mUserDetails?.username })
-      console.log("Response of pinelab wallet Balance", result.data?.response?.Cards[0].Balance)
       setPineLabData(result.data?.response?.Cards[0])
       setRefreshing(false)
       return result.data?.response?.Cards[0].Balance
     } catch (error) {
-      console.log("Response of pinelab wallet Balance", error)
+      console.log("Response of pinelab wallet Balance Error", error)
       setRefreshing(false)
     }
   }
