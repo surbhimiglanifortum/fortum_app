@@ -55,7 +55,7 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler }) => {
           results.push(data[i]);
         }
 
-        if (data[i].name.includes(search)) {
+        else if (data[i].name.includes(search)) {
           results.push(data[i]);
         }
       }

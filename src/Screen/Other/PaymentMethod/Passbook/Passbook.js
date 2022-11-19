@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, PermissionsAndroid, Platform } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
@@ -22,6 +22,7 @@ import PinelabTransactionCard from '../../../../Component/Card/PinelabTransactio
 import Charger from '../../../../assests/svg/charger'
 import CommonIconCard from '../../../../Component/Card/CommonIconCard/CommonIconCard'
 import NoData from '../../../../Component/NoDataFound/NoData'
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
 
 const Passbook = () => {
     const navigation = useNavigation()
@@ -37,6 +38,7 @@ const Passbook = () => {
     const [endDate, setEndDate] = useState('')
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
+    const [html, setHtml] = useState("");
 
     const allBtnHandler = () => {
         setSelectedTab('all')
@@ -157,6 +159,137 @@ const Passbook = () => {
         }
     }
 
+    const [filePath, setFilePath] = useState('');
+
+    const isPermitted = async () => {
+        if (Platform.OS === 'android') {
+            try {
+                const granted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                    {
+                        title: 'External Storage Write Permission',
+                        message: 'App needs access to Storage data',
+                    },
+                );
+                return granted === PermissionsAndroid.RESULTS.GRANTED;
+            } catch (err) {
+                alert('Write permission err', err);
+                return false;
+            }
+        } else {
+            return true;
+        }
+    };
+
+    const createPDF = async () => {
+        if (await isPermitted()) {
+            let options = {
+                //Content to print
+                html:
+                    '<h1 style="text-align: center;"><strong>Hello Guys</strong></h1><p style="text-align: center;">Here is an example of pdf Print in React Native</p><p style="text-align: center;"><strong>Team About React</strong></p>',
+                //File Name
+                fileName: 'test',
+                //File directory
+                directory: 'downloads',
+            };
+            let file = await RNHTMLtoPDF.convert(options);
+            console.log(file);
+            setFilePath(file.filePath);
+        }
+    };
+
+
+    const generateHTML = async (name, mobile, email, openingDate, balance, cardType, data) => {
+        setHtml(
+            '<html>\n' +
+            '<head>\n' +
+            '<title>Statement</title>\n' +
+            '</head>\n' +
+            '<body>\n' +
+            '<h3>Prepaid Card Statement</h3>\n' +
+            '<table style="width: 100%; margin-bottom: 20px;">\n' +
+            '<tr>\n' +
+            ' <th style="text-align: left;">User Attributes</th>\n' +
+            '<th style="text-align: left;">Details</th>' +
+            '</tr>\n' +
+            '<tr>\n' +
+            '<td>Name:</td>\n' +
+            `<td>${name}</td>\n` +
+            '</tr>\n' +
+            '<tr>\n' +
+            '<td>Mobile No:</td>\n' +
+            `<td>${mobile}</td>\n` +
+            '</tr>\n' +
+            '<tr>\n' +
+            '<td>Email ID(IF any or NA):</td>\n' +
+            `<td>${email}</td>\n` +
+            '</tr>\n' +
+            '<tr>\n' +
+            '<td>Corporate name(IF any or NA):</td>\n' +
+            '<td>FORTUM INDIA PRIVATE LIMITED</td>\n' +
+            '</tr>\n' +
+            '<tr>\n' +
+            (
+                openingDate != undefined &&
+                '<td>Account Opening Date:</td>\n' +
+                `<td>${moment(openingDate).format('LLLL')}</td>\n`
+            )
+            +
+            '</tr>\n' +
+            '<tr>\n' +
+            '<td>PAN and Aadhar No (IF any or NA):</td>\n' +
+            '<td>N/A</td>\n' +
+            '</tr>\n' +
+            '<tr>\n' +
+            '<td>IMEI No:</td>\n' +
+            ' <td>NA</th>\n' +
+            '</tr>\n' +
+            '<tr>\n' +
+            '<td>IP Address:</td>\n' +
+            '<td>NA</td>\n' +
+            '</tr>\n' +
+            '</table>\n' +
+            '<table style="width: 100%; margin-bottom: 20px; border: 1px solid black; border-collapse: collapse;">\n' +
+            '<tr>' +
+            '<th style="border: 1px solid black; border-collapse: collapse;">Date & Time</th>\n' +
+            '<th style="border: 1px solid black; border-collapse: collapse;">Account Name</th>\n' +
+            '<th style="border: 1px solid black; border-collapse: collapse;">Account Balance(in Rs.)</th>\n' +
+            '</tr>\n' +
+            '<tr>\n' +
+            `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${moment().format('LLLL')}</td>\n` +
+            `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${cardType}</td>\n` +
+            `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${balance}</td>\n` +
+            '</tr>\n' +
+            '</table>\n' +
+            '<table style="width: 100%; margin-bottom: 20px; border: 1px solid black; border-collapse: collapse;">\n' +
+            '<tr>\n' +
+            '<th style="border: 1px solid black; border-collapse: collapse;">Date & Time of Balance</th>\n' +
+            '<th style="border: 1px solid black; border-collapse: collapse;">Transaction ID</th>\n' +
+            '<th style="border: 1px solid black; border-collapse: collapse;">Transaction Details</th>\n' +
+            '<th style="border: 1px solid black; border-collapse: collapse;">Credit(in Rs.)</th>\n' +
+            '<th style="border: 1px solid black; border-collapse: collapse;">Debit(in Rs.)</th>\n' +
+            '<th style="border: 1px solid black; border-collapse: collapse;">Previous Balance(in Rs.)</th>\n' +
+            '<th style="border: 1px solid black; border-collapse: collapse;">New Balance(in Rs.)</th>\n' +
+            '</tr>\n' +
+            data?.map((item, index) => {
+                return (
+                    '<tr>\n' +
+                    `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${moment(item.TransactionDate).format('LLLL')}</td>\n` +
+                    `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${item.TransactionId}</td>\n` +
+                    `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${item.TransactionType}</td>\n` +
+                    `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${item.TransactionType === 'GIFT CARD RELOAD' ? item.TransactionAmount : 0.00}</td>\n` +
+                    `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${item.TransactionType === 'GIFT CARD REDEEM' ? item.TransactionAmount : 0.00}</td>\n` +
+                    `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${item.TransactionType === 'GIFT CARD REDEEM' ? item.TransactionAmount + item.CardBalance : item.CardBalance - item.TransactionAmount}</td>\n` +
+                    `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${item.CardBalance}</td>\n` +
+                    '</tr>\n'
+                )
+            }) +
+            '</table>\n' +
+            '</body>\n' +
+            '</html>'
+        )
+    }
+
     const AllTransaction = () => {
         return (
             passbookData?.response?.Transactions?.length >= 1 ?
@@ -197,6 +330,7 @@ const Passbook = () => {
                                     Svg={Charger}
                                     date={item?.item?.TransactionDate}
                                     title={item?.item?.MerchantName}
+                                    amount={item?.item?.TransactionAmount}
                                 /> :
                                 null
                         )
@@ -222,6 +356,7 @@ const Passbook = () => {
                                     Svg={WalletSvg}
                                     date={item?.item?.TransactionDate}
                                     title={item?.item?.MerchantName}
+                                    amount={item?.item?.TransactionAmount}
                                 /> :
                                 null
                         )
@@ -321,7 +456,7 @@ const Passbook = () => {
 
 
             <View style={styles.fixedBtn}>
-                <Button showText={'Download Passbook'} />
+                <Button showText={'Download Passbook'} onPress={createPDF} />
             </View>
         </CommonView>
     )

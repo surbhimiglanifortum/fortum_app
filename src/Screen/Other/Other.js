@@ -83,7 +83,6 @@ const Other = ({ setSelectedTab }) => {
     const result = await getUserDetails()
     if (result.data) {
       dispatch(AddToRedux(result.data, Types.USERDETAILS))
-      console.log("Called")
     }
   }
 

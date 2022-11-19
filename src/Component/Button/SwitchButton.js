@@ -6,7 +6,7 @@ const SwitchButton = ({ onValueChange, value }) => {
     return (
         <Switch
             trackColor={{ false: colors.grey, true: colors.green }}
-            thumbColor={value ? colors.green : colors.grey}
+            thumbColor={value ? colors.green : colors.white}
             ios_backgroundColor="#3e3e3e"
             onValueChange={onValueChange}
             value={value}

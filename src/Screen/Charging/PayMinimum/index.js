@@ -15,6 +15,7 @@ import RadioBtn from '../../../Component/Button/RadioButton'
 import colors from '../../../Utils/colors'
 import routes from '../../../Utils/routes'
 import LinearInput from '../../../Component/Textinput/linearInput'
+import Loader from '../../../Component/Loader'
 
 const PayMinimum = ({ route }) => {
 
@@ -48,12 +49,10 @@ const PayMinimum = ({ route }) => {
 
     const checkWalletBalance = () => {
         setMode('CLOSED_WALLET')
-        setRefreshing(true)
         if (userData?.balance < evDetails?.connectors[0]?.pricing?.min_balance) {
             setMsg("Your wallet balance is low. Please select other option or add money in your wallet.")
             setWalletBalance(userData?.balance)
             setWallet(false)
-            setRefreshing(false)
             setColorText(colors.red)
             setGoodToGo(false)
         } else {
@@ -61,14 +60,12 @@ const PayMinimum = ({ route }) => {
             setMsg('You are ready to charge')
             setWalletBalance(userData?.balance)
             setWallet(true)
-            setRefreshing(false)
             setGoodToGo(true)
         }
     }
 
     const checkPrepaidCardBalance = async () => {
         setGoodToGo(false)
-        setRefreshing(true)
         try {
             const res = await walletBalanceEnquiry({ username: mUserDetails?.username })
             setPrepaidCardBalance(res.data?.response?.Cards[0].Balance)
@@ -79,10 +76,8 @@ const PayMinimum = ({ route }) => {
             else {
                 setAskPin(true)
             }
-            setRefreshing(false)
         } catch (error) {
             console.log("Check Prepaid Card Balance Error", error)
-            setRefreshing(false)
         }
     }
 
@@ -108,7 +103,8 @@ const PayMinimum = ({ route }) => {
                 navigation.replace(routes.OngoingDetails, {
                     locDetails: locDetails,
                     evDetails: evDetails,
-                    paymentMethod: mode
+                    paymentMethod: mode,
+                    CardPin: pin.value,
                 })
             } else {
                 setMsg(res.data.message)
@@ -158,6 +154,7 @@ const PayMinimum = ({ route }) => {
 
     useEffect(() => {
         paymentOptions()
+        fatchPinelabWalletBalance()
     }, [])
 
     const prepaidCard = () => {
@@ -234,6 +231,15 @@ const PayMinimum = ({ route }) => {
         }
     }
 
+    const fatchPinelabWalletBalance = async () => {
+        try {
+            const res = await walletBalanceEnquiry({ username: mUserDetails?.username })
+            setPrepaidCardBalance(res.data?.response?.Cards[0].Balance)
+        } catch (error) {
+            console.log("Error in fatch pinelab wallet balance", error)
+        }
+    }
+
     const handleClick = (mode) => {
         switch (mode) {
             case 'CLOSED_WALLET':
@@ -259,106 +265,116 @@ const PayMinimum = ({ route }) => {
     return (
         <CommonView style={{ position: 'relative' }}>
             <Header showText={'Payment Option'} />
+            {
+                refreshing ?
+                    <Loader modalOpen={refreshing} /> :
+                    <>
+                        <DenseCard>
+                            <View style={styles.wrapper}>
+                                <CommonText showText={'Amount to be paid'} customstyles={{ flex: 1 }} fontSize={14} regular />
+                                <CommonText showText={`₹ ${evDetails?.connectors[0]?.pricing?.min_balance}`} fontSize={14} />
+                            </View>
+                        </DenseCard>
 
-            <DenseCard>
-                <View style={styles.wrapper}>
-                    <CommonText showText={'Amount to be paid'} customstyles={{ flex: 1 }} fontSize={14} regular />
-                    <CommonText showText={`₹ ${evDetails?.connectors[0]?.pricing?.min_balance}`} fontSize={14} />
-                </View>
-            </DenseCard>
+                        <View>
+                            <CommonCard style={styles.wrapper}>
+                                <View style={{ flex: 1 }}>
+                                    <CommonText showText={'Prepaid Wallet'} />
+                                    <CommonText showText={`Available Balance : ₹ ${walletBalance}`} fontSize={12} regular />
+                                </View>
+                                <RadioBtn
+                                    value="CLOSED_WALLET"
+                                    status={mode === 'CLOSED_WALLET' ? 'checked' : 'unchecked'}
+                                    onPress={checkWalletBalance}
+                                />
+                            </CommonCard>
 
-            <View>
-                <CommonCard style={styles.wrapper}>
-                    <View style={{ flex: 1 }}>
-                        <CommonText showText={'Prepaid Wallet'} />
-                        <CommonText showText={`Available Balance : ₹ ${walletBalance}`} fontSize={12} regular />
-                    </View>
-                    <RadioBtn
-                        value="CLOSED_WALLET"
-                        status={mode === 'CLOSED_WALLET' ? 'checked' : 'unchecked'}
-                        onPress={checkWalletBalance}
-                    />
-                </CommonCard>
+                            {allowMode.includes('CLOSED_WALLET') &&
+                                (
+                                    !isWallet &&
+                                    <Button showText={'Add Money'} onPress={() => navigation.navigate(routes.RechargeWallet, {
+                                        routeDirection: "SelectPaymentMode",
+                                        minBalance: evDetails?.connectors[0]?.pricing?.min_balance,
+                                        gstState: gstState
+                                    })} />
+                                )
+                            }
 
-                {allowMode.includes('CLOSED_WALLET') &&
-                    (
-                        !isWallet &&
-                        <Button showText={'Add Money'} onPress={() => navigation.navigate(routes.RechargeWallet, {
-                            routeDirection: "SelectPaymentMode",
-                            minBalance: evDetails?.connectors[0]?.pricing?.min_balance,
-                            gstState: gstState
-                        })} />
-                    )
-                }
+                            {
+                                allowMode.includes('PAY_AS_U_GO') &&
+                                <CommonCard >
+                                    <TouchableOpacity style={styles.wrapper} onPress={checkOrderIdStatus}>
+                                        <CommonText showText={'Debit Card / Credit Card / UPI'} customstyles={{ flex: 1 }} />
+                                        <RadioBtn
+                                            value="PAY_AS_U_GO"
+                                            status={mode === 'PAY_AS_U_GO' ? 'checked' : 'unchecked'}
+                                            onPress={checkOrderIdStatus}
+                                        />
+                                    </TouchableOpacity>
+                                </CommonCard>
+                            }
 
-                {
-                    allowMode.includes('PAY_AS_U_GO') &&
-                    <CommonCard >
-                        <TouchableOpacity style={styles.wrapper} onPress={checkOrderIdStatus}>
-                            <CommonText showText={'Debit Card / Credit Card / UPI'} customstyles={{ flex: 1 }} />
-                            <RadioBtn
-                                value="PAY_AS_U_GO"
-                                status={mode === 'PAY_AS_U_GO' ? 'checked' : 'unchecked'}
-                                onPress={checkOrderIdStatus}
-                            />
-                        </TouchableOpacity>
-                    </CommonCard>
-                }
+                            {
+                                allowMode.includes('PREPAID_CARD') &&
+                                <CommonCard style={styles.wrapper}>
+                                    <View style={{ flex: 1 }}>
+                                        <CommonText showText={'Prepaid Card'} customstyles={{ flex: 1 }} />
+                                        {(prepaidCardBalance != undefined && prepaidCardBalance != '') && <CommonText showText={`Available Balance : ₹ ${prepaidCardBalance}`} fontSize={12} regular />}
+                                    </View>
+                                    <RadioBtn
+                                        value="PREPAID_CARD"
+                                        status={mode === 'PREPAID_CARD' ? 'checked' : 'unchecked'}
+                                        onPress={prepaidCard}
+                                    />
+                                </CommonCard>
+                            }
 
-                {
-                    allowMode.includes('PREPAID_CARD') &&
-                    <CommonCard style={styles.wrapper}>
-                        <View style={{ flex: 1 }}>
-                            <CommonText showText={'Prepaid Card'} customstyles={{ flex: 1 }} />
-                            {(prepaidCardBalance != undefined && prepaidCardBalance != '') && <CommonText showText={`Available Balance : ₹ ${prepaidCardBalance}`} fontSize={12} regular />}
+                            {console.log("Check Mode", mode, "check pin", askPin)}
+
+                            {
+                                (mode == "PREPAID_CARD" && askPin) &&
+                                <View style={{ width: '60%', alignSelf: 'center' }}>
+                                    <LinearInput
+                                        style={{ textAlign: 'center', borderBottomWidth: 1, borderBottomColor: colors.backgroundDark, paddingHorizontal: 10 }}
+                                        placeholderText="Please Enter Card Pin Here"
+                                        value={pin.value}
+                                        onChange={text => setPin({ value: text, error: '' })}
+                                        keyboardType='number-pad'
+                                        secureTextEntry={true}
+                                        maxLength={6}
+                                    />
+                                </View>
+                            }
+
+                            {
+                                msg != '' &&
+                                <CommonText showText={msg} customstyles={[{ color: colorText }, styles.text]} fontSize={14} regular />
+                            }
+
+                            {
+                                pin.error != '' &&
+                                <CommonText showText={pin.error} customstyles={[{ color: colorText }, styles.text]} fontSize={14} regular />
+                            }
+
+
                         </View>
-                        <RadioBtn
-                            value="PREPAID_CARD"
-                            status={mode === 'PREPAID_CARD' ? 'checked' : 'unchecked'}
-                            onPress={prepaidCard}
-                        />
-                    </CommonCard>
-                }
 
-                {console.log("Check Mode", mode, "check pin", askPin)}
+                        {console.log("Check Pay As you go order id", payAsYouGoOrderId)}
 
-                {
-                    (mode == "PREPAID_CARD" && askPin) &&
-                    <View style={{ width: '60%', alignSelf: 'center' }}>
-                        <LinearInput
-                            style={{ textAlign: 'center', borderBottomWidth: 1, borderBottomColor: colors.backgroundDark, paddingHorizontal: 10 }}
-                            placeholderText="Please Enter Card Pin Here"
-                            value={pin.value}
-                            onChange={text => setPin({ value: text, error: '' })}
-                            keyboardType='number-pad'
-                            secureTextEntry={true}
-                            maxLength={6}
-                        />
-                    </View>
-                }
-
-                {
-                    msg != '' &&
-                    <CommonText showText={msg} customstyles={[{ color: colorText }, styles.text]} fontSize={14} regular />
-                }
-
-            </View>
-
-            {console.log("Check Pay As you go order id", payAsYouGoOrderId)}
-
-            <View style={styles.fixedContainer}>
-                <Button showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() => {
-                    goodToGo && mode == 'PAY_AS_U_GO' ? navigation.replace(routes.OngoingDetails, {
-                        locDetails: locDetails,
-                        evDetails: evDetails,
-                        paymentMethod: mode,
-                        payAsYouGoOrderId: payAsYouGoOrderId
-                    }) :
-                        handleClick(mode)
-                }
-                }
-                />
-            </View>
+                        <View style={styles.fixedContainer}>
+                            <Button showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() => {
+                                goodToGo && mode == 'PAY_AS_U_GO' ? navigation.replace(routes.OngoingDetails, {
+                                    locDetails: locDetails,
+                                    evDetails: evDetails,
+                                    paymentMethod: mode,
+                                    payAsYouGoOrderId: payAsYouGoOrderId
+                                }) :
+                                    handleClick(mode)
+                            }
+                            }
+                            />
+                        </View>
+                    </>}
         </CommonView>
     )
 }
