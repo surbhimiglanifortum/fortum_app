@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, PermissionsAndroid, Platform } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
@@ -23,6 +23,7 @@ import Charger from '../../../../assests/svg/charger'
 import CommonIconCard from '../../../../Component/Card/CommonIconCard/CommonIconCard'
 import NoData from '../../../../Component/NoDataFound/NoData'
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import RNPrint from 'react-native-print';
 
 const Passbook = () => {
     const navigation = useNavigation()
@@ -38,7 +39,6 @@ const Passbook = () => {
     const [endDate, setEndDate] = useState('')
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
-    const [html, setHtml] = useState("");
 
     const allBtnHandler = () => {
         setSelectedTab('all')
@@ -58,7 +58,6 @@ const Passbook = () => {
     }, [])
 
     const getWalletHistory = async () => {
-        console.log("Pressed")
         setRefreshing(true)
         const payload = {
             username: mUserDetails?.username,
@@ -70,7 +69,6 @@ const Passbook = () => {
         }
         try {
             const result = await getPinelabHistroy(payload)
-            console.log("Pinelab Wallet History Response", result.data)
             // setData(result.data)
             setRefreshing(false)
             setModalVisible(false)
@@ -90,11 +88,9 @@ const Passbook = () => {
             }
             const result = await getPinelabBalance(payload)
             setData(result?.data)
-            console.log("Get Pinelab Balance Error", result?.data)
         } catch (error) {
             console.log("Get Pinelab Balance Error", error)
         }
-
     }
 
     const showStartDatePicker = () => {
@@ -115,7 +111,6 @@ const Passbook = () => {
         }
         let d = new Date(date).getDate()
         let srt = `${year}-${month}-${d}T00:00:00`
-        console.log("Check Hour", srt)
         setTechStart(srt)
         hideStartDatePicker();
     };
@@ -138,7 +133,6 @@ const Passbook = () => {
         }
         let d = new Date(date).getDate()
         let end = `${year}-${month}-${d}T24:00:00`
-        console.log("Check Hour", end)
         setTechEnd(end)
         hideEndDatePicker();
     };
@@ -159,49 +153,8 @@ const Passbook = () => {
         }
     }
 
-    const [filePath, setFilePath] = useState('');
-
-    const isPermitted = async () => {
-        if (Platform.OS === 'android') {
-            try {
-                const granted = await PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-                    {
-                        title: 'External Storage Write Permission',
-                        message: 'App needs access to Storage data',
-                    },
-                );
-                return granted === PermissionsAndroid.RESULTS.GRANTED;
-            } catch (err) {
-                alert('Write permission err', err);
-                return false;
-            }
-        } else {
-            return true;
-        }
-    };
-
-    const createPDF = async () => {
-        if (await isPermitted()) {
-            let options = {
-                //Content to print
-                html:
-                    '<h1 style="text-align: center;"><strong>Hello Guys</strong></h1><p style="text-align: center;">Here is an example of pdf Print in React Native</p><p style="text-align: center;"><strong>Team About React</strong></p>',
-                //File Name
-                fileName: 'test',
-                //File directory
-                directory: 'downloads',
-            };
-            let file = await RNHTMLtoPDF.convert(options);
-            console.log(file);
-            setFilePath(file.filePath);
-        }
-    };
-
-
-    const generateHTML = async (name, mobile, email, openingDate, balance, cardType, data) => {
-        setHtml(
-            '<html>\n' +
+    const generateHTML = async () => {
+        let printData = '<html>\n' +
             '<head>\n' +
             '<title>Statement</title>\n' +
             '</head>\n' +
@@ -214,15 +167,15 @@ const Passbook = () => {
             '</tr>\n' +
             '<tr>\n' +
             '<td>Name:</td>\n' +
-            `<td>${name}</td>\n` +
+            `<td>${mUserDetails?.pinelabs_kyc_account[0]?.customerName}</td>\n` +
             '</tr>\n' +
             '<tr>\n' +
             '<td>Mobile No:</td>\n' +
-            `<td>${mobile}</td>\n` +
+            `<td>${mUserDetails?.phone_number}</td>\n` +
             '</tr>\n' +
             '<tr>\n' +
             '<td>Email ID(IF any or NA):</td>\n' +
-            `<td>${email}</td>\n` +
+            `<td>${mUserDetails?.username}</td>\n` +
             '</tr>\n' +
             '<tr>\n' +
             '<td>Corporate name(IF any or NA):</td>\n' +
@@ -230,9 +183,9 @@ const Passbook = () => {
             '</tr>\n' +
             '<tr>\n' +
             (
-                openingDate != undefined &&
+                passbookData?.response?.ActivationDate != undefined &&
                 '<td>Account Opening Date:</td>\n' +
-                `<td>${moment(openingDate).format('LLLL')}</td>\n`
+                `<td>${moment(passbookData?.response?.ActivationDate).format('LLLL')}</td>\n`
             )
             +
             '</tr>\n' +
@@ -257,8 +210,8 @@ const Passbook = () => {
             '</tr>\n' +
             '<tr>\n' +
             `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${moment().format('LLLL')}</td>\n` +
-            `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${cardType}</td>\n` +
-            `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${balance}</td>\n` +
+            `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${passbookData?.response?.CardType}</td>\n` +
+            `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${passbookData?.response?.Balance}</td>\n` +
             '</tr>\n' +
             '</table>\n' +
             '<table style="width: 100%; margin-bottom: 20px; border: 1px solid black; border-collapse: collapse;">\n' +
@@ -271,7 +224,7 @@ const Passbook = () => {
             '<th style="border: 1px solid black; border-collapse: collapse;">Previous Balance(in Rs.)</th>\n' +
             '<th style="border: 1px solid black; border-collapse: collapse;">New Balance(in Rs.)</th>\n' +
             '</tr>\n' +
-            data?.map((item, index) => {
+            passbookData?.response?.Transactions.map((item, index) => {
                 return (
                     '<tr>\n' +
                     `<td style="text-align: center; padding:5px; border: 1px solid black; border-collapse: collapse;">${moment(item.TransactionDate).format('LLLL')}</td>\n` +
@@ -287,7 +240,15 @@ const Passbook = () => {
             '</table>\n' +
             '</body>\n' +
             '</html>'
-        )
+
+
+        const results = await RNHTMLtoPDF.convert({
+            html: printData,
+            fileName: 'Passbook',
+            base64: true,
+        })
+
+        await RNPrint.print({ filePath: results.filePath })
     }
 
     const AllTransaction = () => {
@@ -456,7 +417,7 @@ const Passbook = () => {
 
 
             <View style={styles.fixedBtn}>
-                <Button showText={'Download Passbook'} onPress={createPDF} />
+                <Button showText={'Download Passbook'} onPress={() => generateHTML()} />
             </View>
         </CommonView>
     )

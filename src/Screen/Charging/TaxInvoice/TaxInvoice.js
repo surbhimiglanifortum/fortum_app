@@ -9,20 +9,37 @@ import DenseCard from '../../../Component/Card/DenseCard/index'
 import CommonView from '../../../Component/CommonView'
 import Divider from '../../../Component/Divider'
 import routes from '../../../Utils/routes'
-import { getSessionDetails } from '../../../Services/Api'
+import { getSessionDetails, getUserDetails } from '../../../Services/Api'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 import Charger from '../../../assests/svg/charger'
 import ChargerRed from '../../../assests/svg/ChargerRed'
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import RNPrint from 'react-native-print';
+import { useSelector } from 'react-redux'
+
 
 const TaxInvoice = ({ route }) => {
 
     const paramData = route.params.data
+
+    console.log("Check INvoice", route.params?.data?.item)
+
+    let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
     const isFocused = useIsFocused()
 
     const [isPaid, setPaid] = useState(paramData.item?.paid)
+    const [allowMode, setAllowMode] = useState([])
+    const [usergstIn, setUserGstIn] = useState("");
+
+
+    const start = new Date(route.params?.data?.item?.start_datetime);
+    const end = new Date(route.params?.data?.item?.end_datetime);
+    const diff = Math.abs(start - end);
+    let diffMin = diff / 1000 / 60;
+    if (isNaN(diffMin)) diffMin = 0;
 
     const handleButtonClick = () => {
         navigation.navigate(routes.PayInvoice, {
@@ -41,6 +58,289 @@ const TaxInvoice = ({ route }) => {
     useEffect(() => {
         sessionDetails()
     }, [isFocused])
+
+    useEffect(() => {
+        let temp = []
+        route.params?.data?.item?.payments?.map((item, index) => {
+            if (item.payment_method === 'PAY_AS_U_GO') {
+                temp.push('Pay As You Go');
+            }
+            if (item.payment_method === 'CLOSED_WALLET') {
+                temp.push('Prepaid Wallet');
+            }
+            if (item.payment_method === 'PREPAID_CARD') {
+                temp.push('Prepaid Card');
+            }
+        })
+        setAllowMode(temp);
+    }, [])
+
+    useEffect(() => {
+
+    }, [])
+
+    const generateHTML = async () => {
+        console.log("Download Called")
+        let printData = '<html lang="en">\n' +
+            "<head>\n" +
+            '    <meta charset="UTF-8">\n' +
+            "    <title>INVOICE</title>\n" +
+            "</head>\n" +
+            "<body >\n" +
+            '<div >' +
+            '<div style="text-align: center">\n' +
+            "<h2>TAX INVOICE</h2>\n" +
+            "</div>\n" +
+            '<h3 style="margin-bottom: 0">Total Cost</h3>\n' +
+            "<hr>\n" +
+            "\n" +
+            '<table style="min-width: 100%">\n' +
+            "    <colgroup>\n" +
+            '        <col span="1" style="width: 70%;">\n' +
+            '        <col span="1" style="width: 30%;">\n' +
+            "    </colgroup>\n" +
+            "    <tr>\n" +
+            "        <td><h1>₹ " +
+            route.params?.data?.item?.order?.amount / 100
+            // history?.order?.amount / 100 
+            +
+            "</h1></td>\n" +
+            "        <td>\n" +
+            '            <span style="font-size: 1.1em"><strong>Duration :</strong> ' +
+            diffMin.toFixed(2) +
+            " Min</span>\n" +
+            "            <br/>\n" +
+            '            <span style="font-size: 1.1em"><strong>kWh used :</strong> ' +
+            route.params?.data?.item?.kwh +
+            " kWh</span>\n" +
+            "            <br/>\n" +
+            '            <span style="font-size: 1.1em"><strong>Invoice Number :</strong> ' +
+            (route.params?.data?.item?.order?.invoice_number
+                ? route.params?.data?.item?.order?.invoice_number
+                : route.params?.data?.item?.order?.id) +
+            "</span>\n" +
+            "            <br/>\n" +
+            '            <span style="font-size: 1.1em"><strong>Date :</strong> ' +
+            getFormatedDate(route.params?.data?.item?.start_datetime) +
+            "</span>\n" +
+
+
+
+            // history.paid_with && history.paid_with != undefined && history.paid_with != '' ?
+
+            "            <br/>\n" +
+            '            <span style="font-size: 1.1em"><strong>Payment Method : </strong> ' +
+            allowMode.map((item) => {
+                item
+            }) +
+            "</span>\n"
+
+            +
+
+            (route.params?.data?.item?.order != undefined && route.params?.data?.item?.order?.BALANCE_CASH != undefined && route.params?.data?.item?.order?.BALANCE_CASH != '' ?
+                "            <br/>\n" +
+                '            <span style="font-size: 1.1em"><strong>Wallet :</strong> ' +
+                (parseFloat(route.params?.data?.item?.order?.BALANCE_CASH) / 100).toFixed(2) +
+                "</span>\n" : ""
+            )
+            +
+            "        </td>\n" +
+            "    </tr>\n" +
+            "</table>\n" +
+            "\n" +
+            '<table style="min-width: 100%;border:2px solid;border-radius: 12px;text-align: center;margin-top:30px">\n' +
+            "    <colgroup>\n" +
+            '        <col span="1" style="width: 50%;">\n' +
+            '        <col span="1" style="width: 50%;">\n' +
+            "    </colgroup>" +
+            "<tr>\n" +
+            "        <td style=\"font-size: 1.1em;text-align: left\">\n" +
+            '            <span style="font-size: 1.1em;text-align: left"><strong>Charging Station</strong></span>\n' +
+            "        </td>\n" +
+            "        <td style=\"font-size: 1.1em;text-align: left\">\n" +
+            '            <span style="font-size: 1.1em">' +
+            route.params?.data?.item?.location?.name +
+            "</span>\n" +
+            "        </td>\n" +
+            "    </tr>\n" +
+            "    <tr>\n" +
+            "        <td style=\"font-size: 1.1em;text-align: left\">\n" +
+            '            <span style="font-size: 1.1em;text-align: left"><strong>Place of Supply</strong></span>\n' +
+            "        </td>\n" +
+            "        <td style=\"font-size: 1.1em;text-align: left\">\n" +
+            '            <span style="font-size: 1.1em">' +
+            route.params?.data?.item?.location?.address +
+            "</span>\n" +
+            "        </td>\n" +
+            "    </tr>\n" +
+            "    <tr>\n" +
+            "        <td style=\"font-size: 1.1em;text-align: left\">\n" +
+            '            <span style="font-size: 1.1em;text-align: left"><strong>Place of Supply - state</strong></span>\n' +
+            "        </td>\n" +
+            "        <td style=\"font-size: 1.1em;text-align: left\">\n" +
+            '            <span style="font-size: 1.1em">' +
+            // st +
+            "</span>\n" +
+            "        </td>\n" +
+            "    </tr>\n" +
+            "</table>\n" +
+            "\n" +
+            '<h3 style="margin-bottom: 0;">Tax Invoice Details</h3>\n' +
+            '<table style="min-width: 100%;text-align: center;border: 2px solid">\n' +
+            "    <tr>\n" +
+            "        <th>\n" +
+            '            <span style="font-size: 1.1em">Start</span>\n' +
+            "        </th>\n" +
+            "        <th>\n" +
+            '            <span style="font-size: 1.1em">End</span>\n' +
+            "        </th>\n" +
+            "        <th>\n" +
+            '            <span style="font-size: 1.1em">Quantity</span>\n' +
+            "        </th>\n" +
+            "        <th>\n" +
+            '            <span style="font-size: 1.1em">Flat Price</span>\n' +
+            "        </th>\n" +
+            "        <th>\n" +
+            '            <span style="font-size: 1.1em">Price</span>\n' +
+            "        </th>\n" +
+            "        <th>\n" +
+            '            <span style="font-size: 1.1em">Cost</span>\n' +
+            "        </th>\n" +
+            "    </tr>\n" +
+            "    <tr>\n" +
+            "        <td>\n" +
+            '            <span style="font-size: 1.1em">' +
+            getFormatedDate(route.params?.data?.item?.start_datetime) +
+            "</span>\n" +
+            "        </td>\n" +
+            "        <td>\n" +
+            '            <span style="font-size: 1.1em">' +
+            getFormatedDate(route.params?.data?.item?.end_datetime) +
+            "</span>\n" +
+            "        </td><td>\n" +
+            '            <span style="font-size: 1.1em">' +
+            (route.params?.data?.item?.order?.pricingToApply?.type === "TIME"
+                ? diffMin.toFixed(2)
+                : route.params?.data?.item?.kwh) +
+            "</span>\n" +
+            "        </td><td>\n" +
+            '            <span style="font-size: 1.1em"> ₹' +
+            route.params?.data?.item?.order?.pricingToApply?.flat_price +
+            "</span>\n" +
+            "        </td><td>\n" +
+            '            <span style="font-size: 1.1em"> ₹' +
+            route.params?.data?.item?.order?.pricingToApply?.price +
+            "/" +
+            (route.params?.data?.item?.order?.pricingToApply?.type === "TIME"
+                ? "min"
+                : "kWh") +
+            "</span>\n" +
+            "        </td><td>\n" +
+            '            <span style="font-size: 1.1em"> ₹' +
+            route.params?.data?.item?.order?.amount / 100 +
+            "</span>\n" +
+            "        </td>\n" +
+            "    </tr>\n" +
+            "</table>\n" +
+            "\n" +
+            "<h3>Total cost excl. GST : ₹ " +
+            (
+                (route.params?.data?.item?.order?.amount -
+                    route.params?.data?.item?.order?.sgst -
+                    route.params?.data?.item?.order?.cgst) /
+                100
+            ).toFixed(2) +
+            "</h3>\n" +
+            "<h3>Amount of CGST(" +
+            (route.params?.data?.item?.order?.pricingToApply?.cgst != undefined ? route.params?.data?.item?.order?.pricingToApply?.cgst : 0) +
+            "%) : ₹ " +
+            (route.params?.data?.item?.order?.cgst / 100).toFixed(2) +
+            "</h3>\n" +
+            "<h3>Amount of SGST(" +
+            (route.params?.data?.item?.order?.pricingToApply?.sgst != undefined ? route.params?.data?.item?.order?.pricingToApply?.sgst : 0) +
+            "%) : ₹ " +
+            (route.params?.data?.item?.order?.sgst / 100).toFixed(2) +
+            "</h3>\n" +
+            "\n" +
+            "\n" +
+            '<table style="min-width: 100%;text-align: center;border: 2px solid">\n' +
+            "    <tr>\n" +
+            "        <th>\n" +
+            '            <span style="font-size: 1.1em">Other Information</span>\n' +
+            "        </th>\n" +
+            "        <th>\n" +
+            '            <span style="font-size: 1.1em">Customer Information</span>\n' +
+            "        </th>\n" +
+            "    </tr>\n" +
+            "    <tr>\n" +
+            " <td style=\"font-size: 1.1em;text-align: left\">\n" +
+            "            Product Name: EV Charging Service SAC - 999799 <br/>\n" +
+            "            Transaction ID: " +
+            route.params?.data?.item?.id +
+            " <br/>\n" +
+            "            Whether GST is payable under reverse charge mechanism: No <br/>\n" +
+            "            This is a computer generated invoice no signature is required\n" +
+            "        </td>\n" +
+            " <td style=\"font-size: 1.1em;text-align: left\">\n" +
+            '            <span style="font-size: 1.1em">Name : ' +
+            (mUserDetails?.first_name + " " + mUserDetails?.last_name) +
+            "</span> <br/>\n" +
+            '            <span style="font-size: 1.1em">GSTIN : ' +
+            (mUserDetails?.usergstIn != undefined ? mUserDetails?.usergstIn : 0) +
+            "</span> <br/>\n" +
+            '            <span style="font-size: 1.1em">State : ' +
+            // st +
+            "</span><br/>\n" +
+            '            <span style="font-size: 1.1em">Billing Address :<br/>' +
+
+            mUserDetails?.billing_addresses[0]?.address +
+            " " +
+            mUserDetails?.billing_addresses[0]?.address_line_2 +
+            " " +
+            " " +
+            mUserDetails?.billing_addresses[0]?.city +
+            " " +
+            mUserDetails?.billing_addresses[0]?.country +
+            " " +
+            mUserDetails?.billing_addresses[0]?.postal_code +
+            "</span>\n" +
+            "        </td>\n" +
+            "    </tr>\n" +
+            "</table>\n" +
+            '<h3 style="margin-bottom: 0">FORTUM CHARGE AND DRIVE INDIA PRIVATE LIMITED</h3>\n' +
+            "<hr>\n" +
+            '<table style="min-width: 100%;text-align: center">\n' +
+            "    <colgroup>\n" +
+            '        <col span="1" style="width: 50%;">\n' +
+            '        <col span="1" style="width: 50%;">\n' +
+            "    </colgroup>" +
+            "<tr>\n" +
+            "        <th>Address</th>\n" +
+            "        <th>GSTIN</th>\n" +
+            "    </tr>\n" +
+            "    <tr>\n" +
+            "        <td>" +
+            // gstAddr +
+            "</td>\n" +
+            "        <td>\n" +
+            "            " +
+            // (gstIn != undefined ? gstIn : 0) +
+            "\n" +
+            "        </td>\n" +
+            "    </tr>\n" +
+            "</table>\n" +
+            "</div>\n" +
+            "</body>\n" +
+            "</html>"
+
+        const results = await RNHTMLtoPDF.convert({
+            html: printData,
+            fileName: 'Passbook',
+            base64: true,
+        })
+
+        await RNPrint.print({ filePath: results.filePath })
+    }
 
     return (
         <CommonView>
@@ -148,7 +448,7 @@ const TaxInvoice = ({ route }) => {
                 </View>
                 <Button
                     showText={isPaid ? 'Download Invoice' : 'Pay'}
-                    onPress={() => handleButtonClick()}
+                    onPress={() => isPaid ? generateHTML() : handleButtonClick()}
                 />
             </ScrollView>
         </CommonView>
