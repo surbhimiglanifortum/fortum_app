@@ -59,6 +59,10 @@ const MobileVerification = ({ route }) => {
     }
 
     const VerifyButtonHandler = async () => {
+        if (!otpConcatData || otpConcatData == "" || otpConcatData.length < 4) {
+            setOpenCommonModal({ isVisible: true, message: "Enter OTP" })
+            return
+        }
         setLoading(true)
         if (!signin) {
             verifyOTP(mobile_number.replace("+91", ""), otpConcatData).then(async r => {
@@ -111,14 +115,14 @@ const MobileVerification = ({ route }) => {
                         loginSuccess()
                     }).catch(e => {
                         console.log("ERROR", e)
-                        setOpenCommonModal({ isVisible: true, message: e })
+                        setOpenCommonModal({ isVisible: true, message: e.message })
                     });
                 setLoading(false)
 
             } catch (e) {
                 // Handle 3 error thrown for 3 incorrect attempts. 
                 console.log("ERROR", e)
-                setOpenCommonModal({ isVisible: true, message: e })
+                setOpenCommonModal({ isVisible: true, message: e.message })
                 setLoading(false)
             }
         }
@@ -215,10 +219,7 @@ const MobileVerification = ({ route }) => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.button} >
-                        <Button onPress={VerifyButtonHandler} showText={'Verify'} onLoading={loading} />
-                    </TouchableOpacity>
-
+                    <Button onPress={VerifyButtonHandler} showText={'Verify'} onLoading={loading} />
                 </View>
             </ScrollView>
         </SafeAreaView>

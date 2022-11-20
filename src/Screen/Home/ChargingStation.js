@@ -49,33 +49,35 @@ const ChargingStation = ({ route }) => {
     }
 
     const chargerCardHandler = async (evDetails) => {
-        console.log(evDetails)
 
         if (evDetails?.status === "CHARGING") {
             const response = await fetchLastSession(evDetails?.uid)
-            console.log("respo",response)
+            console.log("respo", response)
             if (response) {
                 navigation.navigate(routes.OngoingDetails, {
-                    locDetails:locDetails,
+                    locDetails: locDetails,
                     evDetails: evDetails,
                     paymentMethod: response?.payments?.payment_method
                 })
             }
             return
         }
-
-        setOpenCommonModal({
-            isVisible: true, message: `Minimum Balance of ₹ ${evDetails?.connectors[0]?.pricing?.min_balance} to start charging` || result.data?.message,
-            heading: 'Payment',
-            onOkPress: () => {
-                navigation.navigate(routes.PayMinimum, {
-                    locDetails: locDetails,
-                    evDetails: evDetails
-                })
-            }
-        })
-
-
+        if (evDetails?.status === 'AVAILABLE') {
+            setOpenCommonModal({
+                isVisible: true, message: `Minimum Balance of ₹ ${evDetails?.connectors[0]?.pricing?.min_balance} to start charging` || result.data?.message,
+                heading: 'Payment',
+                onOkPress: () => {
+                    navigation.navigate(routes.PayMinimum, {
+                        locDetails: locDetails,
+                        evDetails: evDetails
+                    })
+                }
+            })
+        } else {
+            setOpenCommonModal({
+                isVisible: true, message: `Charger No Available right now`
+            })
+        }
     }
 
 
