@@ -216,7 +216,7 @@ console.log("scannerButtonHandler")
         } catch (e) {
           console.log(e)
         }
-        config.headers['App_ver'] = appConfig.APP_VERSION;
+        config.headers['App_ver'] = appConfig?.APP_VERSION;
         // console.log("interceptror", config)
         return config;
       });
@@ -309,7 +309,7 @@ console.log("scannerButtonHandler")
 
   return (
     <View style={styles.container}>
-      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
+      {selectedTab == 'List' ? <MapList data={mLocation} setSelectedTab={setSelectedTab} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>

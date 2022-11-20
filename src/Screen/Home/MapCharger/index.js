@@ -7,6 +7,7 @@ import AvailMarker from '../../../assests/svg/AvailMarker'
 import DarkMap from '../../../Utils/DarkMapView.json'
 import LighMapView from '../../../Utils/LighMapView.json'
 import colors from '../../../Utils/colors';
+import CommonText from './../../../Component/Text/CommonText';
 
 
 export default function index({ data, locationLoading, isLoading, chargingBtnHandler, location }) {
@@ -113,6 +114,8 @@ export default function index({ data, locationLoading, isLoading, chargingBtnHan
                         if (boxCheck(lat, long, vb[1], vb[0], vb[3], vb[2]))
                             return (
                                 <Marker key={item.id}
+                                tracksViewChange={false}
+                                lite
                                     coordinate={{
                                         latitude: parseFloat(item.latitude),
                                         longitude: parseFloat(item.longitude)

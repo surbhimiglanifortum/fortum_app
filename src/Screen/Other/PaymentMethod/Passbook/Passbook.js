@@ -23,7 +23,7 @@ import Charger from '../../../../assests/svg/charger'
 import CommonIconCard from '../../../../Component/Card/CommonIconCard/CommonIconCard'
 import NoData from '../../../../Component/NoDataFound/NoData'
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import RNPrint from 'react-native-print';
+// import RNPrint from 'react-native-print';
 
 const Passbook = () => {
     const navigation = useNavigation()
@@ -248,7 +248,7 @@ const Passbook = () => {
             base64: true,
         })
 
-        await RNPrint.print({ filePath: results.filePath })
+        // await RNPrint.print({ filePath: results.filePath })
     }
 
     const AllTransaction = () => {

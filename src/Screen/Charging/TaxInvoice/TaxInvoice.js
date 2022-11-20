@@ -14,15 +14,13 @@ import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCar
 import Charger from '../../../assests/svg/charger'
 import ChargerRed from '../../../assests/svg/ChargerRed'
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import RNPrint from 'react-native-print';
+// import RNPrint from 'react-native-print';
 import { useSelector } from 'react-redux'
 
 
 const TaxInvoice = ({ route }) => {
 
     const paramData = route.params.data
-
-    console.log("Check INvoice", route.params?.data?.item)
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
@@ -339,7 +337,7 @@ const TaxInvoice = ({ route }) => {
             base64: true,
         })
 
-        await RNPrint.print({ filePath: results.filePath })
+        // await RNPrint.print({ filePath: results.filePath })
     }
 
     return (

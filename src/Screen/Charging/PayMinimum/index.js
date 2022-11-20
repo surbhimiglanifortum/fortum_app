@@ -94,7 +94,6 @@ const PayMinimum = ({ route }) => {
                 Amount: evDetails?.connectors[0]?.pricing?.min_balance
             }
             const res = await blockAmount(payload);
-            console.log("Check Response from blockMinBalance", res.data)
             if (res.data.success) {
                 dispatch(AddToRedux(res.data, Types.PINELABAUTH))
                 setAskPin(false)

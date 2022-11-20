@@ -11,11 +11,14 @@ import { AddToRedux } from '../../../Redux/AddToRedux';
 import Button from '../../../Component/Button/Button'
 import routes from '../../../Utils/routes'
 import * as Types from '../../../Redux/Types'
-import { getPaymentOption, getAllUnpaid, unpaidPayByJuspay, unpaidPayByWallet } from '../../../Services/Api'
+import { getPaymentOption, getAllUnpaid, unpaidPayByJuspay, unpaidPayByWallet, walletBalanceEnquiry, unpaidPayByCard } from '../../../Services/Api'
 import RadioBtn from '../../../Component/Button/RadioButton'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import CommonCard from '../../../Component/Card/CommonCard'
 import DenseCard from '../../../Component/Card/DenseCard'
+import CryptoJS from 'crypto-js'
+import { encryptedPassword } from '../../../Utils/GlobalDefines'
+import LinearInput from '../../../Component/Textinput/linearInput'
 
 
 const PayInvoice = ({ route }) => {
@@ -37,6 +40,9 @@ const PayInvoice = ({ route }) => {
     const [walletBalance, setWalletBalance] = useState(mUserDetails?.balance)
     const [allowMode, setAllowMode] = useState([])
     const [loadingSign, setLoadingSign] = useState(false)
+    const [askPin, setAskPin] = useState(false)
+    const [pin, setPin] = useState({ value: '', error: '' });
+    const [prepaidCardBalance, setPrepaidCardBalance] = useState('')
 
     const userDetails = async () => {
         const result = await getUserDetails()
@@ -52,6 +58,7 @@ const PayInvoice = ({ route }) => {
 
     useEffect(() => {
         paymentOptions()
+        fatchPinelabWalletBalance()
     }, [])
 
     useEffect(() => {
@@ -78,6 +85,7 @@ const PayInvoice = ({ route }) => {
 
     const checkWalletBalance = () => {
         setMode('CLOSED_WALLET')
+        setPin({ value: '', error: '' })
         setRefreshing(true)
         if (userData?.balance < route.params.amount) {
             setMsg("Your wallet balance is low. Please select other option or add money in your wallet.")
@@ -111,12 +119,38 @@ const PayInvoice = ({ route }) => {
         setMode('PAY_AS_U_GO')
         setWallet(true)
         setMsg('')
+        setPin({ value: '', error: '' })
     }
 
     const prepaidCard = () => {
         setMode('PREPAID_CARD')
         setWallet(true)
         setMsg('')
+        checkPrepaidCardBalance()
+    }
+
+    const checkPrepaidCardBalance = async () => {
+        try {
+            const res = await walletBalanceEnquiry({ username: mUserDetails?.username })
+            setPrepaidCardBalance(res.data?.response?.Cards[0].Balance)
+            if (res.data?.response?.Cards[0].Balance < route.params?.amount) {
+                setMsg("Your wallet balance is low to start charger. Please load money in your card.")
+            }
+            else {
+                setAskPin(true)
+            }
+        } catch (error) {
+            console.log("Check Prepaid Card Balance Error", error)
+        }
+    }
+
+    const fatchPinelabWalletBalance = async () => {
+        try {
+            const res = await walletBalanceEnquiry({ username: mUserDetails?.username })
+            setPrepaidCardBalance(res.data?.response?.Cards[0].Balance)
+        } catch (error) {
+            console.log("Error in fatch pinelab wallet balance", error)
+        }
     }
 
     const payClick = (mode, session_id) => {
@@ -128,7 +162,7 @@ const PayInvoice = ({ route }) => {
                 payByJuspay(session_id)
                 break;
             case 'PREPAID_CARD':
-
+                payByCard(session_id)
                 break;
             default:
                 console.log("In Default Case", mode)
@@ -189,13 +223,44 @@ const PayInvoice = ({ route }) => {
         })
     }
 
+    const payByCard = async (session_id) => {
+        if (pin.value.length < 6) {
+            setPin({ value: pin.value, error: "Please enter correct card pin." })
+            return
+        }
+
+        setLoadingSign(true)
+        var encrypted = CryptoJS.AES.encrypt(pin.value, encryptedPassword).toString();
+        const payload = {
+            secret_code: encrypted,
+            username: mUserDetails?.username
+        }
+
+        unpaidPayByCard(session_id, payload).then((res) => {
+            console.log("Pay By Card", res.data)
+            if (res.data.success) {
+                setOpenCommonModal({
+                    isVisible: true, message: res.data?.message, onOkPress: () => {
+                        navigation.pop(1)
+                    }
+                })
+            }
+            setLoadingSign(false)
+        }).catch((error) => {
+            setLoadingSign(false)
+            console.log("Pay By Card Error", error)
+        })
+    }
+
     return (
         <CommonView>
             <Header showText={'Pay Invoice'} />
             {refreshing && <ActivityIndicator size={'small'} color={colors.black} style={{ position: 'absolute', alignSelf: 'center', backgroundColor: colors.white, padding: 10 }} />}
-            <DenseCard style={styles.wrapper}>
-                <CommonText showText={'Pending Amount'} customstyles={{ flex: 1 }} />
-                <CommonText showText={`₹ ${route.params?.amount}`} />
+            <DenseCard padding={5}>
+                <View style={styles.wrapper}>
+                    <CommonText showText={'Pending Amount'} customstyles={{ flex: 1 }} />
+                    <CommonText showText={`₹ ${route.params?.amount}`} />
+                </View>
             </DenseCard>
             <View>
                 <CommonCard style={styles.wrapper}>
@@ -233,9 +298,12 @@ const PayInvoice = ({ route }) => {
                 }
 
                 {
-                    !allowMode.includes('PREPAID_CARD') &&
+                    allowMode.includes('PREPAID_CARD') &&
                     <CommonCard style={styles.wrapper}>
-                        <CommonText showText={'Prepaid Card'} regular customstyles={{ flex: 1 }} />
+                        <View style={{ flex: 1 }}>
+                            <CommonText showText={'Prepaid Card'} regular customstyles={{ flex: 1 }} />
+                            {(prepaidCardBalance != undefined && prepaidCardBalance != '') && <CommonText showText={`Available Balance : ₹ ${prepaidCardBalance}`} fontSize={12} regular />}
+                        </View>
                         <RadioBtn
                             value="PREPAID_CARD"
                             status={mode === 'PREPAID_CARD' ? 'checked' : 'unchecked'}
@@ -245,8 +313,28 @@ const PayInvoice = ({ route }) => {
                 }
 
                 {
+                    (mode == "PREPAID_CARD" && askPin) &&
+                    <View style={{ width: '60%', alignSelf: 'center' }}>
+                        <LinearInput
+                            style={{ textAlign: 'center', borderBottomWidth: 1, borderBottomColor: colors.backgroundDark, paddingHorizontal: 10 }}
+                            placeholderText="Please Enter Card Pin Here"
+                            value={pin.value}
+                            onChange={text => setPin({ value: text, error: '' })}
+                            keyboardType='number-pad'
+                            secureTextEntry={true}
+                            maxLength={6}
+                        />
+                    </View>
+                }
+
+                {
                     msg != '' &&
                     <CommonText showText={msg} customstyles={styles.text} fontSize={14} regular />
+                }
+
+                {
+                    pin.error != '' &&
+                    <CommonText showText={pin.error} customstyles={[{ color: colorText }, styles.text]} fontSize={14} regular />
                 }
 
             </View>
