@@ -49,7 +49,8 @@ const routes = {
     Pinelab: 'Pinelab',
     AddMoneyDone: 'AddMoneyDone',
     OrderCard: 'OrderCard',
-    CardOrderConfirmed: 'CardOrderConfirmed'
+    CardOrderConfirmed: 'CardOrderConfirmed',
+    QRSCANNER: 'QrScanner'
 }
 
 export default routes

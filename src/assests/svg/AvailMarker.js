@@ -30,10 +30,6 @@ const AvailMarker = (props) => (
     <Defs>
       <LinearGradient
         id="paint0_linear_446_2271"
-        x1={50.2696}
-        y1={58.3189}
-        x2={31.3599}
-        y2={58.8947}
         gradientUnits="userSpaceOnUse"
       >
         <Stop stopColor="#D6E3F3" />
