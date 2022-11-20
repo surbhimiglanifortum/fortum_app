@@ -22,8 +22,6 @@ const TaxInvoice = ({ route }) => {
 
     const paramData = route.params.data
 
-    console.log("Check INvoice", route.params?.data?.item)
-
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const navigation = useNavigation()

@@ -145,6 +145,11 @@ export const unpaidPayByWallet = async (session_id) => {
     return await axios.get('/api_app/sessions/pay/close_wallet/' + session_id);
 }
 
+export const unpaidPayByCard = async (session_id, payload) => {
+    console.log("Check Url for unpaid", '/api_app/sessions/pay/prepaid_card/' + session_id)
+    return await axios.post('/api_app/sessions/pay/prepaid_card/' + session_id, payload);
+}
+
 export const getSessionDetails = async (session_id) => {
     return await axios.get('/api_app/sessions/session_details/' + session_id);
 }

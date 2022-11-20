@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, FlatList, TextInput } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, FlatList, TextInput, BackHandler, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DetailsCard from '../../../Component/Card/DetailsCard'
 import colors from '../../../Utils/colors'
@@ -10,15 +10,15 @@ import CommonCard from '../../../Component/Card/CommonCard'
 import DensCard from '../../../Component/Card/DenseCard'
 import { Auth } from 'aws-amplify'
 import CommonView from '../../../Component/CommonView'
-import Textinput from '../../../Component/Textinput/Textinput'
 
-const MapList = ({ data, isRefetching, location, searchBtnHandler }) => {
+const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTab }) => {
 
   const navigation = useNavigation()
 
   const [loading, setLoading] = useState(isRefetching)
   const [mapData, setMapData] = useState(data)
   const [search, setSearch] = useState('')
+
   useEffect(() => {
     setMapData(data)
   }, [data])
@@ -72,6 +72,16 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler }) => {
     else
       setMapData(data)
   }, [search])
+
+
+  const backAction = () => setSelectedTab('home')
+
+  // useEffect(() => {
+  //   BackHandler.addEventListener('hardwareBackPress', backAction)
+  //   return () => {
+  //     BackHandler.removeEventListener('hardwareBackPress', ()=>{return true})
+  //   }
+  // }, [])
 
   return (
     <CommonView style={[styles.container]}>
