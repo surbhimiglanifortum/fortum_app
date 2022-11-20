@@ -132,7 +132,10 @@ const MobileVerification = ({ route }) => {
             const result = await ApiAction.getUserDetails()
             if (result.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
-                navigation.replace(routes.dashboard)
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: routes.dashboard }],
+                });
                 return
             }
         }
@@ -175,7 +178,7 @@ const MobileVerification = ({ route }) => {
                         <View style={styles.centerText}>
                             <CommonText regular showText={mobile_number} fontSize={15} />
                             {signin && <TouchableOpacity onPress={onPhoneEdit} >
-                                <CommonText customstyles={{textDecorationLine:'underline'}} showText={' Edit'} fontSize={15} />
+                                <CommonText customstyles={{ textDecorationLine: 'underline' }} showText={' Edit'} fontSize={15} />
                             </TouchableOpacity>}
 
                         </View>
@@ -208,7 +211,7 @@ const MobileVerification = ({ route }) => {
                         <View style={styles.resendContainer}>
                             <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
                             <TouchableOpacity onPress={onResendClick} >
-                                <CommonText customstyles={{textDecorationLine:'underline'}} showText={`Resend`} fontSize={14} />
+                                <CommonText customstyles={{ textDecorationLine: 'underline' }} showText={`Resend`} fontSize={14} />
                             </TouchableOpacity>
                         </View>
                     </View>

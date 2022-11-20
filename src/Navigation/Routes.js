@@ -50,7 +50,7 @@ import Pinelab from '../Screen/Other/PaymentMethod/Pinelab'
 import AddMoneyDone from '../Screen/Other/PaymentMethod/AddMoneyDone';
 import OrderCard from '../Screen/Other/PaymentMethod/OrderCard';
 import CardOrderConfirmed from '../Screen/Other/PaymentMethod/CardOrderConfimed'
-
+import QrScanner from '../Screen/QrScanner';
 
 const Stack = createNativeStackNavigator();
 
@@ -105,6 +105,7 @@ const Routes = ({ loggedin }) => {
       <Stack.Screen name={routes.AddMoneyDone} component={AddMoneyDone} options={{ headerShown: false }} />
       <Stack.Screen name={routes.OrderCard} component={OrderCard} options={{ headerShown: false }} />
       <Stack.Screen name={routes.CardOrderConfirmed} component={CardOrderConfirmed} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.QRSCANNER} component={QrScanner} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

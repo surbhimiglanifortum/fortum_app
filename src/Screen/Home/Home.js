@@ -68,15 +68,14 @@ export default Home = ({ navigatedata }) => {
     setOpenFilterModal(true)
   }
   const scannerButtonHandler = () => {
-
+console.log("scannerButtonHandler")
     Auth.currentSession().then(r => {
       if (!r) {
         navigation.navigate(routes.login)
 
-      }
-      else {
+      } else {
         if (mUserDetails.phone_number && mUserDetails.phone_number != '') {
-          navigation.navigate("QRScannerPage")
+          navigation.navigate(routes.QRSCANNER)
         }
       }
     }).catch(err => { console.log(err); navigation.navigate("MakeChargingEasySplash") });
