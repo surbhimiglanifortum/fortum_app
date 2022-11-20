@@ -78,15 +78,15 @@ const OngoingDetails = ({ route }) => {
   console.log("ONGPOIN", evDetails, locDetails)
   let lastPaidSession = {}
 
-  const checkIfUnpaid = () => {
-    axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/allunpaid/' + username + '?app_version=' + appconfig.APP_VERSION_NUMBER).then((res) => {
-      console.log("Check If Unpaid From Charging Start Page", res.data)
-      if (res.data != undefined && res.data !== [] && res?.data.length > 0) {
-        setUnpaid(res.data)
-        setUnpaidVisible(true)
-      }
-    }).catch((err) => console.log("Check If Unpaid From Charging Start Page Error", err))
-  }
+  // const checkIfUnpaid = () => {
+  //   axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/allunpaid/' + username + '?app_version=' + appconfig.APP_VERSION_NUMBER).then((res) => {
+  //     console.log("Check If Unpaid From Charging Start Page", res.data)
+  //     if (res.data != undefined && res.data !== [] && res?.data.length > 0) {
+  //       setUnpaid(res.data)
+  //       setUnpaidVisible(true)
+  //     }
+  //   }).catch((err) => console.log("Check If Unpaid From Charging Start Page Error", err))
+  // }
 
   const fetchLastSession = async () => {
     setRefreshing(true)
@@ -186,44 +186,42 @@ const OngoingDetails = ({ route }) => {
       setRefreshing(true)
       console.log("Check Payment Method in Poll Session", paymentMethod)
       // amountDeductionProcess(paymentMethod)
-      console.log("Check Refund API URL", appconfig.TOTAL_BASE_URL + '/api_app/sessions/showRefundDialog/' + sessionId + '/' + username)
-      axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/showRefundDialog/' + sessionId + '/' + username).then(res => {
-        console.log("Response Restart API", res.data.data)
-        if (res.data.success) {
-          setChargingCost(res.data.data.chargingCost / 100)
-          setRemainingCost(res.data.data.remainingAmount / 100)
-          setShowRestart(true)
+
+
+      axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/allunpaid/' + username + '?app_version=' + appconfig.APP_VERSION_NUMBER).then((r) => {
+        axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/showRefundDialog/' + sessionId + '/' + username).then(res => {
+          console.log("Response Restart API", res.data.data)
+          if (res.data.success) {
+            setChargingCost(res.data.data.chargingCost / 100)
+            setRemainingCost(res.data.data.remainingAmount / 100)
+            setShowRestart(true)
+            setRefreshing(false)
+          } else {
+            // setIsVisible(true)
+            setShowFeedbackModel({ "isVisible": true, "locid": locDetails?.id, "evseid": evDetails?.uid })
+            navigation.reset({
+              index: 0,
+              routes: [{ name: routes.dashboard }],
+            });
+            // setOpenCommonModal({
+            //   isVisible: true,
+            //   message: 'Charging Completed. Are You Ready To Drive ?',
+            //   showBtnText: 'Yes',
+            //   onOkPress: () => {
+            //     navigation.navigate(routes.dashboard)
+            //     console.log("Charging Completed")
+            //   }
+            // })
+            setRefreshing(false)
+          }
+        }).catch(error => {
+          console.log("Error Restart API", error)
           setRefreshing(false)
-        } else {
-          // setIsVisible(true)
-          setShowFeedbackModel({ "isVisible": true, "locid": locDetails?.id, "evseid": evDetails?.uid })
-          navigation.reset({
-            index: 0,
-            routes: [{ name: routes.dashboard }],
-          });
-          // setOpenCommonModal({
-          //   isVisible: true,
-          //   message: 'Charging Completed. Are You Ready To Drive ?',
-          //   showBtnText: 'Yes',
-          //   onOkPress: () => {
-          //     navigation.navigate(routes.dashboard)
-          //     console.log("Charging Completed")
-          //   }
-          // })
-          setRefreshing(false)
-        }
+        })
       }).catch(error => {
-        console.log("Error Restart API", error)
+        console.log("All Unpaid API Catch", error)
         setRefreshing(false)
       })
-
-      // axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/allunpaid/' + username + '?app_version=' + appconfig.APP_VERSION_NUMBER).then((r) => {
-
-
-      // }).catch(error => {
-      //   console.log("All Unpaid API Catch", error)
-      //   setRefreshing(false)
-      // })
       return
     }
 

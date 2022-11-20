@@ -9,7 +9,6 @@ import CommonCard from '../../Component/Card/CommonCard/index'
 import CommonIconCard from './CommonIconCard/CommonIconCard'
 
 const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard }) => {
-    console.log("Check data item", dataItem)
     return (
         <CommonCard>
             <TouchableOpacity style={styles.card} onPress={navigationHandler} disabled={disabledCard}>
