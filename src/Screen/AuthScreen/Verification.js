@@ -93,17 +93,19 @@ const Verification = ({ route }) => {
                         // enter valid OTP
                         setOpenCommonModal({ isVisible: true, message: "OTP is wrong please re enter " })
                     }
-                    loginSuccess(false)
+                    setLoading(false)
                 }).catch(error => {
                     // Somethong went wrong
                     console.log("Something went wrong", error)
                     setOpenCommonModal({ isVisible: true, message: "Something Went Wrong!!!" })
-                    loginSuccess(false)
+                    setLoading(false)
+                    // loginSuccess(false)
                 })
 
             } catch (error) {
                 //// Somethong went wrong
-                loginSuccess(false)
+                // loginSuccess(false)
+                setLoading(false)
                 console.log("Something went wrong", error)
             }
         }
