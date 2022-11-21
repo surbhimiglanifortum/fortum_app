@@ -34,6 +34,7 @@ const Login = () => {
       } else {
         user = await Auth.signIn(userInput);
       }
+      console.log("userdetail",user)
 
       if (user) {
         if (validatePhone(userInput)) {

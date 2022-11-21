@@ -141,6 +141,18 @@ const MobileVerification = ({ route }) => {
                     routes: [{ name: routes.dashboard }],
                 });
                 return
+            } else {
+                try {
+                    const result_ = await Auth.currentAuthenticatedUser();
+                    const result = await ApiAction.registerNoPhone(result_.attributes.email, {}, { first_name, last_name })
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: routes.dashboard }],
+                    });
+                    // user created at backend if not exisits
+                } catch (error) {
+                    setOpenCommonModal({ isVisible: true, message: "Unable to Create User" })
+                }
             }
         }
         setOpenCommonModal({ isVisible: true, message: "Something Went wrong!!!" })
