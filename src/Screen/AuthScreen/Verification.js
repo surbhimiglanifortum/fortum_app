@@ -88,6 +88,7 @@ const Verification = ({ route }) => {
                 Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
                     console.log(success)
                     if (success.signInUserSession) {
+                        
                         loginSuccess()
                     } else {
                         // enter valid OTP
@@ -115,7 +116,7 @@ const Verification = ({ route }) => {
     const loginSuccess = async (navigateToDashboard = true) => {
         const data = await Auth.currentAuthenticatedUser();
         
-        if (data.SesssignInUserSessionion) {
+        if (data.signInUserSession) {
             const result = await ApiAction.getUserDetails()
             if (result?.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
