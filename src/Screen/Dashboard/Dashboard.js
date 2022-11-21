@@ -91,7 +91,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
           <View style={{ flex: 1 }}>
             {selectedTab == 'home' && <Home navigatedata={navigatedata} />}
             {selectedTab == 'wallet' && <Wallet setSelectedTab={setSelectedTab} />}
-            {selectedTab == 'charging' && <Charging setSelectedTabs={setSelectedTab} />}
+            {selectedTab == 'charging' && <Charging setSelectedTab={setSelectedTab} />}
             {selectedTab == 'notification' && <Notification setSelectedTab={setSelectedTab} />}
             {selectedTab == 'other' && <Other setSelectedTab={setSelectedTab} />}
           </View>
