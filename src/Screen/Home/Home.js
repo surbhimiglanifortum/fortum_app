@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, useRef, useCallback } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme, FlatList } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme, FlatList, BackHandler } from 'react-native'
 import colors from '../../Utils/colors';
 import MapList from './ChargerList/MapList';
 import IconCardWithoutBg from '../../Component/Card/IconCardWithoutBg';
@@ -60,6 +60,7 @@ export default Home = ({ navigatedata }) => {
   const listButtonHandler = () => {
     setSelectedTab('List')
   }
+
   const favButtonHandler = () => {
 
     navigation.navigate(routes.Favoruite, { location: location })
@@ -68,7 +69,7 @@ export default Home = ({ navigatedata }) => {
     setOpenFilterModal(true)
   }
   const scannerButtonHandler = () => {
-console.log("scannerButtonHandler")
+    console.log("scannerButtonHandler")
     Auth.currentSession().then(r => {
       if (!r) {
         navigation.navigate(routes.login)
@@ -193,13 +194,10 @@ console.log("scannerButtonHandler")
   }
 
   useEffect(() => {
-    console.log("begore refeth", locationsPayload)
     mLocationPayload = locationsPayload
     refetch({ jhsgd: "SLJ" })
     CallCheckActiveSession()
   }, [location, locationsPayload])
-
-
 
   const addInterceptor = async () => {
     const result = await Auth.currentAuthenticatedUser();
@@ -246,9 +244,7 @@ console.log("scannerButtonHandler")
           Object.keys(payload?.filterByConnectorCategories)?.length <= 0 ? delete payload.filterByConnectorCategories : null
         }
 
-        console.log("final payload_____", payload)
         const res = await ApiAction.getLocation(payload)
-        console.log("dskjsajbd", res.data)
         var locationsArray = res.data?.locations[0];
         if (!location.coords) {
 
@@ -292,7 +288,6 @@ console.log("scannerButtonHandler")
   }
 
   const onFilterClick = useCallback((filterByConnectorCategories, onlyAvailableConnectors) => {
-    console.log("onFilterClick", filterByConnectorCategories, onlyAvailableConnectors)
     let tlocationsPayload = {
       onlyAvailableConnectors: onlyAvailableConnectors,
       filterByConnectorCategories: filterByConnectorCategories
@@ -309,7 +304,7 @@ console.log("scannerButtonHandler")
 
   return (
     <View style={styles.container}>
-      {selectedTab == 'List' ? <MapList data={mLocation} setSelectedTab={setSelectedTab} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
+      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} setSelectedTab={setSelectedTab} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>

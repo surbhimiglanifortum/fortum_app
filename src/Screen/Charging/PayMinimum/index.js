@@ -94,6 +94,7 @@ const PayMinimum = ({ route }) => {
                 Amount: evDetails?.connectors[0]?.pricing?.min_balance
             }
             const res = await blockAmount(payload);
+            console.log("Check PreAuth", res.data)
             if (res.data.success) {
                 dispatch(AddToRedux(res.data, Types.PINELABAUTH))
                 setAskPin(false)
@@ -104,6 +105,7 @@ const PayMinimum = ({ route }) => {
                     evDetails: evDetails,
                     paymentMethod: mode,
                     CardPin: pin.value,
+                    PreAuthCode: res?.data?.PreAuthCode
                 })
             } else {
                 setMsg(res.data.message)

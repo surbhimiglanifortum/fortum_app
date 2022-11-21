@@ -11,7 +11,7 @@ import DensCard from '../../../Component/Card/DenseCard'
 import { Auth } from 'aws-amplify'
 import CommonView from '../../../Component/CommonView'
 
-const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTab }) => {
+const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTab, selectedTab }) => {
 
   const navigation = useNavigation()
 
@@ -74,14 +74,20 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
   }, [search])
 
 
-  const backAction = () => setSelectedTab('home')
+  const backAction = () => {
+    setSelectedTab('map')
+    return true
+  }
 
-  // useEffect(() => {
-  //   BackHandler.addEventListener('hardwareBackPress', backAction)
-  //   return () => {
-  //     BackHandler.removeEventListener('hardwareBackPress', ()=>{return true})
-  //   }
-  // }, [])
+  let backHandler
+
+  useEffect(() => {
+    backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
+
+    return () => {
+      backHandler.remove()
+    }
+  }, [])
 
   return (
     <CommonView style={[styles.container]}>

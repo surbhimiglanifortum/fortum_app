@@ -9,7 +9,7 @@ import DenseCard from '../../../Component/Card/DenseCard/index'
 import CommonView from '../../../Component/CommonView'
 import Divider from '../../../Component/Divider'
 import routes from '../../../Utils/routes'
-import { getSessionDetails, getUserDetails } from '../../../Services/Api'
+import { getSessionDetails, invoiceMap, gstMap } from '../../../Services/Api'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 import Charger from '../../../assests/svg/charger'
 import ChargerRed from '../../../assests/svg/ChargerRed'
@@ -22,6 +22,9 @@ const TaxInvoice = ({ route }) => {
 
     const paramData = route.params.data
 
+    console.log("Check Route Data", route?.params?.data?.item?.location?.city.toUpperCase().replace(/[^a-zA-Z ]/g, ""))
+
+    // 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const navigation = useNavigation()
@@ -31,7 +34,9 @@ const TaxInvoice = ({ route }) => {
     const [isPaid, setPaid] = useState(paramData.item?.paid)
     const [allowMode, setAllowMode] = useState([])
     const [usergstIn, setUserGstIn] = useState("");
-
+    const [st, setSt] = useState("");
+    const [gstAddr, setGstAddr] = useState("");
+    const [gstIn, setGstIn] = useState("");
 
     const start = new Date(route.params?.data?.item?.start_datetime);
     const end = new Date(route.params?.data?.item?.end_datetime);
@@ -74,7 +79,17 @@ const TaxInvoice = ({ route }) => {
     }, [])
 
     useEffect(() => {
-
+        invoiceMap(route?.params?.data?.item?.location?.city.toUpperCase().replace(/[^a-zA-Z ]/g, "")).then((res) => {
+            setSt(res?.data[0]?.state)
+            gstMap({ state: res?.data[0]?.state }).then((result) => {
+                setGstAddr(result?.data[0]?.address)
+                setGstIn(result?.data[0]?.gstin);
+            }).catch((error) => {
+                console.log("GST Map Error", error)
+            })
+        }).catch((error) => {
+            console.log("Invoice Map Error", error)
+        })
     }, [])
 
     const generateHTML = async () => {
@@ -129,7 +144,9 @@ const TaxInvoice = ({ route }) => {
             "            <br/>\n" +
             '            <span style="font-size: 1.1em"><strong>Payment Method : </strong> ' +
             allowMode.map((item) => {
-                item
+                return (
+                    item
+                )
             }) +
             "</span>\n"
 
@@ -177,7 +194,7 @@ const TaxInvoice = ({ route }) => {
             "        </td>\n" +
             "        <td style=\"font-size: 1.1em;text-align: left\">\n" +
             '            <span style="font-size: 1.1em">' +
-            // st +
+            (st != undefined ? st : 'N/A') +
             "</span>\n" +
             "        </td>\n" +
             "    </tr>\n" +
@@ -287,21 +304,24 @@ const TaxInvoice = ({ route }) => {
             (mUserDetails?.usergstIn != undefined ? mUserDetails?.usergstIn : 0) +
             "</span> <br/>\n" +
             '            <span style="font-size: 1.1em">State : ' +
-            // st +
+            (st != undefined ? st : 'N/A') +
+
             "</span><br/>\n" +
             '            <span style="font-size: 1.1em">Billing Address :<br/>' +
 
-            mUserDetails?.billing_addresses[0]?.address +
-            " " +
-            mUserDetails?.billing_addresses[0]?.address_line_2 +
-            " " +
-            " " +
-            mUserDetails?.billing_addresses[0]?.city +
-            " " +
-            mUserDetails?.billing_addresses[0]?.country +
-            " " +
-            mUserDetails?.billing_addresses[0]?.postal_code +
-            "</span>\n" +
+            (mUserDetails?.billing_addresses[0]?.address != undefined ?
+                mUserDetails?.billing_addresses[0]?.address +
+                " " +
+                mUserDetails?.billing_addresses[0]?.address_line_2 +
+                " " +
+                " " +
+                mUserDetails?.billing_addresses[0]?.city +
+                " " +
+                mUserDetails?.billing_addresses[0]?.country +
+                " " +
+                mUserDetails?.billing_addresses[0]?.postal_code + '' : 'N/A')
+
+        "</span>\n" +
             "        </td>\n" +
             "    </tr>\n" +
             "</table>\n" +
@@ -318,11 +338,11 @@ const TaxInvoice = ({ route }) => {
             "    </tr>\n" +
             "    <tr>\n" +
             "        <td>" +
-            // gstAddr +
+            gstAddr +
             "</td>\n" +
             "        <td>\n" +
             "            " +
-            // (gstIn != undefined ? gstIn : 0) +
+            (gstIn != undefined ? gstIn : 0) +
             "\n" +
             "        </td>\n" +
             "    </tr>\n" +
@@ -333,9 +353,18 @@ const TaxInvoice = ({ route }) => {
 
         const results = await RNHTMLtoPDF.convert({
             html: printData,
-            fileName: 'Passbook',
+            fileName: 'Invoice',
             base64: true,
         })
+
+        // RNHTMLtoPDF.convert(results).then(filePath => {
+        //     Share.open({
+        //         title: 'Invoice',
+        //         message: 'Invoice',
+        //         url: filePath.filePath
+        //     })
+        // })
+
 
         // await RNPrint.print({ filePath: results.filePath })
     }
