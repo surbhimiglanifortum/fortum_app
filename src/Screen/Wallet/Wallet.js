@@ -1,4 +1,4 @@
-import { View, StyleSheet, SafeAreaView, useColorScheme, FlatList, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, useColorScheme, FlatList, TouchableOpacity, BackHandler } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Header from '../../Component/Header/Header'
 import CommonText from '../../Component/Text/CommonText'
@@ -105,6 +105,20 @@ const Wallet = ({ setSelectedTab }) => {
     setSelectedTab('home')
   }
 
+  const backAction = () => {
+    setSelectedTab('home')
+    return true
+  }
+
+  let backHandler
+
+  useEffect(() => {
+    backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
+
+    return () => {
+      backHandler.remove()
+    }
+  }, [])
 
   return (
     <CommonView style={styles.container}>
