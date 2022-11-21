@@ -1,5 +1,5 @@
-import { View, StyleSheet, } from 'react-native'
-import React from 'react'
+import { View, StyleSheet, BackHandler } from 'react-native'
+import React, { useEffect } from 'react'
 import CommonText from '../../Component/Text/CommonText'
 import IconCardLarge from '../../Component/Card/IconCardLarge'
 import StoreGreenSvg from '../../assests/svg/StoreGreenSvg'
@@ -16,6 +16,21 @@ const Notification = ({ setSelectedTab }) => {
   const backhandler = () => {
     setSelectedTab('home')
   }
+
+  const backAction = () => {
+    setSelectedTab('home')
+    return true
+  }
+
+  let backHandler
+
+  useEffect(() => {
+    backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
+
+    return () => {
+      backHandler.remove()
+    }
+  }, [])
 
   return (
     <CommonView>
