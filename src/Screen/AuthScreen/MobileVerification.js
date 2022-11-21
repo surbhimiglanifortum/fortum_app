@@ -144,7 +144,7 @@ const MobileVerification = ({ route }) => {
             } else {
                 try {
                     const result_ = await Auth.currentAuthenticatedUser();
-                    const result = await ApiAction.registerNoPhone(result_.attributes.email, {}, { first_name, last_name })
+                    const result = await ApiAction.registerNoPhone(result_.attributes.email.toLowerCase(), {}, { first_name, last_name })
                     navigation.reset({
                         index: 0,
                         routes: [{ name: routes.dashboard }],
