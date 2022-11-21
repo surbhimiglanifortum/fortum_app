@@ -130,7 +130,7 @@ const Verification = ({ route }) => {
             } else {
                 // show wrong otp message
                 try {
-                    const result = await ApiAction.registerNoPhone(data.attributes.email, {}, { first_name, last_name })
+                    const result = await ApiAction.registerNoPhone(data.attributes.email.toLowerCase(), {}, { first_name, last_name })
 
                     navigation.reset({
                         index: 0,
