@@ -429,15 +429,15 @@ const TaxInvoice = ({ route }) => {
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Cost'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? ((paramData?.item?.order?.amount - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst)) / 100).toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? (((paramData?.item?.order?.amount)/100 - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst))).toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of CGST (9%)'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.cgst / 100).toFixed(2) ? (paramData?.item?.order?.cgst / 100).toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.cgst).toFixed(2) ? (paramData?.item?.order?.cgst).toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of SGST (9%)'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.sgst / 100).toFixed(2) ? (paramData?.item?.order?.sgst / 100).toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.sgst).toFixed(2) ? (paramData?.item?.order?.sgst).toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <Divider />
                             <View style={styles.innerCard1}>
