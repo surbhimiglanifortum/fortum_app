@@ -33,8 +33,6 @@ const OngoingDetails = ({ route }) => {
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const username = mUserDetails?.username
 
-  console.log("Check Params", route?.params?.CardPin)
-
   const navigation = useNavigation()
   const scheme = useColorScheme()
 
@@ -75,7 +73,6 @@ const OngoingDetails = ({ route }) => {
 
   const locDetails = route?.params?.locDetails
   const evDetails = route.params?.evDetails
-  console.log("ONGPOIN", evDetails, locDetails)
   let lastPaidSession = {}
 
   // const checkIfUnpaid = () => {
@@ -345,7 +342,8 @@ const OngoingDetails = ({ route }) => {
                 evse_uid: evDetails?.uid,
                 payment_method: paymentMethod,
                 CardPin: route?.params?.CardPin,
-                minimum_balance: evDetails?.connectors[0]?.pricing?.min_balance
+                minimum_balance: evDetails?.connectors[0]?.pricing?.min_balance,
+                PreAuthCode: route?.params?.PreAuthCode
               }
             }
             // data = {
