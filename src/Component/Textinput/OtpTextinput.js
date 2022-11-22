@@ -4,7 +4,7 @@ import colors from '../../Utils/colors'
 import { NeomorphFlex } from 'react-native-neomorph-shadows'
 import commonFonts from '../../Utils/fonts/fonts'
 
-const OtpTextinput = ({ placeholder, onChangeText, value, onChange, onSubmitEditingData, refData }) => {
+const OtpTextinput = ({ placeholder, value, onChange, refData, onKeyPress }) => {
 
     const scheme = useColorScheme()
 
@@ -34,7 +34,9 @@ const OtpTextinput = ({ placeholder, onChangeText, value, onChange, onSubmitEdit
                 keyboardType='numeric'
                 placeholder={placeholder}
                 ref={refData}
-                style={{ color: scheme == 'dark' ? 'white' : 'black', textAlign: 'center', fontFamily: commonFonts.bold }} />
+                onKeyPress={onKeyPress}
+                style={{ color: scheme == 'dark' ? 'white' : 'black', textAlign: 'center', fontFamily: commonFonts.bold }}
+            />
 
         </NeomorphFlex>
     )
