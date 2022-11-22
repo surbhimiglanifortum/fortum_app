@@ -1,6 +1,5 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView, Platform } from 'react-native'
+import { View, StyleSheet, useColorScheme, TouchableOpacity, ScrollView, Platform } from 'react-native'
 import React, { useState, useContext, useRef } from 'react'
-import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import CommonText from '../../Component/Text/CommonText';
 import Button from '../../Component/Button/Button';
@@ -15,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import { AddToRedux } from '../../Redux/AddToRedux';
 import * as Types from '../../Redux/Types'
 import SnackContext from '../../Utils/context/SnackbarContext'
+import CommonView from '../../Component/CommonView'
 
 const MobileVerification = ({ route }) => {
 
@@ -224,90 +224,63 @@ const MobileVerification = ({ route }) => {
 
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
+        <CommonView >
             <ScrollView>
-                <View style={styles.innerContainer}>
-                    <View style={styles.imageContainer}>
-                        <CarLogo />
-                    </View>
-                    <View>
-                        <CommonText showText={'Mobile Verification'} fontSize={20} />
-                    </View>
-                    <View style={styles.textinputConatiner}>
-                        <CommonText regular showText={'Please enter the verification code sent to '} fontSize={15} />
-                        <View style={styles.centerText}>
-                            <CommonText regular showText={mobile_number} fontSize={15} />
-                            {signin && <TouchableOpacity onPress={onPhoneEdit} >
-                                <CommonText customstyles={{ textDecorationLine: 'underline' }} showText={' Edit'} fontSize={15} />
-                            </TouchableOpacity>}
-
-                        </View>
-                        <View style={styles.otpContainer}>
-                            {[
-                                firstTextInputRef,
-                                secondTextInputRef,
-                                thirdTextInputRef,
-                                fourthTextInputRef,
-                            ].map((textInputRef, index) => (
-                                <OtpTextinput
-                                    value={otpArray[index]}
-                                    onKeyPress={onOtpKeyPress(index)}
-                                    onChange={onOtpChange(index)}
-                                    keyboardType={'numeric'}
-                                    maxLength={1}
-                                    style={[styles.otpText]}
-                                    autoFocus={index === 0 ? true : undefined}
-                                    refData={refCallback(textInputRef)}
-                                    key={index}
-                                />
-                            ))}
-                        </View>
-                        <View style={styles.resendContainer}>
-                            <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
-                            <TouchableOpacity onPress={onResendClick} >
-                                <CommonText customstyles={{ textDecorationLine: 'underline' }} showText={`Resend`} fontSize={14} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <Button onPress={VerifyButtonHandler} showText={'Verify'} onLoading={loading} />
+                <View style={styles.imageContainer}>
+                    <CarLogo />
                 </View>
+                <View>
+                    <CommonText showText={'Mobile Verification'} fontSize={20} />
+                </View>
+                <View style={styles.textinputConatiner}>
+                    <CommonText regular showText={'Please enter the verification code sent to '} fontSize={15} />
+                    <View style={styles.centerText}>
+                        <CommonText regular showText={mobile_number} fontSize={15} />
+                        {signin && <TouchableOpacity onPress={onPhoneEdit} >
+                            <CommonText customstyles={{ textDecorationLine: 'underline' }} showText={' Edit'} fontSize={15} />
+                        </TouchableOpacity>}
+
+                    </View>
+                    <View style={styles.otpContainer}>
+                        {[
+                            firstTextInputRef,
+                            secondTextInputRef,
+                            thirdTextInputRef,
+                            fourthTextInputRef,
+                        ].map((textInputRef, index) => (
+                            <OtpTextinput
+                                value={otpArray[index]}
+                                onKeyPress={onOtpKeyPress(index)}
+                                onChange={onOtpChange(index)}
+                                keyboardType={'numeric'}
+                                maxLength={1}
+                                style={[styles.otpText]}
+                                autoFocus={index === 0 ? true : undefined}
+                                refData={refCallback(textInputRef)}
+                                key={index}
+                            />
+                        ))}
+                    </View>
+                    <View style={styles.resendContainer}>
+                        <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
+                        <TouchableOpacity onPress={onResendClick} >
+                            <CommonText customstyles={{ textDecorationLine: 'underline' }} showText={`Resend`} fontSize={14} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <Button onPress={VerifyButtonHandler} showText={'Verify'} onLoading={loading} />
             </ScrollView>
-        </SafeAreaView>
+        </CommonView>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    innerContainer: {
-        width: '90%',
-        alignSelf: 'center'
-    },
     textinputConatiner: {
         marginVertical: 15
     },
-    button: {
-        marginTop: 80
-    },
-    centerText: {
-        marginTop: 20,
-        alignItems: 'center'
-    },
-    bottomButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignSelf: 'center',
-        marginVertical: 20,
-    },
-    bottomText: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignSelf: 'center',
-        marginTop: 50
-    },
     imageContainer: {
-        marginVertical: 45
+        marginVertical: 45,
+        alignItems: 'center'
     },
     otpContainer: {
         flexDirection: 'row',
@@ -316,9 +289,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginTop: 10,
     },
-    centerText: { flexDirection: 'row', alignItems: 'center' },
-    resendContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 35 },
-
+    centerText: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    resendContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 35
+    },
 })
 
 
