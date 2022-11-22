@@ -46,7 +46,7 @@ const TaxInvoice = ({ route }) => {
 
     const handleButtonClick = () => {
         navigation.navigate(routes.PayInvoice, {
-            amount: paramData?.item?.order?.amount / 100
+            amount: (paramData?.item?.order?.amount_due / 100).toFixed(2)
         })
     }
 
@@ -120,7 +120,7 @@ const TaxInvoice = ({ route }) => {
             "</h1></td>\n" +
             "        <td>\n" +
             '            <span style="font-size: 1.1em"><strong>Duration :</strong> ' +
-            diffMin.toFixed(2) +
+            diffMin?.toFixed(2) +
             " Min</span>\n" +
             "            <br/>\n" +
             '            <span style="font-size: 1.1em"><strong>kWh used :</strong> ' +
@@ -155,7 +155,7 @@ const TaxInvoice = ({ route }) => {
             (route.params?.data?.item?.order != undefined && route.params?.data?.item?.order?.BALANCE_CASH != undefined && route.params?.data?.item?.order?.BALANCE_CASH != '' ?
                 "            <br/>\n" +
                 '            <span style="font-size: 1.1em"><strong>Wallet :</strong> ' +
-                (parseFloat(route.params?.data?.item?.order?.BALANCE_CASH) / 100).toFixed(2) +
+                (parseFloat(route.params?.data?.item?.order?.BALANCE_CASH) / 100)?.toFixed(2) +
                 "</span>\n" : ""
             )
             +
@@ -235,7 +235,7 @@ const TaxInvoice = ({ route }) => {
             "        </td><td>\n" +
             '            <span style="font-size: 1.1em">' +
             (route.params?.data?.item?.order?.pricingToApply?.type === "TIME"
-                ? diffMin.toFixed(2)
+                ? diffMin?.toFixed(2)
                 : route.params?.data?.item?.kwh) +
             "</span>\n" +
             "        </td><td>\n" +
@@ -264,17 +264,17 @@ const TaxInvoice = ({ route }) => {
                     route.params?.data?.item?.order?.sgst -
                     route.params?.data?.item?.order?.cgst) /
                 100
-            ).toFixed(2) +
+            )?.toFixed(2) +
             "</h3>\n" +
             "<h3>Amount of CGST(" +
             (route.params?.data?.item?.order?.pricingToApply?.cgst != undefined ? route.params?.data?.item?.order?.pricingToApply?.cgst : 0) +
             "%) : ₹ " +
-            (route.params?.data?.item?.order?.cgst / 100).toFixed(2) +
+            (route.params?.data?.item?.order?.cgst / 100)?.toFixed(2) +
             "</h3>\n" +
             "<h3>Amount of SGST(" +
             (route.params?.data?.item?.order?.pricingToApply?.sgst != undefined ? route.params?.data?.item?.order?.pricingToApply?.sgst : 0) +
             "%) : ₹ " +
-            (route.params?.data?.item?.order?.sgst / 100).toFixed(2) +
+            (route.params?.data?.item?.order?.sgst / 100)?.toFixed(2) +
             "</h3>\n" +
             "\n" +
             "\n" +
@@ -429,15 +429,15 @@ const TaxInvoice = ({ route }) => {
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Cost'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? (((paramData?.item?.order?.amount)/100 - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst))).toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? (((paramData?.item?.order?.amount)/100 - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst)))?.toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of CGST (9%)'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.cgst).toFixed(2) ? (paramData?.item?.order?.cgst).toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.cgst)?.toFixed(2) ? (paramData?.item?.order?.cgst)?.toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of SGST (9%)'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.sgst).toFixed(2) ? (paramData?.item?.order?.sgst).toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.sgst)?.toFixed(2) ? (paramData?.item?.order?.sgst)?.toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <Divider />
                             <View style={styles.innerCard1}>
@@ -474,7 +474,7 @@ const TaxInvoice = ({ route }) => {
                     </DenseCard>
                 </View>
                 <Button
-                    showText={isPaid ? 'Download Invoice' : 'Pay'}
+                    showText={isPaid ? 'Download Invoice' : `Pay(${(paramData?.item?.order?.amount_due/100)?.toFixed(2)})`}
                     onPress={() => isPaid ? generateHTML() : handleButtonClick()}
                 />
             </ScrollView>

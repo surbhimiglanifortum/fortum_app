@@ -58,6 +58,8 @@ const Signup = ({ route }) => {
         // console.log(this.cognitoService)
         let emailSignupSuccess = false
         let mobileSignupSuccess = false
+        values.email_id = values.email_id.toLowerCase()
+        
         await userExist(values.email_id).then((e) => {
         }).catch(e => {
             if (e.code == 'UserNotFoundException') {
