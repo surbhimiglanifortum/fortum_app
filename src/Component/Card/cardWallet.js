@@ -12,9 +12,11 @@ import { NeuButton } from '../../NeuElement/index'
 import CommonIconCard from './CommonIconCard/CommonIconCard'
 import WalletSvg from '../../assests/svg/wallet'
 import Charger from '../../assests/svg/charger'
+import moment from 'moment'
 
 
 const CardWallet = ({ navigationHandler, Svg, dataItem, }) => {
+    const getFormatedDate = (date)=> moment.utc(date).local().format('DD-MMM-YYYY h:mm A');
 
     return (
         <CommonCard   >

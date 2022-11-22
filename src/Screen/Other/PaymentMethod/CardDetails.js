@@ -62,14 +62,17 @@ const CardDetails = () => {
     return (
         <CommonView style={styles.container}>
             <Header showText={'Card Details'} />
-            <PinePerksCardView
-                cardContainerStyle={{ display: 'flex', flexDirection: "column" }}
-                cardBackgroundImage={require('../../../assests/prepaidCard.jpg')}
-                cardImageStyle={{ width: '100%', resizeMode: 'contain', height: 250, marginTop: 0 }}
-                cardNumberStyle={{ marginTop: 110, marginLeft: 19 }}
-                expiryTextStyle={{ marginTop: -5, marginLeft: 19, fontSize: 12 }}
-                cvvTextStyle={{ marginTop: -5, fontSize: 12, textAlign: 'center' }}
-            />
+            <View  style={{alignContent:'center',marginLeft:10}}>
+                <PinePerksCardView
+                    cardContainerStyle={{ justifyContent:'center',justifyContent:'center',alignContent:'center'}}
+                    cardBackgroundImage={require('../../../assests/card.jpg')}
+                    cardImageStyle={{ width: '100%', resizeMode: 'contain', height: 250, marginTop: 0 }}
+                    cardNumberStyle={{ marginTop: 110, marginLeft: 19 }}
+                    expiryTextStyle={{ marginTop: -5, marginLeft: 19, fontSize: 12 }}
+                    cvvTextStyle={{ marginTop: -5,marginRight:130, fontSize: 12, textAlign: 'center' }}
+                />
+            </View>
+
             <View style={styles.row}>
                 <CommonText showText={'Update Card Status'} />
                 <SwitchButton onValueChange={toggleSwitch} value={isEnabled} />

@@ -57,7 +57,7 @@ const Wallet = ({ setSelectedTab }) => {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [techStart, setTechStart] = useState(moment().subtract(30, 'days').format('YYYY-MM-DDT24:00:00'))
-  const [techEnd, setTechEnd] = useState(moment().format('YYYY-MM-DDT00:00:00'))
+  const [techEnd, setTechEnd] = useState(moment().format('YYYY-MM-DDT23:59:00'))
 
   const showStartDatePicker = () => {
     setStartDatePickerVisibility(!isStartDatePickerVisible);
@@ -76,12 +76,14 @@ const Wallet = ({ setSelectedTab }) => {
   };
 
   const handleStartConfirm = (date) => {
+    console.log("handleStartConfirm",date)
     setTechStart(moment(date).format('YYYY-MM-DDT00:00:00'))
     hideStartDatePicker();
   };
 
   const handleEndConfirm = (date) => {
-    setTechEnd(moment(date).format('YYYY-MM-DDT24:00:00'))
+    console.log("handleEndConfirm",date)
+    setTechEnd(moment(date).format('YYYY-MM-DDT23:59:00'))
     hideEndDatePicker();
   };
 
