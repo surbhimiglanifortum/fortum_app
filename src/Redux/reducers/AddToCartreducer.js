@@ -19,13 +19,16 @@ const AddToCartReducers = ((state = initialData, action) => {
             if (itemIndexsub >= 0) {
                 state.cartItem[itemIndexsub].cartItem = state.cartItem[itemIndexsub].cartItem - 1
             }
-            if(state.cartItem[itemIndexsub].cartItem<=0){
+            if (state.cartItem[itemIndexsub].cartItem <= 0) {
                 // remove item
-                state.cartItem.splice(itemIndexsub,1)
+                state.cartItem.splice(itemIndexsub, 1)
             }
             return { ...state }
         case 'REMOVE_TO_CART':
             state.cartItem.pop(action.payload)
+            return { ...state }
+        case 'CLEAR_CART':
+            state.cartItem=[]
             return { ...state }
 
         default:
