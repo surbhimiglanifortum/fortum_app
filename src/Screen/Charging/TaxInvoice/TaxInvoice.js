@@ -21,10 +21,7 @@ import { useSelector } from 'react-redux'
 const TaxInvoice = ({ route }) => {
 
     const paramData = route.params.data
-
-    console.log("Check Route Data", route?.params?.data?.item?.location?.city.toUpperCase().replace(/[^a-zA-Z ]/g, ""))
-
-    // 
+    
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const navigation = useNavigation()

@@ -159,7 +159,6 @@ export default Home = ({ navigatedata }) => {
         const response = await ApiAction.chargingList(mUserDetails.username)
         console.log(response.data)
         if (response.data && response.data.length > 0) {
-
           setOpenCommonModal({
             isVisible: true, message: `You have an ongoing charging session at Charger ${response.data[0]?.location?.name} please stop the session if you have done charging!`,
             heading: "Ongoing Session",
@@ -169,6 +168,7 @@ export default Home = ({ navigatedata }) => {
               },
               title: "Ignore"
             },
+
             onOkPress: () => {
               navigation.navigate(routes.OngoingDetails, {
                 locDetails: {
@@ -213,8 +213,6 @@ export default Home = ({ navigatedata }) => {
       axios.interceptors.request.use(async (config) => {
         // console.log("AUTH ",Auth)
         const token = await Auth.currentSession().catch(err => { console.log(err) });
-        console.log("JWT token")
-        console.log(token.getIdToken().getJwtToken())
         try {
           if (token)
             config.headers.Authorization = token.getIdToken().getJwtToken();

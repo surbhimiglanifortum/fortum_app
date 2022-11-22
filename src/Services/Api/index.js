@@ -257,6 +257,5 @@ export const gstMap = async (payload) => {
 }
 
 export const qrCodeService = async (locid, payload) => {
-    console.log("Check URL","/api_app/locations/gist/" + locid, payload )
     return await axios.post("/api_app/locations/gist/" + locid, payload);
 }
