@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, useColorScheme, ScrollView } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, useColorScheme, ScrollView, BackHandler } from 'react-native'
 import React, { useEffect } from 'react'
 import SettingCard from '../../Component/Card/SettingCard'
 import ElectricCarSvg from '../../assests/svg/ElectricCarSvg'
@@ -90,6 +90,20 @@ const Other = ({ setSelectedTab }) => {
     userDetailsUpdated()
   }, [isFocused])
 
+  const backAction = () => {
+    setSelectedTab('home')
+    return true
+  }
+
+  let backHandler
+
+  useEffect(() => {
+    backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
+
+    return () => {
+      backHandler.remove()
+    }
+  }, [])
 
   return (
     <CommonView >

@@ -65,16 +65,17 @@ const CompleteKYC = ({ route }) => {
     };
 
     const handleConfirm = (date) => {
-        let dob = moment(date).format('LL')
+         let dob = moment(date).format('LL')
         setDob(dob)
-        let month = String(new Date(dob).getMonth() + 1)
-        let day = String(new Date(dob).getDate())
-        if (month.length <= 1)
-            month = '0' + month
-        if (day.length <= 1)
-            day = '0' + day
-        let fullDob = `${new Date(dob).getFullYear()}-${month}-${day}`
-        setDobTech(fullDob)
+        // let month = String(new Date(dob).getMonth() + 1)
+        // let day = String(new Date(dob).getDate())
+        // if (month.length <= 1)
+        //     month = '0' + month
+        // if (day.length <= 1)
+        //     day = '0' + day
+        // let fullDob = `${new Date(dob).getFullYear()}-${month}-${day}`
+        console.log(moment(date).format('YYYY-MM-DD'))
+        setDobTech(moment(date).format('YYYY-MM-DD'))
         hideDatePicker();
     };
 
@@ -87,16 +88,20 @@ const CompleteKYC = ({ route }) => {
     };
 
     const docHandleConfirm = (date) => {
+
+
+
         let docDate = moment(date).format('LL')
         setDocDate(docDate)
-        let month = String(new Date(docDate).getMonth() + 1)
-        let day = String(new Date(docDate).getDate())
-        if (month.length <= 1)
-            month = '0' + month
-        if (day.length <= 1)
-            day = '0' + day
-        let fullDocDate = `${new Date(docDate).getFullYear()}-${month}-${day}`
-        setDocDateTech(fullDocDate)
+        // let month = String(new Date(docDate).getMonth() + 1)
+        // let day = String(new Date(docDate).getDate())
+        // if (month.length <= 1)
+        //     month = '0' + month
+        // if (day.length <= 1)
+        //     day = '0' + day
+        // let fullDocDate = `${new Date(docDate).getFullYear()}-${month}-${day}`
+        console.log(moment(date).format('YYYY-MM-DD'))
+        setDocDateTech(moment(date).format('YYYY-MM-DD'))
         docHideDatePicker();
     };
 
@@ -236,24 +241,24 @@ const CompleteKYC = ({ route }) => {
         }
     }
 
-    useEffect(() =>
-        navigation.addListener('beforeRemove', (e) => {
-            e.preventDefault()
-            Alert.alert(
-                'Discard changes?',
-                'Do you really want to quit process ?',
-                [
-                    { text: "Cancel", style: 'cancel', onPress: () => { } },
-                    {
-                        text: 'Discard',
-                        style: 'destructive',
-                        onPress: () => navigation.dispatch(e.data.action)
-                    },
-                ]
-            );
-        }),
-        [navigation]
-    );
+    // useEffect(() =>
+    //     navigation.addListener('beforeRemove', (e) => {
+    //         e.preventDefault()
+    //         Alert.alert(
+    //             'Discard changes?',
+    //             'Do you really want to quit process ?',
+    //             [
+    //                 { text: "Cancel", style: 'cancel', onPress: () => { } },
+    //                 {
+    //                     text: 'Discard',
+    //                     style: 'destructive',
+    //                     onPress: () => navigation.dispatch(e.data.action)
+    //                 },
+    //             ]
+    //         );
+    //     }),
+    //     [navigation]
+    // );
 
     return (
         <CommonView >
@@ -381,7 +386,7 @@ const CompleteKYC = ({ route }) => {
                 }
             </ScrollView>
 
-            <Button showText={'Compelete to KYC'} onPress={onDocumentVerify} />
+            <Button showText={'Compelete to KYC'} onPress={onDocumentVerify} onLoading={loadingSign} />
 
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}

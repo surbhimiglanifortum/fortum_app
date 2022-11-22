@@ -247,6 +247,15 @@ export const userMigration = async (payload) => {
 export const updateCardStatus = async (payload) => {
     return await axios.post("/api_app/pinelabs/card/update/status", payload);
 }
+
+export const invoiceMap = async (payload) => {
+    return await axios.get(`/api_app/invoice_map/${payload}`);
+}
+
+export const gstMap = async (payload) => {
+    return await axios.post('/api_app/invoice_map/',payload);
+}
+
 export const qrCodeService = async (locid, payload) => {
     console.log("Check URL","/api_app/locations/gist/" + locid, payload )
     return await axios.post("/api_app/locations/gist/" + locid, payload);

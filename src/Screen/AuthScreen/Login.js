@@ -28,27 +28,28 @@ const Login = () => {
       let user
 
       // console.log(userInput)
-      if (validatePhone(userInput)) {
-        console.log('phone', ("+91" + userInput).toString())
-        user = await Auth.signIn(("+91" + userInput).trim());
+      if (validatePhone(userInput.toLowerCase())) {
+        console.log('phone', ("+91" + userInput.toLowerCase()).toString())
+        user = await Auth.signIn(("+91" + userInput.toLowerCase()).trim());
       } else {
-        user = await Auth.signIn(userInput);
+        user = await Auth.signIn(userInput.toLowerCase());
       }
+      console.log("userdetail",user)
 
       if (user) {
-        if (validatePhone(userInput)) {
+        if (validatePhone(userInput.toLowerCase())) {
           // navigate to mobile input
           navigation.navigate(routes.MobileVerification, {
             signin: true,
             user: user,
-            mobile_number: userInput
+            mobile_number: userInput.toLowerCase()
           })
-        } else if (validateEmail(userInput)) {
+        } else if (validateEmail(userInput.toLowerCase())) {
           // navigate to email input
           navigation.navigate(routes.Verification, {
             signin: true,
             user: user,
-            email_id: userInput
+            email_id: userInput.toLowerCase()
           })
         }
       }
@@ -58,7 +59,7 @@ const Login = () => {
       switch (error.code) {
         case 'UserNotFoundException':
           //check for migration
-          const response = await APIAction.userMigration({ email: userInput })
+          const response = await APIAction.userMigration({ email: userInput.toLowerCase() })
           if (response?.data?.status === true) {
             // try sign in once again
             continueButtonHandler()
@@ -82,32 +83,32 @@ const Login = () => {
 
   const HandleUserNotFound = async () => {
     const payload = {}
-    if (validatePhone(userInput)) {
-      payload.phone_number = userInput
+    if (validatePhone(userInput.toLowerCase())) {
+      payload.phone_number = userInput.toLowerCase()
     } else if (validateEmail) {
-      payload.email = userInput
+      payload.email = userInput.toLowerCase()
     }
     navigation.navigate(routes.Signup, { ...payload })
   }
 
   const handleUserComfirmation = async () => {
     const payload = {}
-    if (validatePhone(userInput)) {
-      payload.phone_number = userInput
+    if (validatePhone(userInput.toLowerCase())) {
+      payload.phone_number = userInput.toLowerCase()
 
     } else if (validateEmail) {
-      payload.email = userInput
-      await Auth.resendSignUp(userInput);
+      payload.email = userInput.toLowerCase()
+      await Auth.resendSignUp(userInput.toLowerCase());
       navigation.navigate(routes.Verification, { ...payload })
     }
   }
 
   const signupHandler = () => {
     const payload = {}
-    if (validatePhone(userInput)) {
-      payload.phone_number = userInput
+    if (validatePhone(userInput.toLowerCase())) {
+      payload.phone_number = userInput.toLowerCase()
     } else if (validateEmail) {
-      payload.email = userInput
+      payload.email = userInput.toLowerCase()
     }
 
     navigation.navigate(routes.Signup, {

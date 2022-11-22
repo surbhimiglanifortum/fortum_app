@@ -103,8 +103,17 @@ const RechargeWallet = ({ route }) => {
       setLoadingSign(false)
     }
   }
+
+  const onChange = e => {
+    // const input = e.currentTarget.value;
+    if (/^[^!-\/:-@\[-`{-~]+$/.test(e) || e === "") {
+      // setValue(input);
+      setAmount({ value: e, error: '' })
+    }
+  };
   let lazyAmount = [50, 100, 120, 150]
   let lazyAmount2 = [200, 300, 400, 500]
+
   return (
     <CommonView>
       <ScrollView >
@@ -120,10 +129,11 @@ const RechargeWallet = ({ route }) => {
               <CommonText showText={'₹'} customstyles={styles.rupeeText} fontSize={25} />
               <LinearInput
                 value={amount.value}
-                onChange={(text) => { setAmount({ value: text, error: '' }) }}
+                onChange={(text) => onChange(text)}
                 placeholderText={'50'}
                 style={styles.input}
                 keyboardType={'number-pad'}
+                maxLength={5}
               />
             </View>
 

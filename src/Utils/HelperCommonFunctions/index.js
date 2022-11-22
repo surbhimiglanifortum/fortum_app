@@ -11,8 +11,6 @@ export function validatePhone(phone) { //Validates the phone number
     return phoneRegex.test(phone);
 }
 
-
-
 export function generateSHA(number, dateISO, counter) {
 
     const HASH = "19c14cbe3260087bf121af4b6949469b"
