@@ -1,40 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
     StyleSheet,
     Text,
-    TouchableOpacity
+    TouchableOpacity, Linking
 } from 'react-native';
 
-// import QRCodeScanner from 'react-native-qrcode-scanner';
-// import { RNCamera } from 'react-native-camera';
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import { RNCamera } from 'react-native-camera';
+import { qrCodeService } from '../Services/Api';
+import { useSelector } from 'react-redux';
 
 export default function QrScanner() {
 
-    onSuccess = e => {
-        Linking.openURL(e.data).catch(err =>
-          console.error('An error occured', err)
-        );
-      };
+
+    let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+    const username = mUserDetails?.username
+    const payload = {
+        username: username
+    }
+
+    const onSuccess = async (e) => {
+        console.log(typeof (e))
+        console.log(JSON.parse(e.data).locid, '............id')
+        const res = await qrCodeService(JSON.parse(e.data).locid, payload)
+        console.log(res.data, '...............res')
+
+    };
 
     return (
-        <></>
-        // <QRCodeScanner
-        //     onRead={onSuccess}
-        //     flashMode={RNCamera.Constants.FlashMode.torch}
-        //     topContent={
-        //         <Text style={styles.centerText}>
-        //             Go to{' '}
-        //             <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
-        //             your computer and scan the QR code.
-        //         </Text>
-        //     }
-        //     bottomContent={
-        //         <TouchableOpacity style={styles.buttonTouchable}>
-        //             <Text style={styles.buttonText}>OK. Got it!</Text>
-        //         </TouchableOpacity>
-        //     }
-        // />
+        <QRCodeScanner
+            onRead={onSuccess}
+            flashMode={RNCamera.Constants.FlashMode.auto}
+
+        />
     )
 }
 
