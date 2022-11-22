@@ -1,4 +1,4 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
+import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView, Platform } from 'react-native'
 import React, { useRef, useState, useContext } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
@@ -7,41 +7,44 @@ import Button from '../../Component/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import routes from '../../Utils/routes';
 import OtpTextinput from '../../Component/Textinput/OtpTextinput';
-import Textinput from '../../Component/Textinput/Textinput'
-import { Auth, Hub } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import * as ApiAction from '../../Services/Api'
 import { useDispatch } from 'react-redux';
 import * as Types from '../../Redux/Types'
 import { AddToRedux } from '../../Redux/AddToRedux';
-import CommonModal from '../../Component/Modal/CommonModal';
 import SnackContext from '../../Utils/context/SnackbarContext'
+import CommonView from '../../Component/CommonView'
 
 const Verification = ({ route }) => {
 
-    const navigation = useNavigation()
-    const scheme = useColorScheme();
-    const otpField1 = useRef(null);
-    const otpField2 = useRef(null);
-    const otpField3 = useRef(null);
-    const otpField4 = useRef(null);
-    const dispatch = useDispatch();
-    const [loading, setLoading] = useState(false)
-    const [userInput, setUserInput] = useState('101299')
-    const [userInput1, setUserInput1] = useState('')
-    const [userInput2, setUserInput2] = useState('')
-    const [userInput3, setUserInput3] = useState('')
-    const [userInput4, setUserInput4] = useState('')
-    let otpConcatData = userInput1.concat(userInput2).concat(userInput3).concat(userInput4)
-
-
-    const { setOpenCommonModal } = useContext(SnackContext);
-
-
     const { email_id, signin, user, mobile_number, first_name, last_name } = route.params;
 
-    const VerifyButtonHandler = async () => {
-        setLoading(true)
+    const isAndroid = Platform.OS === 'android';
 
+    const { setOpenCommonModal } = useContext(SnackContext);
+    const navigation = useNavigation()
+    const scheme = useColorScheme();
+    const dispatch = useDispatch();
+
+    const firstTextInputRef = useRef(null);
+    const secondTextInputRef = useRef(null);
+    const thirdTextInputRef = useRef(null);
+    const fourthTextInputRef = useRef(null);
+
+    const [loading, setLoading] = useState(false)
+    const [otpArray, setOtpArray] = useState(['', '', '', '']);
+
+    const refCallback = textInputRef => node => {
+        textInputRef.current = node;
+    };
+
+    const VerifyButtonHandler = async () => {
+        const otp = otpArray.join('');
+        if (!otp || otp == "" || otp.length < 4) {
+            setOpenCommonModal({ isVisible: true, message: "Enter OTP" })
+            return
+        }
+        setLoading(true)
         if (!signin) {
             try {
 
@@ -85,10 +88,9 @@ const Verification = ({ route }) => {
             }
         } else {
             try {
-                Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
-                    console.log(success)
+                Auth.sendCustomChallengeAnswer(user, otp).then(success => {
+                    console.log("Check OTP", otp, success)
                     if (success.signInUserSession) {
-                        
                         loginSuccess()
                     } else {
                         // enter valid OTP
@@ -110,12 +112,10 @@ const Verification = ({ route }) => {
                 console.log("Something went wrong", error)
             }
         }
-
     }
 
     const loginSuccess = async (navigateToDashboard = true) => {
         const data = await Auth.currentAuthenticatedUser();
-        
         if (data.signInUserSession) {
             const result = await ApiAction.getUserDetails()
             if (result?.data) {
@@ -141,118 +141,119 @@ const Verification = ({ route }) => {
                     setOpenCommonModal({ isVisible: true, message: "Unable to Create User" })
                 }
             }
-
-
         }
     }
 
     const onResendClick = async () => {
-
-
         setLoading(true)
-
         //  signed in 
         route.params.user = await Auth.signIn((email_id).trim());
         setOpenCommonModal({ isVisible: true, message: "OTP Sent!!!" })
-
         setLoading(false)
     }
 
+    const onOtpKeyPress = index => {
+        return ({ nativeEvent: { key: value } }) => {
+            if (value === 'Backspace' && otpArray[index] === '') {
+                if (index === 1) {
+                    firstTextInputRef.current.focus();
+                } else if (index === 2) {
+                    secondTextInputRef.current.focus();
+                } else if (index === 3) {
+                    thirdTextInputRef.current.focus();
+                }
+
+                if (isAndroid && index > 0) {
+                    const otpArrayCopy = otpArray.concat();
+                    otpArrayCopy[index - 1] = '';
+                    setOtpArray(otpArrayCopy);
+                }
+            }
+        };
+    };
+
+    const onOtpChange = index => {
+        return value => {
+            if (isNaN(Number(value))) {
+                return;
+            }
+            const otpArrayCopy = otpArray.concat();
+            otpArrayCopy[index] = value;
+            setOtpArray(otpArrayCopy);
+
+            if (value !== '') {
+                if (index === 0) {
+                    secondTextInputRef.current.focus();
+                } else if (index === 1) {
+                    thirdTextInputRef.current.focus();
+                } else if (index === 2) {
+                    fourthTextInputRef.current.focus();
+                }
+            }
+        };
+    };
+
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
+        <CommonView>
             <ScrollView>
-                <View style={styles.innerContainer}>
-                    <View style={styles.imageContainer}>
-                        <CarLogo />
-                    </View>
-                    <View>
-                        <CommonText showText={'Email Verification'} fontSize={20} />
-                    </View>
-                    <View style={styles.textinputConatiner}>
-                        <CommonText regular showText={'Please enter the verification code sent to '} fontSize={15} />
-                        <View style={styles.centerText}>
-                            <CommonText regular showText={email_id} fontSize={15} />
-                            <TouchableOpacity onPress={() => navigation.goBack()} >
-                                <CommonText customstyles={{ textDecorationLine: 'underline', marginLeft: 2 }} showText={'Edit'} fontSize={15} />
-                            </TouchableOpacity>
-                        </View>
-                        {/* <Textinput value={userInput} onChange={setUserInput} /> */}
-                        <View style={styles.otpContainer}>
-                            <OtpTextinput refData={otpField1} value={userInput1} onChange={(pin1) => {
-                                setUserInput1(pin1);
-                                if (pin1 !== '') {
-                                    otpField2.current.focus();
-                                }
-                            }} />
-                            <OtpTextinput refData={otpField2} value={userInput2} onChange={(pin2) => {
-                                setUserInput2(pin2);
-                                if (pin2 !== '') {
-                                    otpField3.current.focus();
-                                }
-                            }} />
-                            <OtpTextinput refData={otpField3} value={userInput3} onChange={(pin3) => {
-                                setUserInput3(pin3);
-                                if (pin3 !== '') {
-                                    otpField4.current.focus();
-                                }
-                            }} />
-                            <OtpTextinput refData={otpField4} value={userInput4} onChange={(pin4) => {
-                                setUserInput4(pin4);
-                                if (pin4 !== '') {
-                                    otpField4.current.focus();
-                                }
-                            }} />
-
-                        </View>
-                        <View style={styles.resendContainer}>
-                            <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
-                            <TouchableOpacity onPress={onResendClick}  >
-                                <CommonText customstyles={{ textDecorationLine: 'underline' }} showText={'Resend'} fontSize={14} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.button} >
-                        <Button onPress={VerifyButtonHandler} showText={'Verify'} onLoading={loading} />
-                    </View>
-
+                <View style={styles.imageContainer}>
+                    <CarLogo />
                 </View>
+                <View>
+                    <CommonText showText={'Email Verification'} fontSize={20} />
+                </View>
+                <View style={styles.textinputConatiner}>
+                    <CommonText regular showText={'Please enter the verification code sent to '} fontSize={15} />
+                    <View style={styles.centerText}>
+                        <CommonText regular showText={email_id} fontSize={15} />
+                        <TouchableOpacity onPress={() => navigation.goBack()} >
+                            <CommonText customstyles={{ textDecorationLine: 'underline', marginLeft: 2 }} showText={'Edit'} fontSize={15} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.otpContainer}>
+                        {[
+                            firstTextInputRef,
+                            secondTextInputRef,
+                            thirdTextInputRef,
+                            fourthTextInputRef,
+                        ].map((textInputRef, index) => (
+                            <OtpTextinput
+                                value={otpArray[index]}
+                                onKeyPress={onOtpKeyPress(index)}
+                                onChange={onOtpChange(index)}
+                                keyboardType={'numeric'}
+                                maxLength={1}
+                                style={[styles.otpText]}
+                                autoFocus={index === 0 ? true : undefined}
+                                refData={refCallback(textInputRef)}
+                                key={index}
+                            />
+                        ))}
+                    </View>
+                    <View style={styles.resendContainer}>
+                        <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
+                        <TouchableOpacity onPress={onResendClick}  >
+                            <CommonText customstyles={{ textDecorationLine: 'underline' }} showText={'Resend'} fontSize={14} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <Button onPress={VerifyButtonHandler} showText={'Verify'} onLoading={loading} />
             </ScrollView>
-        </SafeAreaView>
+        </CommonView>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    innerContainer: {
-        width: '90%',
-        alignSelf: 'center'
-    },
     textinputConatiner: {
         marginVertical: 15
-    },
-    button: {
-        marginTop: 130
     },
     centerText: {
         marginTop: 20,
         alignItems: 'center'
     },
-    bottomButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignSelf: 'center',
-        marginVertical: 20,
-    },
-    bottomText: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignSelf: 'center',
-        marginTop: 50
-    },
     imageContainer: {
-        marginVertical: 45
+        marginVertical: 45,
+        alignItems: 'center'
     },
     otpContainer: {
         flexDirection: 'row',
@@ -261,9 +262,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginTop: 10,
     },
-    centerText: { flexDirection: 'row', alignItems: 'center' },
-    resendContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 35 },
-
+    centerText: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    resendContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 35
+    }
 })
 
 

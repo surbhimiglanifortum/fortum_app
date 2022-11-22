@@ -1,4 +1,4 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
+import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView, Platform } from 'react-native'
 import React, { useState, useContext, useRef } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
@@ -18,29 +18,29 @@ import SnackContext from '../../Utils/context/SnackbarContext'
 
 const MobileVerification = ({ route }) => {
 
-    const dispatch = useDispatch();
-
-    const navigation = useNavigation()
-    const scheme = useColorScheme();
-
-    const otpField1 = useRef(null);
-    const otpField2 = useRef(null);
-    const otpField3 = useRef(null);
-    const otpField4 = useRef(null);
-
-    const [userInput1, setUserInput1] = useState('')
-    const [userInput2, setUserInput2] = useState('')
-    const [userInput3, setUserInput3] = useState('')
-    const [userInput4, setUserInput4] = useState('')
-
-    let otpConcatData = userInput1.concat(userInput2).concat(userInput3).concat(userInput4)
-
-    const { setOpenCommonModal } = useContext(SnackContext);
-    // OTP
-    const [loading, setLoading] = useState(false)
     let { mobile_number, email_id, signin } = route.params;
     let user = route.params?.user
 
+    const isAndroid = Platform.OS === 'android';
+
+    const { setOpenCommonModal } = useContext(SnackContext);
+    const dispatch = useDispatch();
+    const navigation = useNavigation()
+    const scheme = useColorScheme();
+
+    const firstTextInputRef = useRef(null);
+    const secondTextInputRef = useRef(null);
+    const thirdTextInputRef = useRef(null);
+    const fourthTextInputRef = useRef(null);
+
+    const [otpArray, setOtpArray] = useState(['', '', '', '']);
+    const [loading, setLoading] = useState(false)
+
+    const refCallback = textInputRef => node => {
+        textInputRef.current = node;
+    };
+
+    // OTP
     async function verifyOTP(number, otp) {
 
         const url = appconfig.TOTAL_BASE_URL + '/verifyotp'
@@ -59,13 +59,14 @@ const MobileVerification = ({ route }) => {
     }
 
     const VerifyButtonHandler = async () => {
-        if (!otpConcatData || otpConcatData == "" || otpConcatData.length < 4) {
+        const otp = otpArray.join('');
+        if (!otp || otp == "" || otp.length < 4) {
             setOpenCommonModal({ isVisible: true, message: "Enter OTP" })
             return
         }
         setLoading(true)
         if (!signin) {
-            verifyOTP(mobile_number.replace("+91", ""), otpConcatData).then(async r => {
+            verifyOTP(mobile_number.replace("+91", ""), otp).then(async r => {
                 console.log("verifyOTP", r)
                 if (r?.verified) {
                     // SIgnup to cognito
@@ -185,6 +186,49 @@ const MobileVerification = ({ route }) => {
     const onPhoneEdit = () => {
         navigation.goBack()
     }
+
+    const onOtpKeyPress = index => {
+        return ({ nativeEvent: { key: value } }) => {
+            if (value === 'Backspace' && otpArray[index] === '') {
+                if (index === 1) {
+                    firstTextInputRef.current.focus();
+                } else if (index === 2) {
+                    secondTextInputRef.current.focus();
+                } else if (index === 3) {
+                    thirdTextInputRef.current.focus();
+                }
+
+                if (isAndroid && index > 0) {
+                    const otpArrayCopy = otpArray.concat();
+                    otpArrayCopy[index - 1] = '';
+                    setOtpArray(otpArrayCopy);
+                }
+            }
+        };
+    };
+
+    const onOtpChange = index => {
+        return value => {
+            if (isNaN(Number(value))) {
+                return;
+            }
+            const otpArrayCopy = otpArray.concat();
+            otpArrayCopy[index] = value;
+            setOtpArray(otpArrayCopy);
+
+            if (value !== '') {
+                if (index === 0) {
+                    secondTextInputRef.current.focus();
+                } else if (index === 1) {
+                    thirdTextInputRef.current.focus();
+                } else if (index === 2) {
+                    fourthTextInputRef.current.focus();
+                }
+            }
+        };
+    };
+
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <ScrollView>
@@ -205,30 +249,24 @@ const MobileVerification = ({ route }) => {
 
                         </View>
                         <View style={styles.otpContainer}>
-                            <OtpTextinput refData={otpField1} value={userInput1} onChange={(pin1) => {
-                                setUserInput1(pin1);
-                                if (pin1 !== '') {
-                                    otpField2.current.focus();
-                                }
-                            }} />
-                            <OtpTextinput refData={otpField2} value={userInput2} onChange={(pin2) => {
-                                setUserInput2(pin2);
-                                if (pin2 !== '') {
-                                    otpField3.current.focus();
-                                }
-                            }} />
-                            <OtpTextinput refData={otpField3} value={userInput3} onChange={(pin3) => {
-                                setUserInput3(pin3);
-                                if (pin3 !== '') {
-                                    otpField4.current.focus();
-                                }
-                            }} />
-                            <OtpTextinput refData={otpField4} value={userInput4} onChange={(pin4) => {
-                                setUserInput4(pin4);
-                                if (pin4 !== '') {
-                                    otpField4.current.focus();
-                                }
-                            }} />
+                            {[
+                                firstTextInputRef,
+                                secondTextInputRef,
+                                thirdTextInputRef,
+                                fourthTextInputRef,
+                            ].map((textInputRef, index) => (
+                                <OtpTextinput
+                                    value={otpArray[index]}
+                                    onKeyPress={onOtpKeyPress(index)}
+                                    onChange={onOtpChange(index)}
+                                    keyboardType={'numeric'}
+                                    maxLength={1}
+                                    style={[styles.otpText]}
+                                    autoFocus={index === 0 ? true : undefined}
+                                    refData={refCallback(textInputRef)}
+                                    key={index}
+                                />
+                            ))}
                         </View>
                         <View style={styles.resendContainer}>
                             <CommonText regular showText={'Didn’t receive the code?  '} fontSize={14} />
