@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, useRef, useCallback } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme, FlatList } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme, FlatList,Linking } from 'react-native'
 import colors from '../../Utils/colors';
 import MapList from './ChargerList/MapList';
 import IconCardWithoutBg from '../../Component/Card/IconCardWithoutBg';
@@ -28,10 +28,17 @@ import { AddToRedux } from '../../Redux/AddToRedux';
 import * as Types from '../../Redux/Types'
 import axios from "axios";
 import appConfig from '../../../appConfig'
+
+
 let selectedMarker = ""
 let mLocationPayload = {}
 let flatListBottomList
 export default Home = ({ navigatedata }) => {
+
+
+
+
+
   const isFocused = useIsFocused()
   const mapRef = useRef();
   flatListBottomList = useRef();
@@ -363,6 +370,7 @@ console.log("scannerButtonHandler")
               <MaterialIcons name='qr-code-scanner' color={scheme == 'dark' ? colors.white : colors.black} size={22} />
             </TouchableOpacity>
           </CommonCard>
+
         </View>}
 
         {selectedTab != 'List' && !selectedCharger &&
