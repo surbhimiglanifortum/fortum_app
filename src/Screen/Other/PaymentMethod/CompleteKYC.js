@@ -1,4 +1,4 @@
-import { View, StyleSheet, useColorScheme, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import { View, StyleSheet, useColorScheme, ScrollView, TouchableOpacity, Linking } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react'
 import colors from '../../../Utils/colors'
 import CommonText from '../../../Component/Text/CommonText'
@@ -67,14 +67,6 @@ const CompleteKYC = ({ route }) => {
     const handleConfirm = (date) => {
          let dob = moment(date).format('LL')
         setDob(dob)
-        // let month = String(new Date(dob).getMonth() + 1)
-        // let day = String(new Date(dob).getDate())
-        // if (month.length <= 1)
-        //     month = '0' + month
-        // if (day.length <= 1)
-        //     day = '0' + day
-        // let fullDob = `${new Date(dob).getFullYear()}-${month}-${day}`
-        console.log(moment(date).format('YYYY-MM-DD'))
         setDobTech(moment(date).format('YYYY-MM-DD'))
         hideDatePicker();
     };
@@ -88,19 +80,8 @@ const CompleteKYC = ({ route }) => {
     };
 
     const docHandleConfirm = (date) => {
-
-
-
         let docDate = moment(date).format('LL')
         setDocDate(docDate)
-        // let month = String(new Date(docDate).getMonth() + 1)
-        // let day = String(new Date(docDate).getDate())
-        // if (month.length <= 1)
-        //     month = '0' + month
-        // if (day.length <= 1)
-        //     day = '0' + day
-        // let fullDocDate = `${new Date(docDate).getFullYear()}-${month}-${day}`
-        console.log(moment(date).format('YYYY-MM-DD'))
         setDocDateTech(moment(date).format('YYYY-MM-DD'))
         docHideDatePicker();
     };
