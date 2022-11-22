@@ -381,7 +381,7 @@ const CompleteKYC = ({ route }) => {
                 }
             </ScrollView>
 
-            <Button showText={'Compelete to KYC'} onPress={onDocumentVerify} />
+            <Button showText={'Compelete to KYC'} onPress={onDocumentVerify} onLoading={loadingSign} />
 
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
