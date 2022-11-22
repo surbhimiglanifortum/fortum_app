@@ -107,10 +107,10 @@ const RechargeWallet = ({ route }) => {
   const onChange = e => {
     // const input = e.currentTarget.value;
     if (/^[^!-\/:-@\[-`{-~]+$/.test(e) || e === "") {
-      // setValue(input);
-      setAmount({ value: e, error: '' })
+      setAmount({ value: e.trim(), error: '' })
     }
   };
+
   let lazyAmount = [50, 100, 120, 150]
   let lazyAmount2 = [200, 300, 400, 500]
 
@@ -132,12 +132,12 @@ const RechargeWallet = ({ route }) => {
                 onChange={(text) => onChange(text)}
                 placeholderText={'50'}
                 style={styles.input}
-                keyboardType={'number-pad'}
+                keyboardType={'numeric'}
                 maxLength={5}
               />
             </View>
 
-            <TouchableOpacity onPress={() => setAmount({ value: (parseInt(amount.value) + 50).toString(), error: '' })}>
+            <TouchableOpacity onPress={() => setAmount({ value: (isNaN((parseInt(amount.value) + 50)) == true ? "0" : (parseInt(amount.value) + 50)).toString(), error: '' })}>
               <CommonCard style={{ padding: 10, backgroundColor: colors.green, height: 50, width: 50, alignItems: 'center' }} >
                 <CommonText showText={'+'} customstyles={[{ color: colors.white }]} fontSize={20} bold />
               </CommonCard>
