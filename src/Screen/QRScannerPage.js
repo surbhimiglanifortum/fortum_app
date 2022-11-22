@@ -9,8 +9,8 @@ import {
     Linking
 } from 'react-native';
 
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import { RNCamera } from 'react-native-camera';
+// import QRCodeScanner from 'react-native-qrcode-scanner';
+// import { RNCamera } from 'react-native-camera';
 
 class ScanScreen extends Component {
     onSuccess = e => {

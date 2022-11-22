@@ -2,6 +2,7 @@ import { Auth } from 'aws-amplify';
 import appconfig from '../../Utils/appconfig';
 import axios from '../BaseUrl'
 import { generateSHA } from '../../Utils/HelperCommonFunctions'
+import { appConfig } from '../../../appConfig';
 
 export const getUserDetails = async () => {
     const result = await Auth.currentAuthenticatedUser();
@@ -253,4 +254,9 @@ export const invoiceMap = async (payload) => {
 
 export const gstMap = async (payload) => {
     return await axios.post('/api_app/invoice_map/',payload);
+}
+
+export const qrCodeService = async (locid, payload) => {
+    console.log("Check URL","/api_app/locations/gist/" + locid, payload )
+    return await axios.post("/api_app/locations/gist/" + locid, payload);
 }
