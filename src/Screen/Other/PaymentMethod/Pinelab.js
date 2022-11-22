@@ -105,7 +105,7 @@ const FortumChargeAndDriveCard = () => {
 
                 <PinelabCard width={'100%'} />
 
-                <CommonText showText={`Card Status : ${status}`} customstyles={{ marginVertical: 10, textAlign: 'center' }} />
+                {status != '' && <CommonText showText={`Card Status : ${status}`} customstyles={{ marginVertical: 10, textAlign: 'center' }} />}
             </ScrollView>
 
             {

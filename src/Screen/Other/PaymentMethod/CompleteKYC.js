@@ -1,4 +1,4 @@
-import { View, StyleSheet, useColorScheme, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import { View, StyleSheet, useColorScheme, ScrollView, TouchableOpacity, Linking } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react'
 import colors from '../../../Utils/colors'
 import CommonText from '../../../Component/Text/CommonText'
