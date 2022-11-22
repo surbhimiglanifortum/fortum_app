@@ -1,6 +1,5 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView, Platform } from 'react-native'
+import { View, StyleSheet, useColorScheme, TouchableOpacity, ScrollView, Platform } from 'react-native'
 import React, { useRef, useState, useContext } from 'react'
-import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import CommonText from '../../Component/Text/CommonText';
 import Button from '../../Component/Button/Button';
@@ -48,7 +47,7 @@ const Verification = ({ route }) => {
         if (!signin) {
             try {
 
-                Auth.sendCustomChallengeAnswer(user, otpConcatData).then(success => {
+                Auth.sendCustomChallengeAnswer(user, otp).then(success => {
                     console.log("sendCustomChallengeAnswer", success)
                     if (success.signInUserSession) {
 

@@ -71,11 +71,6 @@ const ActivateCard = () => {
             if (result.data?.message) {
                 if (result.data?.message === "RequestId Generated successfully") {
                     setDisable(false)
-                    setOpenCommonModal({
-                        isVisible: true, message: 'OTP send successfully !!!', onOkPress: () => {
-                            console.log("OKPressed")
-                        }
-                    })
                 } else {
                     setOpenCommonModal({
                         isVisible: true, message: result.data?.message, onOkPress: () => {
@@ -107,24 +102,20 @@ const ActivateCard = () => {
         }
 
         try {
-            setLoadingSign(true)
             const payload = {
                 email: mUserDetails?.username
             }
             const result = await resendPinelabOtp(payload)
+            console.log("On Resend OTP Result", result.data)
             if (!result.data?.success) {
                 setOpenCommonModal({
-                    isVisible: true, message: result.data?.message, onOkPress: () => { }
-                })
-            } else {
-                setOpenCommonModal({
-                    isVisible: true, message: 'OTP resend successfully !!!', onOkPress: () => { }
+                    isVisible: true, message: result.data?.message, onOkPress: () => {
+                        console.log("OKPressed")
+                    }
                 })
             }
-            setLoadingSign(false)
         } catch (error) {
             console.log("On Resend OTP error", error)
-            setLoadingSign(false)
         }
     }
 
@@ -201,8 +192,8 @@ const ActivateCard = () => {
                     <Textinput value={mUserDetails?.phone_number} editable={false} />
                 </View>
 
-                <TouchableOpacity style={[styles.otpBtn, { borderColor: disable ? colors.green : colors.grey }]} onPress={otpSend} disabled={!disable}>
-                    <CommonText showText={'Send OTP'} fontSize={18} customstyles={{ color: disable ? colors.green : colors.grey }} />
+                <TouchableOpacity style={styles.otpBtn} onPress={otpSend}>
+                    <CommonText showText={'Send OTP'} fontSize={18} customstyles={{ color: colors.green }} />
                 </TouchableOpacity>
 
                 <CommonText showText={'Enter OTP'} />
@@ -255,7 +246,7 @@ const ActivateCard = () => {
                     <View style={styles.bottomText}>
                         <CommonText showText={'Didn’t receive the code? '} regular fontSize={14} />
                         <TouchableOpacity onPress={onResendOtp}>
-                            <CommonText showText={'Resend'} fontSize={14} customstyles={styles.resendText} />
+                            <CommonText showText={'Resend'} fontSize={14} />
                         </TouchableOpacity>
                     </View>
                 }
@@ -288,12 +279,13 @@ const styles = StyleSheet.create({
     },
     otpBtn: {
         borderWidth: 1,
+        borderColor: colors.green,
         paddingVertical: 15,
         paddingHorizontal: 10,
         alignItems: 'center',
         marginBottom: 20,
         marginTop: 10,
-        borderRadius: 12,
+        borderRadius: 10
     },
     otpContainer: {
         flexDirection: 'row',
@@ -308,9 +300,6 @@ const styles = StyleSheet.create({
     },
     errorText: {
         color: colors.red
-    },
-    resendText: {
-        textDecorationLine: 'underline'
     }
 })
 
