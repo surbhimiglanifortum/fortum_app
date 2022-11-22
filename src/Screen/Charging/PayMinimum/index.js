@@ -8,7 +8,7 @@ import CommonText from '../../../Component/Text/CommonText'
 import { useSelector, useDispatch } from 'react-redux'
 import { AddToRedux } from '../../../Redux/AddToRedux'
 import * as Types from '../../../Redux/Types'
-import { getUserDetails, getPaymentOption, payAsYouGo, walletBalanceEnquiry, checkOrderId, blockAmount } from '../../../Services/Api'
+import { getUserDetails, getPaymentOption, payAsYouGo, walletBalanceEnquiry, checkOrderId, blockAmount, qrCodeService } from '../../../Services/Api'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import CommonCard from '../../../Component/Card/CommonCard'
 import RadioBtn from '../../../Component/Button/RadioButton'
@@ -21,8 +21,9 @@ const PayMinimum = ({ route }) => {
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
     const gstState = mUserDetails?.defaultState
-    const locDetails = route?.params?.locDetails
     const evDetails = route.params?.evDetails
+
+    console.log("Check Pay Minimum Route", route.params)
 
     const dispatch = useDispatch();
     const isFocused = useIsFocused()
@@ -44,8 +45,31 @@ const PayMinimum = ({ route }) => {
     const [prepaidCardBalance, setPrepaidCardBalance] = useState('')
     const [colorText, setColorText] = useState('red')
     const [orderExist, setOrderExist] = useState(false)
-
     const [isShow, setShow] = useState(true)
+    const [locDetails, setLocDetails] = useState(route?.params?.locDetails)
+
+    const qrLocationData = async () => {
+        try {
+            const payload = {
+                username: mUserDetails?.username
+            }
+            const r = await qrCodeService(route?.params?.locid, payload)
+            console.log("check Response", r.data)
+            var data = r.data;
+            data = {
+                ...r.data, address: {
+                    "city": r.data?.city,
+                    "street": r.data?.address,
+                    "countryIsoCode": "IND",
+                    "postalCode": r.data?.postal_code
+                }
+            }
+            console.log("Check Response Data 123", data)
+            setLocDetails(data)
+        } catch (error) {
+            console.log("Check Error in fatch QR location", error)
+        }
+    }
 
     const checkWalletBalance = () => {
         setMode('CLOSED_WALLET')
@@ -116,7 +140,6 @@ const PayMinimum = ({ route }) => {
         }
     }
 
-
     const checkOrderIdStatus = async () => {
         setGoodToGo(false)
         setMode('PAY_AS_U_GO')
@@ -156,6 +179,9 @@ const PayMinimum = ({ route }) => {
     useEffect(() => {
         paymentOptions()
         fatchPinelabWalletBalance()
+        if (route?.params?.callFrom) {
+            qrLocationData()
+        }
     }, [])
 
     const prepaidCard = () => {
@@ -329,8 +355,6 @@ const PayMinimum = ({ route }) => {
                                     />
                                 </CommonCard>
                             }
-
-                            {console.log("Check Mode", mode, "check pin", askPin)}
 
                             {
                                 (mode == "PREPAID_CARD" && askPin) &&

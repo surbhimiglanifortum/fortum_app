@@ -50,7 +50,7 @@ import Pinelab from '../Screen/Other/PaymentMethod/Pinelab'
 import AddMoneyDone from '../Screen/Other/PaymentMethod/AddMoneyDone';
 import OrderCard from '../Screen/Other/PaymentMethod/OrderCard';
 import CardOrderConfirmed from '../Screen/Other/PaymentMethod/CardOrderConfimed'
-import QrScanner from '../Screen/QrScanner';
+import QrScanner from '../Screen/Home/QrScanner';
 
 const Stack = createNativeStackNavigator();
 

@@ -2,7 +2,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList, RefreshControl, BackHandl
 import React, { useState, useEffect } from 'react'
 import { scale } from 'react-native-size-matters'
 import Card from '../../Component/Card/Card'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
 import routes from '../../Utils/routes'
 import { useQuery } from 'react-query'
 import { chargingListCompleted, chargingList } from '../../Services/Api'
@@ -17,10 +17,15 @@ import DenseCard from '../../Component/Card/DenseCard/index'
 import ChargerRed from '../../assests/svg/ChargerRed'
 import Header from '../../Component/Header/Header'
 
+let backHandler
+
 const Charging = ({ setSelectedTab }) => {
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
     const navigation = useNavigation()
+    const isFocused = useIsFocused()
+
     const [tab, setTab] = useState('ongoing')
     const [loaderOpen, setLoaderOpen] = useState(false)
 
@@ -78,15 +83,12 @@ const Charging = ({ setSelectedTab }) => {
         return true
     }
 
-    let backHandler
-
     useEffect(() => {
-        backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
-
+        backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
         return () => {
             backHandler.remove()
         }
-    }, [])
+    }, [isFocused])
 
     return (
         <CommonView>
