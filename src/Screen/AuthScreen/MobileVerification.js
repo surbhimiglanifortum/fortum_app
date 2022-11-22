@@ -111,7 +111,7 @@ const MobileVerification = ({ route }) => {
             })
         } else {
             try {
-                await Auth.sendCustomChallengeAnswer(user, otpConcatData)
+                await Auth.sendCustomChallengeAnswer(user, otp)
                     .then(async e => {
                         console.log(e)
                         if (e.signInUserSession) {
