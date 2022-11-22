@@ -112,8 +112,14 @@ const MobileVerification = ({ route }) => {
         } else {
             try {
                 await Auth.sendCustomChallengeAnswer(user, otp)
-                    .then(e => {
-                        loginSuccess()
+                    .then(async e => {
+                        console.log(e)
+                        if (e.signInUserSession) {
+                            loginSuccess()
+                        } else {
+                            // enter valid OTP
+                            setOpenCommonModal({ isVisible: true, message: "OTP is wrong please re enter " })
+                        }
                     }).catch(e => {
                         console.log("ERROR", e)
                         setOpenCommonModal({ isVisible: true, message: e.message })
