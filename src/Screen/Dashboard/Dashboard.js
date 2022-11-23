@@ -34,7 +34,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
 
       }
     }).catch(err => {
-      console.log(err)
+      dispatch(AddToRedux({}, Types.USERDETAILS))
     })
   }, [])
 

@@ -154,7 +154,7 @@ export default Home = ({ navigatedata }) => {
   const CallCheckActiveSession = async () => {
     console.log(checkActiveSession)
     if (checkActiveSession) {
-      console.log("CHECK actove session")
+
       if (mUserDetails?.username) {
         const response = await ApiAction.chargingList(mUserDetails.username)
         console.log(response.data)

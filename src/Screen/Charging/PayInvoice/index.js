@@ -17,7 +17,7 @@ import SnackContext from '../../../Utils/context/SnackbarContext'
 import CommonCard from '../../../Component/Card/CommonCard'
 import DenseCard from '../../../Component/Card/DenseCard'
 import CryptoJS from 'crypto-js'
-import { encryptedPassword } from '../../../Utils/GlobalDefines'
+import { encryptedPassword } from '../../../Utils/globalDefines'
 import LinearInput from '../../../Component/Textinput/linearInput'
 
 

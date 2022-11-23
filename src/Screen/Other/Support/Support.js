@@ -11,7 +11,7 @@ import PrivacySvg from '../../../assests/svg/PrivacySvg'
 import CallSvg from '../../../assests/svg/CallSvg'
 import SupportSvg from '../../../assests/svg/SupportSvg'
 import WhatsSvg from '../../../assests/svg/WhatsSvg'
-import GlobalDefines from '../../../Component/GlobalDefines'
+import GlobalDefines from '../../../Utils/globalDefines'
 import routes from '../../../Utils/routes'
 import CommonView from '../../../Component/CommonView'
 

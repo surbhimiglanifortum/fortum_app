@@ -8,7 +8,7 @@ import axios from 'axios'
 import CommonText from '../../Component/Text/CommonText'
 import routes from '../../Utils/routes'
 import SnackContext from '../../Utils/context/SnackbarContext'
-
+import { useDispatch } from 'react-redux'
 let eventListener;
 let clientId = "fortum"
 let merchantId = "fortum"
@@ -20,6 +20,8 @@ let juspay_process_payload = {}
 let orderStatus
 
 const PaymentScreenJuspay = (props) => {
+
+    const dispatch = useDispatch()
 
     const { setOpenCommonModal } = useContext(SnackContext);
 
@@ -312,7 +314,7 @@ const PaymentScreenJuspay = (props) => {
                 try {
                     props?.route?.params?.paymentSuccess()
                 } catch (error) {
-                    
+
                 }
                 if (props.route.params?.callFrom === 'payPendingInvoice') {
                     props.navigation.pop(1)
@@ -324,7 +326,12 @@ const PaymentScreenJuspay = (props) => {
                     props.navigation.replace(routes.AddMoneyDone)
                 } if (props.route.params?.callFrom === 'MyCart') {
                     props.navigation.replace(routes.OrderPlaced)
-                }  else {
+                    dispatch({
+                        type: 'CLEAR_CART',
+                        payload: []
+                    })
+
+                } else {
                     // props.navigation.goBack()
                 }
 
