@@ -19,10 +19,10 @@ const Notification = ({ setSelectedTab }) => {
     setSelectedTab('home')
   }
 
-  const backAction = () => {
-    setSelectedTab('home')
-    return true
-  }
+  // const backAction = () => {
+  //   setSelectedTab('home')
+  //   return true
+  // }
 
 
 
