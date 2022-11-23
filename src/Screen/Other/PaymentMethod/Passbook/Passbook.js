@@ -132,7 +132,7 @@ const Passbook = () => {
             month = "0" + month
         }
         let d = new Date(date).getDate()
-        let end = `${year}-${month}-${d}T24:00:00`
+        let end = `${year}-${month}-${d}T23:59:00`
         setTechEnd(end)
         hideEndDatePicker();
     };
@@ -375,11 +375,11 @@ const Passbook = () => {
                 {selectedTab == 'receive' ?
                     <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
                         <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
-                            <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Receive</Text>
+                            <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Received</Text>
                         </TouchableOpacity>
                     </DenseCard> :
                     <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
-                        <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Receive</Text>
+                        <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Received</Text>
                     </TouchableOpacity>
                 }
             </View>
@@ -397,6 +397,7 @@ const Passbook = () => {
                 setNoTrans={setNoTrans}
                 onClosePress={() => setModalVisible(false)}
                 onPress={refetch}
+                loader={isLoading}
             />
 
             <DateTimePickerModal

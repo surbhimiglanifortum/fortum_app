@@ -7,7 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Button from '../Button/Button'
 import WhiteButton from '../Button/WhiteButton'
 
-const PinelabPassbookFilter = ({ isVisible, bgStyle, startDate, endDate, showStartDatePicker, showEndDatePicker, noTrans, setNoTrans, onClosePress, onPress }) => {
+const PinelabPassbookFilter = ({ isVisible, bgStyle, startDate, endDate, showStartDatePicker, showEndDatePicker, noTrans, setNoTrans, onClosePress, onPress, loader }) => {
 
     return (
         <Modal
@@ -63,7 +63,7 @@ const PinelabPassbookFilter = ({ isVisible, bgStyle, startDate, endDate, showSta
                     <View style={styles.wrapper}>
                         <WhiteButton showText={'Cancel'} style={{ flex: 1, marginRight: 5 }} onPress={onClosePress} />
                         <View style={{ flex: 1, marginLeft: 5 }}>
-                            <Button showText={'Show'} onPress={onPress} />
+                            <Button showText={'Show'} onPress={onPress} onLoading={loader} />
                         </View>
                     </View>
                 </CommonView>
