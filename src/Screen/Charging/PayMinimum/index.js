@@ -106,6 +106,7 @@ const PayMinimum = ({ route }) => {
     }
 
     const blockMinBalance = async () => {
+        setLoadingSign(true)
         if (pin.value.length < 6) {
             setPin({ value: pin.value, error: "Please enter correct card pin." })
             return
@@ -118,6 +119,7 @@ const PayMinimum = ({ route }) => {
                 Amount: evDetails?.connectors[0]?.pricing?.min_balance
             }
             const res = await blockAmount(payload);
+            setLoadingSign(true)
             console.log("Check PreAuth", res.data)
             if (res.data.success) {
                 dispatch(AddToRedux(res.data, Types.PINELABAUTH))
@@ -136,6 +138,7 @@ const PayMinimum = ({ route }) => {
                 setGoodToGo(false)
             }
         } catch (error) {
+            setLoadingSign(true)
             console.log("Check Response from blockMinBalance error", error)
         }
     }
@@ -282,7 +285,7 @@ const PayMinimum = ({ route }) => {
             case 'PREPAID_CARD':
                 console.log("Check Prepaid Card Selection")
                 blockMinBalance()
-                setLoadingSign(false)
+                // setLoadingSign(false)
                 break;
             default:
                 console.log("In Default Case", mode)
@@ -384,7 +387,7 @@ const PayMinimum = ({ route }) => {
 
                         </View>
 
-                        {console.log("Check Pay As you go order id", payAsYouGoOrderId)}
+
 
                         <View style={styles.fixedContainer}>
                             <Button showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() => {
