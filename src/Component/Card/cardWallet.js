@@ -32,7 +32,7 @@ const CardWallet = ({ navigationHandler, Svg, dataItem, }) => {
                 </View>
                 <View>
                     <CommonText showText={`${dataItem?.item?.topUpBalance ? ` + ₹ ${parseFloat(dataItem?.item?.topUpBalance.toFixed(2))}` : `₹ ${dataItem?.item?.consumedAmount ? dataItem?.item?.consumedAmount : '0'}`}`} fontSize={16} customstyles={{ color: dataItem?.item?.topUpBalance ? colors.green : colors.red }} />
-                    <CommonText regular showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '120'} Min`} fontSize={14} />
+                    {/* <CommonText regular showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '120'} Min`} fontSize={14} /> */}
                 </View>
             </TouchableOpacity>
         </CommonCard>

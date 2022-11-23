@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, FlatList, Image, } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
@@ -61,6 +61,10 @@ const StoreDetails = ({ route }) => {
         setCartCount(1)
     }
 
+    useEffect(() => {
+      
+    }, [cartData])
+    
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
