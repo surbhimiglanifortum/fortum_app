@@ -54,7 +54,7 @@ const RechargeWallet = ({ route }) => {
   }
 
   const rechargeWallet = async () => {
-    if (amount.value == '') {
+    if (amount.value == 0) {
       setAmount({ value: '', error: "Please enter Amount." })
       return
     }
@@ -126,11 +126,11 @@ const RechargeWallet = ({ route }) => {
               </CommonCard>
             </TouchableOpacity>
             <View style={[styles.row, { flex: 1, justifyContent: 'center' }]}>
-              <CommonText showText={'₹'} customstyles={styles.rupeeText} fontSize={25} />
+              <CommonText showText={'₹'} customstyles={[styles.rupeeText,]} fontSize={25} />
               <LinearInput
                 value={amount.value}
                 onChange={(text) => onChange(text)}
-                placeholderText={'50'}
+                placeholderText={'0'}
                 style={styles.input}
                 keyboardType={'numeric'}
                 maxLength={5}
@@ -205,7 +205,6 @@ const RechargeWallet = ({ route }) => {
       </ScrollView>
       <View style={[styles.row, { justifyContent: 'space-between' }]}>
         <View style={{ width: '40%' }}>
-
           <WhiteButton showText={'Cancel'} onPress={() => navigation.goBack()} />
         </View>
         <View style={{ width: '50%' }}>
@@ -230,7 +229,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20
   },
   rupeeText: {
-    marginTop: 13
+    marginTop: 17
   }
 })
 

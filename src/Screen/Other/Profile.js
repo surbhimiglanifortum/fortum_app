@@ -42,9 +42,11 @@ const Profile = ({ route }) => {
     });
 
     const handleUpdate = (values, event) => {
+        
         try {
             updateFirstName(username, values.first_name).then((res) => {
                 updateLastName(username, values.last_name).then((result) => {
+                    event.setSubmitting(false)
                     console.log("Check Profile Update Result", res.data, result.data)
                     setOpenCommonModal({
                         isVisible: true, message: "Profile Updated Successfully !!!", onOkPress: () => {
@@ -53,12 +55,15 @@ const Profile = ({ route }) => {
                     })
                     // return
                 }).catch(error => {
+                    event.setSubmitting(false)
                     console.log("Last Name Update Error", error)
                 })
             }).catch(err => {
+                event.setSubmitting(false)
                 console.log("Last Name Update Error", err)
             })
         } catch (error) {
+            event.setSubmitting(false)
             console.log("Check Profile Update Error", error)
         }
     }
