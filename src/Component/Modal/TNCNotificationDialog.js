@@ -5,7 +5,7 @@ import { differenceInDays } from 'date-fns'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import * as TYPES from '../../Redux/Types'
 import colors from '../../Utils/colors';
-import GlobalDefines from '../GlobalDefines';
+import GlobalDefines from '../../Utils/globalDefines';
 import { getTncVersion, acceptTnc } from '../../Services/Api'
 import CommonText from '../Text/CommonText';
 import Button from '../Button/Button';
