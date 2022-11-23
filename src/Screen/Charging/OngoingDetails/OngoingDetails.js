@@ -1,5 +1,5 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Header from '../../../Component/Header/Header'
 import colors from '../../../Utils/colors'
 import CommonText from '../../../Component/Text/CommonText'
@@ -38,7 +38,7 @@ const OngoingDetails = ({ route }) => {
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const username = mUserDetails?.username
 
-  const timerRef = useRef();
+  
   const { setOpenCommonModal, setShowFeedbackModel } = useContext(SnackContext);
 
   const navigation = useNavigation()
@@ -576,7 +576,6 @@ const OngoingDetails = ({ route }) => {
 
         {/* chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? */}
 
-        <ChargingSesssionTimer ref={timerRef} />
         <DenseCard>
           <View style={styles.middleCard}>
             <View style={styles.middleInner}>
