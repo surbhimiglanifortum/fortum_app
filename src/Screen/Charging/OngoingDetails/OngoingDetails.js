@@ -24,7 +24,6 @@ import { refundCloseLoopWallet, refundPayAsUGo } from '../../../Services/Api'
 import CommonView from '../../../Component/CommonView'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
-import ChargingSesssionTimer from '../../../Component/ChargingSesssionTimer'
 
 
 var mStoppedPressed = false;
