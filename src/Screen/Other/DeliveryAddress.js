@@ -48,7 +48,7 @@ export default function DeliveryAddress({ route,navigation }) {
                 }}
             />
            </View>
-           <Button showText={'Add Address'} onPress={addAddressHandler} />
+           <Button isFlex={false} showText={'Add Address'} onPress={addAddressHandler} />
         </CommonView>
 
     )

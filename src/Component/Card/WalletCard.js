@@ -20,7 +20,7 @@ const WalletCard = ({ onPress, title, subTitle }) => {
           <CommonText showText={subTitle} regular customstyles={{ marginTop: -5 }} />
         </View>
       </View>
-      <Button showText={'Recharge'} onPress={onPress} />
+      <Button showText={'Recharge'} onPress={onPress} isFlex={false} />
     </DenseCard>
   )
 }
