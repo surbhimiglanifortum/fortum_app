@@ -365,7 +365,6 @@ const TaxInvoice = ({ route }) => {
         //     })
         // })
 
-
         // await RNPrint.print({ filePath: results.filePath })
     }
 
