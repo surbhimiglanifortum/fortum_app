@@ -18,7 +18,7 @@ const Button = ({ onPress, showText, color, onLoading, setOnLoading, style, disa
   })
 
   return (
-    <TouchableOpacity onPress={onPress}  disabled={onLoading}>
+    <TouchableOpacity onPress={onPress}  disabled={onLoading} style={{flex:1}}>
 
     <NeomorphFlex
       inner // <- enable shadow inside of neomorph
