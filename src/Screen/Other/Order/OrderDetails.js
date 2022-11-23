@@ -40,7 +40,7 @@ const OrderDetails = ({ route }) => {
             <CommonText showText={GetFormatedDateOnly(paramsData.orderdate)} fontSize={14} />
           </View>
         </DenseCard>
-        <CommonText showText={'Item'} fontSize={18} customstyles={styles.text} />
+        <CommonText showText={'Items'} fontSize={18} customstyles={styles.text} />
         <DenseCard style={styles.card}>
           <View style={styles.keyInner}>
             <View style={styles.keyInner1}>
@@ -52,11 +52,11 @@ const OrderDetails = ({ route }) => {
         </DenseCard>
         <CommonText showText={'Order Summary'} customstyles={styles.text} />
         <DenseCard style={styles.card}>
-          <View style={styles.keyInner}>
+          {/* <View style={styles.keyInner}>
             <CommonText showText={'Price'} />
             <CommonText showText={`₹ ${paramsData?.order?.amount || '0'}`} />
-          </View>
-          <View style={styles.keyInner}>
+          </View> */}
+          {/* <View style={styles.keyInner}>
             <CommonText showText={'Cost'} />
             <CommonText showText={`₹ ${'1200'}`} />
           </View>
@@ -67,10 +67,10 @@ const OrderDetails = ({ route }) => {
           <View style={styles.keyInner}>
             <CommonText showText={'Amount of SGST (0%)'} />
             <CommonText showText={`₹ ${'100'}`} />
-          </View>
+          </View> */}
           <View style={styles.keyInner}>
             <CommonText showText={'Total'} customstyles={styles.text} />
-            <CommonText showText={`₹ ${'1400'}`} customstyles={styles.text} />
+            <CommonText showText={`₹ ${paramsData?.order?.amount || '0'}`} customstyles={styles.text} />
           </View>
         </DenseCard>
       </View>
