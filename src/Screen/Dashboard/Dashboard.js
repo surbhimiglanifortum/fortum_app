@@ -27,11 +27,11 @@ const Dashboard = ({ tabName, navigation, route }) => {
   const navigatedata = route?.params?.animateMap
   const [selectedTab, setSelectedTab] = useState('home')
   const dispatch = useDispatch()
+
   useEffect(() => {
     ApiAction.getUserDetails().then(result => {
       if (result?.data) {
         dispatch(AddToRedux(result.data, Types.USERDETAILS))
-
       }
     }).catch(err => {
       dispatch(AddToRedux({}, Types.USERDETAILS))
@@ -55,10 +55,8 @@ const Dashboard = ({ tabName, navigation, route }) => {
   }
 
   const handleSelection = async (tab) => {
-
     try {
       const result = await Auth.currentAuthenticatedUser();
-
       console.log(result)
       if (result?.signInUserSession) {
         if (result.attributes.phone_number && result.attributes.phone_number != '') {

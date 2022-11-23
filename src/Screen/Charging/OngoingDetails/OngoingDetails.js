@@ -25,16 +25,19 @@ import CommonView from '../../../Component/CommonView'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 
+
 var mStoppedPressed = false;
 let sessionId = ''
 
+let counterinterval;
 const OngoingDetails = ({ route }) => {
 
-  console.log("Check Charging Screen Route", route.params)
+
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const username = mUserDetails?.username
 
+  
   const { setOpenCommonModal, setShowFeedbackModel } = useContext(SnackContext);
 
   const navigation = useNavigation()
@@ -43,7 +46,7 @@ const OngoingDetails = ({ route }) => {
   const locDetails = route?.params?.locDetails
   const evDetails = route.params?.evDetails
 
-  var counterinterval;
+
 
   const [paymentMethod, setPaymentMethod] = useState(route?.params?.paymentMethod)
   const [msg, setMsg] = useState('')
@@ -123,9 +126,12 @@ const OngoingDetails = ({ route }) => {
           if (item.auth_id.startsWith("fleet") || item.auth_id.startsWith("token_")) {
             setButtonDisable(false)
           }
-          counterinterval = setInterval(() => {
-            setChargeTime(GetCouterTime(item.start_datetime))
-          }, 1000);
+          if (!counterinterval) {
+            counterinterval = setInterval(() => {
+              setChargeTime(GetCouterTime(item.start_datetime))
+            }, 1000);
+          }
+
         }
         else {
           setChargerText('START')
@@ -266,9 +272,13 @@ const OngoingDetails = ({ route }) => {
           // setChargerState('CHARGING')
           setChargerText("Stop")
           try {
-            counterinterval = setInterval(() => {
-              setChargeTime(GetCouterTime(r.data.start_datetime))
-            }, 1000);
+
+            if (!counterinterval) {
+              counterinterval = setInterval(() => {
+                setChargeTime(GetCouterTime(r.data.start_datetime))
+              }, 1000);
+            }
+
           } catch (error) {
             console.log("Error After Charging", error)
           }
@@ -276,7 +286,7 @@ const OngoingDetails = ({ route }) => {
       } else {
         console.log(r.data.status + "!!!")
       }
-      setTimeout(() => pollSessions(authID, contSucc, active, failcounter + 1), 2000)
+      setTimeout(() => pollSessions(authID, contSucc, active, failcounter + 1), 20000)
     }).catch(err => {
       console.log(err)
     })
@@ -350,7 +360,7 @@ const OngoingDetails = ({ route }) => {
                 PreAuthCode: route?.params?.PreAuthCode
               }
             }
-            
+
             // data = {
             //   token: vtoken,
             //   location_id: locDetails?.id,

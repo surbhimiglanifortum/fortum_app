@@ -17,12 +17,10 @@ const PayAsUGoModal = ({ modalVisible, bgStyle, onRefundClick, onRestartClick, o
     const paymentOptions = async () => {
         try {
             const result = await getPaymentOption(mUserDetails?.username)
-            console.log("getPaymentOption PayAsyougomodal try block", result.data)
             if (result.data.result?.allPaymentOptions?.length > 0) {
                 const tempAllowMethods = result.data.result?.allPaymentOptions
                 const isWallet = tempAllowMethods.includes("CLOSED_WALLET")
                 setWalletAllow(isWallet)
-                console.log("Result of allow method", isWallet)
             }
         } catch (error) {
             console.log("getPaymentOption PayAsyougomodal catch block", error)
