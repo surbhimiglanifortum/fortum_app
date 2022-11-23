@@ -11,7 +11,6 @@ const CommonText = ({ showText, fontSize = 16, children, customstyles, bold, reg
     <Text onPress={onPress} style={
       [styles.text, {
         fontSize: fontSize,
-
         color: scheme == 'dark' ? colors.white : colors.lightText, fontFamily: semibold ? commonFonts.semibold : regular ? commonFonts.regular : black ? commonFonts.black : medium ? robotoFonts.medium : commonFonts.bold
       },
         customstyles
