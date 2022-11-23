@@ -47,6 +47,7 @@ const PayMinimum = ({ route }) => {
     const [orderExist, setOrderExist] = useState(false)
     const [isShow, setShow] = useState(true)
     const [locDetails, setLocDetails] = useState(route?.params?.locDetails)
+    const [loading, setLoading] = useState(false)
 
     const qrLocationData = async () => {
         try {
@@ -390,7 +391,7 @@ const PayMinimum = ({ route }) => {
 
 
                         <View style={styles.fixedContainer}>
-                            <Button showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() => {
+                            <Button onLoading={loadingSign} showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() => {
                                 goodToGo && mode == 'PAY_AS_U_GO' ? navigation.replace(routes.OngoingDetails, {
                                     locDetails: locDetails,
                                     evDetails: evDetails,
