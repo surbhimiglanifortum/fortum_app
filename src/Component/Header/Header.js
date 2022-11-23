@@ -19,8 +19,7 @@ const Header = ({ onPress, showText, backButton = true, style }) => {
         <View style={[styles.header]}>
             {backButton && <BackButton onPress={onBackPress} />}
             <CommonText showText={showText} fontSize={16} bold customstyles={[styles.headerText, {
-                marginLeft: backButton ?
-                    -25 : 0
+                
             }]} />
         </View>
     )
@@ -31,12 +30,11 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingBottom: 10,
-        paddingHorizontal: 12
     },
     headerText: {
         textAlign: 'center',
         flex: 1,
+        marginRight:50
     },
 })
 

@@ -68,9 +68,30 @@ export default Home = ({ navigatedata }) => {
     setSelectedTab('List')
   }
 
-  const favButtonHandler = () => {
+  const favButtonHandler = async () => {
 
-    navigation.navigate(routes.Favoruite, { location: location })
+
+
+    try {
+      const result = await Auth.currentAuthenticatedUser();
+
+      console.log(result)
+      if (result?.signInUserSession) {
+        if (result.attributes.phone_number && result.attributes.phone_number != '') {
+          navigation.navigate(routes.Favoruite, { location: location })
+        } else {
+          navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
+        }
+        return
+      }
+
+    } catch (error) {
+
+    }
+    navigation.navigate(routes.login)
+
+
+
   }
   const filterButtonHandler = () => {
     setOpenFilterModal(true)

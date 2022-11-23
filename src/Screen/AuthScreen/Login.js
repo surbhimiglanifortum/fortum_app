@@ -141,7 +141,9 @@ const Login = () => {
           {/* show google and facebook icon */}
           <View style={styles.bottomButton}>
             <SmallButton Svg={GoogleSvg} />
+            <View style={{marginLeft:20}}>
             <SmallButton Svg={FaceBookSvg} />
+            </View>
           </View>
         </View>
         <View style={styles.bottomText}>

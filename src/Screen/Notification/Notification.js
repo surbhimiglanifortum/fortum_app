@@ -26,12 +26,12 @@ const Notification = ({ setSelectedTab }) => {
 
 
 
-  useEffect(() => {
-    backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
-    return () => {
-      backHandler.remove()
-    }
-  }, [isFocused])
+  // useEffect(() => {
+  //   backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
+  //   return () => {
+  //     backHandler.remove()
+  //   }
+  // }, [isFocused])
 
   return (
     <CommonView>
