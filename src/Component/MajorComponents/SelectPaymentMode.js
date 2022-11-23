@@ -315,7 +315,7 @@ const SelectPaymentMode = ({ min_balance, addMoneyPress, orderStatus, isShow, se
             {
                 !isWallet ?
                     <>
-                        <Button showText={'Add Money'} onPress={addMoneyPress} style={{ marginTop: 10 }} />
+                        <Button onLoading={loadingSign} showText={'Add Money'} onPress={addMoneyPress} style={{ marginTop: 10 }} />
                     </>
                     :
                     (mode === "PAY_AS_U_GO" && isShow && !orderExist) &&
@@ -326,7 +326,7 @@ const SelectPaymentMode = ({ min_balance, addMoneyPress, orderStatus, isShow, se
                     //     disable={loadingSign}
                     //     bg={loadingSign ? AppColors.lightGray : AppColors.txtInputColo}
                     // />
-                    <Button showText={'Make Payment'} onPress={() => handleClick(mode)} />
+                    <Button showText={'Make Payment'} onPress={() => handleClick(mode)} onLoading={loadingSign} />
             }
         </SafeAreaView >
     )
