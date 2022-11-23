@@ -18,6 +18,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import NoData from '../../Component/NoDataFound/NoData'
 import Loader from '../../Component/Loader'
 import CommonView from '../../Component/CommonView'
+import { AddToRedux } from '../../Redux/AddToRedux'
+import * as Types from '../../Redux/Types'
+
+let backHandler
 
 const Wallet = ({ setSelectedTab }) => {
 
@@ -57,7 +61,7 @@ const Wallet = ({ setSelectedTab }) => {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [techStart, setTechStart] = useState(moment().subtract(30, 'days').format('YYYY-MM-DDT24:00:00'))
-  const [techEnd, setTechEnd] = useState(moment().format('YYYY-MM-DDT00:00:00'))
+  const [techEnd, setTechEnd] = useState(moment().format('YYYY-MM-DDT23:59:00'))
 
   const showStartDatePicker = () => {
     setStartDatePickerVisibility(!isStartDatePickerVisible);
@@ -76,12 +80,14 @@ const Wallet = ({ setSelectedTab }) => {
   };
 
   const handleStartConfirm = (date) => {
+    console.log("handleStartConfirm",date)
     setTechStart(moment(date).format('YYYY-MM-DDT00:00:00'))
     hideStartDatePicker();
   };
 
   const handleEndConfirm = (date) => {
-    setTechEnd(moment(date).format('YYYY-MM-DDT24:00:00'))
+    console.log("handleEndConfirm",date)
+    setTechEnd(moment(date).format('YYYY-MM-DDT23:59:00'))
     hideEndDatePicker();
   };
 
@@ -110,20 +116,16 @@ const Wallet = ({ setSelectedTab }) => {
     return true
   }
 
-  let backHandler
-
   useEffect(() => {
-    backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
-
+    backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
     return () => {
       backHandler.remove()
     }
-  }, [])
+  }, [isFocused])
 
   return (
     <CommonView style={styles.container}>
       <Header onPress={backhandler} showText={"Wallet"} />
-
 
       {/* card */}
       <WalletCard onPress={RechargeButtonHandler} title={`₹ ${balance}`} subTitle={'Your Prepaid Balance'} />

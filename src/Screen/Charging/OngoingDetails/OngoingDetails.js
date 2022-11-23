@@ -30,11 +30,18 @@ let sessionId = ''
 
 const OngoingDetails = ({ route }) => {
 
+  console.log("Check Charging Screen Route", route.params)
+
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const username = mUserDetails?.username
 
+  const { setOpenCommonModal, setShowFeedbackModel } = useContext(SnackContext);
+
   const navigation = useNavigation()
   const scheme = useColorScheme()
+
+  const locDetails = route?.params?.locDetails
+  const evDetails = route.params?.evDetails
 
   var counterinterval;
 
@@ -65,14 +72,11 @@ const OngoingDetails = ({ route }) => {
   const [isVisible, setIsVisible] = useState(false)
 
   let pollsessnioCalls = 0
+
   const stopButtonHandler = () => {
     navigation.navigate(routes.taxInvoice)
   }
 
-  const { setOpenCommonModal, setShowFeedbackModel } = useContext(SnackContext);
-
-  const locDetails = route?.params?.locDetails
-  const evDetails = route.params?.evDetails
   let lastPaidSession = {}
 
   // const checkIfUnpaid = () => {
@@ -346,6 +350,7 @@ const OngoingDetails = ({ route }) => {
                 PreAuthCode: route?.params?.PreAuthCode
               }
             }
+            
             // data = {
             //   token: vtoken,
             //   location_id: locDetails?.id,
@@ -360,12 +365,11 @@ const OngoingDetails = ({ route }) => {
             // if (paymentMethod === 'CLOSED_WALLET' || paymentMethod === 'PAY_AS_U_GO') {
             //   delete data.cardPin
             // }
+
             console.log("PUSH TO SERVER", data)
             axios.put(appconfig.TOTAL_BASE_URL + "/ocpi/emsp/2.1.1/commands/START_SESSION", data).then((r) => {
-
               console.log("commands/START_SESSION response")
               console.log(r.data)
-
               if (Array.isArray(r.data) && r.data.length > 0 && r.data[0].amount) {
                 //existing bill
                 setChargerState("STOP")
