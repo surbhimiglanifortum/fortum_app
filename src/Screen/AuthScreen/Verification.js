@@ -88,7 +88,6 @@ const Verification = ({ route }) => {
         } else {
             try {
                 Auth.sendCustomChallengeAnswer(user, otp).then(success => {
-                    console.log("Check OTP", otp, success)
                     if (success.signInUserSession) {
                         loginSuccess()
                     } else {

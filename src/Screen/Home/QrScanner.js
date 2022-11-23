@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
-import { qrCodeService } from '../../Services/Api';
+import { qrCodeService, chargingList } from '../../Services/Api';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../Utils/routes';
@@ -11,6 +11,8 @@ import SnackContext from '../../Utils/context/SnackbarContext';
 export default function QrScanner() {
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
+    const checkActiveSession = useSelector((state) => state.TempStore.checkActiveSession);
 
     const { setOpenCommonModal } = useContext(SnackContext);
 
@@ -27,13 +29,7 @@ export default function QrScanner() {
             for (let i = 0; i < allEvse.length; i++) {
                 if (allEvse[i].uid === JSON.parse(e.data).evid) {
                     console.log("Received", allEvse[i]?.status)
-                    if (allEvse[i]?.status != 'AVAILABLE') {
-                        setOpenCommonModal({
-                            isVisible: true, message: "Connector is not available.", onOkPress: () => {
-                                navigation.goBack()
-                            }
-                        })
-                    } else {
+                    if (allEvse[i]?.status == 'AVAILABLE') {
                         navigation.replace(routes.PayMinimum, {
                             locid: JSON.parse(e.data).locid,
                             evid: JSON.parse(e.data).evid,
@@ -42,6 +38,17 @@ export default function QrScanner() {
                             callFrom: 'QrScanner'
                         })
                     }
+                    if (allEvse[i]?.status == 'CHARGING') {
+                        CallCheckActiveSession()
+                    }
+                    else {
+                        setOpenCommonModal({
+                            isVisible: true, message: "Connector is not available.", onOkPress: () => {
+                                navigation.goBack()
+                            }
+                        })
+                    }
+
                     break;
                 }
             }
@@ -54,6 +61,42 @@ export default function QrScanner() {
             })
         })
     };
+
+    const CallCheckActiveSession = async () => {
+        if (mUserDetails?.username) {
+            const response = await chargingList(mUserDetails.username)
+            console.log("Check Response of CallCheckActiveSession two", response.data)
+            if (response.data && response.data.length > 0) {
+                // setOpenCommonModal({
+                //     isVisible: true, message: `You have an ongoing charging session at Charger ${response.data[0]?.location?.name} please stop the session if you have done charging!`,
+                //     heading: "Ongoing Session",
+                //     secondButton: {
+                //         onPress: () => {
+
+                //         },
+                //         title: "Ignore"
+                //     },
+
+                //     onOkPress: () => {
+                navigation.replace(routes.OngoingDetails, {
+                    locDetails: {
+                        ...response.data[0]?.location, address: {
+                            "city": response.data[0]?.location?.city,
+                            "street": response.data[0]?.location?.address,
+                            "countryIsoCode": "IND",
+                            "postalCode": "11112"
+                        }
+                    },
+                    evDetails: response.data[0]?.location?.evses[0],
+                    paymentMethod: response?.payments?.payment_method
+                })
+            }
+            // })
+            // }
+            dispatch(AddToRedux(false, Types.CHECKACTIVESESSION))
+        }
+    }
+
 
     return (
         <QRCodeScanner

@@ -10,13 +10,14 @@ import { useQuery } from 'react-query'
 import { useSelector, useDispatch } from 'react-redux'
 import { computeDistance } from '../../Utils/helperFuncations/computeDistance';
 import Loader from '../../Component/Loader'
-import CommonText from '../../Component/Text/CommonText'
 import * as Types from '../../Redux/Types'
 import { AddToRedux } from '../../Redux/AddToRedux'
 
 const Favoruite = ({ route }) => {
 
   const { location } = route.params
+
+  console.log("Check Favoruite", route.params)
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const scheme = useColorScheme()
@@ -40,9 +41,6 @@ const Favoruite = ({ route }) => {
     dispatch(AddToRedux(locationsArray, Types.FAVCHARGER))
     return locationsArray
   })
-
-
-
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
