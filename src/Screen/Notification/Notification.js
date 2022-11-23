@@ -11,6 +11,8 @@ import StoreSvg from '../../assests/svg/StoreSvg'
 import NoData from '../../Component/NoDataFound/NoData'
 import Header from '../../Component/Header/Header'
 
+let backHandler
+
 const Notification = ({ setSelectedTab }) => {
 
   const backhandler = () => {
@@ -22,15 +24,14 @@ const Notification = ({ setSelectedTab }) => {
     return true
   }
 
-  let backHandler
+
 
   useEffect(() => {
-    backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
-
+    backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
     return () => {
       backHandler.remove()
     }
-  }, [])
+  }, [isFocused])
 
   return (
     <CommonView>

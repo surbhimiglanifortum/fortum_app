@@ -27,6 +27,8 @@ import { AddToRedux } from '../../Redux/AddToRedux'
 import * as Types from '../../Redux/Types'
 import Header from '../../Component/Header/Header'
 
+let backHandler
+
 const Other = ({ setSelectedTab }) => {
 
   const userDetailsData = useSelector((state) => state.userTypeReducer)
@@ -95,15 +97,12 @@ const Other = ({ setSelectedTab }) => {
     return true
   }
 
-  let backHandler
-
   useEffect(() => {
-    backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
-
+    backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
     return () => {
       backHandler.remove()
     }
-  }, [])
+  }, [isFocused])
 
   return (
     <CommonView >

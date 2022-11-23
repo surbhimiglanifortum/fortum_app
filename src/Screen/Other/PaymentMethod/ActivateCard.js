@@ -1,4 +1,4 @@
-import { View, StyleSheet, useColorScheme, ScrollView, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, useColorScheme, ScrollView, TouchableOpacity, Platform } from 'react-native'
 import React, { useState, useRef, useContext } from 'react'
 import colors from '../../../Utils/colors'
 import CommonText from '../../../Component/Text/CommonText'
@@ -16,10 +16,19 @@ import SnackContext from '../../../Utils/context/SnackbarContext'
 const ActivateCard = () => {
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
-    const { setOpenCommonModal } = useContext(SnackContext);
 
+    const isAndroid = Platform.OS === 'android';
+
+    const { setOpenCommonModal } = useContext(SnackContext);
     const navigation = useNavigation()
     const scheme = useColorScheme()
+
+    const firstTextInputRef = useRef(null);
+    const secondTextInputRef = useRef(null);
+    const thirdTextInputRef = useRef(null);
+    const fourthTextInputRef = useRef(null);
+    const fifthTextInputRef = useRef(null);
+    const sixthTextInputRef = useRef(null);
 
     const [name, setName] = useState(mUserDetails?.first_name || '')
     const [lName, setLName] = useState(mUserDetails?.last_name || '')
@@ -28,23 +37,61 @@ const ActivateCard = () => {
     const [loadingSign, setLoadingSign] = useState(false)
     const [disable, setDisable] = useState(true)
     const [otpError, setOtpError] = useState('')
+    const [otpArray, setOtpArray] = useState(['', '', '', '', '', '']);
 
-    const otpField1 = useRef(null);
-    const otpField2 = useRef(null);
-    const otpField3 = useRef(null);
-    const otpField4 = useRef(null);
-    const otpField5 = useRef(null);
-    const otpField6 = useRef(null);
+    const refCallback = textInputRef => node => {
+        textInputRef.current = node;
+    };
 
-    const [userInput1, setUserInput1] = useState('')
-    const [userInput2, setUserInput2] = useState('')
-    const [userInput3, setUserInput3] = useState('')
-    const [userInput4, setUserInput4] = useState('')
-    const [userInput5, setUserInput5] = useState('')
-    const [userInput6, setUserInput6] = useState('')
+    const onOtpKeyPress = index => {
+        return ({ nativeEvent: { key: value } }) => {
+            if (value === 'Backspace' && otpArray[index] === '') {
+                if (index === 1) {
+                    firstTextInputRef.current.focus();
+                } else if (index === 2) {
+                    secondTextInputRef.current.focus();
+                } else if (index === 3) {
+                    thirdTextInputRef.current.focus();
+                } else if (index === 4) {
+                    fourthTextInputRef.current.focus();
+                } else if (index === 5) {
+                    fifthTextInputRef.current.focus();
+                }
 
-    let otpConcatData = userInput1.concat(userInput2).concat(userInput3).concat(userInput4).concat(userInput5).concat(userInput6)
+                if (isAndroid && index > 0) {
+                    const otpArrayCopy = otpArray.concat();
+                    otpArrayCopy[index - 1] = '';
+                    setOtpArray(otpArrayCopy);
+                }
+            }
+        };
+    };
 
+    const onOtpChange = index => {
+        return value => {
+            if (isNaN(Number(value))) {
+                return;
+            }
+            const otpArrayCopy = otpArray.concat();
+            otpArrayCopy[index] = value;
+            setOtpArray(otpArrayCopy);
+
+            if (value !== '') {
+                if (index === 0) {
+                    secondTextInputRef.current.focus();
+                } else if (index === 1) {
+                    thirdTextInputRef.current.focus();
+                } else if (index === 2) {
+                    fourthTextInputRef.current.focus();
+                } else if (index === 3) {
+                    fifthTextInputRef.current.focus();
+                } else if (index === 4) {
+                    sixthTextInputRef.current.focus();
+                }
+            }
+        };
+    };
+    
     const otpSend = async () => {
         if (name.length < 1) {
             setNameError("Please enter first the name.")
@@ -71,6 +118,11 @@ const ActivateCard = () => {
             if (result.data?.message) {
                 if (result.data?.message === "RequestId Generated successfully") {
                     setDisable(false)
+                    setOpenCommonModal({
+                        isVisible: true, message: 'OTP send successfully !!!', onOkPress: () => {
+                            console.log("OKPressed")
+                        }
+                    })
                 } else {
                     setOpenCommonModal({
                         isVisible: true, message: result.data?.message, onOkPress: () => {
@@ -102,35 +154,40 @@ const ActivateCard = () => {
         }
 
         try {
+            setLoadingSign(true)
             const payload = {
                 email: mUserDetails?.username
             }
             const result = await resendPinelabOtp(payload)
-            console.log("On Resend OTP Result", result.data)
             if (!result.data?.success) {
                 setOpenCommonModal({
-                    isVisible: true, message: result.data?.message, onOkPress: () => {
-                        console.log("OKPressed")
-                    }
+                    isVisible: true, message: result.data?.message, onOkPress: () => { }
+                })
+            } else {
+                setOpenCommonModal({
+                    isVisible: true, message: 'OTP resend successfully !!!', onOkPress: () => { }
                 })
             }
+            setLoadingSign(false)
         } catch (error) {
             console.log("On Resend OTP error", error)
+            setLoadingSign(false)
         }
     }
 
     const otpValidation = async () => {
+        const otp = otpArray.join('')
 
-        if (userInput1 == '' || userInput2 == '' || userInput3 == '' || userInput4 == '' || userInput5 == '' || userInput6 == '') {
+        if (!otp || otp == "" || otp.length < 4) {
             setOtpError("Please Enter Valid Otp.")
-            return;
+            return
         }
 
         try {
             setLoadingSign(true)
             const payload = {
                 email: mUserDetails?.username,
-                otp: otpConcatData
+                otp: otp
             }
             const result = await validatePinelabOtp(payload)
             if (result.data?.message) {
@@ -192,48 +249,33 @@ const ActivateCard = () => {
                     <Textinput value={mUserDetails?.phone_number} editable={false} />
                 </View>
 
-                <TouchableOpacity style={styles.otpBtn} onPress={otpSend}>
-                    <CommonText showText={'Send OTP'} fontSize={18} customstyles={{ color: colors.green }} />
+                <TouchableOpacity style={[styles.otpBtn, { borderColor: disable ? colors.green : colors.grey, }]} onPress={otpSend}>
+                    <CommonText showText={'Send OTP'} fontSize={18} customstyles={{ color: disable ? colors.green : colors.grey }} />
                 </TouchableOpacity>
 
                 <CommonText showText={'Enter OTP'} />
+
                 <View style={styles.otpContainer}>
-                    <OtpTextinput refData={otpField1} value={userInput1} onChange={(pin1) => {
-                        setUserInput1(pin1);
-                        if (pin1 !== '') {
-                            otpField2.current.focus();
-                        }
-                    }} />
-                    <OtpTextinput refData={otpField2} value={userInput2} onChange={(pin2) => {
-                        setUserInput2(pin2);
-                        if (pin2 !== '') {
-                            otpField3.current.focus();
-                        }
-                    }} />
-                    <OtpTextinput refData={otpField3} value={userInput3} onChange={(pin3) => {
-                        setUserInput3(pin3);
-                        if (pin3 !== '') {
-                            otpField4.current.focus();
-                        }
-                    }} />
-                    <OtpTextinput refData={otpField4} value={userInput4} onChange={(pin4) => {
-                        setUserInput4(pin4);
-                        if (pin4 !== '') {
-                            otpField5.current.focus();
-                        }
-                    }} />
-                    <OtpTextinput refData={otpField5} value={userInput5} onChange={(pin5) => {
-                        setUserInput5(pin5);
-                        if (pin5 !== '') {
-                            otpField6.current.focus();
-                        }
-                    }} />
-                    <OtpTextinput refData={otpField6} value={userInput6} onChange={(pin6) => {
-                        setUserInput6(pin6);
-                        if (pin6 !== '') {
-                            otpField6.current.focus();
-                        }
-                    }} />
+                    {[
+                        firstTextInputRef,
+                        secondTextInputRef,
+                        thirdTextInputRef,
+                        fourthTextInputRef,
+                        fifthTextInputRef,
+                        sixthTextInputRef,
+                    ].map((textInputRef, index) => (
+                        <OtpTextinput
+                            value={otpArray[index]}
+                            onKeyPress={onOtpKeyPress(index)}
+                            onChange={onOtpChange(index)}
+                            keyboardType={'numeric'}
+                            maxLength={1}
+                            style={[styles.otpText]}
+                            autoFocus={index === 0 ? true : undefined}
+                            refData={refCallback(textInputRef)}
+                            key={index}
+                        />
+                    ))}
                 </View>
 
                 {
@@ -246,7 +288,7 @@ const ActivateCard = () => {
                     <View style={styles.bottomText}>
                         <CommonText showText={'Didn’t receive the code? '} regular fontSize={14} />
                         <TouchableOpacity onPress={onResendOtp}>
-                            <CommonText showText={'Resend'} fontSize={14} />
+                            <CommonText showText={'Resend'} fontSize={14} customstyles={styles.resendText} />
                         </TouchableOpacity>
                     </View>
                 }
@@ -274,18 +316,14 @@ const styles = StyleSheet.create({
     textinputConatiner: {
         marginVertical: 10
     },
-    button: {
-        // marginTop: 130
-    },
     otpBtn: {
         borderWidth: 1,
-        borderColor: colors.green,
         paddingVertical: 15,
         paddingHorizontal: 10,
         alignItems: 'center',
         marginBottom: 20,
         marginTop: 10,
-        borderRadius: 10
+        borderRadius: 12,
     },
     otpContainer: {
         flexDirection: 'row',
@@ -300,6 +338,9 @@ const styles = StyleSheet.create({
     },
     errorText: {
         color: colors.red
+    },
+    resendText: {
+        textDecorationLine: 'underline'
     }
 })
 
