@@ -79,11 +79,11 @@ const AddAddress = () => {
         objToSend.postal_code = values.postal_code
         objToSend.phone = values.mobile_number
         const res = await addAddressService(objToSend, username)
+        navigation.goBack()
         if (res) {
             setOpenCommonModal({ isVisible: true, message: "Address Add Successfully" })
             return
         }
-        navigation.goBack()
     }
 
 
