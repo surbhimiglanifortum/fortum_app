@@ -15,7 +15,7 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText
         } catch (error) {
         }
 
-        setOpenCommonModal({ isVisible: false, message: "", heading: '', showBtnText: "" })
+        setOpenCommonModal({ isVisible: false, message: "", heading: '', showBtnText: "", })
     }
 
     return (
@@ -40,11 +40,11 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText
 
                                 }
                                 setOpenCommonModal({ isVisible: false, message: "", heading: '', showBtnText: "" })
-
                             }} style={{ flex: 1, marginHorizontal: 4 }} showText={openCommonModal.secondButton?.title}></WhiteButton>
                             }
-                            <Button style={{ flex: 1, marginHorizontal: 4 }} showText={openCommonModal.showBtnText ? openCommonModal?.showBtnText : 'Okay'} onPress={okayBtnHandler} />
+                            {/* <Button style={{ flex: 1, marginHorizontal: 4 }} showText={openCommonModal.showBtnText ? openCommonModal?.showBtnText : 'Okay'} onPress={okayBtnHandler} /> */}
                         </View>
+                            <Button style={{ flex: 1, marginHorizontal: 4 }} showText={openCommonModal.showBtnText ? openCommonModal?.showBtnText : 'Okay'} onPress={okayBtnHandler} />
                     </View>
                 </CommonView>
             </View>

@@ -16,6 +16,7 @@ import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCar
 import * as ApiAction from '../../../Services/Api'
 import routes from '../../../Utils/routes'
 import SnackContext from '../../../Utils/context/SnackbarContext'
+import NoData from '../../../Component/NoDataFound/NoData'
 
 const MyCart = ({ route }) => {
 
@@ -118,7 +119,7 @@ const MyCart = ({ route }) => {
                 <View style={styles.innerContainer}>
                     <Header showText={'MY Cart'} />
                     <View style={styles.topCard}>
-                        {cartDataDetails?.cartItem.map((item, ind) => {
+                        {cartDataDetails?.cartItem.length > 0 ?cartDataDetails?.cartItem.map((item, ind) => {
                             return (
                                 <DenseCard key={ind} padding={5}>
                                     <View style={styles.denceInnnerCard}>
@@ -138,7 +139,7 @@ const MyCart = ({ route }) => {
                                     </View>
                                 </DenseCard>
                             )
-                        })}
+                        }):<NoData showText={'No Items Found in Cart'} />}
                     </View>
                     <TouchableOpacity onPress={handleChangeDeliveryAddress}>
                         <DenseCard>
@@ -179,7 +180,7 @@ const MyCart = ({ route }) => {
                 </View>
             </ScrollView>
 
-            <Button onLoading={loading} showText={'Proceed to Pay'} onPress={ProceedToPayHadnler} />
+           {cartDataDetails?.cartItem.length > 0 &&  <Button onLoading={loading} showText={'Proceed to Pay'} onPress={ProceedToPayHadnler} />}
 
         </CommonView>
     )

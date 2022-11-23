@@ -48,7 +48,7 @@ const AddAddress = () => {
             .min(2, 'Too Short!')
             .max(50, 'Too Long!')
             .required('Address 2 Required'),
-        postal_code: Yup.string().min(6, 'Enter Valid Phone Number!').max(6, 'Enter Valid Postal Code!').matches(phoneRegExp, 'postal Code is not valid !') .required('Postal Code Required'),
+        postal_code: Yup.string().min(6, 'Enter Valid Postal Code!').max(6, 'Enter Valid Postal Code!').matches(phoneRegExp, 'postal Code is not valid !') .required('Postal Code Required'),
            
         city: Yup.string()
             .min(2, 'Too Short!')
@@ -75,7 +75,7 @@ const AddAddress = () => {
         objToSend.postal_code = values.postal_code
         objToSend.phone = values.mobile_number
         const res = await addAddressService(objToSend, username)
-        
+      
     }
 
 

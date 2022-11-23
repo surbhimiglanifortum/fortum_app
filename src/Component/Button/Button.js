@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native'
+import { TouchableOpacity, StyleSheet, ActivityIndicator, View } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
 import CommonText from '../Text/CommonText'
@@ -18,6 +18,7 @@ const Button = ({ onPress, showText, color, onLoading, setOnLoading, style, disa
   })
 
   return (
+    <TouchableOpacity onPress={onPress}  disabled={onLoading}>
 
     <NeomorphFlex
       inner // <- enable shadow inside of neomorph
@@ -35,11 +36,12 @@ const Button = ({ onPress, showText, color, onLoading, setOnLoading, style, disa
       }}
     >
 
-      <TouchableOpacity onPress={onPress} style={[styles.container]} disabled={onLoading}>
+      <View  style={[styles.container]} >
         {onLoading ? <ActivityIndicator></ActivityIndicator> :
           <CommonText showText={showText} fontSize={17} customstyles={{ color: colors.white }} />}
-      </TouchableOpacity>
+      </View>
     </NeomorphFlex>
+      </TouchableOpacity>
   )
 }
 

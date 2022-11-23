@@ -40,7 +40,7 @@ const OrderDetails = ({ route }) => {
             <CommonText showText={GetFormatedDateOnly(paramsData.orderdate)} fontSize={14} />
           </View>
         </DenseCard>
-        <CommonText showText={'Items'} fontSize={18} customstyles={styles.text} />
+        <CommonText showText={'   Items'} fontSize={18} customstyles={styles.text} />
         <DenseCard style={styles.card}>
           <View style={styles.keyInner}>
             <View style={styles.keyInner1}>
@@ -50,7 +50,7 @@ const OrderDetails = ({ route }) => {
             <CommonText showText={`₹ ${'1400'}`} />
           </View>
         </DenseCard>
-        <CommonText showText={'Order Summary'} customstyles={styles.text} />
+        <CommonText showText={'   Order Summary'} customstyles={styles.text} />
         <DenseCard style={styles.card}>
           {/* <View style={styles.keyInner}>
             <CommonText showText={'Price'} />
@@ -76,7 +76,7 @@ const OrderDetails = ({ route }) => {
       </View>
       <View style={styles.btnCon}>
         <WhiteButton showText={'Help'} style={{ width: '35%' }} />
-        <Button showText={'Download Invoice'} style={{ width: '60%' }} />
+        <Button showText={'Download Invoice'} style={{ width: '100%' }} />
       </View>
     </SafeAreaView >
   )

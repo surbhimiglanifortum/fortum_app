@@ -138,10 +138,13 @@ const Login = () => {
           <CommonText showText={'Or Sign in with'} fontSize={12} regular />
         </View>
 
+        {/* show google and facebook icon */}
         <View style={styles.bottomButton}>
-          <SmallButton Svg={GoogleSvg} />
-          <SmallButton Svg={FaceBookSvg} />
-        </View>
+            <SmallButton Svg={GoogleSvg} />
+            <View style={{marginLeft:20}}>
+            <SmallButton Svg={FaceBookSvg} />
+            </View>
+          </View>
 
         <View style={styles.bottomText}>
           <CommonText showText={'Don’t have account ? '} fontSize={14} regular />

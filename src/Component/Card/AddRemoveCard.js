@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import commonFonts from '../../Utils/fonts/fonts'
@@ -9,6 +9,7 @@ import DenseCard from '../../Component/Card/DenseCard/index'
 
 const AddRemoveCard = ({ removeQty, addQty, cartCount,disabled,showText }) => {
     const scheme = useColorScheme()
+
 
     return (
        <DenseCard padding={5}>
