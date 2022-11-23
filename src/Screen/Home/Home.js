@@ -35,10 +35,6 @@ let mLocationPayload = {}
 let flatListBottomList
 export default Home = ({ navigatedata }) => {
 
-
-
-
-
   const isFocused = useIsFocused()
   const mapRef = useRef();
   flatListBottomList = useRef();
@@ -69,24 +65,33 @@ export default Home = ({ navigatedata }) => {
   }
 
   const favButtonHandler = () => {
-
-    navigation.navigate(routes.Favoruite, { location: location })
+    handleSelection(routes.Favoruite, { location: location })
+    // navigation.navigate(routes.Favoruite, { location: location })
   }
   const filterButtonHandler = () => {
     setOpenFilterModal(true)
   }
-  const scannerButtonHandler = () => {
-    console.log("scannerButtonHandler")
-    Auth.currentSession().then(r => {
-      if (!r) {
-        navigation.navigate(routes.login)
 
-      } else {
-        if (mUserDetails.phone_number && mUserDetails.phone_number != '') {
-          navigation.navigate(routes.QRSCANNER)
+  const handleSelection = async (screen, payload) => {
+    try {
+      const result = await Auth.currentAuthenticatedUser();
+      console.log(result)
+      if (result?.signInUserSession) {
+        if (result.attributes.phone_number && result.attributes.phone_number != '') {
+          navigation.navigate(screen, payload)
+        } else {
+          navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
         }
+        return
       }
-    }).catch(err => { console.log(err); navigation.navigate("MakeChargingEasySplash") });
+    } catch (error) {
+      console.log("Error in handleSelection", error)
+    }
+    navigation.navigate(routes.login)
+  }
+
+  const scannerButtonHandler = () => {
+    handleSelection(routes.QrScanner)
   }
 
   const searchedLocation = (payload) => {
@@ -120,7 +125,6 @@ export default Home = ({ navigatedata }) => {
       // setSelectedCharger(false)
     } else {
       setSelectedCharger(true)
-
     }
 
     selectedMarker = marker_id
@@ -129,7 +133,7 @@ export default Home = ({ navigatedata }) => {
       try {
         flatListBottomList?.current?.scrollToIndex({ index: e })
       } catch (error) {
-        console.log("SDKJBS", error)
+        console.log("Error in chargingBtnHandler", error)
       }
     } else {
 
@@ -137,16 +141,12 @@ export default Home = ({ navigatedata }) => {
         try {
           flatListBottomList?.current?.scrollToIndex({ index: e })
         } catch (error) {
-          console.log("SDKJBS", error)
+          console.log("Error in chargingBtnHandler setTimeout", error)
         }
       }, 2000);
     }
 
 
-  }
-
-  const chargingCardHandler = () => {
-    navigation.navigate(routes.ChargingStation)
   }
 
   const { setOpenCommonModal } = useContext(SnackContext)
@@ -188,7 +188,7 @@ export default Home = ({ navigatedata }) => {
         dispatch(AddToRedux(false, Types.CHECKACTIVESESSION))
       }
     } else {
-      console.log("dont CHECK actove session")
+      console.log("don't CHECK active session")
     }
   }
 
@@ -209,7 +209,6 @@ export default Home = ({ navigatedata }) => {
   const addInterceptor = async () => {
     const result = await Auth.currentAuthenticatedUser();
     if (result.signInUserSession) {
-      console.log("add Intecept")
       axios.interceptors.request.use(async (config) => {
         // console.log("AUTH ",Auth)
         const token = await Auth.currentSession().catch(err => { console.log(err) });
@@ -230,8 +229,6 @@ export default Home = ({ navigatedata }) => {
       userDetailsUpdated()
     })
     getLocationAndAnimate()
-
-
   }, [])
 
   useEffect(() => {
@@ -241,7 +238,6 @@ export default Home = ({ navigatedata }) => {
 
   const { data, status, isLoading, isRefetching, refetch, refetc } = useQuery('MapData', async () => {
     {
-      // console.log("SDKS", context)
       try {
 
         const payload = { ...mLocationPayload, username: mUserDetails?.username || "" }

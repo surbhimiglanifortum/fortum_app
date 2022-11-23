@@ -51,8 +51,8 @@ const Other = ({ setSelectedTab }) => {
       index: 0,
       routes: [{ name: routes.dashboard }],
     });
-
   }
+  
   const preferenceHandler = () => {
     navigation.navigate(routes.Preference)
   }
