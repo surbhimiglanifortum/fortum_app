@@ -139,9 +139,13 @@ const AddPinelabMoney = ({ route }) => {
                 </View>
 
             </ScrollView>
-            <View style={[styles.row, { justifyContent: 'space-evenly' }]}>
-                <WhiteButton showText={'Cancel'} style={{ flex: 1, marginHorizontal: 10 }} onPress={() => navigation.goBack()} />
-                <Button showText={'Recharge'} style={{ flex: 1, marginHorizontal: 10 }} onPress={rechargeWallet} onLoading={loadingSign} />
+            <View style={[styles.row, { justifyContent: 'space-between' }]}>
+                <View style={{ width: '48%' }}>
+                    <WhiteButton showText={'Cancel'} onPress={() => navigation.goBack()} />
+                </View>
+                <View style={{ width: '48%', }}>
+                    <Button showText={'Recharge'} onPress={rechargeWallet} onLoading={loadingSign} />
+                </View>
             </View>
         </CommonView>
     )
