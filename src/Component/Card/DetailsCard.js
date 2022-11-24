@@ -40,15 +40,16 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
         }
     }
 
-    const navigateToGoogleMap = () => {
-        if (location?.coords?.latitude) {
+    const navigateToGoogleMap = (latlong) => {
+
+        if (latlong?.latitude) {
             const lat = {
-                lat: parseFloat(location?.coords?.latitude),
-                long: parseFloat(location?.coords?.longitude),
+                lat: parseFloat(latlong?.latitude),
+                long: parseFloat(latlong?.longitude),
             }.lat;
             const lng = {
-                lat: parseFloat(location?.coords?.latitude),
-                long: parseFloat(location?.coords?.longitude),
+                lat: parseFloat(latlong?.latitude),
+                long: parseFloat(latlong?.longitude),
             }.long;
             const scheme = Platform.select({
                 ios: "maps:0,0?q=",
@@ -86,7 +87,7 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
                                 </TouchableOpacity>
                             </CommonCard>
                             <CommonCard marginLeft={10} margin={1} padding={8} backgroundColor={'#3070CE'}>
-                                <TouchableOpacity style={styles.leftIcon} onPress={navigateToGoogleMap}>
+                                <TouchableOpacity style={styles.leftIcon} onPress={() => navigateToGoogleMap(item)}>
                                     <Feather name='corner-up-right' size={18} color={colors.white} />
                                 </TouchableOpacity>
                             </CommonCard>
@@ -97,7 +98,7 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
                             {favourite ? <CommonText fontSize={12} showText={`${item?.address2?.city} ${item?.address2?.street} ${item?.address2?.postalCode}`} /> : <CommonText fontSize={12} showText={`${item?.address?.city} ${item?.address?.street} ${item?.address?.postalCode}`} />}
 
                         </View>
-                        <CommonText fontSize={12} showText={`${item?.distance} Km`} />
+                        {item?.distance != undefined && <CommonText fontSize={12} showText={`${item?.distance} Km`} />}
                     </View>
                     {/* {chargerType == 1 && <HorizontalCard />}
                     {chargerType == 2 && <VerticalCard />} */}

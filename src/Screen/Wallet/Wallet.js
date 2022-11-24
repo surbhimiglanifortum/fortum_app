@@ -80,13 +80,13 @@ const Wallet = ({ setSelectedTab }) => {
   };
 
   const handleStartConfirm = (date) => {
-    console.log("handleStartConfirm",date)
+    console.log("handleStartConfirm", date)
     setTechStart(moment(date).format('YYYY-MM-DDT00:00:00'))
     hideStartDatePicker();
   };
 
   const handleEndConfirm = (date) => {
-    console.log("handleEndConfirm",date)
+    console.log("handleEndConfirm", date)
     setTechEnd(moment(date).format('YYYY-MM-DDT23:59:00'))
     hideEndDatePicker();
   };
@@ -124,20 +124,22 @@ const Wallet = ({ setSelectedTab }) => {
   // }, [isFocused])
 
   return (
-    <CommonView style={styles.container}>
+    <CommonView>
       <Header onPress={backhandler} showText={"Wallet"} />
 
       {/* card */}
       <WalletCard onPress={RechargeButtonHandler} title={`₹ ${balance}`} subTitle={'Your Prepaid Balance'} />
       <View style={styles.text}>
-        <CommonText showText={`Transaction History(${data?.length || 0})`} />
+        <CommonText showText={`Transaction History (${data?.length || 0})`} />
       </View>
-
 
       {!loaderOpen && data?.length > 0 ?
         <FlatList
+          refreshControl={<RefreshControl
+            refreshing={isLoading}
+            onRefresh={refetch} />
+          }
           data={data}
-          refreshControl={<RefreshControl onRefresh={refetch} />}
           keyExtractor={item => item.id}
           renderItem={(item) => {
             return (
@@ -148,10 +150,10 @@ const Wallet = ({ setSelectedTab }) => {
         !loaderOpen && <NoData showText={'No History Found'} />
       }
 
-
       <TouchableOpacity style={styles.filterBtn} onPress={() => setModalVisible(true)}>
         <Fontisto name='equalizer' size={20} color={colors.white} />
       </TouchableOpacity>
+
       <DateTimePickerModal
         isVisible={isStartDatePickerVisible}
         mode="date"
@@ -178,13 +180,6 @@ const Wallet = ({ setSelectedTab }) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-
-  },
-  innerContainer: {
-    flex: 1
-    // marginTop: 20,
-  },
   text: {
     marginVertical: 15,
     paddingHorizontal: 12

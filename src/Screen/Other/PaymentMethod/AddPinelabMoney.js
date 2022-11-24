@@ -112,10 +112,10 @@ const AddPinelabMoney = ({ route }) => {
                 <View style={styles.row}>
                     {lazyAmount.map((e) => {
                         return (
-                            <TouchableOpacity onPress={() => {
+                            <TouchableOpacity style={styles.innerRow} onPress={() => {
                                 setAmount({ value: e.toString(), error: '' })
                             }}>
-                                <CommonCard style={styles.column}>
+                                <CommonCard>
                                     <CommonText showText={`₹ ${e}`} />
                                 </CommonCard>
                             </TouchableOpacity>
@@ -127,10 +127,10 @@ const AddPinelabMoney = ({ route }) => {
                 <View style={styles.row}>
                     {lazyAmount2.map((e) => {
                         return (
-                            <TouchableOpacity onPress={() => {
+                            <TouchableOpacity style={styles.innerRow} onPress={() => {
                                 setAmount({ value: e.toString(), error: '' })
                             }}>
-                                <CommonCard style={styles.column}>
+                                <CommonCard>
                                     <CommonText showText={`₹ ${e}`} />
                                 </CommonCard>
                             </TouchableOpacity>
@@ -157,16 +157,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    column: {
-        paddingHorizontal: 20,
-        paddingVertical: 20
-    },
     rupeeText: {
         position: 'absolute',
         zIndex: 9,
         top: 27,
         left: 15
-    }
+    },
+    innerRow: {
+        flex: 1,
+        alignItems: 'center',
+    },
 })
 
 export default AddPinelabMoney

@@ -1,8 +1,7 @@
 import React, { useEffect, useContext, useState, useRef, useCallback } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme, FlatList, BackHandler } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, useColorScheme, FlatList } from 'react-native'
 import colors from '../../Utils/colors';
 import MapList from './ChargerList/MapList';
-import IconCardWithoutBg from '../../Component/Card/IconCardWithoutBg';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FilterSvg from '../../assests/svg/FilterSvg';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -15,7 +14,7 @@ import Geolocation from '@react-native-community/geolocation';
 import { computeDistance } from '../../Utils/helperFuncations/computeDistance';
 import SnackContext from '../../Utils/context/SnackbarContext';
 import { useQuery } from 'react-query'
-import { API, Auth } from 'aws-amplify'
+import { Auth } from 'aws-amplify'
 import * as ApiAction from '../../Services/Api'
 import MapCharger from '../Home/MapCharger'
 import CommonText from '../../Component/Text/CommonText';
@@ -29,10 +28,10 @@ import * as Types from '../../Redux/Types'
 import axios from "axios";
 import appConfig from '../../../appConfig'
 
-
 let selectedMarker = ""
 let mLocationPayload = {}
 let flatListBottomList
+
 export default Home = ({ navigatedata }) => {
 
   const isFocused = useIsFocused()
@@ -52,8 +51,8 @@ export default Home = ({ navigatedata }) => {
   const dispatch = useDispatch()
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
-
   const checkActiveSession = useSelector((state) => state.TempStore.checkActiveSession);
+  const userLocation = useSelector((state) => state.commonReducer.locations)
 
   const scheme = useColorScheme()
 
@@ -82,7 +81,6 @@ export default Home = ({ navigatedata }) => {
 
     }
     navigation.navigate(routes.login)
-
   }
 
   const filterButtonHandler = () => {
@@ -118,6 +116,7 @@ export default Home = ({ navigatedata }) => {
         longitude: payload.lng
       }
     })
+    dispatch(AddToRedux(location, Types.USERLOCATIONS))
   }
 
   const searchBtnHandler = () => {
@@ -169,45 +168,43 @@ export default Home = ({ navigatedata }) => {
   const { setOpenCommonModal } = useContext(SnackContext)
 
   const CallCheckActiveSession = async () => {
-  
-    const result = await Auth.currentAuthenticatedUser();
-    if (result.signInUserSession) {
-      if (checkActiveSession) {
-        if (mUserDetails?.username) {
-          const response = await ApiAction.chargingList(mUserDetails.username)
-          console.log(response.data)
-          if (response.data && response.data.length > 0) {
-            setOpenCommonModal({
-              isVisible: true, message: `You have an ongoing charging session at Charger ${response.data[0]?.location?.name} please stop the session if you have done charging!`,
-              heading: "Ongoing Session",
-              secondButton: {
-                onPress: () => {
+    console.log(checkActiveSession)
+    if (checkActiveSession) {
 
-                },
-                title: "Ignore"
+      if (mUserDetails?.username) {
+        const response = await ApiAction.chargingList(mUserDetails.username)
+        console.log(response.data)
+        if (response.data && response.data.length > 0) {
+          setOpenCommonModal({
+            isVisible: true, message: `You have an ongoing charging session at Charger ${response.data[0]?.location?.name} please stop the session if you have done charging!`,
+            heading: "Ongoing Session",
+            secondButton: {
+              onPress: () => {
+
               },
+              title: "Ignore"
+            },
 
-              onOkPress: () => {
-                navigation.navigate(routes.OngoingDetails, {
-                  locDetails: {
-                    ...response.data[0]?.location, address: {
-                      "city": response.data[0]?.location?.city,
-                      "street": response.data[0]?.location?.address,
-                      "countryIsoCode": "IND",
-                      "postalCode": "11112"
-                    }
-                  },
-                  evDetails: response.data[0]?.location?.evses[0],
-                  paymentMethod: response?.payments?.payment_method
-                })
-              }
-            })
-          }
-          dispatch(AddToRedux(false, Types.CHECKACTIVESESSION))
+            onOkPress: () => {
+              navigation.navigate(routes.OngoingDetails, {
+                locDetails: {
+                  ...response.data[0]?.location, address: {
+                    "city": response.data[0]?.location?.city,
+                    "street": response.data[0]?.location?.address,
+                    "countryIsoCode": "IND",
+                    "postalCode": "11112"
+                  }
+                },
+                evDetails: response.data[0]?.location?.evses[0],
+                paymentMethod: response?.payments?.payment_method
+              })
+            }
+          })
         }
-      } else {
-        console.log("don't CHECK active session")
+        dispatch(AddToRedux(false, Types.CHECKACTIVESESSION))
       }
+    } else {
+      console.log("don't CHECK active session")
     }
   }
 
@@ -266,18 +263,17 @@ export default Home = ({ navigatedata }) => {
 
         const res = await ApiAction.getLocation(payload)
         var locationsArray = res.data?.locations[0];
-        if (!location.coords) {
+        if (!userLocation.coords) {
 
         } else {
           if (locationsArray.length > 0) {
             locationsArray.map((data, index) => {
-              locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
+              locationsArray[index].distance = computeDistance([userLocation?.coords?.latitude, userLocation?.coords?.longitude], [
                 data?.latitude,
                 data?.longitude,
               ])
             })
             locationsArray?.sort(function (a, b) { return a.distance - b.distance })
-
           }
         }
         setMLocation(locationsArray)
@@ -294,9 +290,9 @@ export default Home = ({ navigatedata }) => {
     try {
       setLocationLoading(true)
       Geolocation.getCurrentPosition(info => {
-
         setLocation(info)
         setLocationLoading(false)
+        dispatch(AddToRedux(info, Types.USERLOCATIONS))
       }, error => {
         console.log(error)
       })
