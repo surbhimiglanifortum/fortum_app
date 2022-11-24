@@ -15,7 +15,7 @@ import { scale } from 'react-native-size-matters'
 // import { GetFormatedDate } from '../../../Utils/utils'
 const OrderDetails = ({ route }) => {
 
-  const paramsData = route.params.dataItem.item
+  const paramsData = route?.params?.dataItem?.item
   const scheme = useColorScheme()
 
   return (
@@ -28,7 +28,7 @@ const OrderDetails = ({ route }) => {
               <IconCard Svg={OrderGreenSvg} />
               <CommonText showText={'Order Id'} customstyles={styles.textCon} />
             </View>
-            <CommonText showText={paramsData.order.id} fontSize={14} />
+            <CommonText showText={paramsData?.order?.id} fontSize={14} />
           </View>
           <View style={styles.keyInner}>
             <View style={styles.keyInner1}>
@@ -37,7 +37,7 @@ const OrderDetails = ({ route }) => {
               </View>
               <CommonText showText={'Date'} customstyles={styles.textCon} />
             </View>
-            <CommonText showText={GetFormatedDateOnly(paramsData.orderdate)} fontSize={14} />
+            <CommonText showText={GetFormatedDateOnly(paramsData?.orderdate)} fontSize={14} />
           </View>
         </DenseCard>
         <CommonText showText={'   Items'} fontSize={18} customstyles={styles.text} />

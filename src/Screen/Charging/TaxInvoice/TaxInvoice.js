@@ -21,7 +21,7 @@ import { GetFormatedDate } from '../../../Utils/utils'
 const TaxInvoice = ({ route }) => {
 
     const paramData = route.params.data
-    
+
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const navigation = useNavigation()
@@ -34,6 +34,7 @@ const TaxInvoice = ({ route }) => {
     const [st, setSt] = useState("");
     const [gstAddr, setGstAddr] = useState("");
     const [gstIn, setGstIn] = useState("");
+    const [loading, setLoading] = useState(false)
 
     const start = new Date(route.params?.data?.item?.start_datetime);
     const end = new Date(route.params?.data?.item?.end_datetime);
@@ -42,9 +43,11 @@ const TaxInvoice = ({ route }) => {
     if (isNaN(diffMin)) diffMin = 0;
 
     const handleButtonClick = () => {
+
         navigation.navigate(routes.PayInvoice, {
             amount: (paramData?.item?.order?.amount_due / 100).toFixed(2)
         })
+
     }
 
     const sessionDetails = async () => {
@@ -90,6 +93,7 @@ const TaxInvoice = ({ route }) => {
     }, [])
 
     const generateHTML = async () => {
+        setLoading(true)
         console.log("Download Called")
         let printData = '<html lang="en">\n' +
             "<head>\n" +
@@ -363,6 +367,7 @@ const TaxInvoice = ({ route }) => {
         // })
 
         await RNPrint.print({ filePath: results.filePath })
+        setLoading(false)
     }
 
     return (
@@ -425,7 +430,7 @@ const TaxInvoice = ({ route }) => {
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Cost'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? (((paramData?.item?.order?.amount)/100 - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst)))?.toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? (((paramData?.item?.order?.amount) / 100 - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst)))?.toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of CGST (9%)'} fontSize={14} regular />
@@ -469,8 +474,8 @@ const TaxInvoice = ({ route }) => {
                         </View>
                     </DenseCard>
                 </View>
-                <Button
-                    showText={isPaid ? 'Download Invoice' : `Pay(${(paramData?.item?.order?.amount_due/100)?.toFixed(2)})`}
+                <Button onLoading={loading}
+                    showText={isPaid ? 'Download Invoice' : `Pay(${(paramData?.item?.order?.amount_due / 100)?.toFixed(2)})`}
                     onPress={() => isPaid ? generateHTML() : handleButtonClick()}
                 />
             </ScrollView>

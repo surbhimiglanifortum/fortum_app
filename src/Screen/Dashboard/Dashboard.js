@@ -23,6 +23,7 @@ import { useDispatch } from 'react-redux';
 import { AddToRedux } from '../../Redux/AddToRedux'
 import * as  Types from '../../Redux/Types'
 import { useIsFocused } from '@react-navigation/native'
+
 let backHandler
 let mselectedHandler = "home"
 const Dashboard = ({ tabName, navigation, route }) => {
@@ -36,7 +37,10 @@ const Dashboard = ({ tabName, navigation, route }) => {
     mselectedHandler = selectedTab
   }, [selectedTab])
 
+
+
   useEffect(() => {
+
     ApiAction.getUserDetails().then(result => {
       if (result?.data) {
         dispatch(AddToRedux(result.data, Types.USERDETAILS))
@@ -95,7 +99,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
         setSelectedTab('home')
         return true
       }
-      
+
     }
     return false
   }
