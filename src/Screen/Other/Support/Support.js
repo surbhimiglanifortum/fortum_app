@@ -13,7 +13,7 @@ import SupportSvg from '../../../assests/svg/SupportSvg'
 import WhatsSvg from '../../../assests/svg/WhatsSvg'
 import routes from '../../../Utils/routes'
 import CommonView from '../../../Component/CommonView'
-import GlobalDefines from '../../../Utils/globalDefines'
+import GlobalDefines from '../../../Utils/GlobalDefines'
 
 const Support = () => {
 
