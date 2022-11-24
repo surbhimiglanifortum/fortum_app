@@ -62,9 +62,9 @@ export const AddToRedux = (value, type) => {
                 type: Types.CHECKACTIVESESSION,
                 payload: value
             }
-        case Types.LOCATIONS:
+        case Types.USERLOCATIONS:
             return {
-                type: Types.LOCATIONS,
+                type: Types.USERLOCATIONS,
                 payload: value
             }
         default:

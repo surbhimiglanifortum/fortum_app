@@ -90,7 +90,6 @@ const Dashboard = ({ tabName, navigation, route }) => {
   }, [tabName])
 
   const backAction = () => {
-    console.log('first', mselectedHandler)
     if (isFocused) {
       if (mselectedHandler != 'home') {
         setSelectedTab('home')
@@ -102,7 +101,6 @@ const Dashboard = ({ tabName, navigation, route }) => {
   }
 
   useEffect(() => {
-    console.log("IS focu", isFocused)
     backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
     return () => {
       backHandler.remove()
