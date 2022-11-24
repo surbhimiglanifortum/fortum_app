@@ -264,7 +264,9 @@ implementation project(':react-native-vector-icons')
     implementation 'com.google.android.gms:play-services-base:18.0.1'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
-
+    implementation(project(':react-native-print'))
+    implementation(project(':react-native-html-to-pdf'))
+    // compile project(':react-native-html-to-pdf')
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
     }

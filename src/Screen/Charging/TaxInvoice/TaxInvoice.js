@@ -13,7 +13,7 @@ import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCar
 import Charger from '../../../assests/svg/charger'
 import ChargerRed from '../../../assests/svg/ChargerRed'
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-// import RNPrint from 'react-native-print';
+import RNPrint from 'react-native-print';
 import { useSelector } from 'react-redux'
 import { GetFormatedDate } from '../../../Utils/utils'
 
@@ -362,7 +362,7 @@ const TaxInvoice = ({ route }) => {
         //     })
         // })
 
-        // await RNPrint.print({ filePath: results.filePath })
+        await RNPrint.print({ filePath: results.filePath })
     }
 
     return (

@@ -15,6 +15,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import routes from '../../Utils/routes'
 import SnackContext from '../../Utils/context/SnackbarContext'
+import { scale } from 'react-native-size-matters'
 
 const RechargeWallet = ({ route }) => {
 
@@ -149,7 +150,7 @@ const RechargeWallet = ({ route }) => {
 
 
 
-        <View style={styles.row}>
+        <View style={[styles.row,{flexWrap:'wrap'}]}>
           {lazyAmount.map((e) => {
             return (
               <TouchableOpacity style={styles.innerRow} onPress={() => {
@@ -223,10 +224,15 @@ const styles = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent:'space-between',
   },
-  innerRow: {
-    flex: 1,
-    alignItems: 'center',
+  column: {
+    // paddingHorizontal: 16,
+    // paddingVertical: 16
+    width:scale(60),
+    height:scale(45),
+    alignItems:'center',
+    justifyContent:'center'
   },
   rupeeText: {
     marginTop: 17

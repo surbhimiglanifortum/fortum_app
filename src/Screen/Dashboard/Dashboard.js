@@ -115,7 +115,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
             {selectedTab == 'home' && <Home navigatedata={navigatedata} />}
             {selectedTab == 'wallet' && <Wallet setSelectedTab={setSelectedTab} />}
             {selectedTab == 'charging' && <Charging setSelectedTab={setSelectedTab} />}
-            {selectedTab == 'notification' && <Notification setSelectedTab={setSelectedTab} />}
+            {/* {selectedTab == 'notification' && <Notification setSelectedTab={setSelectedTab} />} */}
             {selectedTab == 'other' && <Other setSelectedTab={setSelectedTab} />}
           </View>
         </View>
@@ -132,8 +132,6 @@ const Dashboard = ({ tabName, navigation, route }) => {
             </View></DashboardCard> : <WalletSvg color={colors.white} />}
           </TouchableOpacity>
 
-
-
           <TouchableOpacity onPress={chargingButtonHandler} style={[styles.tabButton, selectedTab == 'charging' ? styles.activeTab : null]}>
 
             {selectedTab == 'charging' ? <DashboardCard><View style={styles.tabButton}>
@@ -143,12 +141,12 @@ const Dashboard = ({ tabName, navigation, route }) => {
           </TouchableOpacity>
 
 
-          <TouchableOpacity onPress={notificationButtonHandler} style={[styles.tabButton, selectedTab == 'notification' ? styles.activeTab : null]}>
+          {/* <TouchableOpacity onPress={notificationButtonHandler} style={[styles.tabButton, selectedTab == 'notification' ? styles.activeTab : null]}>
             {selectedTab == 'notification' ? <DashboardCard><View style={styles.tabButton}>
               <NotificationSvg color={colors.white} />
               <CommonText showText={'Notification'} margin={6} customstyles={styles.tabText} />
             </View></DashboardCard> : <NotificationSvg color={colors.white} />}
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
 
           <TouchableOpacity onPress={otherButtonHandler} style={[styles.tabButton, selectedTab == 'other' ? styles.activeTab : null]}>
