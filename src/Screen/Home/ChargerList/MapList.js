@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, FlatList, TextInput, BackHandler, Alert } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, FlatList, TextInput, BackHandler, TouchableWithoutFeedback } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DetailsCard from '../../../Component/Card/DetailsCard'
 import colors from '../../../Utils/colors'
@@ -51,11 +51,11 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
     try {
       setLoading(true)
       for (var i = 0; i < data.length; i++) {
-        if (data[i].address.city.includes(search)) {
+        if (data[i].address.city.toLowerCase().includes(search)) {
           results.push(data[i]);
         }
 
-        else if (data[i].name.includes(search)) {
+        else if (data[i].name.toLowerCase().includes(search)) {
           results.push(data[i]);
         }
       }
@@ -83,7 +83,6 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
 
   useEffect(() => {
     backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
-
     return () => {
       backHandler.remove()
     }
@@ -93,7 +92,7 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
     <CommonView style={[styles.container]}>
       <View style={styles.searchContainer}>
         <CommonCard padding={1} style={{ flex: 1 }}>
-          <TouchableOpacity onPress={searchButtonHandler} style={styles.searchContainer}>
+          <TouchableOpacity style={styles.searchContainer} disabled={true}>
             <View>
               <DensCard marginVertical={5}>
                 <AntDesign name='search1' size={16} />

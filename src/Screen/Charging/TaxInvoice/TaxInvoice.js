@@ -4,7 +4,6 @@ import { useNavigation, useIsFocused } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import CommonText from '../../../Component/Text/CommonText'
 import Button from '../../../Component/Button/Button'
-import { getFormatedDate } from '../../../Services/CommonServices'
 import DenseCard from '../../../Component/Card/DenseCard/index'
 import CommonView from '../../../Component/CommonView'
 import Divider from '../../../Component/Divider'
@@ -14,8 +13,9 @@ import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCar
 import Charger from '../../../assests/svg/charger'
 import ChargerRed from '../../../assests/svg/ChargerRed'
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-// import RNPrint from 'react-native-print';
+import RNPrint from 'react-native-print';
 import { useSelector } from 'react-redux'
+import { GetFormatedDate } from '../../../Utils/utils'
 
 
 const TaxInvoice = ({ route }) => {
@@ -131,7 +131,7 @@ const TaxInvoice = ({ route }) => {
             "</span>\n" +
             "            <br/>\n" +
             '            <span style="font-size: 1.1em"><strong>Date :</strong> ' +
-            getFormatedDate(route.params?.data?.item?.start_datetime) +
+            GetFormatedDate(route.params?.data?.item?.start_datetime) +
             "</span>\n" +
 
 
@@ -222,12 +222,12 @@ const TaxInvoice = ({ route }) => {
             "    <tr>\n" +
             "        <td>\n" +
             '            <span style="font-size: 1.1em">' +
-            getFormatedDate(route.params?.data?.item?.start_datetime) +
+            GetFormatedDate(route.params?.data?.item?.start_datetime) +
             "</span>\n" +
             "        </td>\n" +
             "        <td>\n" +
             '            <span style="font-size: 1.1em">' +
-            getFormatedDate(route.params?.data?.item?.end_datetime) +
+            GetFormatedDate(route.params?.data?.item?.end_datetime) +
             "</span>\n" +
             "        </td><td>\n" +
             '            <span style="font-size: 1.1em">' +
@@ -362,7 +362,7 @@ const TaxInvoice = ({ route }) => {
         //     })
         // })
 
-        // await RNPrint.print({ filePath: results.filePath })
+        await RNPrint.print({ filePath: results.filePath })
     }
 
     return (
@@ -377,7 +377,7 @@ const TaxInvoice = ({ route }) => {
 
                         <View style={{}}>
                             <CommonText showText={paramData?.item?.location?.name} fontSize={14} />
-                            <CommonText showText={getFormatedDate(paramData?.item?.start_datetime)} fontSize={14} regular />
+                            <CommonText showText={GetFormatedDate(paramData?.item?.start_datetime)} fontSize={14} regular />
                         </View>
                         <View>
                             <CommonText showText={`₹ ${paramData?.item?.order?.amount / 100 ? paramData?.item?.order?.amount / 100 : '0'}`} fontSize={14} />
@@ -409,11 +409,11 @@ const TaxInvoice = ({ route }) => {
                         <View >
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Start Time'} fontSize={14} regular />
-                                <CommonText semibold showText={paramData?.item?.start_datetime ? getFormatedDate(paramData?.item?.start_datetime) : 'NA'} fontSize={14} regular />
+                                <CommonText semibold showText={paramData?.item?.start_datetime ? GetFormatedDate(paramData?.item?.start_datetime) : 'NA'} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'End Time'} fontSize={14} regular />
-                                <CommonText semibold showText={paramData?.item?.end_datetime ? getFormatedDate(paramData?.item?.end_datetime) : 'NA'} fontSize={14} regular />
+                                <CommonText semibold showText={paramData?.item?.end_datetime ? GetFormatedDate(paramData?.item?.end_datetime) : 'NA'} fontSize={14} regular />
                             </View>
                         </View>
                     </DenseCard>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { StyleSheet, useColorScheme, View, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, useColorScheme, View, TouchableOpacity, ScrollView, FlatList } from 'react-native'
 import CommonView from '../../Component/CommonView'
 import DenseCard from '../../Component/Card/DenseCard'
 import Header from '../../Component/Header/Header'
@@ -15,6 +15,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import routes from '../../Utils/routes'
 import SnackContext from '../../Utils/context/SnackbarContext'
+import { scale } from 'react-native-size-matters'
 
 const RechargeWallet = ({ route }) => {
 
@@ -149,10 +150,10 @@ const RechargeWallet = ({ route }) => {
 
 
 
-        <View style={styles.row}>
+        <View style={[styles.row,{flexWrap:'wrap'}]}>
           {lazyAmount.map((e) => {
             return (
-              <TouchableOpacity onPress={() => {
+              <TouchableOpacity style={styles.innerRow} onPress={() => {
                 setAmount({ value: e.toString(), error: '' })
               }}>
                 <CommonCard style={styles.column}>
@@ -167,10 +168,10 @@ const RechargeWallet = ({ route }) => {
         <View style={styles.row}>
           {lazyAmount2.map((e) => {
             return (
-              <TouchableOpacity onPress={() => {
+              <TouchableOpacity style={styles.innerRow} onPress={() => {
                 setAmount({ value: e.toString(), error: '' })
               }}>
-                <CommonCard style={styles.column}>
+                <CommonCard>
                   <CommonText showText={`₹ ${e}`} />
                 </CommonCard>
               </TouchableOpacity>
@@ -223,10 +224,15 @@ const styles = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent:'space-between',
   },
   column: {
-    paddingHorizontal: 20,
-    paddingVertical: 20
+    // paddingHorizontal: 16,
+    // paddingVertical: 16
+    width:scale(60),
+    height:scale(45),
+    alignItems:'center',
+    justifyContent:'center'
   },
   rupeeText: {
     marginTop: 17
