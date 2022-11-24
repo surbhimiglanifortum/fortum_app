@@ -75,6 +75,7 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
 
 
   const backAction = () => {
+    
     setSelectedTab('map')
     return true
   }
@@ -114,7 +115,6 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
       </View>
 
       <Loader modalOpen={loading} />
-
       <FlatList
         data={mapData}
         keyExtractor={item => item.id}
