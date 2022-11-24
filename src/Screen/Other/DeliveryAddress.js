@@ -1,25 +1,30 @@
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native'
-import React, { useContext } from 'react'
+import { View, FlatList, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native'
+import React, { useContext, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import CommonCard from '../../Component/Card/CommonCard';
 import DenseCard from '../../Component/Card/DenseCard';
 import CommonText from '../../Component/Text/CommonText';
 import CommonView from '../../Component/CommonView'
 import Header from '../../Component/Header/Header'
 import SnackContext from '../../Utils/context/SnackbarContext'
 import Button from '../../Component/Button/Button';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import routes from '../../Utils/routes';
 import * as ApiAction from '../../Services/Api'
 import { AddToRedux } from '../../Redux/AddToRedux';
-import Types, { USERDETAILS } from '../../Redux/Types'
+import { USERDETAILS } from '../../Redux/Types'
 import { useState } from 'react';
+
 export default function DeliveryAddress({ route, navigation }) {
+
     const dispatch = useDispatch()
     const navigationScreen = useNavigation()
+    const isFocus = useIsFocused()
+
     const { callbackSelectAddress } = route.params
     const { setOpenCommonModal } = useContext(SnackContext);
+
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
     const [loaderOpen, setLoaderOpen] = useState(false)
 
     const addAddressHandler = () => {
@@ -29,11 +34,16 @@ export default function DeliveryAddress({ route, navigation }) {
     const refetch = async () => {
         setLoaderOpen(true)
         const result = await ApiAction.getUserDetails()
+        console.log("Check Address", result.data?.delivery_addresses)
         if (result.data) {
             dispatch(AddToRedux(result.data, USERDETAILS))
         }
         setLoaderOpen(false)
     }
+
+    useEffect(() => {
+        refetch()
+    }, [isFocus])
 
     return (
         <CommonView>
@@ -49,13 +59,8 @@ export default function DeliveryAddress({ route, navigation }) {
                                 navigation.pop()
                             }}>
                                 <DenseCard>
-                                    <CommonText>
-                                        {item.first_name + " " + item.last_name}
-                                    </CommonText>
-                                    <CommonText fontSize={14} regular>
-                                        {item.address + " " + item.address_line_2 + " " + item.city + " " + item.country + " " + item.postal_code}
-                                    </CommonText>
-
+                                    <CommonText showText={`${item?.first_name} ${item?.last_name}`} />
+                                    <CommonText fontSize={14} regular showText={`${item?.address} ${item?.address_line_2} ${item?.city} ${item?.country} ${item?.postal_code}`} />
                                 </DenseCard>
                             </TouchableOpacity>
                         )
