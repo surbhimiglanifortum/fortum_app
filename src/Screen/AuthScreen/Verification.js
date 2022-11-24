@@ -97,8 +97,13 @@ const Verification = ({ route }) => {
                     setLoading(false)
                 }).catch(error => {
                     // Somethong went wrong
+                    setOpenCommonModal({
+                        isVisible: true, message: "Session expired. Please retry !!!", onOkPress: () => {
+                            navigation.goBack()
+                        }
+                    })
                     console.log("Something went wrong", error)
-                    setOpenCommonModal({ isVisible: true, message: "Something Went Wrong!!!" })
+                    // setOpenCommonModal({ isVisible: true, message: "Something Went Wrong!!!" })
                     setLoading(false)
                     // loginSuccess(false)
                 })

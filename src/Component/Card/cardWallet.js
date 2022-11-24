@@ -18,14 +18,14 @@ const CardWallet = ({ navigationHandler, Svg, dataItem, }) => {
                 <View style={styles.leftContainer}>
                     <CommonIconCard Svg={dataItem?.item?.topUpBalance ? WalletSvg : Charger} />
                     <View style={styles.middleContainer}>
-                        <CommonText showText={dataItem?.item?.topUpBalance ? 'Wallet Recharge' : "Charging Done"} fontSize={14} />
+                        <CommonText showText={dataItem?.item?.topUpBalance ? 'Added to wallet' : "Charging Done"} fontSize={16} black />
                         <View style={styles.leftContainer}>
-                            <CommonText regular showText={GetFormatedDate(dataItem?.item?.createdAt)} fontSize={14} />
+                            <CommonText regular showText={GetFormatedDate(dataItem?.item?.createdAt)} fontSize={12} />
                         </View>
                     </View>
                 </View>
                 <View>
-                    <CommonText showText={`${dataItem?.item?.topUpBalance ? ` + ₹ ${parseFloat(dataItem?.item?.topUpBalance.toFixed(2))}` : `₹ ${dataItem?.item?.consumedAmount ? dataItem?.item?.consumedAmount : '0'}`}`} fontSize={16} customstyles={{ color: dataItem?.item?.topUpBalance ? colors.green : colors.red }} />
+                    <CommonText showText={`${dataItem?.item?.topUpBalance ? ` + ₹ ${parseFloat(dataItem?.item?.topUpBalance.toFixed(2))}` : `₹ ${dataItem?.item?.consumedAmount ? dataItem?.item?.consumedAmount : '0'}`}`} fontSize={16} black customstyles={{ color: dataItem?.item?.topUpBalance ? colors.green : colors.red }} />
                     {/* <CommonText regular showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '120'} Min`} fontSize={14} /> */}
                 </View>
             </TouchableOpacity>

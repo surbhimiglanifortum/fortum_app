@@ -41,7 +41,7 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
     }
 
     const navigateToGoogleMap = (latlong) => {
-
+        console.log("Check Latlong", latlong)
         if (latlong?.latitude) {
             const lat = {
                 lat: parseFloat(latlong?.latitude),
@@ -63,8 +63,8 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
             });
             Linking.openURL(url);
         }
-
     }
+
     return (
         <TouchableOpacity onPress={onPress}>
             <CommonCard>
