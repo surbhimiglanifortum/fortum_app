@@ -10017,6 +10017,11 @@
   "resolved" "https://registry.npmjs.org/react-native-permissions/-/react-native-permissions-3.6.1.tgz"
   "version" "3.6.1"
 
+"react-native-print@^0.10.0":
+  "integrity" "sha512-jXFIeTLiQeC9rTduRjMGXWzGEaslx69U64tsw851+v2fbfNwn4SP53uEIhCCc0ly3VxGCFxseafrZjfuMyVXNg=="
+  "resolved" "https://registry.npmjs.org/react-native-print/-/react-native-print-0.10.0.tgz"
+  "version" "0.10.0"
+
 "react-native-qrcode-scanner@^1.5.4":
   "integrity" "sha512-il79uStkFqUvofqXJQfOL30qgQyU17MUKxj7IGHv6oT2OxIY/vutTwuPPDbsivtv0yTMHP4dGx/79oys4eAuNw=="
   "resolved" "https://registry.npmjs.org/react-native-qrcode-scanner/-/react-native-qrcode-scanner-1.5.5.tgz"
@@ -10130,7 +10135,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native-windows@>=0.62.0", "react-native-windows@>=0.63.x":
+"react-native-windows@>=0.62", "react-native-windows@>=0.62.0", "react-native-windows@>=0.63.x":
   "integrity" "sha512-9eHftdeI5e1tuvzUOgUDqNUI9g04yn+US1O6ny/qmvbmdSdGnMHxo1Tx3MYnJgb8p7VpigKQHO/duwjFy0IeNA=="
   "resolved" "https://registry.npmjs.org/react-native-windows/-/react-native-windows-0.70.6.tgz"
   "version" "0.70.6"
@@ -10172,7 +10177,7 @@
     "whatwg-fetch" "^3.0.0"
     "ws" "^6.1.4"
 
-"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.71 || 1000.0.0", "react-native@^0.70.0", "react-native@>= 0.59", "react-native@>= 0.64.3", "react-native@>=0.42.0", "react-native@>=0.46", "react-native@>=0.50.0", "react-native@>=0.56", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.59.0", "react-native@>=0.60.0", "react-native@>=0.63.3", "react-native@>=0.65.0", "react-native@0.70.3":
+"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.71 || 1000.0.0", "react-native@^0.70.0", "react-native@>= 0.59", "react-native@>= 0.64.3", "react-native@>=0.42.0", "react-native@>=0.46", "react-native@>=0.50.0", "react-native@>=0.56", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.59.0", "react-native@>=0.60.0", "react-native@>=0.63.3", "react-native@>=0.65.0", "react-native@>=0.8.0 || 0.8.0-rc || 0.8.0-rc.2 || 0.9.0-rc || 0.10.1", "react-native@0.70.3":
   "integrity" "sha512-EiJxOonyvpSWa3Eik7a6YAD6QU8lK2W9M/DDdYlpWmIlGLCd5110rIpEZjxttsyrohxlRJAYRgJ9Tx2mMXqtfw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.70.3.tgz"
   "version" "0.70.3"

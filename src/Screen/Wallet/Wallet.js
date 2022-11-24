@@ -1,4 +1,4 @@
-import { View, StyleSheet, useColorScheme, FlatList, TouchableOpacity, BackHandler } from 'react-native'
+import { View, StyleSheet, useColorScheme, FlatList, TouchableOpacity, BackHandler, RefreshControl } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Header from '../../Component/Header/Header'
 import CommonText from '../../Component/Text/CommonText'
@@ -130,13 +130,14 @@ const Wallet = ({ setSelectedTab }) => {
       {/* card */}
       <WalletCard onPress={RechargeButtonHandler} title={`₹ ${balance}`} subTitle={'Your Prepaid Balance'} />
       <View style={styles.text}>
-        <CommonText showText={`Transcation History(${data?.length || 0})`} />
+        <CommonText showText={`Transaction History(${data?.length || 0})`} />
       </View>
 
 
       {!loaderOpen && data?.length > 0 ?
         <FlatList
           data={data}
+          refreshControl={<RefreshControl onRefresh={refetch} />}
           keyExtractor={item => item.id}
           renderItem={(item) => {
             return (
