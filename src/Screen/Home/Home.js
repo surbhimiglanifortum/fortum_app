@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, useRef, useCallback } from 'react';
-import { StyleSheet, TouchableOpacity, View, useColorScheme, FlatList } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, useColorScheme, FlatList, BackHandler } from 'react-native'
 import colors from '../../Utils/colors';
 import MapList from './ChargerList/MapList';
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -31,6 +31,7 @@ import appConfig from '../../../appConfig'
 let selectedMarker = ""
 let mLocationPayload = {}
 let flatListBottomList
+let backHandler
 
 export default Home = ({ navigatedata }) => {
 
@@ -86,6 +87,23 @@ export default Home = ({ navigatedata }) => {
   const filterButtonHandler = () => {
     setOpenFilterModal(true)
   }
+
+  // const backAction = () => {
+  //   console.log("Check Filter", openFilterModal)
+  //   if (openFilterModal) {
+  //     setOpenFilterModal(false)
+  //     return true
+  //   }
+  //   return false
+  // }
+
+  // useEffect(() => {
+  //   console.log("hardwa")
+  //   backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
+  //   return () => {
+  //     backHandler.remove()
+  //   }
+  // }, [])
 
   const handleSelection = async (screen, payload) => {
     try {

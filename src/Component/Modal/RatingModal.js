@@ -1,9 +1,9 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, useColorScheme } from 'react-native'
+import { View, Modal, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native'
 import React, { useState, useContext } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Button from '../Button/Button'
 import CommonText from '../Text/CommonText'
-import { Rating, AirbnbRating } from 'react-native-ratings';
+import { AirbnbRating } from 'react-native-ratings';
 import Textinput from '../Textinput/Textinput'
 import CommonView from '../../Component/CommonView'
 import CommonCard from '../../Component/Card/CommonCard'
@@ -33,7 +33,6 @@ const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
             return
         }
 
-
         const payload = {
             "locid": isModalVisible.locid || "SDS",
             "evseid": isModalVisible.evseid || "SDS",
@@ -41,6 +40,7 @@ const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
             "desc": review || "SADSDSD",
             "user": mUserDetails?.username || "res2GMAIL.COM"
         }
+
         setLoadingSign(true)
         try {
             const response = await ApiAction.feedback(payload)
@@ -70,10 +70,7 @@ const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
 
     const onFinishRating = (data) => {
         ratings = data
-
     }
-
-
 
     return (
         <Modal visible={isModalVisible.isVisible} statusBarTranslucent={true} transparent>

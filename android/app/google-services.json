@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "370447065731",
+    "project_id": "fortum-eb7d4",
+    "storage_bucket": "fortum-eb7d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370447065731:android:ee0dba97fded42aa9af1b6",
+        "android_client_info": {
+          "package_name": "com.fortumapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "370447065731-3pp6c3ttjj0v8p7hk3lhpmuf5hmdsfep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmaUcbxa07o2aLDYK9pShpQtIS4teZC_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "370447065731-3pp6c3ttjj0v8p7hk3lhpmuf5hmdsfep.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
