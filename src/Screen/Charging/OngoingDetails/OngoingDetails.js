@@ -29,10 +29,10 @@ import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCar
 var mStoppedPressed = false;
 let sessionId = ''
 
-let counterinterval;
+
 const OngoingDetails = ({ route }) => {
 
-
+  let counterinterval;
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const username = mUserDetails?.username
@@ -273,6 +273,7 @@ const OngoingDetails = ({ route }) => {
           setChargerText("Stop")
           try {
 
+            console.log("counterinterval_hai",counterinterval)
             if (!counterinterval) {
               counterinterval = setInterval(() => {
                 setChargeTime(GetCouterTime(r.data.start_datetime))
@@ -286,7 +287,7 @@ const OngoingDetails = ({ route }) => {
       } else {
         console.log(r.data.status + "!!!")
       }
-      setTimeout(() => pollSessions(authID, contSucc, active, failcounter + 1), 20000)
+      setTimeout(() => pollSessions(authID, contSucc, active, failcounter + 1), 2000)
     }).catch(err => {
       console.log(err)
     })
