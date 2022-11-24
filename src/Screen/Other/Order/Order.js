@@ -27,10 +27,13 @@ const Order = () => {
     const username = mUserDetails?.username
 
     const { data, status, isLoading, refetch } = useQuery('ordersData', async () => {
-        setLoaderOpen(true)
+        setLoaderOpen(true)  
         const res = await getOrdersService(username)
+        var result = res.data
+        result = result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setLoaderOpen(false)
-        return res.data
+        console.log(result,'......................result')
+        return result
     })
 
     return (

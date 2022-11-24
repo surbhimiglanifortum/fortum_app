@@ -23,7 +23,7 @@ import Charger from '../../../../assests/svg/charger'
 import CommonIconCard from '../../../../Component/Card/CommonIconCard/CommonIconCard'
 import NoData from '../../../../Component/NoDataFound/NoData'
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-// import RNPrint from 'react-native-print';
+import RNPrint from 'react-native-print';
 
 const Passbook = () => {
     const navigation = useNavigation()
@@ -37,6 +37,7 @@ const Passbook = () => {
     const [data, setData] = useState([])
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
+    const [loading,setLoading]=useState(false)
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
 
@@ -154,6 +155,7 @@ const Passbook = () => {
     }
 
     const generateHTML = async () => {
+        setLoading(true)
         let printData = '<html>\n' +
             '<head>\n' +
             '<title>Statement</title>\n' +
@@ -241,14 +243,14 @@ const Passbook = () => {
             '</body>\n' +
             '</html>'
 
-
-        const results = await RNHTMLtoPDF.convert({
+       
+        const results = await RNHTMLtoPDF.convert({ 
             html: printData,
             fileName: 'Passbook',
             base64: true,
         })
-
-        // await RNPrint.print({ filePath: results.filePath })
+        await RNPrint.print({ filePath: results.filePath })
+        setLoading(false)
     }
 
     const AllTransaction = () => {
@@ -389,7 +391,7 @@ const Passbook = () => {
             </View>
 
             <View style={styles.fixedBtn}>
-                <Button showText={'Download Passbook'} onPress={() => generateHTML()} />
+                <Button onLoading={loading} showText={'Download Passbook'} onPress={() => generateHTML()} />
             </View>
 
             <PinelabPassbookFilter

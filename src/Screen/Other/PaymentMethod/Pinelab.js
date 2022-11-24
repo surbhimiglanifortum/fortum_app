@@ -100,7 +100,7 @@ const FortumChargeAndDriveCard = () => {
                 </View>
 
                 <View style={styles.centerText}>
-                    <CommonText fontSize={14}>{'View'} <CommonText fontSize={14} onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms And Condition'}</CommonText></CommonText>
+                    <CommonText fontSize={14}>{'View'} <CommonText fontSize={14} onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms And Conditions'}</CommonText></CommonText>
                 </View>
 
                 <PinelabCard width={'100%'} />
