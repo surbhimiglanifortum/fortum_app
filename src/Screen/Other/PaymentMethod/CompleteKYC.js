@@ -338,7 +338,7 @@ const CompleteKYC = ({ route }) => {
                         status={isAcceptCheck ? 'checked' : 'unchecked'}
                         onPress={() => setIsAcceptCheck(!isAcceptCheck)}
                     />
-                    <CommonText fontSize={14} regular>{'I accept the'} <CommonText fontSize={14} regular onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms Of Services'}</CommonText></CommonText>
+                    <CommonText fontSize={14} regular>{'I accept the'} <CommonText fontSize={14} regular onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms Of Service'}</CommonText></CommonText>
                 </View>
 
                 {isAcceptCheckError !== '' &&
@@ -354,7 +354,7 @@ const CompleteKYC = ({ route }) => {
                     />
 
                     <CommonText fontSize={14} regular customstyles={{ flex: 1 }}>{'I acknowledge that '}
-                        <CommonText fontSize={14} regular onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms of Services,'}</CommonText>
+                        <CommonText fontSize={14} regular onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms of Service,'}</CommonText>
                         <CommonText showText={' '} />
                         <CommonText fontSize={14} regular onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Privacy Policy, '}</CommonText>
                         <CommonText fontSize={14} regular showText={'and our default '} />
@@ -367,7 +367,7 @@ const CompleteKYC = ({ route }) => {
                 }
             </ScrollView>
 
-            <Button showText={'Compelete to KYC'} onPress={onDocumentVerify} onLoading={loadingSign} />
+            <Button showText={'Complete to KYC'} onPress={onDocumentVerify} onLoading={loadingSign} />
 
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
