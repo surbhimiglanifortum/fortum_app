@@ -181,7 +181,7 @@ const ActivateCard = () => {
     const otpValidation = async () => {
         const otp = otpArray.join('')
 
-        if (!otp || otp == "" || otp.length < 4) {
+        if (!otp || otp == "" || otp.length < 6) {
             setOtpError("Please Enter Valid Otp.")
             return
         }
