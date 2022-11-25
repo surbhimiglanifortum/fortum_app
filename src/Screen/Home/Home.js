@@ -196,6 +196,7 @@ export default Home = ({ navigatedata }) => {
           setOpenCommonModal({
             isVisible: true, message: `You have an ongoing charging session at Charger ${response.data[0]?.location?.name} please stop the session if you have done charging!`,
             heading: "Ongoing Session",
+            showBtnText:"Stop",
             secondButton: {
               onPress: () => {
 
