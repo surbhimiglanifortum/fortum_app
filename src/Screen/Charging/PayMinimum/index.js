@@ -148,6 +148,7 @@ const PayMinimum = ({ route }) => {
             } else {
                 setMsg(res.data.message)
                 setGoodToGo(false)
+                setColorText(colors.red)
             }
             setLoadingSign(false)
         } catch (error) {
