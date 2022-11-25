@@ -7,13 +7,13 @@ import IconCard from '../Card/IconCard'
 import ConfirmOrder from '../../assests/svg/ConfirmOrder'
 import WhiteButton from '../Button/WhiteButton'
 
-const OrderConfirm = ({ subHeading, btnText, onPress }) => {
+const OrderConfirm = ({ header, subHeading, btnText, onPress, subHeadingStyle }) => {
     return (
         <CommonView style={styles.container}>
-            <Header showText={'Order Confirmed'} backButton={false} />
+            <Header showText={header || 'Order Confirmed'} backButton={false} />
             <IconCard Svg={ConfirmOrder} />
             <CommonText showText={'Congratulations!'} customstyles={styles.heading} fontSize={24} />
-            <CommonText showText={subHeading} />
+            <CommonText showText={subHeading} customstyles={[subHeadingStyle]} />
             <WhiteButton showText={btnText} onPress={onPress} style={styles.btn} />
         </CommonView>
     )
