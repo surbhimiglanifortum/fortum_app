@@ -1,7 +1,7 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, FlatList, Image, } from 'react-native'
 import React, { useEffect } from 'react'
 import colors from '../../../Utils/colors'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import routes from '../../../Utils/routes'
@@ -30,7 +30,7 @@ const StoreDetails = ({ route }) => {
     const navigation = useNavigation()
     const scheme = useColorScheme()
     const [cartCount, setCartCount] = useState(0);
-
+    const isFocused = useIsFocused()
     const cartHandler = () => {
         navigation.navigate(routes.MyCart)
     }
@@ -62,9 +62,9 @@ const StoreDetails = ({ route }) => {
     }
 
     useEffect(() => {
-      
-    }, [cartData])
-    
+
+    }, [isFocused])
+
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
