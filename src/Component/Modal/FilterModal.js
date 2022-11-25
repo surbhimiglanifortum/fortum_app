@@ -48,7 +48,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
 
     const applyButtonHandler = () => {
         onFilterClick(payloadConnectors, mSwitchOn)
-        setOpenFilterModal(false)
+        // setOpenFilterModal(false)
     }
 
     const { data: filterData, status, isLoading, refetch } = useQuery('FilterData', async () => {
