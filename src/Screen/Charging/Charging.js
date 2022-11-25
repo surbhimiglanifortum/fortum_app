@@ -70,6 +70,7 @@ const Charging = ({ setSelectedTab }) => {
     const { data: completedData, status: completedStatus, isLoading: completedIsLoading, refetch: completedreFetch } = useQuery('chargingCompletedData', async () => {
         setLoaderOpen(true)
         const res = await chargingListCompleted(username)
+        console.log("Charging Completed List", res.data)
         setLoaderOpen(false)
         return res.data
     })
@@ -77,18 +78,6 @@ const Charging = ({ setSelectedTab }) => {
     const backhandler = () => {
         setSelectedTab('home')
     }
-
-    const backAction = () => {
-        setSelectedTab('home')
-        return true
-    }
-
-    useEffect(() => {
-        backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
-        return () => {
-            backHandler.remove()
-        }
-    }, [isFocused])
 
     return (
         <CommonView>
@@ -117,7 +106,7 @@ const Charging = ({ setSelectedTab }) => {
                 }
             </View>
 
-            <View>
+            <View style={{ flex: 1 }}>
                 {tab == 'ongoing' &&
                     <>
                         {!loaderOpen && data?.length > 0 ?
@@ -137,23 +126,27 @@ const Charging = ({ setSelectedTab }) => {
                     </>
                 }
 
-                {tab == 'completed' &&
-                    <>{!loaderOpen && completedData?.length > 0 ?
-                        <FlatList
-                            data={completedData}
-                            refreshControl={<RefreshControl onRefresh={completedreFetch} />}
-                            keyExtractor={item => item.id}
+                <View >
+                    {tab == 'completed' &&
+                        <>{!loaderOpen && completedData?.length > 0 ?
+                            <FlatList
+                                data={completedData}
+                                refreshControl={<RefreshControl onRefresh={completedreFetch} />}
+                                keyExtractor={item => item.id}
 
-                            renderItem={(item) => {
-                                return (
-                                    <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={item?.item?.paid ? Charger : ChargerRed} dataItem={item} />
-                                )
-                            }
-                            }
-                        /> : !loaderOpen && <NoData showText={'No Data Completed'} />
+                                renderItem={(item) => {
+                                    return (
+                                        <>
+                                            {item?.item?.status != "ACTIVE" && <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={item?.item?.paid ? Charger : ChargerRed} dataItem={item} />}
+                                        </>
+                                    )
+                                }
+                                }
+                            /> : !loaderOpen && <NoData showText={'No Data Completed'} />
+                        }
+                        </>
                     }
-                    </>
-                }
+                </View>
             </View>
             <Loader modalOpen={loaderOpen} />
         </CommonView>

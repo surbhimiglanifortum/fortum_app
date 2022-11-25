@@ -1,4 +1,4 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, NativeModules, useColorScheme } from 'react-native'
+import { View, Text, Modal, StyleSheet, TouchableOpacity, BackHandler, NativeModules, useColorScheme } from 'react-native'
 import React, { useState, memo, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { scale } from 'react-native-size-matters'
@@ -22,17 +22,16 @@ import IEC_62196_T1_COMBO from '../../../src/assests/svg/IEC_62196_T1_COMBO'
 import IEC_62196_T2 from '../../../src/assests/svg/IEC_62196_T2'
 import Loader from '../Loader'
 import DenseCard from '../Card/DenseCard'
-import { StatusBar } from 'react-native';
-
 
 const { StatusBarManager } = NativeModules;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBarManager.HEIGHT;
 
-
-
 let payloadConnectors = {}
 let allCon = {}
 let mSwitchOn = false
+
+let backHandler
+
 const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => {
     const scheme = useColorScheme()
 
@@ -65,6 +64,15 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
         setConnectorTypes(data)
         return data
     })
+
+    // useEffect(() => {
+    //     console.log("Check Filter Call")
+    //     backHandler = BackHandler.addEventListener('hardwareBackPress', () => setOpenFilterModal(false))
+    //     return () => {
+    //         backHandler.remove()
+    //     }
+    // }, [])
+
 
     const getFile = (key) => {
         switch (key) {
@@ -108,14 +116,11 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
                 return item
             }
         })
-
         console.log("ALLCON", allCon)
-
         allCon.forEach((item, index) => {
             payloadConnectors[item.title] = item.active
         })
         setConnectorTypes(allCon)
-
     }
 
     return (
@@ -131,13 +136,13 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
                                 <CommonText fontSize={16} >Filter</CommonText>
                             </View>
                             <View>
-                                <CommonCard>
+                                {/* <CommonCard>
                                     <TouchableOpacity onPress={() => { setOpenFilterModal(false) }}
                                         style={{ alignSelf: 'center', justifyContent: 'center' }}>
                                         <AntDesign size={20} name='close' color={scheme == 'dark' ? colors.backgroundLight : colors.ligthIcon} />
                                     </TouchableOpacity>
 
-                                </CommonCard>
+                                </CommonCard> */}
                             </View>
 
 

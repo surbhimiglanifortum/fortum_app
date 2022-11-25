@@ -1,4 +1,4 @@
-import { View, StyleSheet, useColorScheme, FlatList, TouchableOpacity, BackHandler } from 'react-native'
+import { View, StyleSheet, useColorScheme, FlatList, TouchableOpacity, BackHandler, RefreshControl } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Header from '../../Component/Header/Header'
 import CommonText from '../../Component/Text/CommonText'
@@ -80,13 +80,13 @@ const Wallet = ({ setSelectedTab }) => {
   };
 
   const handleStartConfirm = (date) => {
-    console.log("handleStartConfirm",date)
+    console.log("handleStartConfirm", date)
     setTechStart(moment(date).format('YYYY-MM-DDT00:00:00'))
     hideStartDatePicker();
   };
 
   const handleEndConfirm = (date) => {
-    console.log("handleEndConfirm",date)
+    console.log("handleEndConfirm", date)
     setTechEnd(moment(date).format('YYYY-MM-DDT23:59:00'))
     hideEndDatePicker();
   };
@@ -111,31 +111,34 @@ const Wallet = ({ setSelectedTab }) => {
     setSelectedTab('home')
   }
 
-  const backAction = () => {
-    setSelectedTab('home')
-    return true
-  }
+  // const backAction = () => {
+  //   setSelectedTab('home')
+  //   return true
+  // }
 
-  useEffect(() => {
-    backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
-    return () => {
-      backHandler.remove()
-    }
-  }, [isFocused])
+  // useEffect(() => {
+  //   backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
+  //   return () => {
+  //     backHandler.remove()
+  //   }
+  // }, [isFocused])
 
   return (
-    <CommonView style={styles.container}>
+    <CommonView>
       <Header onPress={backhandler} showText={"Wallet"} />
 
       {/* card */}
       <WalletCard onPress={RechargeButtonHandler} title={`₹ ${balance}`} subTitle={'Your Prepaid Balance'} />
       <View style={styles.text}>
-        <CommonText showText={`Transcation History(${data?.length || 0})`} />
+        <CommonText showText={`Transaction History (${data?.length || 0})`} />
       </View>
-
 
       {!loaderOpen && data?.length > 0 ?
         <FlatList
+          refreshControl={<RefreshControl
+            refreshing={isLoading}
+            onRefresh={refetch} />
+          }
           data={data}
           keyExtractor={item => item.id}
           renderItem={(item) => {
@@ -147,10 +150,10 @@ const Wallet = ({ setSelectedTab }) => {
         !loaderOpen && <NoData showText={'No History Found'} />
       }
 
-
       <TouchableOpacity style={styles.filterBtn} onPress={() => setModalVisible(true)}>
         <Fontisto name='equalizer' size={20} color={colors.white} />
       </TouchableOpacity>
+
       <DateTimePickerModal
         isVisible={isStartDatePickerVisible}
         mode="date"
@@ -177,13 +180,6 @@ const Wallet = ({ setSelectedTab }) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-
-  },
-  innerContainer: {
-    flex: 1
-    // marginTop: 20,
-  },
   text: {
     marginVertical: 15,
     paddingHorizontal: 12

@@ -1,4 +1,3 @@
-// import 'react-native-gesture-handler';
 import React, { } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Dashboard from '../Screen/Dashboard/Dashboard';
@@ -51,6 +50,7 @@ import AddMoneyDone from '../Screen/Other/PaymentMethod/AddMoneyDone';
 import OrderCard from '../Screen/Other/PaymentMethod/OrderCard';
 import CardOrderConfirmed from '../Screen/Other/PaymentMethod/CardOrderConfimed'
 import QrScanner from '../Screen/Home/QrScanner';
+import KycDone from '../Screen/Other/PaymentMethod/KycDone';
 
 const Stack = createNativeStackNavigator();
 
@@ -105,7 +105,8 @@ const Routes = ({ loggedin }) => {
       <Stack.Screen name={routes.AddMoneyDone} component={AddMoneyDone} options={{ headerShown: false }} />
       <Stack.Screen name={routes.OrderCard} component={OrderCard} options={{ headerShown: false }} />
       <Stack.Screen name={routes.CardOrderConfirmed} component={CardOrderConfirmed} options={{ headerShown: false }} />
-      <Stack.Screen name={routes.QRSCANNER} component={QrScanner} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.QrScanner} component={QrScanner} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.KycDone} component={KycDone} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

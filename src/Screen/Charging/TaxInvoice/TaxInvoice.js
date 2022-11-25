@@ -4,7 +4,6 @@ import { useNavigation, useIsFocused } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import CommonText from '../../../Component/Text/CommonText'
 import Button from '../../../Component/Button/Button'
-import { getFormatedDate } from '../../../Services/CommonServices'
 import DenseCard from '../../../Component/Card/DenseCard/index'
 import CommonView from '../../../Component/CommonView'
 import Divider from '../../../Component/Divider'
@@ -14,14 +13,17 @@ import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCar
 import Charger from '../../../assests/svg/charger'
 import ChargerRed from '../../../assests/svg/ChargerRed'
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-// import RNPrint from 'react-native-print';
+import RNPrint from 'react-native-print';
 import { useSelector } from 'react-redux'
+import { GetFormatedDate } from '../../../Utils/utils'
 
 
 const TaxInvoice = ({ route }) => {
 
     const paramData = route.params.data
-    
+
+
+    console.log("Chargin History Data", route.params?.data?.item?.order?.pricingToApply?.cgst)
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const navigation = useNavigation()
@@ -34,6 +36,7 @@ const TaxInvoice = ({ route }) => {
     const [st, setSt] = useState("");
     const [gstAddr, setGstAddr] = useState("");
     const [gstIn, setGstIn] = useState("");
+    const [loading, setLoading] = useState(false)
 
     const start = new Date(route.params?.data?.item?.start_datetime);
     const end = new Date(route.params?.data?.item?.end_datetime);
@@ -42,9 +45,11 @@ const TaxInvoice = ({ route }) => {
     if (isNaN(diffMin)) diffMin = 0;
 
     const handleButtonClick = () => {
+
         navigation.navigate(routes.PayInvoice, {
             amount: (paramData?.item?.order?.amount_due / 100).toFixed(2)
         })
+
     }
 
     const sessionDetails = async () => {
@@ -90,6 +95,7 @@ const TaxInvoice = ({ route }) => {
     }, [])
 
     const generateHTML = async () => {
+        setLoading(true)
         console.log("Download Called")
         let printData = '<html lang="en">\n' +
             "<head>\n" +
@@ -131,7 +137,7 @@ const TaxInvoice = ({ route }) => {
             "</span>\n" +
             "            <br/>\n" +
             '            <span style="font-size: 1.1em"><strong>Date :</strong> ' +
-            getFormatedDate(route.params?.data?.item?.start_datetime) +
+            GetFormatedDate(route.params?.data?.item?.start_datetime) +
             "</span>\n" +
 
 
@@ -222,12 +228,12 @@ const TaxInvoice = ({ route }) => {
             "    <tr>\n" +
             "        <td>\n" +
             '            <span style="font-size: 1.1em">' +
-            getFormatedDate(route.params?.data?.item?.start_datetime) +
+            GetFormatedDate(route.params?.data?.item?.start_datetime) +
             "</span>\n" +
             "        </td>\n" +
             "        <td>\n" +
             '            <span style="font-size: 1.1em">' +
-            getFormatedDate(route.params?.data?.item?.end_datetime) +
+            GetFormatedDate(route.params?.data?.item?.end_datetime) +
             "</span>\n" +
             "        </td><td>\n" +
             '            <span style="font-size: 1.1em">' +
@@ -264,14 +270,14 @@ const TaxInvoice = ({ route }) => {
             )?.toFixed(2) +
             "</h3>\n" +
             "<h3>Amount of CGST(" +
-            (route.params?.data?.item?.order?.pricingToApply?.cgst != undefined ? route.params?.data?.item?.order?.pricingToApply?.cgst : 0) +
+            (route.params?.data?.item?.order?.cgst != undefined ? route.params?.data?.item?.order?.cgst : 0) +
             "%) : ₹ " +
-            (route.params?.data?.item?.order?.cgst / 100)?.toFixed(2) +
+            (route.params?.data?.item?.order?.cgst)?.toFixed(2) +
             "</h3>\n" +
             "<h3>Amount of SGST(" +
-            (route.params?.data?.item?.order?.pricingToApply?.sgst != undefined ? route.params?.data?.item?.order?.pricingToApply?.sgst : 0) +
+            (route.params?.data?.item?.order?.sgst != undefined ? route.params?.data?.item?.order?.sgst : 0) +
             "%) : ₹ " +
-            (route.params?.data?.item?.order?.sgst / 100)?.toFixed(2) +
+            (route.params?.data?.item?.order?.sgst)?.toFixed(2) +
             "</h3>\n" +
             "\n" +
             "\n" +
@@ -362,8 +368,8 @@ const TaxInvoice = ({ route }) => {
         //     })
         // })
 
-
-        // await RNPrint.print({ filePath: results.filePath })
+        await RNPrint.print({ filePath: results.filePath })
+        setLoading(false)
     }
 
     return (
@@ -378,7 +384,7 @@ const TaxInvoice = ({ route }) => {
 
                         <View style={{}}>
                             <CommonText showText={paramData?.item?.location?.name} fontSize={14} />
-                            <CommonText showText={getFormatedDate(paramData?.item?.start_datetime)} fontSize={14} regular />
+                            <CommonText showText={GetFormatedDate(paramData?.item?.start_datetime)} fontSize={14} regular />
                         </View>
                         <View>
                             <CommonText showText={`₹ ${paramData?.item?.order?.amount / 100 ? paramData?.item?.order?.amount / 100 : '0'}`} fontSize={14} />
@@ -410,11 +416,11 @@ const TaxInvoice = ({ route }) => {
                         <View >
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Start Time'} fontSize={14} regular />
-                                <CommonText semibold showText={paramData?.item?.start_datetime ? getFormatedDate(paramData?.item?.start_datetime) : 'NA'} fontSize={14} regular />
+                                <CommonText semibold showText={paramData?.item?.start_datetime ? GetFormatedDate(paramData?.item?.start_datetime) : 'NA'} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'End Time'} fontSize={14} regular />
-                                <CommonText semibold showText={paramData?.item?.end_datetime ? getFormatedDate(paramData?.item?.end_datetime) : 'NA'} fontSize={14} regular />
+                                <CommonText semibold showText={paramData?.item?.end_datetime ? GetFormatedDate(paramData?.item?.end_datetime) : 'NA'} fontSize={14} regular />
                             </View>
                         </View>
                     </DenseCard>
@@ -426,7 +432,7 @@ const TaxInvoice = ({ route }) => {
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Cost'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? (((paramData?.item?.order?.amount)/100 - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst)))?.toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? (((paramData?.item?.order?.amount) / 100 - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst)))?.toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of CGST (9%)'} fontSize={14} regular />
@@ -470,8 +476,8 @@ const TaxInvoice = ({ route }) => {
                         </View>
                     </DenseCard>
                 </View>
-                <Button
-                    showText={isPaid ? 'Download Invoice' : `Pay(${(paramData?.item?.order?.amount_due/100)?.toFixed(2)})`}
+                <Button onLoading={loading}
+                    showText={isPaid ? 'Download Invoice' : `Pay(${(paramData?.item?.order?.amount_due / 100)?.toFixed(2)})`}
                     onPress={() => isPaid ? generateHTML() : handleButtonClick()}
                 />
             </ScrollView>

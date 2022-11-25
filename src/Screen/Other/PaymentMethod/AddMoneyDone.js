@@ -7,7 +7,7 @@ const AddMoneyDone = () => {
     return (
         <OrderConfirm
             subHeading={'Recharged Successfully'}
-            btnText={'View Card Deatils'}
+            btnText={'View Card Details'}
             onPress={() => {
                 navigation.pop(2)
             }}

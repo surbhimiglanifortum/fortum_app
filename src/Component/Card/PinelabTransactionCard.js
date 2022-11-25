@@ -5,7 +5,7 @@ import CommonCard from './CommonCard'
 import colors from '../../Utils/colors'
 import WalletSvg from '../../assests/svg/wallet'
 import Charger from '../../assests/svg/charger'
-import { getFormatedDate } from '../../Services/CommonServices'
+import { GetFormatedDate } from '../../Utils/utils'
 import CommonIconCard from './CommonIconCard/CommonIconCard'
 
 const PinelabTransactionCard = ({ navigationHandler, Svg, title, date, amount, transactionType }) => {
@@ -18,7 +18,7 @@ const PinelabTransactionCard = ({ navigationHandler, Svg, title, date, amount, t
                     <View style={styles.middleContainer}>
                         <CommonText showText={title} fontSize={14} />
                         <View style={styles.leftContainer}>
-                            <CommonText regular showText={getFormatedDate(date)} fontSize={14} />
+                            <CommonText regular showText={GetFormatedDate(date)} fontSize={14} />
                         </View>
                     </View>
                 </View>

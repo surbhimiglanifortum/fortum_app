@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet } from 'react-native'
+import { View, ScrollView, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import CommonView from '../../Component/CommonView'
 import Textinput from '../../Component/Textinput/Textinput';
@@ -10,6 +10,8 @@ import routes from '../../Utils/routes';
 import colors from '../../Utils/colors'
 import * as ApiAction from '../../Services/Api'
 import { userExist } from '../../Utils/HelperCommonFunctions'
+import TextButton from '../../Component/Button/TextButton'
+import { Auth } from 'aws-amplify'
 
 
 export default function MobileInput({ navigation, route }) {
@@ -33,6 +35,13 @@ export default function MobileInput({ navigation, route }) {
 
     });
 
+    const logoutHandler = async () => {
+        await Auth.signOut();
+        navigation.reset({
+            index: 0,
+            routes: [{ name: routes.dashboard }],
+        });
+    }
 
     const onSubmit = () => {
         if (input != '' && input.match(phoneRegExp)) {
@@ -81,7 +90,7 @@ export default function MobileInput({ navigation, route }) {
                         <View style={{
                             marginVertical: 15
                         }}>
-                            <Textinput maxLength={10} keyboardType={'number-pad'} value={input}  onChange={(e) => {
+                            <Textinput maxLength={10} keyboardType={'number-pad'} value={input} onChange={(e) => {
                                 setInput(e)
                                 setShowError('')
                             }} />
@@ -89,14 +98,14 @@ export default function MobileInput({ navigation, route }) {
                                 <CommonText showText={showError} customstyles={{ color: colors.red }} fontSize={14} />
                             ) : null}
                         </View>
-
                     </View>
+
+                    <TextButton showText={'Sign Out'} style={styles.txtBtn} onPress={logoutHandler} />
                 </View>
 
+
                 <View>
-
                     <Button onPress={onSubmit} onLoading={loading} showText={'Continue'} />
-
                 </View>
             </ScrollView>
 
@@ -109,6 +118,10 @@ export default function MobileInput({ navigation, route }) {
 const styles = StyleSheet.create({
     textinputConatiner: {
         marginVertical: 15
+    },
+    txtBtn: {
+        alignSelf: 'center',
+        paddingHorizontal: 0,
+        margin: 0
     }
-
 })

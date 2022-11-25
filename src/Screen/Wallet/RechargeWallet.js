@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { StyleSheet, useColorScheme, View, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, useColorScheme, View, TouchableOpacity, ScrollView, FlatList } from 'react-native'
 import CommonView from '../../Component/CommonView'
 import DenseCard from '../../Component/Card/DenseCard'
 import Header from '../../Component/Header/Header'
@@ -15,6 +15,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import routes from '../../Utils/routes'
 import SnackContext from '../../Utils/context/SnackbarContext'
+import { scale } from 'react-native-size-matters'
 
 const RechargeWallet = ({ route }) => {
 
@@ -54,7 +55,7 @@ const RechargeWallet = ({ route }) => {
   }
 
   const rechargeWallet = async () => {
-    if (amount.value == '') {
+    if (amount.value == 0) {
       setAmount({ value: '', error: "Please enter Amount." })
       return
     }
@@ -126,11 +127,11 @@ const RechargeWallet = ({ route }) => {
               </CommonCard>
             </TouchableOpacity>
             <View style={[styles.row, { flex: 1, justifyContent: 'center' }]}>
-              <CommonText showText={'₹'} customstyles={styles.rupeeText} fontSize={25} />
+              <CommonText showText={'₹'} customstyles={[styles.rupeeText,]} fontSize={25} />
               <LinearInput
                 value={amount.value}
                 onChange={(text) => onChange(text)}
-                placeholderText={'50'}
+                placeholderText={'0'}
                 style={styles.input}
                 keyboardType={'numeric'}
                 maxLength={5}
@@ -149,10 +150,10 @@ const RechargeWallet = ({ route }) => {
 
 
 
-        <View style={styles.row}>
+        <View style={[styles.row,{flexWrap:'wrap'}]}>
           {lazyAmount.map((e) => {
             return (
-              <TouchableOpacity onPress={() => {
+              <TouchableOpacity style={styles.innerRow} onPress={() => {
                 setAmount({ value: e.toString(), error: '' })
               }}>
                 <CommonCard style={styles.column}>
@@ -167,10 +168,10 @@ const RechargeWallet = ({ route }) => {
         <View style={styles.row}>
           {lazyAmount2.map((e) => {
             return (
-              <TouchableOpacity onPress={() => {
+              <TouchableOpacity style={styles.innerRow} onPress={() => {
                 setAmount({ value: e.toString(), error: '' })
               }}>
-                <CommonCard style={styles.column}>
+                <CommonCard>
                   <CommonText showText={`₹ ${e}`} />
                 </CommonCard>
               </TouchableOpacity>
@@ -203,9 +204,13 @@ const RechargeWallet = ({ route }) => {
         </DenseCard>
 
       </ScrollView>
-      <View style={[styles.row, { justifyContent: 'space-evenly' }]}>
-        <WhiteButton showText={'Cancel'} style={{ flex: 1, marginHorizontal: 10 }} onPress={() => navigation.goBack()} />
-        <Button showText={'Recharge'} style={{ flex: 1, marginHorizontal: 10 }} onPress={rechargeWallet} onLoading={loadingSign} />
+      <View style={[styles.row, { justifyContent: 'space-between' }]}>
+        <View style={{ width: '40%' }}>
+          <WhiteButton showText={'Cancel'} onPress={() => navigation.goBack()} />
+        </View>
+        <View style={{ width: '50%' }}>
+          <Button showText={'Recharge'} onPress={rechargeWallet} onLoading={loadingSign} />
+        </View>
       </View>
     </CommonView>
   )
@@ -219,13 +224,18 @@ const styles = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent:'space-between',
   },
   column: {
-    paddingHorizontal: 20,
-    paddingVertical: 20
+    // paddingHorizontal: 16,
+    // paddingVertical: 16
+    width:scale(60),
+    height:scale(45),
+    alignItems:'center',
+    justifyContent:'center'
   },
   rupeeText: {
-    marginTop: 13
+    marginTop: 17
   }
 })
 

@@ -1,18 +1,20 @@
 import sha256 from 'crypto-js/sha256';
+import moment from 'moment';
 
-export const GetFormatedDate = (datetime) => {
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"];
+export const GetFormatedDate = (date) => {
+    //     const monthNames = ["January", "February", "March", "April", "May", "June",
+    //         "July", "August", "September", "October", "November", "December"];
 
-    // if (typeof datetime === 'string' || datetime instanceof String)
-    // datetime = datetime.replace("Z","")
+    //     // if (typeof datetime === 'string' || datetime instanceof String)
+    //     // datetime = datetime.replace("Z","")
 
-    var date = new Date(datetime);
-    return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}, ${date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()} ${date.getHours() >= 12 ? 'PM' : 'AM'} `
-}
-export const GetFormatedDateOnly = (datetime) => {
-    var date = new Date(datetime);
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+    //     var date = new Date(datetime);
+    //     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}, ${date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()} ${date.getHours() >= 12 ? 'PM' : 'AM'} `
+    // }
+    // export const GetFormatedDateOnly = (datetime) => {
+    //     var date = new Date(datetime);
+    //     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+    return moment.utc(date).local().format('DD/MM/YYYY h:mm A');
 }
 
 export const GetCouterTime = (startTime, endDate) => {

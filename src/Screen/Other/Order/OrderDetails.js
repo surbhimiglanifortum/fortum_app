@@ -10,25 +10,25 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import StoreGreenSvg from '../../../assests/svg/StoreGreenSvg'
 import WhiteButton from '../../../Component/Button/WhiteButton'
 import Button from '../../../Component/Button/Button'
-import { GetFormatedDate, GetFormatedDateOnly } from '../../../Utils/utils'
+import { GetFormatedDate } from '../../../Utils/utils'
 import { scale } from 'react-native-size-matters'
-// import { GetFormatedDate } from '../../../Utils/utils'
+import CommonView from '../../../Component/CommonView/index'
 const OrderDetails = ({ route }) => {
 
-  const paramsData = route.params.dataItem.item
+  const paramsData = route?.params?.dataItem?.item
   const scheme = useColorScheme()
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
+    <CommonView>
       <View style={styles.innerContainer}>
-        <Header showText={paramsData?.id} customstyles={{ width: scale(200) }} />
+        <Header showText={paramsData?.id} customstyles={{ width: scale(200), }} />
         <DenseCard style={styles.card}>
           <View style={styles.keyInner}>
             <View style={styles.keyInner1}>
               <IconCard Svg={OrderGreenSvg} />
               <CommonText showText={'Order Id'} customstyles={styles.textCon} />
             </View>
-            <CommonText showText={paramsData.order.id} fontSize={14} />
+            <CommonText showText={paramsData?.order?.id} fontSize={14} />
           </View>
           <View style={styles.keyInner}>
             <View style={styles.keyInner1}>
@@ -37,10 +37,10 @@ const OrderDetails = ({ route }) => {
               </View>
               <CommonText showText={'Date'} customstyles={styles.textCon} />
             </View>
-            <CommonText showText={GetFormatedDateOnly(paramsData.orderdate)} fontSize={14} />
+            <CommonText showText={GetFormatedDate(paramsData?.orderdate)} fontSize={14} />
           </View>
         </DenseCard>
-        <CommonText showText={'Item'} fontSize={18} customstyles={styles.text} />
+        <CommonText showText={'   Items'} fontSize={18} customstyles={styles.text} />
         <DenseCard style={styles.card}>
           <View style={styles.keyInner}>
             <View style={styles.keyInner1}>
@@ -50,13 +50,13 @@ const OrderDetails = ({ route }) => {
             <CommonText showText={`₹ ${'1400'}`} />
           </View>
         </DenseCard>
-        <CommonText showText={'Order Summary'} customstyles={styles.text} />
+        <CommonText showText={'   Order Summary'} customstyles={styles.text} />
         <DenseCard style={styles.card}>
-          <View style={styles.keyInner}>
+          {/* <View style={styles.keyInner}>
             <CommonText showText={'Price'} />
             <CommonText showText={`₹ ${paramsData?.order?.amount || '0'}`} />
-          </View>
-          <View style={styles.keyInner}>
+          </View> */}
+          {/* <View style={styles.keyInner}>
             <CommonText showText={'Cost'} />
             <CommonText showText={`₹ ${'1200'}`} />
           </View>
@@ -67,18 +67,22 @@ const OrderDetails = ({ route }) => {
           <View style={styles.keyInner}>
             <CommonText showText={'Amount of SGST (0%)'} />
             <CommonText showText={`₹ ${'100'}`} />
-          </View>
+          </View> */}
           <View style={styles.keyInner}>
             <CommonText showText={'Total'} customstyles={styles.text} />
-            <CommonText showText={`₹ ${'1400'}`} customstyles={styles.text} />
+            <CommonText showText={`₹ ${paramsData?.order?.amount || '0'}`} customstyles={styles.text} />
           </View>
         </DenseCard>
       </View>
-      <View style={styles.btnCon}>
+      {/* <View style={styles.btnCon}>
         <WhiteButton showText={'Help'} style={{ width: '35%' }} />
-        <Button showText={'Download Invoice'} style={{ width: '60%' }} />
-      </View>
-    </SafeAreaView >
+        <Button showText={'Download Invoice'} style={{ width: '100%' }} />
+      </View> */}
+
+
+      {/* ----Order details session paid later implement and also download invoice and help btn implemt */}
+
+    </CommonView>
   )
 }
 
@@ -88,15 +92,16 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    marginTop: 20,
-    width: '90%',
-    alignSelf: 'center'
+    // marginTop: 20,
+    // width: '90%',
+    // alignSelf: 'center'
   },
   card: {
     marginTop: 30,
     paddingVertical: 10,
     paddingHorizontal: 10,
-    borderRadius: 6
+    borderRadius: 6,
+
   },
   keyInner: {
     flexDirection: 'row',

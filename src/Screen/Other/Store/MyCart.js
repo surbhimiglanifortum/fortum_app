@@ -16,6 +16,7 @@ import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCar
 import * as ApiAction from '../../../Services/Api'
 import routes from '../../../Utils/routes'
 import SnackContext from '../../../Utils/context/SnackbarContext'
+import NoData from '../../../Component/NoDataFound/NoData'
 
 const MyCart = ({ route }) => {
 
@@ -68,12 +69,12 @@ const MyCart = ({ route }) => {
         }
 
         setLoading(true)
-        
+
         const cartObj = {}
         cartDataDetails?.cartItem.map(e => {
             cartObj[e.id] = e.cartItem
         })
-        
+
         const payload = {
             username: mUserDetails.username, cartObj: cartObj, deliveryAddress
         }
@@ -116,9 +117,9 @@ const MyCart = ({ route }) => {
         <CommonView>
             <ScrollView >
                 <View style={styles.innerContainer}>
-                    <Header showText={'MY Cart'} />
+                    <Header showText={'My Cart'} />
                     <View style={styles.topCard}>
-                        {cartDataDetails?.cartItem.map((item, ind) => {
+                        {cartDataDetails?.cartItem.length > 0 ? cartDataDetails?.cartItem.map((item, ind) => {
                             return (
                                 <DenseCard key={ind} padding={5}>
                                     <View style={styles.denceInnnerCard}>
@@ -138,16 +139,15 @@ const MyCart = ({ route }) => {
                                     </View>
                                 </DenseCard>
                             )
-                        })}
+                        }) : <NoData showText={'No Items Found in Cart'} />}
                     </View>
                     <TouchableOpacity onPress={handleChangeDeliveryAddress}>
                         <DenseCard>
                             <CommonText showText={'Delivery Address'} />
+                            {console.log("Check Address on cart", deliveryAddress)}
                             {!deliveryAddress?.address && <CommonText regular fontSize={14}>Add Delivery Address</CommonText>}
-                            <CommonText regular fontSize={14}>
-                                {deliveryAddress?.first_name + " " + deliveryAddress?.last_name}
-                            </CommonText>
-                            <CommonText regular fontSize={14}>{(deliveryAddress?.address || "") + " " + (deliveryAddress?.address_line_2 || "") + " " + (deliveryAddress?.city || "") + " " + (deliveryAddress?.country || "") + " " + (deliveryAddress?.postal_code || "")}</CommonText>
+                            {(!deliveryAddress?.first_name == "" || !deliveryAddress?.last_name == "") && <CommonText regular fontSize={14} showText={`${deliveryAddress?.first_name || ""} ${deliveryAddress?.last_name || ""}`} />}
+                            {(!deliveryAddress?.address == "" || !deliveryAddress?.address_line_2 == "" || !deliveryAddress?.city == "" || !deliveryAddress?.country == "" || !deliveryAddress?.postal_code == "") && <CommonText regular fontSize={14}>{(deliveryAddress?.address || "") + " " + (deliveryAddress?.address_line_2 || "") + " " + (deliveryAddress?.city || "") + " " + (deliveryAddress?.country || "") + " " + (deliveryAddress?.postal_code || "")}</CommonText>}
                         </DenseCard>
                     </TouchableOpacity>
 
@@ -179,7 +179,7 @@ const MyCart = ({ route }) => {
                 </View>
             </ScrollView>
 
-            <Button onLoading={loading} showText={'Proceed to Pay'} onPress={ProceedToPayHadnler} />
+            {cartDataDetails?.cartItem.length > 0 && <Button onLoading={loading} showText={'Proceed to Pay'} onPress={ProceedToPayHadnler} />}
 
         </CommonView>
     )

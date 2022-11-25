@@ -65,7 +65,7 @@ const CompleteKYC = ({ route }) => {
     };
 
     const handleConfirm = (date) => {
-         let dob = moment(date).format('LL')
+        let dob = moment(date).format('LL')
         setDob(dob)
         setDobTech(moment(date).format('YYYY-MM-DD'))
         hideDatePicker();
@@ -162,6 +162,8 @@ const CompleteKYC = ({ route }) => {
 
         console.log("ALL WELL", payload)
 
+
+
         try {
             setLoadingSign(true)
             const result = await pinelabDocVerify(payload)
@@ -193,11 +195,7 @@ const CompleteKYC = ({ route }) => {
             }
             const result = await createPinelabWallet(payload)
             if (result.data.success) {
-                createDigitalCard()
-                navigation.navigate(routes.FortumChargeAndDriveCard, {
-                    response: result.data.response,
-                    name: route.params?.fName
-                })
+                createDigitalCard(result.data.response.Cards[0].CardPin, result.data.response, route.params?.fName)
             }
             if (!result.data.success) {
                 setOpenCommonModal({
@@ -211,12 +209,25 @@ const CompleteKYC = ({ route }) => {
         }
     }
 
-    const createDigitalCard = async () => {
+    const createDigitalCard = async (pin, response, name) => {
         try {
             const payload = {
                 username: mUserDetails?.username
             }
             const result = await createPinelabDigitalCard(payload)
+            if (result?.data?.success) {
+                navigation.navigate(routes.KycDone, {
+                    pin: pin,
+                    response: response,
+                    name: name
+                })
+            } else {
+                setOpenCommonModal({
+                    isVisible: true, message: result.data?.message, onOkPress: () => {
+                        console.log("OKPressed")
+                    }
+                })
+            }
         } catch (error) {
             console.log("Error of Create Digital Card", error)
         }
@@ -338,7 +349,7 @@ const CompleteKYC = ({ route }) => {
                         status={isAcceptCheck ? 'checked' : 'unchecked'}
                         onPress={() => setIsAcceptCheck(!isAcceptCheck)}
                     />
-                    <CommonText fontSize={14} regular>{'I accept the'} <CommonText fontSize={14} regular onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms Of Services'}</CommonText></CommonText>
+                    <CommonText fontSize={14} regular>{'I accept the'} <CommonText fontSize={14} regular onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms Of Service'}</CommonText></CommonText>
                 </View>
 
                 {isAcceptCheckError !== '' &&
@@ -354,7 +365,7 @@ const CompleteKYC = ({ route }) => {
                     />
 
                     <CommonText fontSize={14} regular customstyles={{ flex: 1 }}>{'I acknowledge that '}
-                        <CommonText fontSize={14} regular onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms of Services,'}</CommonText>
+                        <CommonText fontSize={14} regular onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms of Service,'}</CommonText>
                         <CommonText showText={' '} />
                         <CommonText fontSize={14} regular onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Privacy Policy, '}</CommonText>
                         <CommonText fontSize={14} regular showText={'and our default '} />
@@ -367,7 +378,7 @@ const CompleteKYC = ({ route }) => {
                 }
             </ScrollView>
 
-            <Button showText={'Compelete to KYC'} onPress={onDocumentVerify} onLoading={loadingSign} />
+            <Button showText={'Complete to KYC'} onPress={onDocumentVerify} onLoading={loadingSign} />
 
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}

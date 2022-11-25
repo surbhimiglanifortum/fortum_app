@@ -3,7 +3,7 @@ const initialState = {
     tnc_last_called: null,
     favCharger: null,
     checkActiveSession: true,
-    locations: []
+    userLocations: []
 }
 
 const CommonReducer = (state = initialState, action) => {
@@ -24,10 +24,10 @@ const CommonReducer = (state = initialState, action) => {
                 ...state,
                 checkActiveSession: action.payload
             };
-        case Types.LOCATIONS:
+        case Types.USERLOCATIONS:
             return {
                 ...state,
-                locations: action.payload
+                userLocations: action.payload
             };
         default:
             return state;

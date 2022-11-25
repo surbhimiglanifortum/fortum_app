@@ -1,8 +1,7 @@
 import React, { useEffect, useContext, useState, useRef, useCallback } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme, FlatList, BackHandler } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, useColorScheme, FlatList, BackHandler } from 'react-native'
 import colors from '../../Utils/colors';
 import MapList from './ChargerList/MapList';
-import IconCardWithoutBg from '../../Component/Card/IconCardWithoutBg';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FilterSvg from '../../assests/svg/FilterSvg';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -15,7 +14,7 @@ import Geolocation from '@react-native-community/geolocation';
 import { computeDistance } from '../../Utils/helperFuncations/computeDistance';
 import SnackContext from '../../Utils/context/SnackbarContext';
 import { useQuery } from 'react-query'
-import { API, Auth } from 'aws-amplify'
+import { Auth } from 'aws-amplify'
 import * as ApiAction from '../../Services/Api'
 import MapCharger from '../Home/MapCharger'
 import CommonText from '../../Component/Text/CommonText';
@@ -29,15 +28,12 @@ import * as Types from '../../Redux/Types'
 import axios from "axios";
 import appConfig from '../../../appConfig'
 
-
 let selectedMarker = ""
 let mLocationPayload = {}
 let flatListBottomList
+let backHandler
+
 export default Home = ({ navigatedata }) => {
-
-
-
-
 
   const isFocused = useIsFocused()
   const mapRef = useRef();
@@ -56,8 +52,8 @@ export default Home = ({ navigatedata }) => {
   const dispatch = useDispatch()
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
-
   const checkActiveSession = useSelector((state) => state.TempStore.checkActiveSession);
+  const userLocation = useSelector((state) => state.commonReducer.userLocations)
 
   const scheme = useColorScheme()
 
@@ -68,25 +64,67 @@ export default Home = ({ navigatedata }) => {
     setSelectedTab('List')
   }
 
-  const favButtonHandler = () => {
+  const favButtonHandler = async () => {
+    try {
+      const result = await Auth.currentAuthenticatedUser();
 
-    navigation.navigate(routes.Favoruite, { location: location })
+      console.log(result)
+      if (result?.signInUserSession) {
+        if (result.attributes.phone_number && result.attributes.phone_number != '') {
+          navigation.navigate(routes.Favoruite, { location: location })
+        } else {
+          navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
+        }
+        return
+      }
+
+    } catch (error) {
+
+    }
+    navigation.navigate(routes.login)
   }
+
   const filterButtonHandler = () => {
     setOpenFilterModal(true)
   }
-  const scannerButtonHandler = () => {
-    console.log("scannerButtonHandler")
-    Auth.currentSession().then(r => {
-      if (!r) {
-        navigation.navigate(routes.login)
 
-      } else {
-        if (mUserDetails.phone_number && mUserDetails.phone_number != '') {
-          navigation.navigate(routes.QRSCANNER)
+  // const backAction = () => {
+  //   console.log("Check Filter", openFilterModal)
+  //   if (openFilterModal) {
+  //     setOpenFilterModal(false)
+  //     return true
+  //   }
+  //   return false
+  // }
+
+  // useEffect(() => {
+  //   console.log("hardwa")
+  //   backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
+  //   return () => {
+  //     backHandler.remove()
+  //   }
+  // }, [])
+
+  const handleSelection = async (screen, payload) => {
+    try {
+      const result = await Auth.currentAuthenticatedUser();
+      console.log(result)
+      if (result?.signInUserSession) {
+        if (result.attributes.phone_number && result.attributes.phone_number != '') {
+          navigation.navigate(screen, payload)
+        } else {
+          navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
         }
+        return
       }
-    }).catch(err => { console.log(err); navigation.navigate("MakeChargingEasySplash") });
+    } catch (error) {
+      console.log("Error in handleSelection", error)
+    }
+    navigation.navigate(routes.login)
+  }
+
+  const scannerButtonHandler = () => {
+    handleSelection(routes.QrScanner)
   }
 
   const searchedLocation = (payload) => {
@@ -96,6 +134,7 @@ export default Home = ({ navigatedata }) => {
         longitude: payload.lng
       }
     })
+    dispatch(AddToRedux(location, Types.USERLOCATIONS))
   }
 
   const searchBtnHandler = () => {
@@ -120,7 +159,6 @@ export default Home = ({ navigatedata }) => {
       // setSelectedCharger(false)
     } else {
       setSelectedCharger(true)
-
     }
 
     selectedMarker = marker_id
@@ -129,7 +167,7 @@ export default Home = ({ navigatedata }) => {
       try {
         flatListBottomList?.current?.scrollToIndex({ index: e })
       } catch (error) {
-        console.log("SDKJBS", error)
+        console.log("Error in chargingBtnHandler", error)
       }
     } else {
 
@@ -137,7 +175,7 @@ export default Home = ({ navigatedata }) => {
         try {
           flatListBottomList?.current?.scrollToIndex({ index: e })
         } catch (error) {
-          console.log("SDKJBS", error)
+          console.log("Error in chargingBtnHandler setTimeout", error)
         }
       }, 2000);
     }
@@ -145,16 +183,12 @@ export default Home = ({ navigatedata }) => {
 
   }
 
-  const chargingCardHandler = () => {
-    navigation.navigate(routes.ChargingStation)
-  }
-
   const { setOpenCommonModal } = useContext(SnackContext)
 
   const CallCheckActiveSession = async () => {
     console.log(checkActiveSession)
     if (checkActiveSession) {
-      console.log("CHECK actove session")
+
       if (mUserDetails?.username) {
         const response = await ApiAction.chargingList(mUserDetails.username)
         console.log(response.data)
@@ -162,6 +196,7 @@ export default Home = ({ navigatedata }) => {
           setOpenCommonModal({
             isVisible: true, message: `You have an ongoing charging session at Charger ${response.data[0]?.location?.name} please stop the session if you have done charging!`,
             heading: "Ongoing Session",
+            showBtnText:"Stop",
             secondButton: {
               onPress: () => {
 
@@ -188,7 +223,7 @@ export default Home = ({ navigatedata }) => {
         dispatch(AddToRedux(false, Types.CHECKACTIVESESSION))
       }
     } else {
-      console.log("dont CHECK actove session")
+      console.log("don't CHECK active session")
     }
   }
 
@@ -204,12 +239,11 @@ export default Home = ({ navigatedata }) => {
     mLocationPayload = locationsPayload
     refetch({ jhsgd: "SLJ" })
     CallCheckActiveSession()
-  }, [location, locationsPayload])
+  }, [locationsPayload,userLocation])
 
   const addInterceptor = async () => {
     const result = await Auth.currentAuthenticatedUser();
     if (result.signInUserSession) {
-      console.log("add Intecept")
       axios.interceptors.request.use(async (config) => {
         // console.log("AUTH ",Auth)
         const token = await Auth.currentSession().catch(err => { console.log(err) });
@@ -230,8 +264,6 @@ export default Home = ({ navigatedata }) => {
       userDetailsUpdated()
     })
     getLocationAndAnimate()
-
-
   }, [])
 
   useEffect(() => {
@@ -241,7 +273,6 @@ export default Home = ({ navigatedata }) => {
 
   const { data, status, isLoading, isRefetching, refetch, refetc } = useQuery('MapData', async () => {
     {
-      // console.log("SDKS", context)
       try {
 
         const payload = { ...mLocationPayload, username: mUserDetails?.username || "" }
@@ -251,18 +282,17 @@ export default Home = ({ navigatedata }) => {
 
         const res = await ApiAction.getLocation(payload)
         var locationsArray = res.data?.locations[0];
-        if (!location.coords) {
+        if (!userLocation?.coords) {
 
         } else {
           if (locationsArray.length > 0) {
             locationsArray.map((data, index) => {
-              locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
+              locationsArray[index].distance = computeDistance([userLocation?.coords?.latitude, userLocation?.coords?.longitude], [
                 data?.latitude,
                 data?.longitude,
               ])
             })
             locationsArray?.sort(function (a, b) { return a.distance - b.distance })
-
           }
         }
         setMLocation(locationsArray)
@@ -279,9 +309,9 @@ export default Home = ({ navigatedata }) => {
     try {
       setLocationLoading(true)
       Geolocation.getCurrentPosition(info => {
-
         setLocation(info)
         setLocationLoading(false)
+        dispatch(AddToRedux(info, Types.USERLOCATIONS))
       }, error => {
         console.log(error)
       })

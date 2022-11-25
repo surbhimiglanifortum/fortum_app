@@ -76,6 +76,12 @@ const AddPinelabMoney = ({ route }) => {
         refetch()
     }, [isFocused])
 
+    const onChange = e => {
+        // const input = e.currentTarget.value;
+        if (/^[^!-\/:-@\[-`{-~]+$/.test(e) || e === "") {
+            setAmount({ value: e.trim(), error: '' })
+        }
+    };
 
     return (
         <CommonView>
@@ -91,7 +97,14 @@ const AddPinelabMoney = ({ route }) => {
                 <CommonText showText={'Add Money in Wallet'} regular fontSize={14} />
                 <View style={{ position: 'relative' }}>
                     <CommonText showText={'₹'} customstyles={styles.rupeeText} />
-                    <Textinput paddingHorizontal={25} placeholder={'Enter Amount'} value={amount.value} onChange={(text) => { setAmount({ value: text, error: '' }) }} />
+                    <Textinput
+                        paddingHorizontal={25}
+                        placeholder={'Enter Amount'}
+                        value={amount.value}
+                        onChange={(text) => onChange(text)}
+                        keyboardType={'numeric'}
+                        maxLength={5}
+                    />
                 </View>
 
                 <CommonText showText={'Quick Recommendation'} fontSize={14} customstyles={{ marginVertical: 15 }} />
@@ -99,10 +112,10 @@ const AddPinelabMoney = ({ route }) => {
                 <View style={styles.row}>
                     {lazyAmount.map((e) => {
                         return (
-                            <TouchableOpacity onPress={() => {
+                            <TouchableOpacity style={styles.innerRow} onPress={() => {
                                 setAmount({ value: e.toString(), error: '' })
                             }}>
-                                <CommonCard style={styles.column}>
+                                <CommonCard>
                                     <CommonText showText={`₹ ${e}`} />
                                 </CommonCard>
                             </TouchableOpacity>
@@ -114,10 +127,10 @@ const AddPinelabMoney = ({ route }) => {
                 <View style={styles.row}>
                     {lazyAmount2.map((e) => {
                         return (
-                            <TouchableOpacity onPress={() => {
+                            <TouchableOpacity style={styles.innerRow} onPress={() => {
                                 setAmount({ value: e.toString(), error: '' })
                             }}>
-                                <CommonCard style={styles.column}>
+                                <CommonCard>
                                     <CommonText showText={`₹ ${e}`} />
                                 </CommonCard>
                             </TouchableOpacity>
@@ -126,9 +139,13 @@ const AddPinelabMoney = ({ route }) => {
                 </View>
 
             </ScrollView>
-            <View style={[styles.row, { justifyContent: 'space-evenly' }]}>
-                <WhiteButton showText={'Cancel'} style={{ flex: 1, marginHorizontal: 10 }} onPress={() => navigation.goBack()} />
-                <Button showText={'Recharge'} style={{ flex: 1, marginHorizontal: 10 }} onPress={rechargeWallet} onLoading={loadingSign} />
+            <View style={[styles.row, { justifyContent: 'space-between' }]}>
+                <View style={{ width: '48%' }}>
+                    <WhiteButton showText={'Cancel'} onPress={() => navigation.goBack()} />
+                </View>
+                <View style={{ width: '48%', }}>
+                    <Button showText={'Recharge'} onPress={rechargeWallet} onLoading={loadingSign} />
+                </View>
             </View>
         </CommonView>
     )
@@ -144,16 +161,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    column: {
-        paddingHorizontal: 20,
-        paddingVertical: 20
-    },
     rupeeText: {
         position: 'absolute',
         zIndex: 9,
         top: 27,
         left: 15
-    }
+    },
+    innerRow: {
+        flex: 1,
+        alignItems: 'center',
+    },
 })
 
 export default AddPinelabMoney

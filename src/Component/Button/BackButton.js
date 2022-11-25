@@ -7,7 +7,7 @@ import CommonCard from '../../Component/Card/CommonCard/index'
 const BackButton = ({ onPress }) => {
   const scheme = useColorScheme()
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} style={{paddingHorizontal:5,}}>
       <CommonCard margin={1}>
         <AntDesign name='left' size={25} color={scheme == 'dark' ? colors.white : colors.black} />
       </CommonCard>

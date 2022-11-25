@@ -51,8 +51,8 @@ const Other = ({ setSelectedTab }) => {
       index: 0,
       routes: [{ name: routes.dashboard }],
     });
-
   }
+  
   const preferenceHandler = () => {
     navigation.navigate(routes.Preference)
   }
@@ -92,17 +92,7 @@ const Other = ({ setSelectedTab }) => {
     userDetailsUpdated()
   }, [isFocused])
 
-  const backAction = () => {
-    setSelectedTab('home')
-    return true
-  }
-
-  useEffect(() => {
-    backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
-    return () => {
-      backHandler.remove()
-    }
-  }, [isFocused])
+  
 
   return (
     <CommonView >

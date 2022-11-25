@@ -12,6 +12,7 @@ import CommonView from '../../../Component/CommonView'
 import { useSelector } from 'react-redux'
 import { sentKycOtp, resendPinelabOtp, validatePinelabOtp } from '../../../Services/Api'
 import SnackContext from '../../../Utils/context/SnackbarContext'
+import Loader from '../../../Component/Loader'
 
 const ActivateCard = () => {
 
@@ -35,6 +36,7 @@ const ActivateCard = () => {
     const [nameError, setNameError] = useState('')
     const [lNameError, setLNameError] = useState('')
     const [loadingSign, setLoadingSign] = useState(false)
+    const [otpLoader, setOtpLoader] = useState(false)
     const [disable, setDisable] = useState(true)
     const [otpError, setOtpError] = useState('')
     const [otpArray, setOtpArray] = useState(['', '', '', '', '', '']);
@@ -91,7 +93,7 @@ const ActivateCard = () => {
             }
         };
     };
-    
+
     const otpSend = async () => {
         if (name.length < 1) {
             setNameError("Please enter first the name.")
@@ -108,13 +110,14 @@ const ActivateCard = () => {
         }
 
         try {
-            setLoadingSign(true)
+            setOtpLoader(true)
             const payload = {
                 customerName: name + lName,
                 mobileNumber: mUserDetails?.phone_number,
                 email: mUserDetails?.username
             }
             const result = await sentKycOtp(payload)
+            console.log("Check Response of Pinelab OTP", result.data)
             if (result.data?.message) {
                 if (result.data?.message === "RequestId Generated successfully") {
                     setDisable(false)
@@ -131,9 +134,9 @@ const ActivateCard = () => {
                     })
                 }
             }
-            setLoadingSign(false)
+            setOtpLoader(false)
         } catch (error) {
-            setLoadingSign(false)
+            setOtpLoader(false)
             console.log("Check the pinelab otp api error", error)
         }
     }
@@ -178,7 +181,7 @@ const ActivateCard = () => {
     const otpValidation = async () => {
         const otp = otpArray.join('')
 
-        if (!otp || otp == "" || otp.length < 4) {
+        if (!otp || otp == "" || otp.length < 6) {
             setOtpError("Please Enter Valid Otp.")
             return
         }
@@ -190,16 +193,18 @@ const ActivateCard = () => {
                 otp: otp
             }
             const result = await validatePinelabOtp(payload)
-            if (result.data?.message) {
-                if (result.data?.message?.responseMessage == "Min Kyc OTP Verified Successfully") {
-                    navigation.navigate(routes.CompleteKYC, {
-                        fName: name,
-                        lName: lName,
-                        email: mUserDetails?.username,
-                        mobileNumber: mUserDetails?.phone_number
-                    })
-                }
-            } else {
+            console.log("Check Response of Pinelab Verify OTP", result.data)
+
+            if (result.data?.message?.responseMessage == "Min Kyc OTP Verified Successfully") {
+                navigation.navigate(routes.CompleteKYC, {
+                    fName: name,
+                    lName: lName,
+                    email: mUserDetails?.username,
+                    mobileNumber: mUserDetails?.phone_number
+                })
+            }
+            else {
+                console.log("Check Invalid Response", result.data?.message?.responseMessage)
                 setOpenCommonModal({
                     isVisible: true, message: result.data?.message?.responseMessage || result.data?.message, onOkPress: () => {
                         console.log("OKPressed")
@@ -250,7 +255,7 @@ const ActivateCard = () => {
                 </View>
 
                 <TouchableOpacity style={[styles.otpBtn, { borderColor: disable ? colors.green : colors.grey, }]} onPress={otpSend}>
-                    <CommonText showText={'Send OTP'} fontSize={18} customstyles={{ color: disable ? colors.green : colors.grey }} />
+                    {otpLoader ? <Loader modalOpen={otpLoader} /> : <CommonText showText={'Send OTP'} fontSize={18} customstyles={{ color: disable ? colors.green : colors.grey }} />}
                 </TouchableOpacity>
 
                 <CommonText showText={'Enter OTP'} />

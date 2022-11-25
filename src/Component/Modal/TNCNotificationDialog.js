@@ -5,11 +5,11 @@ import { differenceInDays } from 'date-fns'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import * as TYPES from '../../Redux/Types'
 import colors from '../../Utils/colors';
-import GlobalDefines from '../GlobalDefines';
 import { getTncVersion, acceptTnc } from '../../Services/Api'
 import CommonText from '../Text/CommonText';
 import Button from '../Button/Button';
 import CommonView from '../CommonView'
+import GlobalDefines from '../../Utils/GlobalDefines';
 
 const TNCNotificationDialog = (props) => {
 

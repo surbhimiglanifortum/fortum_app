@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import CommonView from '../../Component/CommonView/index'
 import CommonCard from '../../Component/Card/CommonCard/index'
 import DenseCard from '../../Component/Card/DenseCard/index'
@@ -13,10 +13,14 @@ import Button from '../../Component/Button/Button'
 import WhiteButton from '../../Component/Button/WhiteButton'
 import { addAddressService } from '../../Services/Api'
 import { useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
+import SnackContext from '../../Utils/context/SnackbarContext'
 
 
 const AddAddress = () => {
+    const { setOpenCommonModal } = useContext(SnackContext);
 
+    const navigation = useNavigation()
     const lazy_array = [
         { name: 'First Name *', value: "first_name" },
         { name: 'Last Name *', value: "last_name" },
@@ -48,10 +52,8 @@ const AddAddress = () => {
             .min(2, 'Too Short!')
             .max(50, 'Too Long!')
             .required('Address 2 Required'),
-        postal_code: Yup.string()
-            .min(2, 'Too Short!')
-            .max(50, 'Too Long!')
-            .required('Postal Code Required'),
+        postal_code: Yup.string().min(6, 'Enter Valid Postal Code!').max(6, 'Enter Valid Postal Code!').matches(phoneRegExp, 'postal Code is not valid !').required('Postal Code Required'),
+
         city: Yup.string()
             .min(2, 'Too Short!')
             .max(50, 'Too Long!')
@@ -69,7 +71,7 @@ const AddAddress = () => {
     const handleSignup = async (values, event) => {
         let objToSend = {}
         objToSend.address = values.address_line1
-        objToSend.address_line2 = values.address_line2
+        objToSend.address_line_2 = values.address_line2
         objToSend.city = values.city
         objToSend.country = values.state
         objToSend.first_name = values.first_name
@@ -77,7 +79,11 @@ const AddAddress = () => {
         objToSend.postal_code = values.postal_code
         objToSend.phone = values.mobile_number
         const res = await addAddressService(objToSend, username)
-        
+        navigation.goBack()
+        if (res) {
+            setOpenCommonModal({ isVisible: true, message: "Address Add Successfully" })
+            return
+        }
     }
 
 
@@ -93,7 +99,7 @@ const AddAddress = () => {
                             referral_code: "",
                             mobile_number: '',
                             address_line1: '',
-                            address_line2: '',
+                            address_line_2: '',
                             postal_code: '',
                             city: '',
                             state: '',
@@ -119,7 +125,7 @@ const AddAddress = () => {
                                 })}
                                 <View style={styles.btnConatiner}>
                                     <View style={{ width: '48%' }}>
-                                        <WhiteButton showText={'Cancel'} />
+                                        <WhiteButton showText={'Cancel'} onPress={() => { navigation.goBack() }} />
                                     </View>
                                     <View style={{ width: '48%' }}>
                                         <Button onPress={handleSubmit} showText={'Save'} onLoading={isSubmitting} />

@@ -29,8 +29,9 @@ const Order = () => {
     const { data, status, isLoading, refetch } = useQuery('ordersData', async () => {
         setLoaderOpen(true)
         const res = await getOrdersService(username)
+        var result = res.data
         setLoaderOpen(false)
-        return res.data
+        return result
     })
 
     return (

@@ -23,8 +23,6 @@ const PayMinimum = ({ route }) => {
     const gstState = mUserDetails?.defaultState
     const evDetails = route.params?.evDetails
 
-    console.log("Check Pay Minimum Route", route.params)
-
     const dispatch = useDispatch();
     const isFocused = useIsFocused()
     const navigation = useNavigation()
@@ -47,6 +45,9 @@ const PayMinimum = ({ route }) => {
     const [orderExist, setOrderExist] = useState(false)
     const [isShow, setShow] = useState(true)
     const [locDetails, setLocDetails] = useState(route?.params?.locDetails)
+    const [loading, setLoading] = useState(false)
+    const [showBtn, setShowBtn] = useState(true)
+    const [isLoader, setLoader] = useState(false)
 
     const qrLocationData = async () => {
         try {
@@ -72,40 +73,52 @@ const PayMinimum = ({ route }) => {
     }
 
     const checkWalletBalance = () => {
+        setLoader(true)
         setMode('CLOSED_WALLET')
+        setShowBtn(true)
         if (userData?.balance < evDetails?.connectors[0]?.pricing?.min_balance) {
             setMsg("Your wallet balance is low. Please select other option or add money in your wallet.")
             setWalletBalance(userData?.balance)
             setWallet(false)
             setColorText(colors.red)
             setGoodToGo(false)
+            setLoader(false)
         } else {
             setColorText(colors.green)
             setMsg('You are ready to charge')
             setWalletBalance(userData?.balance)
             setWallet(true)
             setGoodToGo(true)
+            setLoader(false)
         }
     }
 
     const checkPrepaidCardBalance = async () => {
         setGoodToGo(false)
+        setLoader(true)
         try {
             const res = await walletBalanceEnquiry({ username: mUserDetails?.username })
             setPrepaidCardBalance(res.data?.response?.Cards[0].Balance)
             if (res.data?.response?.Cards[0].Balance < evDetails?.connectors[0]?.pricing?.min_balance) {
+                setColorText(colors.red)
                 setMsg("Your wallet balance is low to start charger. Please load money in your card.")
                 setGoodToGo(false)
+                setShowBtn(false)
+                setLoader(false)
             }
             else {
                 setAskPin(true)
+                setShowBtn(true)
+                setLoader(false)
             }
         } catch (error) {
             console.log("Check Prepaid Card Balance Error", error)
+            setLoader(false)
         }
     }
 
     const blockMinBalance = async () => {
+        setLoadingSign(true)
         if (pin.value.length < 6) {
             setPin({ value: pin.value, error: "Please enter correct card pin." })
             return
@@ -118,6 +131,7 @@ const PayMinimum = ({ route }) => {
                 Amount: evDetails?.connectors[0]?.pricing?.min_balance
             }
             const res = await blockAmount(payload);
+            setLoadingSign(true)
             console.log("Check PreAuth", res.data)
             if (res.data.success) {
                 dispatch(AddToRedux(res.data, Types.PINELABAUTH))
@@ -134,8 +148,11 @@ const PayMinimum = ({ route }) => {
             } else {
                 setMsg(res.data.message)
                 setGoodToGo(false)
+                setColorText(colors.red)
             }
+            setLoadingSign(false)
         } catch (error) {
+            setLoadingSign(false)
             console.log("Check Response from blockMinBalance error", error)
         }
     }
@@ -145,6 +162,8 @@ const PayMinimum = ({ route }) => {
         setMode('PAY_AS_U_GO')
         setMsg('')
         setWallet(true)
+        setShowBtn(true)
+        setLoader(true)
         const payload = {
             evses_uid: evDetails?.uid
         }
@@ -158,8 +177,10 @@ const PayMinimum = ({ route }) => {
                 setColorText(colors.green)
             }
             setOrderExist(isOrderExist.data.response.success)
+            setLoader(false)
         } catch (error) {
             console.log("isOrderExist catch block", error)
+            setLoader(false)
         }
     }
 
@@ -282,7 +303,7 @@ const PayMinimum = ({ route }) => {
             case 'PREPAID_CARD':
                 console.log("Check Prepaid Card Selection")
                 blockMinBalance()
-                setLoadingSign(false)
+                // setLoadingSign(false)
                 break;
             default:
                 console.log("In Default Case", mode)
@@ -346,7 +367,7 @@ const PayMinimum = ({ route }) => {
                                 <CommonCard style={styles.wrapper}>
                                     <View style={{ flex: 1 }}>
                                         <CommonText showText={'Prepaid Card'} customstyles={{ flex: 1 }} />
-                                        {(prepaidCardBalance != undefined && prepaidCardBalance != '') && <CommonText showText={`Available Balance : ₹ ${prepaidCardBalance}`} fontSize={12} regular />}
+                                        {(prepaidCardBalance != undefined || prepaidCardBalance != '') && <CommonText showText={`Available Balance : ₹ ${prepaidCardBalance}`} fontSize={12} regular />}
                                     </View>
                                     <RadioBtn
                                         value="PREPAID_CARD"
@@ -381,13 +402,12 @@ const PayMinimum = ({ route }) => {
                                 <CommonText showText={pin.error} customstyles={[{ color: colorText }, styles.text]} fontSize={14} regular />
                             }
 
+                            <Loader modalOpen={isLoader} />
 
                         </View>
 
-                        {console.log("Check Pay As you go order id", payAsYouGoOrderId)}
-
-                        <View style={styles.fixedContainer}>
-                            <Button showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() => {
+                        {showBtn && <View style={styles.fixedContainer}>
+                            <Button onLoading={loadingSign} showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() => {
                                 goodToGo && mode == 'PAY_AS_U_GO' ? navigation.replace(routes.OngoingDetails, {
                                     locDetails: locDetails,
                                     evDetails: evDetails,
@@ -398,7 +418,7 @@ const PayMinimum = ({ route }) => {
                             }
                             }
                             />
-                        </View>
+                        </View>}
                     </>}
         </CommonView>
     )

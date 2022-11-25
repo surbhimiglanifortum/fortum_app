@@ -19,19 +19,19 @@ const Notification = ({ setSelectedTab }) => {
     setSelectedTab('home')
   }
 
-  const backAction = () => {
-    setSelectedTab('home')
-    return true
-  }
+  // const backAction = () => {
+  //   setSelectedTab('home')
+  //   return true
+  // }
 
 
 
-  useEffect(() => {
-    backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
-    return () => {
-      backHandler.remove()
-    }
-  }, [isFocused])
+  // useEffect(() => {
+  //   backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
+  //   return () => {
+  //     backHandler.remove()
+  //   }
+  // }, [isFocused])
 
   return (
     <CommonView>

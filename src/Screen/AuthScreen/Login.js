@@ -1,5 +1,5 @@
-import { View, Text, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
+import React, { useState } from 'react'
 import colors from '../../Utils/colors'
 import CarLogo from '../../assests/svg/CarLogo';
 import TextButton from '../../Component/Button/TextButton';
@@ -14,9 +14,11 @@ import GoogleSvg from '../../assests/svg/GoogleSvg';
 import { validatePhone, validateEmail } from '../../Utils/HelperCommonFunctions'
 import Button from '../../Component/Button/Button';
 import * as APIAction from '../../Services/Api'
+import CommonView from '../../Component/CommonView'
+
 const Login = () => {
 
-  const [userInput, setuserInput] = useState('')
+  const [userInput, setuserInput] = useState('wimimic102@kuvasin.com')
   const [loading, setLoading] = useState(false)
 
   const navigation = useNavigation()
@@ -34,7 +36,7 @@ const Login = () => {
       } else {
         user = await Auth.signIn(userInput.toLowerCase());
       }
-      console.log("userdetail",user)
+      console.log("userdetail", user)
 
       if (user) {
         if (validatePhone(userInput.toLowerCase())) {
@@ -117,52 +119,45 @@ const Login = () => {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
-
+    <CommonView>
       <ScrollView>
-        <View style={styles.innerContainer}>
-          <TextButton onPress={() => navigation.goBack()} />
-          <View style={styles.imageContainer}>
-            <CarLogo />
-          </View>
-          <View>
-            <CommonText showText={'Welcome !'} fontSize={20} />
-          </View>
-          <View style={styles.textinputConatiner}>
-            <CommonText showText={'Please enter your mobile number or email id'} fontSize={12} />
-            <Textinput value={userInput} onChange={setuserInput} placeholder={'Mobile Number / email id'} />
-          </View>
-          <Button showText={"Continue"} onPress={continueButtonHandler} onLoading={loading} ></Button>
-
-          <View style={styles.centerText}>
-            <CommonText showText={'Or Sign in with'} fontSize={12} />
-          </View>
-
-          {/* show google and facebook icon */}
-          <View style={styles.bottomButton}>
-            <SmallButton Svg={GoogleSvg} />
-            <SmallButton Svg={FaceBookSvg} />
-          </View>
+        <TextButton onPress={() => navigation.goBack()} />
+        <View style={styles.imageContainer}>
+          <CarLogo />
         </View>
+        <View>
+          <CommonText showText={'Welcome !'} fontSize={24} black />
+        </View>
+        <View style={styles.textinputConatiner}>
+          <CommonText showText={'Please enter your mobile number or email id'} fontSize={14} regular />
+          <Textinput value={userInput} onChange={setuserInput} placeholder={'Mobile Number / email id'} />
+        </View>
+        <Button showText={"Continue"} onPress={continueButtonHandler} onLoading={loading} ></Button>
+
+        <View style={styles.centerText}>
+          <CommonText showText={'Or Sign in with'} fontSize={12} regular />
+        </View>
+
+        {/* show google and facebook icon */}
+        <View style={styles.bottomButton}>
+            <SmallButton Svg={GoogleSvg} />
+            <View style={{marginLeft:20}}>
+            <SmallButton Svg={FaceBookSvg} />
+            </View>
+          </View>
+
         <View style={styles.bottomText}>
-          <CommonText showText={'Don’t have account ? '} fontSize={12} />
+          <CommonText showText={'Don’t have account ? '} fontSize={14} regular />
           <TouchableOpacity onPress={signupHandler}>
-            <CommonText showText={'Sign Up'} customstyles={{ color: colors.green }} />
+            <CommonText showText={'Sign Up'} customstyles={{ color: colors.green }} fontSize={14} />
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </CommonView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  innerContainer: {
-    width: '90%',
-    alignSelf: 'center'
-  },
   textinputConatiner: {
     marginVertical: 15
   },
@@ -188,10 +183,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
-    // marginTop: 50
+    marginTop: 50
   },
   imageContainer: {
-    marginVertical: 25
+    marginVertical: 25,
+    alignItems: 'center'
   }
 })
 

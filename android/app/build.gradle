@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+apply plugin: 'com.google.gms.google-services'
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
@@ -253,10 +254,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-implementation project(':react-native-vector-icons')
+    implementation project(':react-native-vector-icons')
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:0.70.3!!"  // From node_modules
-
+    implementation platform('com.google.firebase:firebase-bom:31.1.0')
+    implementation 'com.google.firebase:firebase-analytics'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation(project(':react-native-maps')){
         exclude group: 'com.google.android.gms'
@@ -264,7 +266,9 @@ implementation project(':react-native-vector-icons')
     implementation 'com.google.android.gms:play-services-base:18.0.1'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
-
+    implementation(project(':react-native-print'))
+    implementation(project(':react-native-html-to-pdf'))
+    // compile project(':react-native-html-to-pdf')
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
     }
@@ -293,6 +297,9 @@ if (isNewArchitectureEnabled()) {
     // Otherwise we fallback to a prebuilt .aar bundled in the NPM package.
     // This will be applied to all the imported transtitive dependency.
     configurations.all {
+        resolutionStrategy {
+            force 'androidx.core:core-ktx:1.6.0'
+        }
         resolutionStrategy.dependencySubstitution {
             substitute(module("com.facebook.react:react-native"))
                     .using(project(":ReactAndroid"))

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, useColorScheme, BackHandler } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { scale } from 'react-native-size-matters'
 import Home from '../Home/Home'
@@ -22,19 +22,31 @@ import * as ApiAction from '../../Services/Api'
 import { useDispatch } from 'react-redux';
 import { AddToRedux } from '../../Redux/AddToRedux'
 import * as  Types from '../../Redux/Types'
+import { useIsFocused } from '@react-navigation/native'
+
+let backHandler
+let mselectedHandler = "home"
 const Dashboard = ({ tabName, navigation, route }) => {
 
   const navigatedata = route?.params?.animateMap
   const [selectedTab, setSelectedTab] = useState('home')
   const dispatch = useDispatch()
+  const isFocused = useIsFocused()
+
   useEffect(() => {
+    mselectedHandler = selectedTab
+  }, [selectedTab])
+
+
+
+  useEffect(() => {
+
     ApiAction.getUserDetails().then(result => {
       if (result?.data) {
         dispatch(AddToRedux(result.data, Types.USERDETAILS))
-
       }
     }).catch(err => {
-      console.log(err)
+      dispatch(AddToRedux({}, Types.USERDETAILS))
     })
   }, [])
 
@@ -55,10 +67,8 @@ const Dashboard = ({ tabName, navigation, route }) => {
   }
 
   const handleSelection = async (tab) => {
-
     try {
       const result = await Auth.currentAuthenticatedUser();
-
       console.log(result)
       if (result?.signInUserSession) {
         if (result.attributes.phone_number && result.attributes.phone_number != '') {
@@ -83,6 +93,23 @@ const Dashboard = ({ tabName, navigation, route }) => {
     }
   }, [tabName])
 
+  const backAction = () => {
+    if (isFocused) {
+      if (mselectedHandler != 'home') {
+        setSelectedTab('home')
+        return true
+      }
+
+    }
+    return false
+  }
+
+  useEffect(() => {
+    backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
+    return () => {
+      backHandler.remove()
+    }
+  }, [isFocused])
 
   return (
     <>
@@ -92,7 +119,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
             {selectedTab == 'home' && <Home navigatedata={navigatedata} />}
             {selectedTab == 'wallet' && <Wallet setSelectedTab={setSelectedTab} />}
             {selectedTab == 'charging' && <Charging setSelectedTab={setSelectedTab} />}
-            {selectedTab == 'notification' && <Notification setSelectedTab={setSelectedTab} />}
+            {/* {selectedTab == 'notification' && <Notification setSelectedTab={setSelectedTab} />} */}
             {selectedTab == 'other' && <Other setSelectedTab={setSelectedTab} />}
           </View>
         </View>
@@ -109,8 +136,6 @@ const Dashboard = ({ tabName, navigation, route }) => {
             </View></DashboardCard> : <WalletSvg color={colors.white} />}
           </TouchableOpacity>
 
-
-
           <TouchableOpacity onPress={chargingButtonHandler} style={[styles.tabButton, selectedTab == 'charging' ? styles.activeTab : null]}>
 
             {selectedTab == 'charging' ? <DashboardCard><View style={styles.tabButton}>
@@ -120,12 +145,12 @@ const Dashboard = ({ tabName, navigation, route }) => {
           </TouchableOpacity>
 
 
-          <TouchableOpacity onPress={notificationButtonHandler} style={[styles.tabButton, selectedTab == 'notification' ? styles.activeTab : null]}>
+          {/* <TouchableOpacity onPress={notificationButtonHandler} style={[styles.tabButton, selectedTab == 'notification' ? styles.activeTab : null]}>
             {selectedTab == 'notification' ? <DashboardCard><View style={styles.tabButton}>
               <NotificationSvg color={colors.white} />
               <CommonText showText={'Notification'} margin={6} customstyles={styles.tabText} />
             </View></DashboardCard> : <NotificationSvg color={colors.white} />}
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
 
           <TouchableOpacity onPress={otherButtonHandler} style={[styles.tabButton, selectedTab == 'other' ? styles.activeTab : null]}>

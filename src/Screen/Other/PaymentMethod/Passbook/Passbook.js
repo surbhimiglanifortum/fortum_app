@@ -23,7 +23,7 @@ import Charger from '../../../../assests/svg/charger'
 import CommonIconCard from '../../../../Component/Card/CommonIconCard/CommonIconCard'
 import NoData from '../../../../Component/NoDataFound/NoData'
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-// import RNPrint from 'react-native-print';
+import RNPrint from 'react-native-print';
 
 const Passbook = () => {
     const navigation = useNavigation()
@@ -37,6 +37,7 @@ const Passbook = () => {
     const [data, setData] = useState([])
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
+    const [loading,setLoading]=useState(false)
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
 
@@ -132,7 +133,7 @@ const Passbook = () => {
             month = "0" + month
         }
         let d = new Date(date).getDate()
-        let end = `${year}-${month}-${d}T24:00:00`
+        let end = `${year}-${month}-${d}T23:59:00`
         setTechEnd(end)
         hideEndDatePicker();
     };
@@ -154,6 +155,7 @@ const Passbook = () => {
     }
 
     const generateHTML = async () => {
+        setLoading(true)
         let printData = '<html>\n' +
             '<head>\n' +
             '<title>Statement</title>\n' +
@@ -241,14 +243,14 @@ const Passbook = () => {
             '</body>\n' +
             '</html>'
 
-
-        const results = await RNHTMLtoPDF.convert({
+       
+        const results = await RNHTMLtoPDF.convert({ 
             html: printData,
             fileName: 'Passbook',
             base64: true,
         })
-
-        // await RNPrint.print({ filePath: results.filePath })
+        await RNPrint.print({ filePath: results.filePath })
+        setLoading(false)
     }
 
     const AllTransaction = () => {
@@ -256,7 +258,7 @@ const Passbook = () => {
             passbookData?.response?.Transactions?.length >= 1 ?
                 <FlatList
                     data={passbookData?.response?.Transactions}
-                    refreshControl={<RefreshControl onRefresh={refetch} />}
+                    refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
                     keyExtractor={item => item.id}
                     renderItem={(item) => {
                         return (
@@ -282,7 +284,7 @@ const Passbook = () => {
                 <FlatList
                     style={{ flex: 1 }}
                     data={passbookData?.response?.Transactions}
-                    refreshControl={<RefreshControl onRefresh={refetch} />}
+                    refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
                     keyExtractor={item => item.id}
                     renderItem={(item) => {
                         return (
@@ -308,7 +310,7 @@ const Passbook = () => {
             passbookData?.response?.Transactions?.length >= 1 ?
                 <FlatList
                     data={passbookData?.response?.Transactions}
-                    refreshControl={<RefreshControl onRefresh={refetch} />}
+                    refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
                     keyExtractor={item => item.id}
                     renderItem={(item) => {
                         return (
@@ -330,61 +332,67 @@ const Passbook = () => {
     }
 
     return (
-        <CommonView style={{ position: 'relative' }}>
-            <View style={styles.innerHeader}>
-                <View style={{ flex: 1 }}>
-                    <Header showText={'Passbook'} />
-                </View>
-                <SmallButton Svg={FilterSvg} onPress={() => setModalVisible(true)} />
-            </View>
-
-            <DenseCard padding={10}>
+        <CommonView>
+            <View style={{ flex: 1, marginBottom: 70 }}>
                 <View style={styles.innerHeader}>
-                    <View style={[styles.innerHeader, { flex: 1 }]}>
-                        <CommonIconCard Svg={WalletSvg} />
-                        <CommonText showText={'Balance'} fontSize={14} regular customstyles={{ marginLeft: 10 }} />
+                    <View style={{ flex: 1 }}>
+                        <Header showText={'Passbook'} />
                     </View>
-                    <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)}`} fontSize={14} />
+                    <SmallButton Svg={FilterSvg} onPress={() => setModalVisible(true)} />
                 </View>
-            </DenseCard>
 
-            <View style={styles.tabContainer}>
+                <DenseCard padding={10}>
+                    <View style={styles.innerHeader}>
+                        <View style={[styles.innerHeader, { flex: 1 }]}>
+                            <CommonIconCard Svg={WalletSvg} />
+                            <CommonText showText={'Balance'} fontSize={14} regular customstyles={{ marginLeft: 10 }} />
+                        </View>
+                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)}`} fontSize={14} />
+                    </View>
+                </DenseCard>
 
-                {selectedTab == 'all' ?
-                    <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                <View style={styles.tabContainer}>
+
+                    {selectedTab == 'all' ?
+                        <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                            <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton]}>
+                                <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
+                            </TouchableOpacity>
+                        </DenseCard> :
                         <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton]}>
                             <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
                         </TouchableOpacity>
-                    </DenseCard> :
-                    <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton]}>
-                        <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
-                    </TouchableOpacity>
-                }
+                    }
 
-                {selectedTab == 'sent' ?
-                    <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                    {selectedTab == 'sent' ?
+                        <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                            <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton]}>
+                                <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
+                            </TouchableOpacity>
+                        </DenseCard> :
                         <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton]}>
                             <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
                         </TouchableOpacity>
-                    </DenseCard> :
-                    <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton]}>
-                        <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
-                    </TouchableOpacity>
-                }
+                    }
 
-                {selectedTab == 'receive' ?
-                    <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                    {selectedTab == 'receive' ?
+                        <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
+                            <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
+                                <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Received</Text>
+                            </TouchableOpacity>
+                        </DenseCard> :
                         <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
-                            <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Receive</Text>
+                            <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Received</Text>
                         </TouchableOpacity>
-                    </DenseCard> :
-                    <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
-                        <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Receive</Text>
-                    </TouchableOpacity>
-                }
+                    }
+                </View>
+
+                <ShowTab tabName={selectedTab} />
             </View>
 
-            <ShowTab tabName={selectedTab} />
+            <View style={styles.fixedBtn}>
+                <Button onLoading={loading} showText={'Download Passbook'} onPress={() => generateHTML()} />
+            </View>
 
             <PinelabPassbookFilter
                 isVisible={modalVisible}
@@ -397,6 +405,7 @@ const Passbook = () => {
                 setNoTrans={setNoTrans}
                 onClosePress={() => setModalVisible(false)}
                 onPress={refetch}
+                loader={isLoading}
             />
 
             <DateTimePickerModal
@@ -416,9 +425,7 @@ const Passbook = () => {
             />
 
 
-            <View style={styles.fixedBtn}>
-                <Button showText={'Download Passbook'} onPress={() => generateHTML()} />
-            </View>
+
         </CommonView>
     )
 }

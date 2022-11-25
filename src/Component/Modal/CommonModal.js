@@ -33,17 +33,23 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText
                             <CommonText showText={openCommonModal?.message} fontSize={16} regular />
                         </View>
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
-                            {openCommonModal.secondButton && <WhiteButton onPress={() => {
-                                try {
-                                    openCommonModal?.secondButton?.onPress()
-                                } catch (error) {
 
-                                }
-                                setOpenCommonModal({ isVisible: false, message: "", heading: '', showBtnText: "" })
+                            {openCommonModal.secondButton &&
+                                <View style={{ flex: 1, marginHorizontal: 4 }}>
+                                    <WhiteButton onPress={() => {
+                                        try {
+                                            openCommonModal?.secondButton?.onPress()
+                                        } catch (error) {
 
-                            }} style={{ flex: 1, marginHorizontal: 4 }} showText={openCommonModal.secondButton?.title}></WhiteButton>
+                                        }
+                                        setOpenCommonModal({ isVisible: false, message: "", heading: '', showBtnText: "" })
+
+                                    }} showText={openCommonModal.secondButton?.title}></WhiteButton>
+                                </View>
                             }
-                            <Button style={{ flex: 1, marginHorizontal: 4 }} showText={openCommonModal.showBtnText ? openCommonModal?.showBtnText : 'Okay'} onPress={okayBtnHandler} />
+                            <View style={{ flex: 1, marginHorizontal: 4 }}>
+                                <Button showText={openCommonModal.showBtnText ? openCommonModal?.showBtnText : 'Okay'} onPress={okayBtnHandler} />
+                            </View>
                         </View>
                     </View>
                 </CommonView>
