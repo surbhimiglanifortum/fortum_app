@@ -135,10 +135,10 @@ const Verification = ({ route }) => {
                 try {
                     const result = await ApiAction.registerNoPhone(data.attributes.email.toLowerCase(), {}, { first_name, last_name })
 
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: routes.dashboard }],
-                    });
+                    // navigation.reset({
+                    //     index: 0,
+                    //     routes: [{ name: routes.dashboard }],
+                    // });
                     // user created at backend if not exisits
                 } catch (error) {
                     setOpenCommonModal({ isVisible: true, message: "Unable to Create User" })

@@ -2,7 +2,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList, TextInput, BackHandler, T
 import React, { useEffect, useState } from 'react'
 import DetailsCard from '../../../Component/Card/DetailsCard'
 import colors from '../../../Utils/colors'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation ,useIsFocused} from '@react-navigation/native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import routes from '../../../Utils/routes'
 import Loader from '../../../Component/Loader'
@@ -12,6 +12,8 @@ import { Auth } from 'aws-amplify'
 import CommonView from '../../../Component/CommonView'
 
 const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTab, selectedTab }) => {
+
+  const isFocused = useIsFocused()
 
   const navigation = useNavigation()
 
@@ -75,9 +77,13 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
 
 
   const backAction = () => {
-    
-    setSelectedTab('map')
-    return true
+    if(isFocused){
+      setSelectedTab('map')
+      return true
+    }else{
+      return false
+    }
+   
   }
 
   let backHandler
@@ -87,7 +93,7 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
     return () => {
       backHandler.remove()
     }
-  }, [])
+  }, [isFocused])
 
   return (
     <CommonView style={[styles.container]}>
