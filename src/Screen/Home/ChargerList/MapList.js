@@ -51,11 +51,11 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
     try {
       setLoading(true)
       for (var i = 0; i < data.length; i++) {
-        if (data[i].address.city.toLowerCase().includes(search)) {
+        if (data[i].address.city.toLowerCase().includes(search.toLowerCase())) {
           results.push(data[i]);
         }
 
-        else if (data[i].name.toLowerCase().includes(search)) {
+        else if (data[i].name.toLowerCase().includes(search.toLowerCase())) {
           results.push(data[i]);
         }
       }
