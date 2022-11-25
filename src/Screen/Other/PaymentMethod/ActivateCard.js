@@ -117,6 +117,7 @@ const ActivateCard = () => {
                 email: mUserDetails?.username
             }
             const result = await sentKycOtp(payload)
+            console.log("Check Response of Pinelab OTP", result.data)
             if (result.data?.message) {
                 if (result.data?.message === "RequestId Generated successfully") {
                     setDisable(false)
@@ -192,16 +193,18 @@ const ActivateCard = () => {
                 otp: otp
             }
             const result = await validatePinelabOtp(payload)
-            if (result.data?.message) {
-                if (result.data?.message?.responseMessage == "Min Kyc OTP Verified Successfully") {
-                    navigation.navigate(routes.CompleteKYC, {
-                        fName: name,
-                        lName: lName,
-                        email: mUserDetails?.username,
-                        mobileNumber: mUserDetails?.phone_number
-                    })
-                }
-            } else {
+            console.log("Check Response of Pinelab Verify OTP", result.data)
+
+            if (result.data?.message?.responseMessage == "Min Kyc OTP Verified Successfully") {
+                navigation.navigate(routes.CompleteKYC, {
+                    fName: name,
+                    lName: lName,
+                    email: mUserDetails?.username,
+                    mobileNumber: mUserDetails?.phone_number
+                })
+            }
+            else {
+                console.log("Check Invalid Response", result.data?.message?.responseMessage)
                 setOpenCommonModal({
                     isVisible: true, message: result.data?.message?.responseMessage || result.data?.message, onOkPress: () => {
                         console.log("OKPressed")
