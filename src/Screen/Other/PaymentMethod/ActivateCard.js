@@ -117,6 +117,7 @@ const ActivateCard = () => {
                 email: mUserDetails?.username
             }
             const result = await sentKycOtp(payload)
+            console.log("Check Response of Pinelab OTP", result.data)
             if (result.data?.message) {
                 if (result.data?.message === "RequestId Generated successfully") {
                     setDisable(false)
@@ -192,6 +193,7 @@ const ActivateCard = () => {
                 otp: otp
             }
             const result = await validatePinelabOtp(payload)
+            console.log("Check Response of Pinelab Resend OTP", result.data)
             if (result.data?.message) {
                 if (result.data?.message?.responseMessage == "Min Kyc OTP Verified Successfully") {
                     navigation.navigate(routes.CompleteKYC, {
