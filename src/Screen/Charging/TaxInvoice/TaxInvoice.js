@@ -22,6 +22,8 @@ const TaxInvoice = ({ route }) => {
 
     const paramData = route.params.data
 
+
+    console.log("Chargin History Data", route.params?.data?.item?.order?.pricingToApply?.cgst)
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const navigation = useNavigation()
@@ -268,14 +270,14 @@ const TaxInvoice = ({ route }) => {
             )?.toFixed(2) +
             "</h3>\n" +
             "<h3>Amount of CGST(" +
-            (route.params?.data?.item?.order?.pricingToApply?.cgst != undefined ? route.params?.data?.item?.order?.pricingToApply?.cgst : 0) +
+            (route.params?.data?.item?.order?.cgst != undefined ? route.params?.data?.item?.order?.cgst : 0) +
             "%) : ₹ " +
-            (route.params?.data?.item?.order?.cgst / 100)?.toFixed(2) +
+            (route.params?.data?.item?.order?.cgst)?.toFixed(2) +
             "</h3>\n" +
             "<h3>Amount of SGST(" +
-            (route.params?.data?.item?.order?.pricingToApply?.sgst != undefined ? route.params?.data?.item?.order?.pricingToApply?.sgst : 0) +
+            (route.params?.data?.item?.order?.sgst != undefined ? route.params?.data?.item?.order?.sgst : 0) +
             "%) : ₹ " +
-            (route.params?.data?.item?.order?.sgst / 100)?.toFixed(2) +
+            (route.params?.data?.item?.order?.sgst)?.toFixed(2) +
             "</h3>\n" +
             "\n" +
             "\n" +
