@@ -79,7 +79,7 @@ const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
                     <View style={styles.wrapContainer}>
                         <View style={[styles.header,]}>
                             <View >
-                                <CommonText showText={'How was your charging exprerience today?'} fontSize={20} />
+                                <CommonText showText={'How was your charging experience today?'} fontSize={20} />
                             </View>
                             <TouchableOpacity style={styles.crossBtn} onPress={() => { setShowFeedbackModel({ "isVisible": false, "locid": "", "evseid": "" }) }}>
                                 <CommonCard >
