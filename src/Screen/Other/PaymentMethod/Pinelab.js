@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getUserDetails, checkCardOrderStatus } from '../../../Services/Api'
 import { AddToRedux } from '../../../Redux/AddToRedux'
 import * as Types from '../../../Redux/Types'
+import GlobalDefines from '../../../Utils/GlobalDefines'
 
 const FortumChargeAndDriveCard = () => {
 
@@ -32,6 +33,10 @@ const FortumChargeAndDriveCard = () => {
         navigation.navigate(routes.Passbook)
     }
 
+    const _onPresstermsCondition = () => {
+        console.log('first')
+        Linking.openURL(GlobalDefines.tncURL);
+    }
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const getDetails = async () => {
@@ -100,7 +105,11 @@ const FortumChargeAndDriveCard = () => {
                 </View>
 
                 <View style={styles.centerText}>
-                    <CommonText fontSize={14}>{'View'} <CommonText fontSize={14} onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms And Conditions'}</CommonText></CommonText>
+                    <TouchableOpacity onPress={_onPresstermsCondition } >
+                        <CommonText fontSize={14}>{'View'}
+                            <CommonText fontSize={14} customstyles={styles.linkText} >{'Terms And Conditions'}</CommonText>
+                        </CommonText>
+                    </TouchableOpacity>
                 </View>
 
                 <PinelabCard width={'100%'} />

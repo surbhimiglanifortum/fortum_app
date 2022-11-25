@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import CommonView from '../../../Component/CommonView'
 import Header from '../../../Component/Header/Header'
 import DenseCard from '../../../Component/Card/DenseCard'
@@ -65,20 +65,22 @@ const OrderCard = () => {
 
     return (
         <CommonView>
-            <Header showText={'Place Order'} />
+            <View style={{flex:1}}>
+                <Header showText={'Place Order'} />
 
-            <TouchableOpacity onPress={handleChangeDeliveryAddress} style={{ marginVertical: 20 }}>
-                <DenseCard>
-                    <CommonText showText={'Delivery Address'} />
-                    {!deliveryAddress?.address && <CommonText regular fontSize={14}>Add Delivery Address</CommonText>}
-                    <CommonText regular fontSize={14}>
-                        {deliveryAddress?.first_name + " " + deliveryAddress?.last_name}
-                    </CommonText>
-                    <CommonText regular fontSize={14}>{(deliveryAddress?.address || "") + " " + (deliveryAddress?.address_line_2 || "") + " " + (deliveryAddress?.city || "") + " " + (deliveryAddress?.country || "") + " " + (deliveryAddress?.postal_code || "")}</CommonText>
-                </DenseCard>
-            </TouchableOpacity>
+                <TouchableOpacity onPress={handleChangeDeliveryAddress} style={{ marginVertical: 20 }}>
+                    <DenseCard>
+                        <CommonText showText={'Delivery Address'} />
+                        {!deliveryAddress?.address && <CommonText regular fontSize={14}>Add Delivery Address</CommonText>}
+                        <CommonText regular fontSize={14}>
+                            {deliveryAddress?.first_name + " " + deliveryAddress?.last_name}
+                        </CommonText>
+                        <CommonText regular fontSize={14}>{(deliveryAddress?.address || "") + " " + (deliveryAddress?.address_line_2 || "") + " " + (deliveryAddress?.city || "") + " " + (deliveryAddress?.country || "") + " " + (deliveryAddress?.postal_code || "")}</CommonText>
+                    </DenseCard>
+                </TouchableOpacity>
 
-            <PinelabCard width={'100%'} />
+                <PinelabCard width={'100%'} />
+            </View>
 
             <Button showText={'Place Order'} style={styles.btnFixed} onPress={placeOrder} onLoading={loading} />
         </CommonView>
@@ -87,10 +89,10 @@ const OrderCard = () => {
 
 const styles = StyleSheet.create({
     btnFixed: {
-        position: 'absolute',
-        bottom: 0,
-        left: 10,
-        width: '100%'
+        // position: 'absolute',
+        // bottom: 0,
+        // left: 10,
+        // width: '100%'
     }
 })
 
