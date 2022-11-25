@@ -53,7 +53,7 @@ export default Home = ({ navigatedata }) => {
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const checkActiveSession = useSelector((state) => state.TempStore.checkActiveSession);
-  const userLocation = useSelector((state) => state.commonReducer.locations)
+  const userLocation = useSelector((state) => state.commonReducer.userLocations)
 
   const scheme = useColorScheme()
 
@@ -238,7 +238,7 @@ export default Home = ({ navigatedata }) => {
     mLocationPayload = locationsPayload
     refetch({ jhsgd: "SLJ" })
     CallCheckActiveSession()
-  }, [location, locationsPayload])
+  }, [locationsPayload,userLocation])
 
   const addInterceptor = async () => {
     const result = await Auth.currentAuthenticatedUser();
@@ -281,7 +281,7 @@ export default Home = ({ navigatedata }) => {
 
         const res = await ApiAction.getLocation(payload)
         var locationsArray = res.data?.locations[0];
-        if (!userLocation.coords) {
+        if (!userLocation?.coords) {
 
         } else {
           if (locationsArray.length > 0) {
