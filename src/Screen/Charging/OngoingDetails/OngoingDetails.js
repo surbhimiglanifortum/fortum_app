@@ -37,7 +37,7 @@ const OngoingDetails = ({ route }) => {
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const username = mUserDetails?.username
 
-  
+
   const { setOpenCommonModal, setShowFeedbackModel } = useContext(SnackContext);
 
   const navigation = useNavigation()
@@ -273,7 +273,7 @@ const OngoingDetails = ({ route }) => {
           setChargerText("Stop")
           try {
 
-            console.log("counterinterval_hai",counterinterval)
+            console.log("counterinterval_hai", counterinterval)
             if (!counterinterval) {
               counterinterval = setInterval(() => {
                 setChargeTime(GetCouterTime(r.data.start_datetime))
@@ -490,7 +490,10 @@ const OngoingDetails = ({ route }) => {
       const result = await refundPayAsUGo(username, sessionId)
       console.log("Result initiateRefund", result.data)
       setShowRestart(false)
-      setSnack({ message: result.data.message, open: true, color: 'error' })
+      setOpenCommonModal({
+        isVisible: true, message: result.data.message,
+
+      })
       navigation.reset({
         index: 0,
         routes: [{ name: 'MapStack' }],
@@ -508,7 +511,10 @@ const OngoingDetails = ({ route }) => {
       const result = await refundCloseLoopWallet(username, sessionId)
       console.log("Result initiateWalletRefund", result.data)
       setShowRestart(false)
-      setSnack({ message: result.data.message, open: true, color: 'error' })
+      setOpenCommonModal({
+        isVisible: true, message: result.data.message,
+
+      })
       navigation.reset({
         index: 0,
         routes: [{ name: 'MapStack' }],

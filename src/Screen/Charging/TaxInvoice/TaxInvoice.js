@@ -16,7 +16,7 @@ import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import RNPrint from 'react-native-print';
 import { useSelector } from 'react-redux'
 import { GetFormatedDate } from '../../../Utils/utils'
-
+import {getPaymentString} from '../../../Utils/HelperCommonFunctions'
 
 const TaxInvoice = ({ route }) => {
 
@@ -432,15 +432,15 @@ const TaxInvoice = ({ route }) => {
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Cost'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? (((paramData?.item?.order?.amount) / 100 - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst)))?.toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? (((paramData?.item?.order?.amount) / 100 - (paramData?.item?.order?.cgst/100 + paramData?.item?.order?.sgst/100)))?.toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of CGST (9%)'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.cgst)?.toFixed(2) ? (paramData?.item?.order?.cgst)?.toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.cgst/100)?.toFixed(2) ? (paramData?.item?.order?.cgst/100)?.toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of SGST (9%)'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.sgst)?.toFixed(2) ? (paramData?.item?.order?.sgst)?.toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.sgst/100)?.toFixed(2) ? (paramData?.item?.order?.sgst/100)?.toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <Divider />
                             <View style={styles.innerCard1}>
@@ -451,9 +451,19 @@ const TaxInvoice = ({ route }) => {
                     </DenseCard>
                     <DenseCard>
                         <View style={styles.card}>
-                            <CommonText showText={'Paid Via'} fontSize={14} regular />
-                            <CommonText showText={'Wallet'} fontSize={14} />
+                            <CommonText showText={'Paid Via'} fontSize={14} />
                         </View>
+
+                        {paramData?.item?.payments?.map((item) => {
+                            return (
+                                <View style={styles.card}>
+                                    <CommonText showText={ getPaymentString(item?.payment_method) || ""} fontSize={14} regular />
+                                    <CommonText showText={((item?.amount_charged)/100)?.toFixed(2) || ""} fontSize={14} />
+                                </View>
+                            )
+                        })}
+
+
                     </DenseCard>
                     <DenseCard>
                         <View >

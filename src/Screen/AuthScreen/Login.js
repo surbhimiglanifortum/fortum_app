@@ -18,7 +18,7 @@ import CommonView from '../../Component/CommonView'
 
 const Login = () => {
 
-  const [userInput, setuserInput] = useState('wimimic102@kuvasin.com')
+  const [userInput, setuserInput] = useState('')
   const [loading, setLoading] = useState(false)
 
   const navigation = useNavigation()
