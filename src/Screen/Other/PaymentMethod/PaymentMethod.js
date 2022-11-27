@@ -114,7 +114,7 @@ const PaymentMethod = () => {
                   <CommonText showText={'Fortum Charge & Drive Card'} fontSize={14} black />
                   {
                     mUserDetails?.pinelabs_account ?
-                      <CommonText showText={`Card Balance : ₹ ${pinelabData?.Balance}`} fontSize={12} regular /> :
+                      <CommonText showText={`Card Balance : ₹ ${pinelabData?.Balance || '0'}`} fontSize={12} regular /> :
                       <CommonText showText={'Activate your prepaid card'} fontSize={12} regular />
                   }
                 </View>
@@ -131,7 +131,7 @@ const PaymentMethod = () => {
                 <IconCardLarge Svg={WalletLight} />
                 <View style={{ marginLeft: 10, flex: 0.9 }}>
                   <CommonText showText={'Wallet'} fontSize={14} black />
-                  <CommonText showText={`Balance : ₹ ${balance}`} fontSize={12} regular />
+                  <CommonText showText={`Balance : ₹ ${balance || '0'}`} fontSize={12} regular />
                 </View>
               </View>
               <AntDesign name='right' color={colors.black} size={20} />
