@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, FlatList, TextInput, BackHandler, TouchableWithoutFeedback } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, FlatList, TextInput, BackHandler, TouchableWithoutFeedback, RefreshControl } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DetailsCard from '../../../Component/Card/DetailsCard'
 import colors from '../../../Utils/colors'
@@ -122,6 +122,7 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
 
       <Loader modalOpen={loading} />
       <FlatList
+      //  refreshControl={<RefreshControl onRefresh={loading} />}
         data={mapData}
         keyExtractor={item => item.id}
         renderItem={({ item }) => {

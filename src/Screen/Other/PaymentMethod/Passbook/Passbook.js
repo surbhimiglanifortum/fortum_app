@@ -141,11 +141,11 @@ const Passbook = () => {
     const ShowTab = ({ tabName }) => {
         switch (tabName) {
             case 'all':
-                return <AllTransaction />
+                return <AllTransaction  />
                 break;
 
             case 'sent':
-                return <SentTransaction />
+                return <SentTransaction  />
                 break;
 
             case 'receive':
