@@ -37,6 +37,7 @@
     "react-native": "0.70.3",
     "react-native-aes-crypto": "^2.1.0",
     "react-native-camera": "^4.2.1",
+    "react-native-crypto-js": "^1.0.0",
     "react-native-encrypted-storage": "^4.0.2",
     "react-native-gesture-handler": "^2.6.0",
     "react-native-google-places-autocomplete": "^2.5.1",

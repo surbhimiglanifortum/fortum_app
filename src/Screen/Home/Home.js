@@ -187,43 +187,45 @@ export default Home = ({ navigatedata }) => {
 
   const CallCheckActiveSession = async () => {
     console.log(checkActiveSession)
-    if (checkActiveSession) {
+    const result = await Auth.currentAuthenticatedUser();
+    if (result.signInUserSession) {
+      if (checkActiveSession) {
+        if (mUserDetails?.username) {
+          const response = await ApiAction.chargingList(mUserDetails.username)
+          console.log(response.data)
+          if (response.data && response.data.length > 0) {
+            setOpenCommonModal({
+              isVisible: true, message: `You have an ongoing charging session at Charger ${response.data[0]?.location?.name} please stop the session if you have done charging!`,
+              heading: "Ongoing Session",
+              showBtnText: "Stop",
+              secondButton: {
+                onPress: () => {
 
-      if (mUserDetails?.username) {
-        const response = await ApiAction.chargingList(mUserDetails.username)
-        console.log(response.data)
-        if (response.data && response.data.length > 0) {
-          setOpenCommonModal({
-            isVisible: true, message: `You have an ongoing charging session at Charger ${response.data[0]?.location?.name} please stop the session if you have done charging!`,
-            heading: "Ongoing Session",
-            showBtnText:"Stop",
-            secondButton: {
-              onPress: () => {
-
-              },
-              title: "Ignore"
-            },
-
-            onOkPress: () => {
-              navigation.navigate(routes.OngoingDetails, {
-                locDetails: {
-                  ...response.data[0]?.location, address: {
-                    "city": response.data[0]?.location?.city,
-                    "street": response.data[0]?.location?.address,
-                    "countryIsoCode": "IND",
-                    "postalCode": "11112"
-                  }
                 },
-                evDetails: response.data[0]?.location?.evses[0],
-                paymentMethod: response?.payments?.payment_method
-              })
-            }
-          })
+                title: "Ignore"
+              },
+
+              onOkPress: () => {
+                navigation.navigate(routes.OngoingDetails, {
+                  locDetails: {
+                    ...response.data[0]?.location, address: {
+                      "city": response.data[0]?.location?.city,
+                      "street": response.data[0]?.location?.address,
+                      "countryIsoCode": "IND",
+                      "postalCode": "11112"
+                    }
+                  },
+                  evDetails: response.data[0]?.location?.evses[0],
+                  paymentMethod: response?.payments?.payment_method
+                })
+              }
+            })
+          }
+          dispatch(AddToRedux(false, Types.CHECKACTIVESESSION))
         }
-        dispatch(AddToRedux(false, Types.CHECKACTIVESESSION))
+      } else {
+        console.log("don't CHECK active session")
       }
-    } else {
-      console.log("don't CHECK active session")
     }
   }
 
@@ -239,7 +241,7 @@ export default Home = ({ navigatedata }) => {
     mLocationPayload = locationsPayload
     refetch({ jhsgd: "SLJ" })
     CallCheckActiveSession()
-  }, [locationsPayload,userLocation])
+  }, [locationsPayload, userLocation])
 
   const addInterceptor = async () => {
     const result = await Auth.currentAuthenticatedUser();

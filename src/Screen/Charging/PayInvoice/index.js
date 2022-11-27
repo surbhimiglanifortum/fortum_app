@@ -16,7 +16,7 @@ import RadioBtn from '../../../Component/Button/RadioButton'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import CommonCard from '../../../Component/Card/CommonCard'
 import DenseCard from '../../../Component/Card/DenseCard'
-import CryptoJS from 'crypto-js'
+import CryptoJS from "react-native-crypto-js";
 import LinearInput from '../../../Component/Textinput/linearInput'
 import { encryptedPassword } from '../../../Utils/GlobalDefines'
 
@@ -235,6 +235,7 @@ const PayInvoice = ({ route }) => {
             secret_code: encrypted,
             username: mUserDetails?.username
         }
+        console.log("patment check", payload)
 
         unpaidPayByCard(session_id, payload).then((res) => {
             console.log("Pay By Card", res.data)
@@ -244,10 +245,18 @@ const PayInvoice = ({ route }) => {
                         navigation.pop(1)
                     }
                 })
+            } else {
+                setOpenCommonModal({
+                    isVisible: true, message: res.data?.message, onOkPress: () => {
+                    }
+                })
             }
             setLoadingSign(false)
         }).catch((error) => {
             setLoadingSign(false)
+            setOpenCommonModal({
+                isVisible: true, message: error.message, onOkPress: () => { }
+            })
             console.log("Pay By Card Error", error)
         })
     }
