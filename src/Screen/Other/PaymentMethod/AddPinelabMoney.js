@@ -58,7 +58,11 @@ const AddPinelabMoney = ({ route }) => {
                 })
                 setLoadingSign(false)
             } else {
-                setSnack({ message: 'Something Went Wrong Please Try After Some Time.', open: true, color: 'success' })
+
+                setOpenCommonModal({
+                    isVisible: true, message: "Something Went Wrong Please Try After Some Time.",
+            
+                  })
                 setLoadingSign(false)
             }
         } catch (error) {
