@@ -57,3 +57,37 @@ export const getChargerMapObject = (standard) => {
 export const userExist = (userName) => {
     return Auth.signIn(userName, '123');
 }
+
+
+export const getPaymentString = (key) => {
+    switch (key) {
+        case "PAY_AS_U_GO":
+            return "Debit/Credit card"
+            break;
+
+        case "CLOSED_WALLET":
+            return "Closed Wallet"
+            break;
+
+        case "PREPAID_CARD":
+            return "Pinelab card"
+            break;
+
+        case "PREPAID_CARD_WALLET_Block":
+            return "Pinelab card"
+            break;
+
+        case "SESSIONPAYMENT":
+            return "Debit/Credit card, Netbanking"
+            break;
+
+        case "SESSIONPAYMENTPREPAIDCARD":
+            return "Pinelab card"
+            break;
+
+        default:
+            return ""
+            break;
+    }
+
+}
