@@ -268,6 +268,7 @@ const Passbook = () => {
                                 title={item?.item?.MerchantName}
                                 amount={item?.item?.TransactionAmount}
                                 transactionType={item?.item?.TransactionType}
+                                
                             />
                         )
                     }
@@ -347,7 +348,7 @@ const Passbook = () => {
                             <CommonIconCard Svg={WalletSvg} />
                             <CommonText showText={'Balance'} fontSize={14} regular customstyles={{ marginLeft: 10 }} />
                         </View>
-                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)}`} fontSize={14} />
+                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)||'0'}`} fontSize={14} />
                     </View>
                 </DenseCard>
 
