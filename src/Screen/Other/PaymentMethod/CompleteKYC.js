@@ -233,7 +233,7 @@ const CompleteKYC = ({ route }) => {
             const result = await createPinelabDigitalCard(payload)
             if (result?.data?.success) {
                 placeOrder()
-                navigation.navigate(routes.KycDone, {
+                navigation.replace(routes.KycDone, {
                     pin: pin,
                     response: response,
                     name: name

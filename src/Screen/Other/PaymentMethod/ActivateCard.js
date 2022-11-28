@@ -196,7 +196,7 @@ const ActivateCard = () => {
             console.log("Check Response of Pinelab Verify OTP", result.data)
 
             if (result.data?.message?.responseMessage == "Min Kyc OTP Verified Successfully") {
-                navigation.navigate(routes.CompleteKYC, {
+                navigation.replace(routes.CompleteKYC, {
                     fName: name,
                     lName: lName,
                     email: mUserDetails?.username,
