@@ -253,9 +253,13 @@ export const invoiceMap = async (payload) => {
 }
 
 export const gstMap = async (payload) => {
-    return await axios.post('/api_app/invoice_map/',payload);
+    return await axios.post('/api_app/invoice_map/', payload);
 }
 
 export const qrCodeService = async (locid, payload) => {
     return await axios.post("/api_app/locations/gist/" + locid, payload);
+}
+
+export const payUnpaidOrder = async (orderId, username) => {
+    return await axios.get("/api_app/orders/initiateJuspay/" + orderId + "/" + username);
 }
