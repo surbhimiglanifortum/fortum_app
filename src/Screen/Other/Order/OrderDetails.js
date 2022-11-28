@@ -27,11 +27,12 @@ const OrderDetails = ({ route }) => {
   const navigation = useNavigation()
 
   const paramsData = route?.params?.dataItem?.item
-
+console.log(paramsData,'.................parms')
   console.log("Check Order Status", paramsData)
 
   const scheme = useColorScheme()
   const [isLoading, setLoading] = useState(false)
+
 
   const payUnpaid = async () => {
     setLoading(true)
@@ -87,7 +88,7 @@ const OrderDetails = ({ route }) => {
         <CommonText showText={'Items'} fontSize={18} customstyles={styles.text} />
         <DenseCard style={styles.card} margin={1}>
           {
-            paramsData?.itemDetailsObjects.map((item, index) => {
+            paramsData?.itemDetailsObjects? paramsData?.itemDetailsObjects?.map((item, index) => {
               return (
                 <View style={styles.keyInner}>
                   <View style={styles.keyInner1}>
@@ -98,8 +99,21 @@ const OrderDetails = ({ route }) => {
                 </View>
               )
             })
+            :
+            Object.keys(paramsData?.cartObj).map((item, index) => {
+              return (
+                <View style={styles.keyInner}>
+                  <View style={styles.keyInner1}>
+                    <IconCard Svg={StoreGreenSvg} />
+                    <CommonText showText={item} customstyles={styles.textCon} />
+                  </View>
+                  {/* <CommonText showText={`₹ ${item?.price || '0'}`} /> */}
+                </View>
+              )
+            })
           }
         </DenseCard>
+       
         <CommonText showText={'Order Summary'} customstyles={styles.text} />
         <DenseCard style={styles.card} margin={1}>
           {/* <View style={styles.keyInner}>
