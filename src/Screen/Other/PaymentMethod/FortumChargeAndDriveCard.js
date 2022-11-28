@@ -28,7 +28,7 @@ const FortumChargeAndDriveCard = () => {
     const [isAccount, setAccount] = useState()
 
     const actiavteButtonHAndler = () => {
-        navigation.navigate(routes.ActivateCard)
+        navigation.replace(routes.ActivateCard)
     }
 
     const passbookButtonHAndler = () => {
