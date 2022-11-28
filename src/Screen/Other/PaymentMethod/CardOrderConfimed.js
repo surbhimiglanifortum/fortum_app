@@ -7,7 +7,7 @@ const CardOrderConfirmed = () => {
     return (
         <OrderConfirm
             subHeading={'Order Confirmed'}
-            btnText={'View Card Deatils'}
+            btnText={'View Card Details'}
             onPress={() => {
                 navigation.pop(3)
             }}
