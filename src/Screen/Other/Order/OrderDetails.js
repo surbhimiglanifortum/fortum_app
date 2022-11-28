@@ -46,7 +46,7 @@ const OrderDetails = ({ route }) => {
           mobile_number: "",
           description: 'Unpaid Order',
           callback_url: "",
-          juspay_process_payload: result.data?.result?.juspay_sdk_payload
+          juspay_process_payload: result.data?.juspay_sdk_payload
         })
       } else {
         setOpenCommonModal({

@@ -164,25 +164,25 @@ const CompleteKYC = ({ route }) => {
 
 
 
-        try {
-            setLoadingSign(true)
-            const result = await pinelabDocVerify(payload)
-            console.log("DOc Verify API Result", result.data)
-            if (result.data.success) {
-                pineLabWalletCreate()
-            }
-            else {
-                setOpenCommonModal({
-                    isVisible: true, message: result.data.message.responseMessage, onOkPress: () => {
-                        console.log("OKPressed")
-                    }
-                })
-            }
-            setLoadingSign(false)
-        } catch (error) {
-            console.log("DOc Verify API error", error)
-            setLoadingSign(false)
-        }
+        // try {
+        //     setLoadingSign(true)
+        //     const result = await pinelabDocVerify(payload)
+        //     console.log("DOc Verify API Result", result.data)
+        //     if (result.data.success) {
+        //         pineLabWalletCreate()
+        //     }
+        //     else {
+        //         setOpenCommonModal({
+        //             isVisible: true, message: result.data.message.responseMessage, onOkPress: () => {
+        //                 console.log("OKPressed")
+        //             }
+        //         })
+        //     }
+        //     setLoadingSign(false)
+        // } catch (error) {
+        //     console.log("DOc Verify API error", error)
+        //     setLoadingSign(false)
+        // }
     }
 
     const pineLabWalletCreate = async (payload) => {
@@ -267,7 +267,24 @@ const CompleteKYC = ({ route }) => {
                     <DenseCard padding={5}>
                         <Picker
                             selectedValue={documentType}
-                            onValueChange={(itemValue, itemIndex) => setDocumentType(itemValue)}
+                            onValueChange={(itemValue, itemIndex) => {
+                                setDocNumber('')
+                                setDocDate('')
+                                setName('')
+                                setDob('')
+                                setIsAcceptCheck('')
+                                setIsAcceptCheck2('')
+                                setStateName('')
+                                setDocTypeError('')
+                                setDocNumberError('')
+                                setNameError('')
+                                setDobError('')
+                                setDocIssueError('')
+                                setIsAcceptCheckError('')
+                                setIsAcceptCheck2Error('')
+                                setStateNameError('')
+                                setDocumentType(itemValue)
+                            }}
                             mode={'dropdown'}
                         >
                             <Picker.Item label={'Select Document Type'} value={''} />
