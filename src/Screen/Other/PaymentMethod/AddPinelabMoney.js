@@ -94,7 +94,7 @@ const AddPinelabMoney = ({ route }) => {
                 <DenseCard margin={1}>
                     <View style={styles.row}>
                         <CommonText showText={'Wallet Balance'} regular fontSize={14} customstyles={{ flex: 1 }} />
-                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)}`} />
+                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)||'0'}`} />
                     </View>
                 </DenseCard>
 

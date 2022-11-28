@@ -96,6 +96,10 @@ const Wallet = ({ setSelectedTab }) => {
     setModalVisible(false)
   }
 
+  useEffect(() => {
+    refetch()
+  }, [isFocused])
+  
   const username = mUserDetails?.username
 
   const { data, status, isLoading, refetch } = useQuery('walletData', async () => {
