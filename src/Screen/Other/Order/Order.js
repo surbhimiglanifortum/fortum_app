@@ -1,19 +1,17 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView, FlatList, TouchableOpacity, RefreshControl } from 'react-native'
+import { View, SafeAreaView, StyleSheet, useColorScheme, FlatList, TouchableOpacity, RefreshControl } from 'react-native'
 import React, { useState } from 'react'
 import colors from '../../../Utils/colors'
 import { useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
-import CommonText from '../../../Component/Text/CommonText'
-import SettingCard from '../../../Component/Card/SettingCard'
 import OrderSvg from '../../../assests/svg/OrderSvg'
 import routes from '../../../Utils/routes'
 import { getOrdersService } from '../../../Services/Api'
 import { useQuery } from 'react-query'
 import NoData from '../../../Component/NoDataFound/NoData'
 import OrdersCard from '../../../Component/Card/OrdersCard'
-import OrderGreenSvg from '../../../assests/svg/OrderGreenSvg'
 import { useSelector } from 'react-redux'
 import Loader from '../../../Component/Loader'
+
 const Order = () => {
 
     const navigation = useNavigation()

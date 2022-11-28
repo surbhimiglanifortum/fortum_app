@@ -501,7 +501,6 @@ const OngoingDetails = ({ route }) => {
       setShowRestart(false)
       setOpenCommonModal({
         isVisible: true, message: result.data.message,
-
       })
       navigation.reset({
         index: 0,
