@@ -301,6 +301,7 @@ const ActivateCard = () => {
                 <Button
                     showText={'Proceed to KYC'}
                     onPress={otpValidation}
+                    // onPress={() => navigation.navigate(routes.CompleteKYC)}
                     disable={!disable ? true : false}
                     onLoading={loadingSign}
                     bg={!disable && colors.lightGray}
