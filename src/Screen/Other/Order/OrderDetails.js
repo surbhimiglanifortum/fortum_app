@@ -1,5 +1,5 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, Image, } from 'react-native'
-import React from 'react'
+import { View, StyleSheet, useColorScheme, } from 'react-native'
+import React, { useState, useContext } from 'react'
 import colors from '../../../Utils/colors'
 import Header from '../../../Component/Header/Header'
 import CommonText from '../../../Component/Text/CommonText'
@@ -13,16 +13,60 @@ import Button from '../../../Component/Button/Button'
 import { GetFormatedDate } from '../../../Utils/utils'
 import { scale } from 'react-native-size-matters'
 import CommonView from '../../../Component/CommonView/index'
+import { payUnpaidOrder } from '../../../Services/Api'
+import { useSelector } from 'react-redux'
+import routes from '../../../Utils/routes'
+import SnackContext from '../../../Utils/context/SnackbarContext'
+import { useNavigation } from '@react-navigation/native'
+
 const OrderDetails = ({ route }) => {
 
+  let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+  const { setOpenCommonModal } = useContext(SnackContext);
+
+  const navigation = useNavigation()
+
   const paramsData = route?.params?.dataItem?.item
+
+  console.log("Check Order Status", paramsData)
+
   const scheme = useColorScheme()
+  const [isLoading, setLoading] = useState(false)
+
+  const payUnpaid = async () => {
+    setLoading(true)
+    try {
+      const result = await payUnpaidOrder(paramsData?.id, mUserDetails?.username)
+      console.log("Check Order", result.data)
+      if (result.data?.success && result.data?.juspay_sdk_payload) {
+        navigation.navigate(routes.PaymentScreenJuspay, {
+          amount: "",
+          email_address: "",
+          orderid: "",
+          mobile_number: "",
+          description: 'Unpaid Order',
+          callback_url: "",
+          juspay_process_payload: result.data?.juspay_sdk_payload
+        })
+      } else {
+        setOpenCommonModal({
+          isVisible: true, message: result.data?.message, onOkPress: () => {
+            console.log("OkPressed")
+          }
+        })
+      }
+      setLoading(false)
+    } catch (error) {
+      console.log("Check Order Error", error)
+      setLoading(false)
+    }
+  }
 
   return (
     <CommonView>
       <View style={styles.innerContainer}>
         <Header showText={paramsData?.id} customstyles={{ width: scale(200), }} />
-        <DenseCard style={styles.card}>
+        <DenseCard style={styles.card} margin={1}>
           <View style={styles.keyInner}>
             <View style={styles.keyInner1}>
               <IconCard Svg={OrderGreenSvg} />
@@ -40,18 +84,18 @@ const OrderDetails = ({ route }) => {
             <CommonText showText={GetFormatedDate(paramsData?.orderdate)} fontSize={14} />
           </View>
         </DenseCard>
-        <CommonText showText={'   Items'} fontSize={18} customstyles={styles.text} />
-        <DenseCard style={styles.card}>
+        <CommonText showText={'Items'} fontSize={18} customstyles={styles.text} />
+        <DenseCard style={styles.card} margin={1}>
           <View style={styles.keyInner}>
             <View style={styles.keyInner1}>
               <IconCard Svg={StoreGreenSvg} />
               <CommonText showText={'Name'} customstyles={styles.textCon} />
             </View>
-            <CommonText showText={`₹ ${'1400'}`} />
+            <CommonText showText={`₹ ${paramsData?.order?.amount / 100 || '0'}`} />
           </View>
         </DenseCard>
-        <CommonText showText={'   Order Summary'} customstyles={styles.text} />
-        <DenseCard style={styles.card}>
+        <CommonText showText={'Order Summary'} customstyles={styles.text} />
+        <DenseCard style={styles.card} margin={1}>
           {/* <View style={styles.keyInner}>
             <CommonText showText={'Price'} />
             <CommonText showText={`₹ ${paramsData?.order?.amount || '0'}`} />
@@ -70,14 +114,22 @@ const OrderDetails = ({ route }) => {
           </View> */}
           <View style={styles.keyInner}>
             <CommonText showText={'Total'} customstyles={styles.text} />
-            <CommonText showText={`₹ ${paramsData?.order?.amount || '0'}`} customstyles={styles.text} />
+            <CommonText showText={`₹ ${paramsData?.order?.amount / 100 || '0'}`} customstyles={styles.text} />
           </View>
         </DenseCard>
       </View>
-      {/* <View style={styles.btnCon}>
-        <WhiteButton showText={'Help'} style={{ width: '35%' }} />
-        <Button showText={'Download Invoice'} style={{ width: '100%' }} />
-      </View> */}
+
+      {/* {
+        paramsData?.paid ?
+          <View style={styles.btnCon}>
+            <WhiteButton showText={'Help'} style={{ width: '35%' }} />
+            <Button showText={'Download Invoice'} style={{ width: '100%' }} />
+          </View> : <Button showText={'Pay'} />
+      } */}
+
+      {/* {
+        !paramsData?.paid && <Button showText={'Pay'} onPress={payUnpaid} onLoadingo={isLoading} />
+      } */}
 
 
       {/* ----Order details session paid later implement and also download invoice and help btn implemt */}
@@ -92,16 +144,12 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    // marginTop: 20,
-    // width: '90%',
-    // alignSelf: 'center'
   },
   card: {
     marginTop: 30,
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 6,
-
   },
   keyInner: {
     flexDirection: 'row',
