@@ -82,7 +82,15 @@ const MyCart = ({ route }) => {
         try {
             const result = await ApiAction.placeOrder(payload)
             if (result.data.result === 'ok') {
+                dispatch({
+                    type: 'CLEAR_CART',
+                    payload: []
+                })
                 setOpenCommonModal({ isVisible: true, message: 'Order placed successfully' })
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: routes.dashboard }],
+                });
             } else {
                 navigation.navigate(routes.PaymentScreenJuspay, {
                     callFrom: 'MyCart',

@@ -1,5 +1,5 @@
 import { View, StyleSheet, TouchableOpacity, useColorScheme, Platform, Linking } from 'react-native'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
@@ -10,13 +10,16 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as ApiAction from '../../Services/Api'
 import { AddToRedux } from '../../Redux/AddToRedux'
 import * as Types from '../../Redux/Types'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
+import { Auth } from 'aws-amplify'
+import routes from '../../Utils/routes'
 
 const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
-
+    const navigation = useNavigation()
     let favChargers = useSelector((state) => state.commonReducer.favCharger);
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
-
     const scheme = useColorScheme()
+    const isFocused = useIsFocused()
 
     const checkFav = useMemo(() => {
         return favChargers?.findIndex(e => e.location_id === (item.location_id || item.id)) >= 0 ? true : false
@@ -25,19 +28,49 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
     const dispatch = useDispatch()
 
     const addFav = async () => {
+        try {
+            const result = await Auth.currentAuthenticatedUser();
+            console.log(result)
+            if (result?.signInUserSession) {
+                if (result.attributes.phone_number && result.attributes.phone_number != '') {
+                    const result = await ApiAction.addFavouriteCharger(mUserDetails.username, item.location_id || item.id)
 
-        const result = await ApiAction.addFavouriteCharger(mUserDetails.username, item.location_id || item.id)
+                    if (result.data.result == 'ok') {
+                        dispatch(AddToRedux([...favChargers, { location_id: item.id, ...item }], Types.FAVCHARGER))
+                    }
+                } else {
+                    navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
+                }
+                return
+            }
 
-        if (result.data.result == 'ok') {
-            dispatch(AddToRedux([...favChargers, { location_id: item.id, ...item }], Types.FAVCHARGER))
+        } catch (error) {
+
         }
+        navigation.navigate(routes.login)
+
     }
 
     const removeFav = async () => {
-        const result = await ApiAction.deleteFavouriteCHarger(mUserDetails.username, item?.location_id || item?.id)
-        if (result.data.success == 'true') {
-            dispatch(AddToRedux(favChargers?.filter(e => e.location_id != (item.location_id || item.id)), Types.FAVCHARGER))
+        try {
+            const result = await Auth.currentAuthenticatedUser();
+            console.log(result)
+            if (result?.signInUserSession) {
+                if (result.attributes.phone_number && result.attributes.phone_number != '') {
+                    const result = await ApiAction.deleteFavouriteCHarger(mUserDetails.username, item?.location_id || item?.id)
+                    if (result.data.success == 'true') {
+                        dispatch(AddToRedux(favChargers?.filter(e => e.location_id != (item.location_id || item.id)), Types.FAVCHARGER))
+                    }
+                } else {
+                    navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
+                }
+                return
+            }
+
+        } catch (error) {
+
         }
+        navigation.navigate(routes.login)
     }
 
     const navigateToGoogleMap = (latlong) => {
@@ -65,6 +98,11 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
         }
     }
 
+    useEffect(() => {
+
+    }, [isFocused])
+
+
     return (
         <TouchableOpacity onPress={onPress}>
             <CommonCard>
@@ -72,7 +110,7 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
                     <View style={styles.innerContainer}>
                         <View>
                             <CommonText showText={item?.name} fontSize={16} />
-                            <CommonText fontSize={12} customstyles={{ color: item?.summary?.aggregatedStatus === 'AVAILABLE' ? colors.green : item?.summary?.aggregatedStatus === 'CHARGING' ? colors.red : item?.summary?.aggregatedStatus === 'OCCUPIED' ? colors.red : "#D25564" }}>{item?.summary?.aggregatedStatus}</CommonText>
+                            <CommonText fontSize={12} customstyles={{ color: item?.summary?.aggregatedStatus === 'AVAILABLE' ? colors.green : item?.summary?.aggregatedStatus === 'CHARGING' ? colors.red : item?.summary?.aggregatedStatus === 'OCCUPIED' ? colors.blue : "#D25564" }}>{item?.summary?.aggregatedStatus}</CommonText>
                             < CommonText fontSize={12} showText={item?.AccessDetails?.chargetType} />
                             {
                                 item?.BusineessTime?.map((i, index) => {
