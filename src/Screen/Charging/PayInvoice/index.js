@@ -170,6 +170,12 @@ const PayInvoice = ({ route }) => {
     }
 
     const getUnpaidSession = (mode) => {
+        if (mode == 'PREPAID_CARD') {
+            if (pin.value.length < 6) {
+                setPin({ value: pin.value, error: "Please enter correct card pin." })
+                return
+            }
+        }
         setLoadingSign(true)
         getAllUnpaid(mUserDetails?.username).then((r) => {
             if (Array.isArray(r.data) && r.data.length > 0) {
@@ -265,7 +271,7 @@ const PayInvoice = ({ route }) => {
         <CommonView>
             <Header showText={'Pay Invoice'} />
             {refreshing && <ActivityIndicator size={'small'} color={colors.black} style={{ position: 'absolute', alignSelf: 'center', backgroundColor: colors.white, padding: 10 }} />}
-            <DenseCard padding={5}>
+            <DenseCard >
                 <View style={styles.wrapper}>
                     <CommonText showText={'Pending Amount'} customstyles={{ flex: 1 }} />
                     <CommonText showText={`₹ ${route.params?.amount}`} />
@@ -343,7 +349,7 @@ const PayInvoice = ({ route }) => {
 
                 {
                     pin.error != '' &&
-                    <CommonText showText={pin.error} customstyles={[{ color: colorText }, styles.text]} fontSize={14} regular />
+                    <CommonText showText={pin.error} customstyles={[{ color: colors.colorText }, styles.text]} fontSize={14} regular />
                 }
 
             </View>

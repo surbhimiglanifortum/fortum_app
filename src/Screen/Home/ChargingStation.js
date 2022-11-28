@@ -1,6 +1,6 @@
 import { View, StyleSheet, useColorScheme, ActivityIndicator, ScrollView } from 'react-native'
 import React, { useState, useContext, useEffect } from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import colors from '../../Utils/colors'
 import Header from '../../Component/Header/Header'
 import DetailsCard from '../../Component/Card/DetailsCard'
@@ -20,6 +20,7 @@ const ChargingStation = ({ route }) => {
     const scheme = useColorScheme()
 
     const { setOpenCommonModal } = useContext(SnackContext);
+    const isFocused=useIsFocused()
 
     const [loading, setLoading] = useState(true)
     const [unpaidSession, setUnpaidSession] = useState([])
@@ -123,7 +124,9 @@ const ChargingStation = ({ route }) => {
         refetchInterval: 30000,
     })
 
-
+    useEffect(() => {
+     
+    }, [isFocused])
     return (
         <CommonView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <Header showText={'Charging Station'} />

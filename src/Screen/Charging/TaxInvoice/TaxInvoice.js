@@ -264,21 +264,20 @@ const TaxInvoice = ({ route }) => {
             "\n" +
             "<h3>Total cost excl. GST : ₹ " +
             (
-                (route.params?.data?.item?.order?.amount -
-                    route.params?.data?.item?.order?.sgst -
-                    route.params?.data?.item?.order?.cgst) /
+                (route.params?.data?.item?.order?.amount
+                ) /
                 100
             )?.toFixed(2) +
             "</h3>\n" +
             "<h3>Amount of CGST(" +
-            (route.params?.data?.item?.order?.cgst != undefined ? route.params?.data?.item?.order?.cgst : 0) +
+            9 +
             "%) : ₹ " +
-            (route.params?.data?.item?.order?.cgst)?.toFixed(2) +
+            (route.params?.data?.item?.order?.cgst) / 100?.toFixed(2) +
             "</h3>\n" +
             "<h3>Amount of SGST(" +
-            (route.params?.data?.item?.order?.sgst != undefined ? route.params?.data?.item?.order?.sgst : 0) +
+            9 +
             "%) : ₹ " +
-            (route.params?.data?.item?.order?.sgst)?.toFixed(2) +
+            (route.params?.data?.item?.order?.sgst) / 100?.toFixed(2) +
             "</h3>\n" +
             "\n" +
             "\n" +
