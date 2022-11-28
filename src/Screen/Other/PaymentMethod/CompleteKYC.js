@@ -162,7 +162,7 @@ const CompleteKYC = ({ route }) => {
 
         console.log("ALL WELL", payload)
 
-
+        
 
         // try {
         //     setLoadingSign(true)

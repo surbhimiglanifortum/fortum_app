@@ -38,7 +38,7 @@ const OrderDetails = ({ route }) => {
     try {
       const result = await payUnpaidOrder(paramsData?.id, mUserDetails?.username)
       console.log("Check Order", result.data)
-      if (result.data?.success && result.data?.juspay_sdk_payload) {
+      if (result.data?.success && result.data?.juspay_sdk_payload?.orderId) {
         navigation.navigate(routes.PaymentScreenJuspay, {
           amount: "",
           email_address: "",
@@ -50,7 +50,7 @@ const OrderDetails = ({ route }) => {
         })
       } else {
         setOpenCommonModal({
-          isVisible: true, message: result.data?.message, onOkPress: () => {
+          isVisible: true, message: result.data?.message || "Something went wrong. Please try after sometimes.", onOkPress: () => {
             console.log("OkPressed")
           }
         })
@@ -86,13 +86,19 @@ const OrderDetails = ({ route }) => {
         </DenseCard>
         <CommonText showText={'Items'} fontSize={18} customstyles={styles.text} />
         <DenseCard style={styles.card} margin={1}>
-          <View style={styles.keyInner}>
-            <View style={styles.keyInner1}>
-              <IconCard Svg={StoreGreenSvg} />
-              <CommonText showText={'Name'} customstyles={styles.textCon} />
-            </View>
-            <CommonText showText={`₹ ${paramsData?.order?.amount / 100 || '0'}`} />
-          </View>
+          {
+            paramsData?.itemDetailsObjects.map((item, index) => {
+              return (
+                <View style={styles.keyInner}>
+                  <View style={styles.keyInner1}>
+                    <IconCard Svg={StoreGreenSvg} />
+                    <CommonText showText={item?.name} customstyles={styles.textCon} />
+                  </View>
+                  <CommonText showText={`₹ ${item?.price || '0'}`} />
+                </View>
+              )
+            })
+          }
         </DenseCard>
         <CommonText showText={'Order Summary'} customstyles={styles.text} />
         <DenseCard style={styles.card} margin={1}>
@@ -127,9 +133,9 @@ const OrderDetails = ({ route }) => {
           </View> : <Button showText={'Pay'} />
       } */}
 
-      {/* {
+      {
         !paramsData?.paid && <Button showText={'Pay'} onPress={payUnpaid} onLoadingo={isLoading} />
-      } */}
+      }
 
 
       {/* ----Order details session paid later implement and also download invoice and help btn implemt */}
