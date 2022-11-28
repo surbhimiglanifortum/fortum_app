@@ -1,7 +1,7 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, FlatList, RefreshControl, } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import colors from '../../../Utils/colors'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import routes from '../../../Utils/routes'
 import StoreCard from '../../../Component/Card/StoreCard/StoreCard'
@@ -33,6 +33,13 @@ const Store = () => {
         setLoaderOpen(false)
         return res.data
     })
+
+    const isFocused = useIsFocused()
+
+    useEffect(() => {
+
+    }, [isFocused])
+
 
     return (
         <CommonView>
