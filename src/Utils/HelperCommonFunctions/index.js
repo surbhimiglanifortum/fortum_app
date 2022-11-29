@@ -32,8 +32,6 @@ export function generateSHA(number, dateISO, counter) {
 
 
 export const getChargerMapObject = (standard) => {
-
-
     const map = {
         "IEC_62196_T1": { name: "TYPE1", icon: "connector-type1" },
         "IEC_62196_T2_COMBO": { name: "CCS", icon: "connector-ccs" },
@@ -56,4 +54,63 @@ export const getChargerMapObject = (standard) => {
 
 export const userExist = (userName) => {
     return Auth.signIn(userName, '123');
+}
+
+
+export const getPaymentString = (key) => {
+    switch (key) {
+        case "PAY_AS_U_GO":
+            return "Debit/Credit card"
+            break;
+
+        case "CLOSED_WALLET":
+            return "Closed Wallet"
+            break;
+
+        case "PREPAID_CARD":
+            return "Prepaid card"
+            break;
+
+        case "PREPAID_CARD_WALLET_Block":
+            return "Pinelab card"
+            break;
+
+        case "SESSIONPAYMENT":
+            return "Debit/Credit card, Netbanking"
+            break;
+
+        case "SESSIONPAYMENTPREPAIDCARD":
+            return "Prepaid card"
+            break;
+
+        default:
+            return ""
+            break;
+    }
+
+}
+
+export const getChargeTime = (dataItem) => {
+    try {
+        let startDate = new Date(dataItem?.item?.start_datetime)
+        let endDate = new Date(dataItem?.item?.end_datetime)
+        var seconds = (endDate.getTime() - startDate.getTime()) / 1000;
+        console.log("charge time", seconds)
+        return secondsToHms(seconds)
+    } catch (error) {
+        console.log("error", error)
+        return ""
+    }
+}
+
+function secondsToHms(d) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor(d % 3600 / 60);
+    var s = Math.floor(d % 3600 % 60);
+    var hDisplay = h > 0 ? h + (h == 1 ? " hr, " : " hrs, ") : "";
+    var mDisplay = m > 0 ? m + (m == 1 ? " min, " : " mins, ") : "";
+    var sDisplay = s > 0 ? s + (s == 1 ? " sec" : " seconds") : "";
+    console.log("charge time", hDisplay + mDisplay + sDisplay)
+    return hDisplay + mDisplay + sDisplay;
 }

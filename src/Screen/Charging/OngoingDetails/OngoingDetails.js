@@ -37,8 +37,8 @@ const OngoingDetails = ({ route }) => {
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const username = mUserDetails?.username
 
-  
-  const { setOpenCommonModal, setShowFeedbackModel } = useContext(SnackContext);
+
+  const { setOpenCommonModal, setShowFeedbackModel, setShowYouSavedModel } = useContext(SnackContext);
 
   const navigation = useNavigation()
   const scheme = useColorScheme()
@@ -176,6 +176,11 @@ const OngoingDetails = ({ route }) => {
     }
   }, [])
 
+  const YouSavedBannerAmount = (kwh) => {
+    kwh = parseFloat(kwh)
+    return ((4.74 * 7 * kwh + 7.14 * 7 * kwh - 2 * 3.91 * kwh * 7) / 2).toFixed(2)
+  }
+
   const pollSessions = (authID, contSucc, active, failcounter) => {
     console.log("Poll seessions count", pollsessnioCalls)
     pollsessnioCalls = pollsessnioCalls + 1
@@ -205,7 +210,11 @@ const OngoingDetails = ({ route }) => {
             setRefreshing(false)
           } else {
             // setIsVisible(true)
-            setShowFeedbackModel({ "isVisible": true, "locid": locDetails?.id, "evseid": evDetails?.uid })
+            setShowYouSavedModel({
+              isVisible: true, message: YouSavedBannerAmount(lastPaidSession.kwh), onOkPress: () => {
+                setShowFeedbackModel({ "isVisible": true, "locid": locDetails?.id, "evseid": evDetails?.uid })
+              }
+            })
             navigation.reset({
               index: 0,
               routes: [{ name: routes.dashboard }],
@@ -273,7 +282,7 @@ const OngoingDetails = ({ route }) => {
           setChargerText("Stop")
           try {
 
-            console.log("counterinterval_hai",counterinterval)
+            console.log("counterinterval_hai", counterinterval)
             if (!counterinterval) {
               counterinterval = setInterval(() => {
                 setChargeTime(GetCouterTime(r.data.start_datetime))
@@ -490,7 +499,9 @@ const OngoingDetails = ({ route }) => {
       const result = await refundPayAsUGo(username, sessionId)
       console.log("Result initiateRefund", result.data)
       setShowRestart(false)
-      setSnack({ message: result.data.message, open: true, color: 'error' })
+      setOpenCommonModal({
+        isVisible: true, message: result.data.message,
+      })
       navigation.reset({
         index: 0,
         routes: [{ name: 'MapStack' }],
@@ -508,7 +519,10 @@ const OngoingDetails = ({ route }) => {
       const result = await refundCloseLoopWallet(username, sessionId)
       console.log("Result initiateWalletRefund", result.data)
       setShowRestart(false)
-      setSnack({ message: result.data.message, open: true, color: 'error' })
+      setOpenCommonModal({
+        isVisible: true, message: result.data.message,
+
+      })
       navigation.reset({
         index: 0,
         routes: [{ name: 'MapStack' }],

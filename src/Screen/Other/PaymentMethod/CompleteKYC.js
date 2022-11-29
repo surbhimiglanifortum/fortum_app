@@ -15,8 +15,9 @@ import CommonView from '../../../Component/CommonView'
 import moment from 'moment'
 import { useSelector } from 'react-redux'
 import SnackContext from '../../../Utils/context/SnackbarContext'
-import { pinelabDocVerify, createPinelabWallet, createPinelabDigitalCard, getStateList } from '../../../Services/Api'
+import { pinelabDocVerify, createPinelabWallet, createPinelabDigitalCard, getStateList, orderPinelabCard } from '../../../Services/Api'
 import { useQuery } from 'react-query'
+import OrderCard from './OrderCard'
 
 const KYCLIST = [
     { value: 2, name: "Pan Card" },
@@ -31,6 +32,8 @@ const CompleteKYC = ({ route }) => {
     const scheme = useColorScheme()
 
     const { setOpenCommonModal } = useContext(SnackContext);
+
+    const [deliveryAddress, setDeliveryAddress] = useState((mUserDetails?.delivery_addresses && mUserDetails.delivery_addresses.length > 0) ? mUserDetails.delivery_addresses[0] : '');
 
     const [documentType, setDocumentType] = useState('')
     const [docNumber, setDocNumber] = useState('')
@@ -50,6 +53,7 @@ const CompleteKYC = ({ route }) => {
     const [isAcceptCheck2Error, setIsAcceptCheck2Error] = useState('')
     const [loadingSign, setLoadingSign] = useState(false)
     const [stateNameError, setStateNameError] = useState('')
+    const [showError, setError] = useState(false)
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [docDatePickerVisible, setDocDatePickerVisibility] = useState(false);
@@ -92,35 +96,47 @@ const CompleteKYC = ({ route }) => {
     })
 
     const onDocumentVerify = async () => {
+
         if (documentType == "") {
             setDocTypeError('Please select a document type.')
             return
         } else {
             setDocTypeError('')
         }
+
         if (docNumber == "") {
             setDocNumberError('Please enter document number.')
             return
         } else {
             setDocNumberError('')
         }
+
         if (name == "") {
             setNameError('Please enter name.')
             return
         } else {
             setNameError('')
         }
+
         if (dob == "") {
             setDobError('Please select date of birth.')
             return
         } else {
             setDobError('')
         }
+
         if (docDateTech == "") {
             setDocIssueError('Please select document issue date.')
             return
         } else {
             setDocIssueError('')
+        }
+
+        if (!deliveryAddress || !deliveryAddress?.address) {
+            setError(true)
+            return
+        } else {
+            setError(false)
         }
 
         if (isAcceptCheck == false) {
@@ -136,6 +152,7 @@ const CompleteKYC = ({ route }) => {
         } else {
             setIsAcceptCheck2Error('')
         }
+
         if (documentType == "") {
             setDocTypeError('Please select a document type.')
             return
@@ -162,8 +179,6 @@ const CompleteKYC = ({ route }) => {
 
         console.log("ALL WELL", payload)
 
-
-
         try {
             setLoadingSign(true)
             const result = await pinelabDocVerify(payload)
@@ -186,6 +201,7 @@ const CompleteKYC = ({ route }) => {
     }
 
     const pineLabWalletCreate = async (payload) => {
+
         try {
             const payload = {
                 FirstName: route.params?.fName,
@@ -216,7 +232,8 @@ const CompleteKYC = ({ route }) => {
             }
             const result = await createPinelabDigitalCard(payload)
             if (result?.data?.success) {
-                navigation.navigate(routes.KycDone, {
+                placeOrder()
+                navigation.replace(routes.KycDone, {
                     pin: pin,
                     response: response,
                     name: name
@@ -252,6 +269,43 @@ const CompleteKYC = ({ route }) => {
     //     [navigation]
     // );
 
+    const handleChangeDeliveryAddress = () => {
+        navigation.navigate(routes.DeliveryAddress, { callbackSelectAddress })
+    }
+
+    const callbackSelectAddress = (address) => {
+        setDeliveryAddress(address)
+    }
+
+    const placeOrder = async () => {
+        try {
+            const payload = {
+                username: mUserDetails?.username,
+                addressInfo: {
+                    addressLine1: deliveryAddress?.address,
+                    addressLine2: deliveryAddress?.address_line_2,
+                    city: deliveryAddress?.city,
+                    state: deliveryAddress?.country,
+                    pinCode: deliveryAddress?.postal_code
+                }
+            }
+            const result = await orderPinelabCard(payload)
+            console.log('Order Card', result.data)
+            // if (result.data?.success) {
+            //     navigation.navigate(routes.CardOrderConfirmed)
+            // }
+            // else {
+            //     setOpenCommonModal({
+            //         isVisible: true, message: result.data?.message, onOkPress: () => {
+            //             navigation.goBack()
+            //         }
+            //     })
+            // }
+        } catch (error) {
+            console.log('Order Card Error', error)
+        }
+    }
+
     return (
         <CommonView >
             <ScrollView>
@@ -267,7 +321,25 @@ const CompleteKYC = ({ route }) => {
                     <DenseCard padding={5}>
                         <Picker
                             selectedValue={documentType}
-                            onValueChange={(itemValue, itemIndex) => setDocumentType(itemValue)}
+                            onValueChange={(itemValue, itemIndex) => {
+                                setDocNumber('')
+                                setDocDate('')
+                                setName('')
+                                setDob('')
+                                setIsAcceptCheck('')
+                                setIsAcceptCheck2('')
+                                setStateName('')
+                                setDocTypeError('')
+                                setDocNumberError('')
+                                setNameError('')
+                                setDobError('')
+                                setDocIssueError('')
+                                setIsAcceptCheckError('')
+                                setIsAcceptCheck2Error('')
+                                setStateNameError('')
+                                setError(false)
+                                setDocumentType(itemValue)
+                            }}
                             mode={'dropdown'}
                         >
                             <Picker.Item label={'Select Document Type'} value={''} />
@@ -319,7 +391,7 @@ const CompleteKYC = ({ route }) => {
 
                 {
                     documentType == 5 &&
-                    <View>
+                    <>
                         <CommonText showText={'State'} regular fontSize={14} />
                         <DenseCard padding={5}>
                             <Picker
@@ -340,10 +412,21 @@ const CompleteKYC = ({ route }) => {
                         {stateNameError !== '' &&
                             <CommonText customstyles={styles.errorText} showText={stateNameError} regular fontSize={12} />
                         }
-                    </View>
+                    </>
                 }
 
-                <View style={styles.bottomText}>
+                <TouchableOpacity onPress={handleChangeDeliveryAddress}>
+                    <CommonText showText={'Shipping Address'} regular fontSize={14} />
+                    <DenseCard margin={1}>
+                        {!deliveryAddress?.address && <CommonText regular fontSize={14}>Add Shipping Address</CommonText>}
+                        {(!deliveryAddress?.first_name == "" || !deliveryAddress?.last_name == "") && <CommonText regular fontSize={14} showText={`${deliveryAddress?.first_name || ""} ${deliveryAddress?.last_name || ""}`} />}
+                        {(!deliveryAddress?.address == "" || !deliveryAddress?.address_line_2 == "" || !deliveryAddress?.city == "" || !deliveryAddress?.country == "" || !deliveryAddress?.postal_code == "") && <CommonText regular fontSize={14}>{(deliveryAddress?.address || "") + " " + (deliveryAddress?.address_line_2 || "") + " " + (deliveryAddress?.city || "") + " " + (deliveryAddress?.country || "") + " " + (deliveryAddress?.postal_code || "")}</CommonText>}
+                    </DenseCard>
+                    <CommonText showText={"This field is required to ship your physical card to your current address."} fontSize={10} regular />
+                    {showError && <CommonText showText={"Please add shipping address"} fontSize={12} customstyles={{ color: colors.red, marginTop: 10 }} regular />}
+                </TouchableOpacity>
+
+                <View style={[styles.bottomText, { marginTop: 30 }]}>
                     <Checkbox
                         color={colors.green}
                         status={isAcceptCheck ? 'checked' : 'unchecked'}

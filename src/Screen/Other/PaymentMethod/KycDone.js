@@ -14,7 +14,7 @@ const KycDone = ({ route }) => {
     const onOkPress = () => {
         setOpenCommonModal({
             isVisible: true, message: 'Please confirm if you have saved the pin else you will have to reset the pin.', onOkPress: () => {
-                navigation.navigate(routes.Pinelab, {
+                navigation.replace(routes.Pinelab, {
                     response: route.params?.response,
                     name: route.params?.name
                 })

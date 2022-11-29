@@ -105,7 +105,7 @@ const FortumChargeAndDriveCard = () => {
                 </View>
 
                 <View style={styles.centerText}>
-                    <TouchableOpacity onPress={_onPresstermsCondition } >
+                    <TouchableOpacity onPress={_onPresstermsCondition} >
                         <CommonText fontSize={14}>{'View'}
                             <CommonText fontSize={14} customstyles={styles.linkText} >{'Terms And Conditions'}</CommonText>
                         </CommonText>
@@ -117,12 +117,12 @@ const FortumChargeAndDriveCard = () => {
                 {status != '' && <CommonText showText={`Card Status : ${status}`} customstyles={{ marginVertical: 10, textAlign: 'center' }} />}
             </ScrollView>
 
-            {
+            {/* {
                 btnText !== 'Check Status' &&
                 <Button showText={btnText} onLoading={loading} onPress={() => {
                     navigation.navigate(routes.OrderCard)
                 }} />
-            }
+            } */}
 
         </CommonView>
     )

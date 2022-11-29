@@ -65,7 +65,7 @@ const OrderCard = () => {
 
     return (
         <CommonView>
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
                 <Header showText={'Place Order'} />
 
                 <TouchableOpacity onPress={handleChangeDeliveryAddress} style={{ marginVertical: 20 }}>

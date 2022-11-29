@@ -38,9 +38,13 @@ const CardDetails = () => {
         })
     }, [])
 
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const toggleSwitch = () => {
+        cardStatusUpdate(!isEnabled)
+        setIsEnabled(previousState => !previousState)
 
-    const cardStatusUpdate = async () => {
+    };
+
+    const cardStatusUpdate = async (isEnabled) => {
         setLoading(true)
         try {
             let payload = {}
@@ -55,6 +59,8 @@ const CardDetails = () => {
                     cardStatus: "Block"
                 }
             }
+
+            console.log("card/update/status", payload)
             const result = await updateCardStatus(payload)
             if (result.data?.success) {
                 if (result.data?.response?.cardStatus == 1) {
@@ -76,13 +82,18 @@ const CardDetails = () => {
             console.log("Check Card Status", result.data)
         } catch (error) {
             console.log("Pinelab Card Staus Error", error)
+            setOpenCommonModal({
+                isVisible: true, message: error.message
+            })
+
             setLoading(false)
+            setIsEnabled(false)
         }
     }
 
-    useEffect(() => {
-        cardStatusUpdate()
-    }, [isEnabled])
+    // useEffect(() => {
+    //     cardStatusUpdate()
+    // }, [isEnabled])
 
     return (
         <CommonView style={styles.container}>

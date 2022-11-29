@@ -15,6 +15,7 @@ var ratings = 3
 
 const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
     const scheme = useColorScheme()
+
     const [review, setReview] = useState("");
     const [loadingSign, setLoadingSign] = useState(false)
 
@@ -22,10 +23,10 @@ const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
 
     const { setOpenCommonModal } = useContext(SnackContext);
 
-
     const okayBtnHandler = async () => {
         // openCommonModal?.onOkPress()
         // setShowFeedbackModel({ "isVisible": false, "locid": "", "evseid": "", onPress: () => { } })
+
         if (review == '') {
             setOpenCommonModal({
                 isVisible: true, message: "Please add your feedback!!!", onOkPress: () => { }
@@ -46,6 +47,7 @@ const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
             const response = await ApiAction.feedback(payload)
 
             console.log("Req saved", response.data)
+
             if (response.data.result == "ok") {
                 setOpenCommonModal({
                     isVisible: true, message: "Your feedback has been saved", onOkPress: () => { }
@@ -65,7 +67,6 @@ const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
                 isVisible: true, message: error, onOkPress: () => { }
             })
         }
-
     }
 
     const onFinishRating = (data) => {

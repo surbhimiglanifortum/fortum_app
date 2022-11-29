@@ -76,6 +76,7 @@ const PayMinimum = ({ route }) => {
         setLoader(true)
         setMode('CLOSED_WALLET')
         setShowBtn(true)
+        setPin({ value: '', error: '' })
         if (userData?.balance < evDetails?.connectors[0]?.pricing?.min_balance) {
             setMsg("Your wallet balance is low. Please select other option or add money in your wallet.")
             setWalletBalance(userData?.balance)
@@ -83,6 +84,7 @@ const PayMinimum = ({ route }) => {
             setColorText(colors.red)
             setGoodToGo(false)
             setLoader(false)
+            setShowBtn(false)
         } else {
             setColorText(colors.green)
             setMsg('You are ready to charge')
@@ -90,12 +92,14 @@ const PayMinimum = ({ route }) => {
             setWallet(true)
             setGoodToGo(true)
             setLoader(false)
+            setShowBtn(true)
         }
     }
 
     const checkPrepaidCardBalance = async () => {
         setGoodToGo(false)
         setLoader(true)
+        setPin({ value: '', error: '' })
         try {
             const res = await walletBalanceEnquiry({ username: mUserDetails?.username })
             setPrepaidCardBalance(res.data?.response?.Cards[0].Balance)
@@ -118,11 +122,12 @@ const PayMinimum = ({ route }) => {
     }
 
     const blockMinBalance = async () => {
-        setLoadingSign(true)
         if (pin.value.length < 6) {
             setPin({ value: pin.value, error: "Please enter correct card pin." })
             return
         }
+
+        setLoadingSign(true)
         try {
             setMsg('')
             const payload = {
@@ -188,6 +193,7 @@ const PayMinimum = ({ route }) => {
         const result = await getUserDetails()
         if (result.data) {
             setUserData(result.data)
+            setWalletBalance(result?.data?.balance)
             dispatch(AddToRedux(result.data, Types.USERDETAILS))
         }
     }
@@ -209,6 +215,7 @@ const PayMinimum = ({ route }) => {
         setMode('PREPAID_CARD')
         setWallet(true)
         setMsg('')
+        setShowBtn(true)
         checkPrepaidCardBalance()
     }
 
@@ -326,10 +333,10 @@ const PayMinimum = ({ route }) => {
 
                         <View>
                             <CommonCard style={styles.wrapper}>
-                                <View style={{ flex: 1 }}>
+                                <TouchableOpacity onPress={checkWalletBalance} style={{ flex: 1 }}>
                                     <CommonText showText={'Prepaid Wallet'} />
                                     <CommonText showText={`Available Balance : ₹ ${walletBalance}`} fontSize={12} regular />
-                                </View>
+                                </TouchableOpacity>
                                 <RadioBtn
                                     value="CLOSED_WALLET"
                                     status={mode === 'CLOSED_WALLET' ? 'checked' : 'unchecked'}
@@ -365,10 +372,10 @@ const PayMinimum = ({ route }) => {
                             {
                                 allowMode.includes('PREPAID_CARD') &&
                                 <CommonCard style={styles.wrapper}>
-                                    <View style={{ flex: 1 }}>
+                                    <TouchableOpacity onPress={prepaidCard} style={{ flex: 1 }}>
                                         <CommonText showText={'Prepaid Card'} customstyles={{ flex: 1 }} />
                                         {(prepaidCardBalance != undefined || prepaidCardBalance != '') && <CommonText showText={`Available Balance : ₹ ${prepaidCardBalance}`} fontSize={12} regular />}
-                                    </View>
+                                    </TouchableOpacity>
                                     <RadioBtn
                                         value="PREPAID_CARD"
                                         status={mode === 'PREPAID_CARD' ? 'checked' : 'unchecked'}
@@ -398,8 +405,8 @@ const PayMinimum = ({ route }) => {
                             }
 
                             {
-                                pin.error != '' &&
-                                <CommonText showText={pin.error} customstyles={[{ color: colorText }, styles.text]} fontSize={14} regular />
+                                mode == 'PREPAID_CARD' && pin.error != '' &&
+                                <CommonText showText={pin.error} customstyles={[{ color: colors.red }, styles.text]} fontSize={14} regular />
                             }
 
                             <Loader modalOpen={isLoader} />

@@ -37,7 +37,7 @@ const Passbook = () => {
     const [data, setData] = useState([])
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
-    const [loading,setLoading]=useState(false)
+    const [loading, setLoading] = useState(false)
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
 
@@ -243,8 +243,8 @@ const Passbook = () => {
             '</body>\n' +
             '</html>'
 
-       
-        const results = await RNHTMLtoPDF.convert({ 
+
+        const results = await RNHTMLtoPDF.convert({
             html: printData,
             fileName: 'Passbook',
             base64: true,
@@ -268,6 +268,7 @@ const Passbook = () => {
                                 title={item?.item?.MerchantName}
                                 amount={item?.item?.TransactionAmount}
                                 transactionType={item?.item?.TransactionType}
+                                style={{ color: (item?.item?.TransactionType === 'GIFT CARD RELOAD' || item?.item?.TransactionType === 'GIFT CARD CANCEL REDEEM') ? colors.green : colors.red }}
                             />
                         )
                     }
@@ -294,6 +295,7 @@ const Passbook = () => {
                                     date={item?.item?.TransactionDate}
                                     title={item?.item?.MerchantName}
                                     amount={item?.item?.TransactionAmount}
+                                    style={{ color: colors.red }}
                                 /> :
                                 null
                         )
@@ -314,12 +316,13 @@ const Passbook = () => {
                     keyExtractor={item => item.id}
                     renderItem={(item) => {
                         return (
-                            item?.item?.TransactionType === 'GIFT CARD RELOAD' ?
+                            (item?.item?.TransactionType === 'GIFT CARD RELOAD' || item?.item?.TransactionType === 'GIFT CARD CANCEL REDEEM') ?
                                 <PinelabTransactionCard
                                     Svg={WalletSvg}
                                     date={item?.item?.TransactionDate}
                                     title={item?.item?.MerchantName}
                                     amount={item?.item?.TransactionAmount}
+                                    style={{ color: colors.green }}
                                 /> :
                                 null
                         )
@@ -347,7 +350,7 @@ const Passbook = () => {
                             <CommonIconCard Svg={WalletSvg} />
                             <CommonText showText={'Balance'} fontSize={14} regular customstyles={{ marginLeft: 10 }} />
                         </View>
-                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)}`} fontSize={14} />
+                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2) || '0'}`} fontSize={14} />
                     </View>
                 </DenseCard>
 
@@ -356,33 +359,33 @@ const Passbook = () => {
                     {selectedTab == 'all' ?
                         <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
                             <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton]}>
-                                <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
+                                <CommonText customstyles={[{ color: selectedTab == 'all' ? colors.black : colors.white }]} showText={'All'} fontSize={12} bold />
                             </TouchableOpacity>
                         </DenseCard> :
                         <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton]}>
-                            <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
+                            <CommonText customstyles={[{ color: selectedTab == 'all' ? colors.black : colors.white }]} showText={'All'} fontSize={12} bold />
                         </TouchableOpacity>
                     }
 
                     {selectedTab == 'sent' ?
                         <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
                             <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton]}>
-                                <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
+                                <CommonText customstyles={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]} showText={'Sent'} fontSize={12} bold />
                             </TouchableOpacity>
                         </DenseCard> :
                         <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton]}>
-                            <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
+                            <CommonText customstyles={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]} showText={'Sent'} fontSize={12} bold />
                         </TouchableOpacity>
                     }
 
                     {selectedTab == 'receive' ?
                         <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
                             <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
-                                <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Received</Text>
+                                <CommonText customstyles={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]} showText={'Received'} fontSize={12} bold />
                             </TouchableOpacity>
                         </DenseCard> :
                         <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
-                            <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Received</Text>
+                            <CommonText customstyles={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]} showText={'Received'} fontSize={12} bold />
                         </TouchableOpacity>
                     }
                 </View>

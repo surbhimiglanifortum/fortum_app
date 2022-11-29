@@ -3,7 +3,8 @@ import { Modal, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } fr
 import colors from "../../Utils/colors";
 import { getPaymentOption } from '../../Services/Api'
 import { useSelector } from 'react-redux'
-
+import CommonText from "../Text/CommonText";
+import AntDesign from 'react-native-vector-icons/AntDesign'
 const PayAsUGoModal = ({ modalVisible, bgStyle, onRefundClick, onRestartClick, onWalletClick, cancelClick, chargingCost, remainingCost, loadingRefund, loadingWallet }) => {
 
     const [walletAllow, setWalletAllow] = useState(false)
@@ -32,34 +33,37 @@ const PayAsUGoModal = ({ modalVisible, bgStyle, onRefundClick, onRestartClick, o
             animationType="fade"
             transparent={true}
             visible={modalVisible}
+            statusBarTranslucent={true}
         >
             <View style={[styles.centeredView, { backgroundColor: bgStyle }]}>
                 <View style={styles.modalView}>
-                    <TouchableOpacity onPress={cancelClick} style={{ zIndex: 9999 }}>
-                        {/* <FontIcon name="cross" color={AppColors.ModerateBlue} size={30} style={styles.fontIcon} /> */}
+                    <TouchableOpacity onPress={cancelClick} style={{ position: 'absolute', right: 10, top: 15 }}>
+                        <AntDesign name="close" size={25} />
                     </TouchableOpacity>
-                    <Text style={styles.subheading}>{'Something went wrong'}</Text>
+                    <View style={{ alignItems: 'center', paddingVertical: 15 }}>
+                        <CommonText showText={'Something went wrong'} />
+                    </View>
                     <View style={styles.divider} />
                     <View style={styles.wrapper}>
-                        <Text style={[styles.subheading, { marginBottom: 0 }]}>{'Do you want to restart the session?'}</Text>
-                        <Text style={styles.subheading}>{'Remove the connector and insert the charging gun again.'}</Text>
-
+                        <View style={{ alignItems: 'center' }}>
+                            <CommonText regular showText={'Do you want to restart the session?'} />
+                            <CommonText regular showText={'Remove the connector and insert the charging gun again.'} customstyles={{ textAlign: 'center', marginVertical: 5 }} />
+                        </View>
                         <TouchableOpacity onPress={onRestartClick} style={styles.restartBtn}>
-                            <Text style={styles.restartBtnTxt}>{'Restart'}</Text>
+                            <CommonText regular showText={'Restart'} customstyles={{ color: colors.white }} />
                         </TouchableOpacity>
+                        <CommonText regular showText={`Your last charging cost is Rs. ${chargingCost}`} customstyles={{ textAlign: 'center', marginVertical: 8 }} />
 
-                        <Text style={[styles.subheading, { color: colors.blue }]}>{`Your last charging cost is Rs. ${chargingCost}`}</Text>
                         {
                             walletAllow &&
                             <TouchableOpacity onPress={onWalletClick} style={styles.walletBtn}>
                                 {loadingWallet && <ActivityIndicator color={"black"} />}
-                                {!loadingWallet && <Text style={styles.walletBtnTxt}>{`Add balance Rs. ${remainingCost} to wallet`}</Text>}
+                                {!loadingWallet && <CommonText regular showText={`Add balance Rs. ${remainingCost} to wallet`} customstyles={{ color: colors.white, textAlign: 'center' }} />}
                             </TouchableOpacity>
                         }
-
                         <TouchableOpacity onPress={onRefundClick} style={styles.refundBtn}>
                             {loadingRefund && <ActivityIndicator color={"black"} />}
-                            {!loadingRefund && <Text style={styles.closeText}>{`Refund Rs.${remainingCost}`}</Text>}
+                            {!loadingRefund && <CommonText regular showText={`Refund Rs.${remainingCost}`} customstyles={{ color: colors.green, textAlign: 'center' }} />}
                         </TouchableOpacity>
 
                     </View>
@@ -74,9 +78,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        // borderWidth:1,
+
     },
     modalView: {
-        margin: 20,
+        // margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
         paddingTop: 10,
@@ -87,7 +93,10 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 5
+        elevation: 5,
+        position: 'absolute',
+        bottom: 0,
+        width: '100%'
     },
     modalText: {
         marginBottom: 15,
@@ -104,7 +113,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     closeText: {
-        color: colors.blue,
+        color: colors.green,
         textAlign: 'center'
     },
     buttonWrapper: {
@@ -116,12 +125,12 @@ const styles = StyleSheet.create({
     },
     refundBtn: {
         borderWidth: 1,
-        borderColor: colors.blue,
+        borderColor: colors.green,
         padding: 5,
         borderRadius: 20,
     },
     restartBtn: {
-        backgroundColor: colors.blue,
+        backgroundColor: colors.green,
         width: 100,
         height: 100,
         borderRadius: 50,
@@ -137,7 +146,7 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     walletBtn: {
-        backgroundColor: colors.blue,
+        backgroundColor: colors.green,
         padding: 8,
         borderRadius: 20,
         marginBottom: 15

@@ -181,7 +181,7 @@ const ActivateCard = () => {
     const otpValidation = async () => {
         const otp = otpArray.join('')
 
-        if (!otp || otp == "" || otp.length < 4) {
+        if (!otp || otp == "" || otp.length < 6) {
             setOtpError("Please Enter Valid Otp.")
             return
         }
@@ -196,7 +196,7 @@ const ActivateCard = () => {
             console.log("Check Response of Pinelab Verify OTP", result.data)
 
             if (result.data?.message?.responseMessage == "Min Kyc OTP Verified Successfully") {
-                navigation.navigate(routes.CompleteKYC, {
+                navigation.replace(routes.CompleteKYC, {
                     fName: name,
                     lName: lName,
                     email: mUserDetails?.username,
@@ -301,6 +301,7 @@ const ActivateCard = () => {
                 <Button
                     showText={'Proceed to KYC'}
                     onPress={otpValidation}
+                    // onPress={() => navigation.navigate(routes.CompleteKYC)}
                     disable={!disable ? true : false}
                     onLoading={loadingSign}
                     bg={!disable && colors.lightGray}
