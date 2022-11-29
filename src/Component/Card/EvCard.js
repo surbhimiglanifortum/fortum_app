@@ -50,9 +50,7 @@ const EvCard = ({item, onPress, title, subTitle, rightText, backgroundColor, rig
                         </View>
                     </View>
                     <View>
-                        <View style={[{ backgroundColor: backgroundColor }, styles.rightCon]}>
-                            <CommonText showText={'0/2'} customstyles={{ color: '#fff' }} />
-                        </View>
+                        
                         <CommonText fontSize={12} showText={rightText} customstyles={{ color: rightTitleColor }} />
                     </View>
                 </View>
@@ -77,17 +75,6 @@ const styles = StyleSheet.create({
     cardInner: {
         marginLeft: 10
     },
-    rightCon: {
-        paddingVertical: 4,
-        paddingHorizontal: 4,
-        borderRadius: 4,
-        width: 35,
-        marginBottom: 5,
-        alignSelf: 'flex-end'
-    },
-    rightText: {
-        color: '#fff'
-    }
 })
 
 export default EvCard
