@@ -1,4 +1,4 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'
+import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, useColorScheme } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -6,6 +6,8 @@ import Button from '../Button/Button'
 import CommonText from '../Text/CommonText'
 import CommonView from '../CommonView'
 import WhiteButton from '../Button/WhiteButton'
+import CommonIconCard from '../Card/CommonIconCard/CommonIconCard'
+import { NeomorphFlex } from 'react-native-neomorph-shadows'
 
 const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText }) => {
 
@@ -17,7 +19,7 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText
 
         setOpenCommonModal({ isVisible: false, message: "", heading: '', showBtnText: "" })
     }
-
+    const scheme = useColorScheme()
     return (
         <Modal visible={openCommonModal?.isVisible} statusBarTranslucent={true} transparent>
             <View style={styles.container}>
@@ -25,12 +27,23 @@ const CommonModal = ({ openCommonModal, setOpenCommonModal, heading, showBtnText
                     <View style={styles.wrapContainer}>
                         <View style={styles.header}>
                             <CommonText showText={openCommonModal.heading ? openCommonModal?.heading : 'Notification'} customstyles={styles.heading} />
-                            <TouchableOpacity style={styles.crossBtn} onPress={() => { setOpenCommonModal({ isVisible: false, message: "" }) }}>
-                                <AntDesign name='close' size={20} />
-                            </TouchableOpacity>
+                            <NeomorphFlex
+                                // inner // <- enable shadow inside of neomorph
+                                swapShadows // <- change zIndex of each shadow color
+                                style={{
+                                    shadowRadius: 3,
+                                    borderRadius: 12,
+                                    backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight,
+                                    padding: 10,
+                                }}>
+
+                                <TouchableOpacity style={[styles.crossBtn]} onPress={() => { setOpenCommonModal({ isVisible: false, message: "" }) }}>
+                                    <AntDesign name='close' size={20} color={scheme == 'dark' ? colors.white : colors.black} />
+                                </TouchableOpacity>
+                            </NeomorphFlex>
                         </View>
                         <View style={styles.centerText}>
-                            <CommonText showText={openCommonModal?.message} fontSize={16} regular />
+                            <CommonText showText={openCommonModal?.message} fontSize={16} regular customstyles={{ textAlign: 'center' }} />
                         </View>
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
 
@@ -84,11 +97,8 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     crossBtn: {
-        backgroundColor: colors.white,
-        elevation: 5,
-        paddingVertical: 8,
-        paddingHorizontal: 8,
-        borderRadius: 6
+
+
     },
     centerText: {
         marginVertical: 50,

@@ -6,8 +6,9 @@ import CommonText from '../Text/CommonText'
 import CommonCard from '../../Component/Card/CommonCard/index'
 import CommonIconCard from './CommonIconCard/CommonIconCard'
 import { GetFormatedDate } from '../../Utils/utils'
+import CommonCardReport from './CommonIconCard/CommonCardReport'
 
-const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard }) => {
+const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard, color, SvgBg }) => {
 
     const getChargeTime = (dataItem) => {
         try {
@@ -39,14 +40,14 @@ const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard }) => {
     return (
         <CommonCard>
             <TouchableOpacity style={styles.card} onPress={navigationHandler} disabled={disabledCard}>
-                <CommonIconCard Svg={Svg} />
+                {SvgBg ? <CommonIconCard Svg={Svg} /> : <CommonCardReport Svg={Svg} />}
                 <View style={styles.middleContainer}>
                     <CommonText showText={dataItem?.item?.location?.name} fontSize={16} black />
                     <CommonText showText={GetFormatedDate(dataItem?.item?.start_datetime)} fontSize={12} regular />
                 </View>
                 {tabName != 'ongoing' &&
                     <View >
-                        <CommonText showText={`₹ ${dataItem?.item?.order?.amount / 100 ? dataItem?.item?.order?.amount / 100 : '0'}`} fontSize={14} customstyles={{ color: !dataItem?.item?.paid && colors.red, textAlign: 'right' }} />
+                        <CommonText showText={`₹ ${dataItem?.item?.order?.amount / 100 ? dataItem?.item?.order?.amount / 100 : '0'}`} fontSize={14} customstyles={{ color: color, textAlign: 'right' }} />
                         <CommonText showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '0'} Kwh`} fontSize={12} regular />
                     </View>
                 }

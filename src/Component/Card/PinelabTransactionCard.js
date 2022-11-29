@@ -16,13 +16,14 @@ const PinelabTransactionCard = ({ navigationHandler, Svg, title, date, amount, t
                 <View style={styles.leftContainer}>
                     <CommonIconCard Svg={Svg} />
                     <View style={styles.middleContainer}>
-                        <CommonText showText={title} fontSize={16} black/>
+                        <CommonText showText={title} fontSize={16} black />
                         <View style={styles.leftContainer}>
                             <CommonText regular showText={GetFormatedDate(date)} fontSize={12} />
                         </View>
                     </View>
                 </View>
-                <CommonText showText={transactionType === 'GIFT CARD RELOAD' ? `+ ₹ ${amount}` : `₹ ${amount}`} fontSize={16} customstyles={[style]} black />
+                {console.log("Check Transaction Type", transactionType)}
+                <CommonText showText={(transactionType === 'GIFT CARD RELOAD' || transactionType === 'GIFT CARD CANCEL REDEEM') ? `+ ₹ ${amount}` : `₹ ${amount}`} fontSize={16} customstyles={[style]} black />
             </TouchableOpacity>
         </CommonCard>
     )
