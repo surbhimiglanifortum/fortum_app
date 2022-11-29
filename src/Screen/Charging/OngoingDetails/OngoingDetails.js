@@ -653,7 +653,9 @@ const OngoingDetails = ({ route }) => {
         />
 
         <CommonCard>
-          <TouchableOpacity style={styles.topCard}>
+          <TouchableOpacity style={styles.topCard} onPress={() => navigation.navigate(routes.ReportPage, {
+            locDetails: locDetails
+          })}>
             <CommonIconCard Svg={Report} />
             <CommonText showText={'Report'} customstyles={{ color: colors.lightRed, alignSelf: 'center', marginLeft: 10 }} />
           </TouchableOpacity>
