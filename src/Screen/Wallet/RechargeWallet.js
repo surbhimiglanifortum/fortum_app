@@ -156,7 +156,7 @@ const RechargeWallet = ({ route }) => {
               <TouchableOpacity style={styles.innerRow} onPress={() => {
                 setAmount({ value: e.toString(), error: '' })
               }}>
-                <CommonCard style={styles.column}>
+                <CommonCard style={[styles.column]}>
                   <CommonText showText={`₹ ${e}`} />
                 </CommonCard>
               </TouchableOpacity>

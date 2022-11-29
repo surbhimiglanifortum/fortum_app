@@ -19,6 +19,7 @@ import { GetFormatedDate } from '../../../Utils/utils'
 import { getPaymentString } from '../../../Utils/HelperCommonFunctions'
 import { scale } from 'react-native-size-matters'
 import { getChargeTime } from '../../../Utils/HelperCommonFunctions'
+import CommonCardReport from '../../../Component/Card/CommonIconCard/CommonCardReport'
 
 const TaxInvoice = ({ route }) => {
 
@@ -367,7 +368,7 @@ const TaxInvoice = ({ route }) => {
                 <DenseCard >
                     <View style={{ flexDirection: 'row', alignItems: 'center', }} >
                         <View style={{ marginRight: 7 }}>
-                            <CommonIconCard Svg={paramData?.item?.paid ? Charger : ChargerRed} />
+                            {isPaid ? <CommonIconCard Svg={Charger} /> : <CommonCardReport Svg={ChargerRed} />}
                         </View>
 
                         <View style={styles.row1}>

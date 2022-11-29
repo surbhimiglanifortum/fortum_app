@@ -143,7 +143,7 @@ const Charging = ({ setSelectedTab }) => {
                                 renderItem={(item) => {
                                     return (
                                         <>
-                                            {item?.item?.status != "ACTIVE" && <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={item?.item?.paid ? Charger : ChargerRed} dataItem={item} color={item?.item?.paid ? colors.black : colors.red} />}
+                                            {item?.item?.status != "ACTIVE" && <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={item?.item?.paid ? Charger : ChargerRed} SvgBg={item?.item?.paid} dataItem={item} color={item?.item?.paid ? colors.black : colors.red} />}
                                         </>
                                     )
                                 }
