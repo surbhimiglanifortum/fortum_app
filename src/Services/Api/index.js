@@ -46,11 +46,6 @@ export const blockAmount = async (payload) => {
 }
 
 export const walletHistory = async (username, startDate, endDated) => {
-    console.log("walletHistory", {
-        username: username,
-        startDate: startDate,
-        endDate: endDated
-    })
     return await axios.get(appconfig.BASE_URL + "/api_app/users/get-transactions/", {
         params: {
             username: username,
@@ -262,4 +257,8 @@ export const qrCodeService = async (locid, payload) => {
 
 export const payUnpaidOrder = async (orderId, username) => {
     return await axios.get("/api_app/orders/initiateJuspay/" + orderId + "/" + username);
+}
+
+export const reportIssue = async (payload) => {
+    return await axios.post("/api_app/reports", payload);
 }

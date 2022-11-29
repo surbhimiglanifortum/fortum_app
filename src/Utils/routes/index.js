@@ -51,7 +51,8 @@ const routes = {
     OrderCard: 'OrderCard',
     CardOrderConfirmed: 'CardOrderConfirmed',
     QrScanner: 'QrScanner',
-    KycDone: 'KycDone'
+    KycDone: 'KycDone',
+    ReportPage:'ReportPage'
 }
 
 export default routes
