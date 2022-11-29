@@ -412,6 +412,10 @@ const TaxInvoice = ({ route }) => {
                     <DenseCard>
                         <View >
                             <View style={styles.innerCard1}>
+                                <CommonText showText={'Flat Price'} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.pricingToApply?.flat_price ? paramData?.item?.order?.pricingToApply?.flat_price : 'NA'}`} fontSize={14} regular />
+                            </View>
+                            <View style={styles.innerCard1}>
                                 <CommonText showText={'Price'} fontSize={14} regular />
                                 <CommonText semibold showText={`₹ ${paramData?.item?.order?.pricingToApply?.price ? paramData?.item?.order?.pricingToApply?.price : 'NA'}`} fontSize={14} regular />
                             </View>
