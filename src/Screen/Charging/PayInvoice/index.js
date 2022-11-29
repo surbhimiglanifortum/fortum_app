@@ -275,6 +275,11 @@ const PayInvoice = ({ route }) => {
         })
     }
 
+    useEffect(() => {
+      
+    }, [showBtn])
+    
+
     return (
         <CommonView>
             <Header showText={'Pay Invoice'} />

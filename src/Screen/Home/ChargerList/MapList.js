@@ -2,7 +2,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList, TextInput, BackHandler, T
 import React, { useEffect, useState } from 'react'
 import DetailsCard from '../../../Component/Card/DetailsCard'
 import colors from '../../../Utils/colors'
-import { useNavigation ,useIsFocused} from '@react-navigation/native'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import routes from '../../../Utils/routes'
 import Loader from '../../../Component/Loader'
@@ -29,8 +29,25 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
     searchBtnHandler()
   }
 
-  const favoruiteButtonHandler = () => {
-    navigation.navigate(routes.Favoruite, { location: location })
+  const favoruiteButtonHandler = async () => {
+    try {
+      const result = await Auth.currentAuthenticatedUser();
+      console.log(result)
+      if (result?.signInUserSession) {
+        if (result.attributes.phone_number && result.attributes.phone_number != '') {
+          navigation.navigate(routes.Favoruite, { location: location })
+        } else {
+          navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
+        }
+        return
+      }
+
+    } catch (error) {
+
+    }
+    navigation.navigate(routes.login)
+
+
   }
 
   const cardDetailsHandler = async (data) => {
@@ -77,13 +94,13 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
 
 
   const backAction = () => {
-    if(isFocused){
+    if (isFocused) {
       setSelectedTab('map')
       return true
-    }else{
+    } else {
       return false
     }
-   
+
   }
 
   let backHandler
@@ -122,7 +139,7 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
 
       <Loader modalOpen={loading} />
       <FlatList
-      //  refreshControl={<RefreshControl onRefresh={loading} />}
+        //  refreshControl={<RefreshControl onRefresh={loading} />}
         data={mapData}
         keyExtractor={item => item.id}
         renderItem={({ item }) => {
