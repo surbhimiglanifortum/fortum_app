@@ -70,7 +70,7 @@ export const getPaymentString = (key) => {
             break;
 
         case "PREPAID_CARD":
-            return "Pinelab card"
+            return "Prepaid card"
             break;
 
         case "PREPAID_CARD_WALLET_Block":
@@ -82,7 +82,7 @@ export const getPaymentString = (key) => {
             break;
 
         case "SESSIONPAYMENTPREPAIDCARD":
-            return "Pinelab card"
+            return "Prepaid card"
             break;
 
         default:

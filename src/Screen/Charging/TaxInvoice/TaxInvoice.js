@@ -24,7 +24,7 @@ const TaxInvoice = ({ route }) => {
     const paramData = route.params.data
 
 
-    console.log("Chargin History Data", route.params?.data?.item?.order?.pricingToApply?.cgst)
+    console.log("Chargin History Data", paramData)
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const navigation = useNavigation()
