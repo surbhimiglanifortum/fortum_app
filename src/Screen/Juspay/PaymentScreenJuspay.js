@@ -36,11 +36,6 @@ const PaymentScreenJuspay = (props) => {
     orderStatus = props.route?.params?.orderStatus
     // isWallet = props.route.params.isWallet
 
-    console.log('Check Naviagtion Props', props.route.params)
-    console.log('Check orderStatus Props', orderStatus)
-    console.log("Order Status", orderStatus, props.route?.params?.orderStatus)
-
-
     if (orderStatus != undefined) {
         console.log("Hello Here")
     } else {
