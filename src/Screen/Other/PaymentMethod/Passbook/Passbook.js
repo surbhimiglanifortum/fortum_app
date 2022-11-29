@@ -31,8 +31,8 @@ const Passbook = () => {
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedTab, setSelectedTab] = useState('all')
     const [refreshing, setRefreshing] = useState(false)
-    const [techStart, setTechStart] = useState('')
-    const [techEnd, setTechEnd] = useState('')
+    const [techStart, setTechStart] = useState(moment().subtract(30, 'days').format('YYYY-MM-DDT24:00:00'))
+    const [techEnd, setTechEnd] = useState(moment().format('YYYY-MM-DDT23:59:00'))
     const [noTrans, setNoTrans] = useState('')
     const [data, setData] = useState([])
     const [startDate, setStartDate] = useState('')
@@ -103,16 +103,7 @@ const Passbook = () => {
     };
 
     const handleStartConfirm = (date) => {
-        let selectedDate = moment(date).format('LL')
-        setStartDate(selectedDate)
-        let year = new Date(date).getFullYear()
-        let month = new Date(date).getMonth() + 1
-        if (month <= 9) {
-            month = "0" + month
-        }
-        let d = new Date(date).getDate()
-        let srt = `${year}-${month}-${d}T00:00:00`
-        setTechStart(srt)
+        setTechStart(moment(date).format('YYYY-MM-DDT00:00:00'))
         hideStartDatePicker();
     };
 
@@ -125,16 +116,7 @@ const Passbook = () => {
     };
 
     const handleEndConfirm = (date) => {
-        let selectedDate = moment(date).format('LL')
-        setEndDate(selectedDate)
-        let year = new Date(date).getFullYear()
-        let month = new Date(date).getMonth() + 1
-        if (month <= 9) {
-            month = "0" + month
-        }
-        let d = new Date(date).getDate()
-        let end = `${year}-${month}-${d}T23:59:00`
-        setTechEnd(end)
+        setTechEnd(moment(date).format('YYYY-MM-DDT23:59:00'))
         hideEndDatePicker();
     };
 
@@ -400,8 +382,8 @@ const Passbook = () => {
             <PinelabPassbookFilter
                 isVisible={modalVisible}
                 bgStyle={'rgba(0,0,0,0.5)'}
-                startDate={startDate}
-                endDate={endDate}
+                startDate={techStart}
+                endDate={techEnd}
                 showStartDatePicker={showStartDatePicker}
                 showEndDatePicker={showEndDatePicker}
                 noTrans={noTrans}
@@ -414,6 +396,7 @@ const Passbook = () => {
             <DateTimePickerModal
                 isVisible={isStartDatePickerVisible}
                 mode="date"
+                date={new Date(techStart)}
                 onConfirm={handleStartConfirm}
                 onCancel={hideStartDatePicker}
                 maximumDate={new Date()}
@@ -422,12 +405,12 @@ const Passbook = () => {
             <DateTimePickerModal
                 isVisible={isEndDatePickerVisible}
                 mode="date"
+                date={new Date(techEnd)}
                 onConfirm={handleEndConfirm}
                 onCancel={hideEndDatePicker}
                 maximumDate={new Date()}
+                minimumDate={new Date(techStart)}
             />
-
-
 
         </CommonView>
     )
