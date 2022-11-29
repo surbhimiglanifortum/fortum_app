@@ -6,6 +6,7 @@ import Textinput from '../Textinput/Textinput'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Button from '../Button/Button'
 import WhiteButton from '../Button/WhiteButton'
+import moment from 'moment'
 
 const PinelabPassbookFilter = ({ isVisible, bgStyle, startDate, endDate, showStartDatePicker, showEndDatePicker, noTrans, setNoTrans, onClosePress, onPress, loader }) => {
 
@@ -28,7 +29,7 @@ const PinelabPassbookFilter = ({ isVisible, bgStyle, startDate, endDate, showSta
                             <View style={{ flex: 1 }}>
                                 <Textinput
                                     editable={false}
-                                    value={startDate}
+                                    value={moment(startDate).format('DD/MM/YYYY')}
                                     placeholder={'Please Select Start Date'}
                                 />
                             </View>
@@ -42,7 +43,7 @@ const PinelabPassbookFilter = ({ isVisible, bgStyle, startDate, endDate, showSta
                             <View style={{ flex: 1 }}>
                                 <Textinput
                                     editable={false}
-                                    value={endDate}
+                                    value={moment(endDate).format('DD/MM/YYYY')}
                                     placeholder={'Please Select End Date'}
                                 />
                             </View>

@@ -27,7 +27,11 @@ const WalletModals = ({ modalVisible, setModalVisible, showStartDatePicker, show
                         </View>
                         <CommonText showText={'Start Date'} />
                         <TouchableOpacity style={styles.textinputCon} onPress={() => { showStartDatePicker() }}>
-                            <TextInput customStyles={{ flex: 1, marginHorizontal: 3 }} editable={false} placeholder='Please Select Start Date' value={moment(startDate).format('DD-MM-YYYY')} />
+                            <TextInput customStyles={{ flex: 1, marginHorizontal: 3 }}
+                                editable={false}
+                                placeholder='Please Select Start Date'
+                                value={moment(startDate).format('DD-MM-YYYY')}
+                            />
                             <Feather name='calendar' size={20} />
                         </TouchableOpacity>
                         <CommonText showText={'End Date'} />
@@ -36,10 +40,7 @@ const WalletModals = ({ modalVisible, setModalVisible, showStartDatePicker, show
                             <Feather name='calendar' size={20} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => { showDateList() }}>
-
                             <Button onPress={() => showDateList()} showText={'Show'} />
-
-
                         </TouchableOpacity>
                     </CommonCard>
                 </View>

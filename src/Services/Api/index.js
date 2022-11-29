@@ -46,11 +46,6 @@ export const blockAmount = async (payload) => {
 }
 
 export const walletHistory = async (username, startDate, endDated) => {
-    console.log("walletHistory", {
-        username: username,
-        startDate: startDate,
-        endDate: endDated
-    })
     return await axios.get(appconfig.BASE_URL + "/api_app/users/get-transactions/", {
         params: {
             username: username,
