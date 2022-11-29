@@ -258,3 +258,7 @@ export const qrCodeService = async (locid, payload) => {
 export const payUnpaidOrder = async (orderId, username) => {
     return await axios.get("/api_app/orders/initiateJuspay/" + orderId + "/" + username);
 }
+
+export const reportIssue = async (payload) => {
+    return await axios.post("/api_app/reports", payload);
+}
