@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Modal, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, useColorScheme } from "react-native";
 import colors from "../../Utils/colors";
 import { getPaymentOption } from '../../Services/Api'
 import { useSelector } from 'react-redux'
@@ -27,7 +27,7 @@ const PayAsUGoModal = ({ modalVisible, bgStyle, onRefundClick, onRestartClick, o
             console.log("getPaymentOption PayAsyougomodal catch block", error)
         }
     }
-
+    const scheme = useColorScheme()
     return (
         <Modal
             animationType="fade"
@@ -35,8 +35,8 @@ const PayAsUGoModal = ({ modalVisible, bgStyle, onRefundClick, onRestartClick, o
             visible={modalVisible}
             statusBarTranslucent={true}
         >
-            <View style={[styles.centeredView, { backgroundColor: bgStyle }]}>
-                <View style={styles.modalView}>
+            <View style={[styles.centeredView,{backgroundColor:bgStyle} ]}>
+                <View style={[styles.modalView,{ backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.lightBackGround }]}>
                     <TouchableOpacity onPress={cancelClick} style={{ position: 'absolute', right: 10, top: 15 }}>
                         <AntDesign name="close" size={25} />
                     </TouchableOpacity>
