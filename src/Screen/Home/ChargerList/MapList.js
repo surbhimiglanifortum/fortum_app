@@ -11,7 +11,7 @@ import DensCard from '../../../Component/Card/DenseCard'
 import { Auth } from 'aws-amplify'
 import CommonView from '../../../Component/CommonView'
 
-const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTab, selectedTab }) => {
+const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTab, selectedTab,refetch }) => {
 
   const isFocused = useIsFocused()
 
@@ -139,7 +139,7 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
 
       <Loader modalOpen={loading} />
       <FlatList
-        //  refreshControl={<RefreshControl onRefresh={loading} />}
+         refreshControl={<RefreshControl onRefresh={refetch}  refreshing={isRefetching} />}
         data={mapData}
         keyExtractor={item => item.id}
         renderItem={({ item }) => {
