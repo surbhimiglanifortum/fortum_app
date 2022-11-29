@@ -355,6 +355,11 @@ const TaxInvoice = ({ route }) => {
         setLoading(false)
     }
 
+    useEffect(() => {
+
+    }, [isFocused])
+
+
     return (
         <CommonView>
             <Header showText={'Tax Invoice'} />
@@ -362,7 +367,7 @@ const TaxInvoice = ({ route }) => {
                 <DenseCard >
                     <View style={{ flexDirection: 'row', alignItems: 'center', }} >
                         <View style={{ marginRight: 7 }}>
-                            <CommonIconCard Svg={paramData.item?.paid ? Charger : ChargerRed} />
+                            <CommonIconCard Svg={paramData?.item?.paid ? Charger : ChargerRed} />
                         </View>
 
                         <View style={styles.row1}>

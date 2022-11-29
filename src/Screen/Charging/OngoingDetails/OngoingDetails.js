@@ -24,6 +24,7 @@ import { refundCloseLoopWallet, refundPayAsUGo } from '../../../Services/Api'
 import CommonView from '../../../Component/CommonView'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
+import CommonCardReport from '../../../Component/Card/CommonIconCard/CommonCardReport'
 
 
 var mStoppedPressed = false;
@@ -654,7 +655,7 @@ const OngoingDetails = ({ route }) => {
 
         <CommonCard>
           <TouchableOpacity style={styles.topCard}>
-            <CommonIconCard Svg={Report} />
+            <CommonCardReport Svg={Report} />
             <CommonText showText={'Report'} customstyles={{ color: colors.lightRed, alignSelf: 'center', marginLeft: 10 }} />
           </TouchableOpacity>
         </CommonCard >

@@ -7,7 +7,7 @@ import CommonCard from '../../Component/Card/CommonCard/index'
 import CommonIconCard from './CommonIconCard/CommonIconCard'
 import { GetFormatedDate } from '../../Utils/utils'
 
-const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard }) => {
+const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard,color }) => {
 
     const getChargeTime = (dataItem) => {
         try {
@@ -46,7 +46,7 @@ const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard }) => {
                 </View>
                 {tabName != 'ongoing' &&
                     <View >
-                        <CommonText showText={`₹ ${dataItem?.item?.order?.amount / 100 ? dataItem?.item?.order?.amount / 100 : '0'}`} fontSize={14} customstyles={{ color: !dataItem?.item?.paid && colors.red, textAlign: 'right' }} />
+                        <CommonText showText={`₹ ${dataItem?.item?.order?.amount / 100 ? dataItem?.item?.order?.amount / 100 : '0'}`} fontSize={14} customstyles={{ color: color, textAlign: 'right' }} />
                         <CommonText showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '0'} Kwh`} fontSize={12} regular />
                     </View>
                 }

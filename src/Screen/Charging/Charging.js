@@ -82,7 +82,7 @@ const Charging = ({ setSelectedTab }) => {
     useEffect(() => {
         completedreFetch()
         refetch()
-    }, [])
+    }, [isFocused])
 
 
     return (
@@ -118,7 +118,7 @@ const Charging = ({ setSelectedTab }) => {
                         {!loaderOpen && data?.length > 0 ?
                             <FlatList
                                 data={data}
-                                refreshControl={<RefreshControl onRefresh={refetch} />}
+                                refreshControl={<RefreshControl onRefresh={refetch} refreshing={loaderOpen} />}
                                 keyExtractor={item => item.id}
                                 renderItem={(item) => {
                                     return (
@@ -137,13 +137,13 @@ const Charging = ({ setSelectedTab }) => {
                         <>{!loaderOpen && completedData?.length > 0 ?
                             <FlatList
                                 data={completedData}
-                                refreshControl={<RefreshControl onRefresh={completedreFetch} />}
+                                refreshControl={<RefreshControl refreshing={loaderOpen} onRefresh={completedreFetch} />}
                                 keyExtractor={item => item.id}
 
                                 renderItem={(item) => {
                                     return (
                                         <>
-                                            {item?.item?.status != "ACTIVE" && <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={item?.item?.paid ? Charger : ChargerRed} dataItem={item} />}
+                                            {item?.item?.status != "ACTIVE" && <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={item?.item?.paid ? Charger : ChargerRed} dataItem={item} color={item?.item?.paid ? colors.black : colors.red} />}
                                         </>
                                     )
                                 }
