@@ -24,6 +24,7 @@ const ChargingStationList = () => {
                 <View style={styles.innerContainer}>
                     {/* <Header /> */}
                     <Header showText={'Charging Station'} />
+                    
                     <View style={styles.cardContainer}>
                         {
                             [1, 1, 1,].map((item, ind) => {
