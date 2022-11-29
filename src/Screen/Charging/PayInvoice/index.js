@@ -71,11 +71,13 @@ const PayInvoice = ({ route }) => {
                     setWalletBalance(res?.data?.balance)
                     setWallet(false)
                     setRefreshing(false)
+                    setShowBtn(false)
                 } else {
                     setWalletBalance(res?.data?.balance)
                     setMsg('')
                     setWallet(true)
                     setRefreshing(false)
+                    setShowBtn(true)
                 }
             }
         }).catch((error) => {
