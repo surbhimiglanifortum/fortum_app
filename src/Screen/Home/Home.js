@@ -67,7 +67,6 @@ export default Home = ({ navigatedata }) => {
   const favButtonHandler = async () => {
     try {
       const result = await Auth.currentAuthenticatedUser();
-
       console.log(result)
       if (result?.signInUserSession) {
         if (result.attributes.phone_number && result.attributes.phone_number != '') {
@@ -108,7 +107,7 @@ export default Home = ({ navigatedata }) => {
   const handleSelection = async (screen, payload) => {
     try {
       const result = await Auth.currentAuthenticatedUser();
-      console.log(result,'.............result scaner')
+      console.log(result, '.............result scaner')
       if (result?.signInUserSession) {
         if (result.attributes.phone_number && result.attributes.phone_number != '') {
           navigation.navigate(screen, payload)
@@ -366,7 +365,9 @@ export default Home = ({ navigatedata }) => {
           </TouchableOpacity>
           }
         </View>
-
+        {/* <View>
+          <CommonText showText={'reddddddddddddddddddddddddddddddd'} customstyles={{ color: colors.red }} />
+        </View> */}
         {selectedTab == 'List' && <TouchableOpacity onPress={filterButtonHandler}
           style={{ position: 'absolute', right: -70 }}>
           <CommonCard>

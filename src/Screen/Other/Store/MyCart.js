@@ -92,6 +92,10 @@ const MyCart = ({ route }) => {
                     routes: [{ name: routes.dashboard }],
                 });
             } else {
+                dispatch({
+                    type: 'CLEAR_CART',
+                    payload: []
+                })
                 navigation.navigate(routes.PaymentScreenJuspay, {
                     callFrom: 'MyCart',
                     description: 'Add Money In Wallet',

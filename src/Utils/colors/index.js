@@ -33,7 +33,8 @@ const colors = {
     darkIcon: '#1D9C71',
     lightIcon: '#C4E1D9',
     reportBackground: '#FAE1E1',
-    borderGreen: '#9FD7C8'
+    borderGreen: '#9FD7C8',
+    redLight:'#F9D9D9'
 }
 
 export default colors
