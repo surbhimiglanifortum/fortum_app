@@ -14,6 +14,8 @@ import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { Auth } from 'aws-amplify'
 import routes from '../../Utils/routes'
 
+let totalEvse = 0
+
 const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
     const navigation = useNavigation()
     let favChargers = useSelector((state) => state.commonReducer.favCharger);
@@ -102,7 +104,6 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
 
     }, [isFocused])
 
-
     return (
         <TouchableOpacity onPress={onPress}>
             <CommonCard>
@@ -118,19 +119,23 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
                                 })
                             }
                         </View>
-                        <View style={styles.leftContainer}>
-                            <CommonCard margin={1} padding={8}>
-                                <TouchableOpacity onPress={checkFav ? removeFav : addFav} >
-                                    {checkFav ? <AntDesign name='heart' color={scheme == 'dark' ? colors.svgColorDark : colors.red} size={18} /> : <AntDesign name='hearto' color={scheme == 'dark' ? colors.svgColorDark : colors.svgColor} size={18} />}
-                                </TouchableOpacity>
-                            </CommonCard>
-                            <CommonCard marginLeft={10} margin={1} padding={8} backgroundColor={'#3070CE'}>
-                                <TouchableOpacity style={styles.leftIcon} onPress={() => navigateToGoogleMap(item)}>
-                                    <Feather name='corner-up-right' size={18} color={colors.white} />
-                                </TouchableOpacity>
-                            </CommonCard>
+                        <View>
+                            <View style={styles.leftContainer}>
+                                <CommonCard margin={1} padding={8}>
+                                    <TouchableOpacity onPress={checkFav ? removeFav : addFav} >
+                                        {checkFav ? <AntDesign name='heart' color={scheme == 'dark' ? colors.svgColorDark : colors.red} size={18} /> : <AntDesign name='hearto' color={scheme == 'dark' ? colors.svgColorDark : colors.svgColor} size={18} />}
+                                    </TouchableOpacity>
+                                </CommonCard>
+                                <CommonCard marginLeft={10} margin={1} padding={8} backgroundColor={'#3070CE'}>
+                                    <TouchableOpacity style={styles.leftIcon} onPress={() => navigateToGoogleMap(item)}>
+                                        <Feather name='corner-up-right' size={18} color={colors.white} />
+                                    </TouchableOpacity>
+                                </CommonCard>
+                            </View>
+                            <CommonText showText={`${item?.availableEvse || 0} / ${item?.evsecount || 0}`} customstyles={styles.rightCon} />
                         </View>
                     </View>
+
                     <View style={[styles.innerContainer1, { borderColor: scheme == 'dark' ? colors.borderColorDark : colors.borderColor }]}>
                         <View style={styles.longText}>
                             {favourite ? <CommonText fontSize={12} showText={`${item?.address2?.city} ${item?.address2?.street} ${item?.address2?.postalCode}`} /> : <CommonText fontSize={12} showText={`${item?.address?.city} ${item?.address?.street} ${item?.address?.postalCode}`} />}
@@ -186,7 +191,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-
+    rightCon: {
+        paddingVertical: 4,
+        paddingHorizontal: 4,
+        borderRadius: 4,
+        alignSelf: 'flex-end',
+        backgroundColor: colors.green,
+        color: '#fff',
+        marginTop: 10,
+        elevation: 5
+    }
 })
 
 export default DetailsCard
