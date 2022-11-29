@@ -108,7 +108,7 @@ export default Home = ({ navigatedata }) => {
   const handleSelection = async (screen, payload) => {
     try {
       const result = await Auth.currentAuthenticatedUser();
-      console.log(result)
+      console.log(result,'.............result scaner')
       if (result?.signInUserSession) {
         if (result.attributes.phone_number && result.attributes.phone_number != '') {
           navigation.navigate(screen, payload)
