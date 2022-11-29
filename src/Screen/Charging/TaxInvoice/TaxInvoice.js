@@ -18,13 +18,12 @@ import { useSelector } from 'react-redux'
 import { GetFormatedDate } from '../../../Utils/utils'
 import { getPaymentString } from '../../../Utils/HelperCommonFunctions'
 import { scale } from 'react-native-size-matters'
+import { getChargeTime } from '../../../Utils/HelperCommonFunctions'
 
 const TaxInvoice = ({ route }) => {
 
     const paramData = route.params.data
 
-
-    console.log("Chargin History Data", paramData)
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const navigation = useNavigation()
@@ -46,11 +45,9 @@ const TaxInvoice = ({ route }) => {
     if (isNaN(diffMin)) diffMin = 0;
 
     const handleButtonClick = () => {
-
         navigation.navigate(routes.PayInvoice, {
             amount: (paramData?.item?.order?.amount_due / 100).toFixed(2)
         })
-
     }
 
     const sessionDetails = async () => {
@@ -124,8 +121,7 @@ const TaxInvoice = ({ route }) => {
             "</h1></td>\n" +
             "        <td>\n" +
             '            <span style="font-size: 1.1em"><strong>Duration :</strong> ' +
-            diffMin?.toFixed(2) +
-            " Min</span>\n" +
+            getChargeTime(route.params?.data) +
             "            <br/>\n" +
             '            <span style="font-size: 1.1em"><strong>kWh used :</strong> ' +
             route.params?.data?.item?.kwh +
@@ -140,11 +136,6 @@ const TaxInvoice = ({ route }) => {
             '            <span style="font-size: 1.1em"><strong>Date :</strong> ' +
             GetFormatedDate(route.params?.data?.item?.start_datetime) +
             "</span>\n" +
-
-
-
-            // history.paid_with && history.paid_with != undefined && history.paid_with != '' ?
-
             "            <br/>\n" +
             '            <span style="font-size: 1.1em"><strong>Payment Method : </strong> ' +
             allowMode.map((item) => {
@@ -359,14 +350,6 @@ const TaxInvoice = ({ route }) => {
             fileName: 'Invoice',
             base64: true,
         })
-
-        // RNHTMLtoPDF.convert(results).then(filePath => {
-        //     Share.open({
-        //         title: 'Invoice',
-        //         message: 'Invoice',
-        //         url: filePath.filePath
-        //     })
-        // })
 
         await RNPrint.print({ filePath: results.filePath })
         setLoading(false)
