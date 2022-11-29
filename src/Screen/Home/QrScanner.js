@@ -25,6 +25,7 @@ export default function QrScanner() {
 
     const onSuccess = (e) => {
         qrCodeService(JSON.parse(e.data).locid, payload).then((r) => {
+            console.log("qrCodeService", r.data, e)
             let allEvse = r.data?.evses
             for (let i = 0; i < allEvse.length; i++) {
                 if (allEvse[i].uid === JSON.parse(e.data).evid) {
@@ -37,21 +38,29 @@ export default function QrScanner() {
                             evDetails: allEvse[i],
                             callFrom: 'QrScanner'
                         })
+                        return
                     }
-                    if (allEvse[i]?.status == 'CHARGING') {
+                    else if (allEvse[i]?.status == 'CHARGING') {
                         CallCheckActiveSession()
-                    }
-                    else {
+                        return
+                    } else {
                         setOpenCommonModal({
                             isVisible: true, message: "Connector is not available.", onOkPress: () => {
                                 navigation.goBack()
                             }
                         })
+                        return
                     }
 
                     break;
                 }
             }
+
+            setOpenCommonModal({
+                isVisible: true, message: "Charger not accessible", onOkPress: () => {
+                    navigation.goBack()
+                }
+            })
         }).catch((error) => {
             console.log("Error in QR Scanner", error)
             setOpenCommonModal({

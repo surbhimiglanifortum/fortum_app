@@ -79,6 +79,12 @@ const Charging = ({ setSelectedTab }) => {
         setSelectedTab('home')
     }
 
+    useEffect(() => {
+        completedreFetch()
+        refetch()
+    }, [])
+
+
     return (
         <CommonView>
             <Header onPress={backhandler} showText={"Charging"} />

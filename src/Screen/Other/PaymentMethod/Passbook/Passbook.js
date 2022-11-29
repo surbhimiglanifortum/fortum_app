@@ -268,7 +268,7 @@ const Passbook = () => {
                                 title={item?.item?.MerchantName}
                                 amount={item?.item?.TransactionAmount}
                                 transactionType={item?.item?.TransactionType}
-                                style={{ color: item?.item?.TransactionType === 'GIFT CARD RELOAD' ? colors.green : colors.red }}
+                                style={{ color: (item?.item?.TransactionType === 'GIFT CARD RELOAD' || item?.item?.TransactionType === 'GIFT CARD CANCEL REDEEM') ? colors.green : colors.red }}
                             />
                         )
                     }
@@ -316,7 +316,7 @@ const Passbook = () => {
                     keyExtractor={item => item.id}
                     renderItem={(item) => {
                         return (
-                            item?.item?.TransactionType === 'GIFT CARD RELOAD' ?
+                            (item?.item?.TransactionType === 'GIFT CARD RELOAD' || item?.item?.TransactionType === 'GIFT CARD CANCEL REDEEM') ?
                                 <PinelabTransactionCard
                                     Svg={WalletSvg}
                                     date={item?.item?.TransactionDate}
