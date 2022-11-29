@@ -22,7 +22,6 @@ const PinelabTransactionCard = ({ navigationHandler, Svg, title, date, amount, t
                         </View>
                     </View>
                 </View>
-                {console.log("Check Transaction Type", transactionType)}
                 <CommonText showText={transactionType === 'GIFT CARD RELOAD' ? `+ ₹ ${amount}` : `₹ ${amount}`} fontSize={16} customstyles={[style]} black />
             </TouchableOpacity>
         </CommonCard>
