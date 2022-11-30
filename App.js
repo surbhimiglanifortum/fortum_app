@@ -16,7 +16,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import HyperSdkReact from 'hyper-sdk-react';
 import RatingModal from './src/Component/Modal/RatingModal'
 import YouSavedModal from './src/Component/Modal/YouSavedModal'
-
+import { requestUserPermission, NotificationListner } from './src/Utils/PushNotificationHelper'
 
 Amplify.configure(awsconfig)
 
@@ -61,6 +61,11 @@ const App = () => {
   const [openCommonModal, setOpenCommonModal] = useState({ isVisible: false, message: "" })
   const [showFeedBackModal, setShowFeedbackModel] = useState({ "isVisible": false, "locid": "", "evseid": "", onPress: () => { } })
   const [showYouSavedkModal, setShowYouSavedModel] = useState({ "isVisible": false, "locid": "", "evseid": "", onPress: () => { } })
+
+  useEffect(() => {
+    requestUserPermission()
+    NotificationListner()
+  }, [])
 
   useEffect(() => {
     const loginCheck = async () => {

@@ -1,4 +1,4 @@
-package com.fortumapp;
+package com.fortum.ChargeAndDriveIndia;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

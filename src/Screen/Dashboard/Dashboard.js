@@ -25,6 +25,7 @@ import * as  Types from '../../Redux/Types'
 import { useIsFocused } from '@react-navigation/native'
 import SnackContext from '../../Utils/context/SnackbarContext'
 
+
 let backHandler
 let mselectedHandler = "home"
 let chargingsrc ="" 
@@ -43,7 +44,6 @@ const Dashboard = ({ tabName, navigation, route }) => {
   let unPaidSeesion = useSelector((state) => state.UnPaidReducer.unPaid);
 
   useEffect(() => {
-
     ApiAction.getUserDetails().then(result => {
       if (result?.data) {
         dispatch(AddToRedux(result.data, Types.USERDETAILS))

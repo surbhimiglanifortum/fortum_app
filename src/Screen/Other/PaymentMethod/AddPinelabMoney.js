@@ -14,6 +14,8 @@ import routes from '../../../Utils/routes'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import Textinput from '../../../Component/Textinput/Textinput'
 import { useQuery } from 'react-query'
+import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
+import WalletSvg from '../../../assests/svg/wallet'
 
 const AddPinelabMoney = ({ route }) => {
 
@@ -61,8 +63,8 @@ const AddPinelabMoney = ({ route }) => {
 
                 setOpenCommonModal({
                     isVisible: true, message: "Something Went Wrong Please Try After Some Time.",
-            
-                  })
+
+                })
                 setLoadingSign(false)
             }
         } catch (error) {
@@ -90,11 +92,12 @@ const AddPinelabMoney = ({ route }) => {
     return (
         <CommonView>
             <ScrollView >
-                <Header showText={'Recharge Pinelab Card'} />
-                <DenseCard margin={1}>
+                <Header showText={'Recharge Prepaid Card'} />
+                <DenseCard margin={1} padding={10}>
                     <View style={styles.row}>
-                        <CommonText showText={'Wallet Balance'} regular fontSize={14} customstyles={{ flex: 1 }} />
-                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)||'0'}`} />
+                        <CommonIconCard Svg={WalletSvg} />
+                        <CommonText showText={'Wallet Balance'} regular fontSize={14} customstyles={{ flex: 1, marginLeft: 10 }} />
+                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2) || '0'}`} fontSize={14}/>
                     </View>
                 </DenseCard>
 

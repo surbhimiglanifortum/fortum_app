@@ -274,7 +274,7 @@ export default Home = ({ navigatedata, tabName }) => {
   }, [isFocused])
 
 
-  const { data, status, isLoading, isRefetching, refetch, refetc } = useQuery('MapData', async () => {
+  const { data, status, isLoading, isRefetching, refetch } = useQuery('MapData', async () => {
     {
       try {
 
@@ -344,7 +344,7 @@ export default Home = ({ navigatedata, tabName }) => {
 
   return (
     <View style={styles.container}>
-      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} setSelectedTab={setSelectedTab} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
+      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} setSelectedTab={setSelectedTab}  refetch={refetch}/> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
