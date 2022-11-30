@@ -135,6 +135,8 @@ const PayMinimum = ({ route }) => {
                 CardPin: pin.value,
                 Amount: evDetails?.connectors[0]?.pricing?.min_balance
             }
+
+            console.log("Check Payload", payload)
             const res = await blockAmount(payload);
             setLoadingSign(true)
             console.log("Check PreAuth", res.data)

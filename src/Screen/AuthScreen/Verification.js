@@ -13,6 +13,7 @@ import * as Types from '../../Redux/Types'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import SnackContext from '../../Utils/context/SnackbarContext'
 import CommonView from '../../Component/CommonView'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Verification = ({ route }) => {
 
@@ -117,14 +118,23 @@ const Verification = ({ route }) => {
         }
     }
 
+    const sendToken = async (username, payload) => {
+        try {
+            const result = await ApiAction.pushNotification(username, payload)
+        } catch (error) {
+            console.log("Push Notification Token API Error", error)
+        }
+    }
+
     const loginSuccess = async (navigateToDashboard = true) => {
         const data = await Auth.currentAuthenticatedUser();
+        const fcmToken = await AsyncStorage.getItem('fcmToken')
         if (data.signInUserSession) {
+            sendToken(data?.attributes?.email, { firebasetoken: fcmToken })
             const result = await ApiAction.getUserDetails()
             if (result?.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
                 if (navigateToDashboard) {
-
                     navigation.reset({
                         index: 0,
                         routes: [{ name: routes.dashboard }],
