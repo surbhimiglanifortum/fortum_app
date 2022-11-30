@@ -47,6 +47,7 @@ const Other = ({ setSelectedTab }) => {
 
   const logoutHandler = async () => {
     await Auth.signOut();
+    dispatch(AddToRedux({}, Types.USERDETAILS))
     navigation.reset({
       index: 0,
       routes: [{ name: routes.dashboard }],
