@@ -9,6 +9,7 @@ import { LOGOUT } from "./Types";
 import AddToCartReducers from "./reducers/AddToCartreducer";
 import AddSearchLocationReducer from "./reducers/AddSearchLocation";
 import TempStore from './reducers/TempStore'
+import UnPaidReducer from "./reducers/UnPaidReducer";
 
 const persistConfig = {
     key: 'root',
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
     commonReducer: CommonReducer,
     AddToCartReducers: AddToCartReducers,
     addSearchLocationReducer: AddSearchLocationReducer,
-    TempStore:TempStore
+    TempStore:TempStore,
+    UnPaidReducer:UnPaidReducer
 });
 
 const removeReducer = (state, action) => {

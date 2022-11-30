@@ -481,10 +481,12 @@ const TaxInvoice = ({ route }) => {
                         </View>
                     </DenseCard>
                 </View>
-                <Button onLoading={loading}
-                    showText={isPaid ? 'Download Invoice' : `Pay(${(paramData?.item?.order?.amount_due / 100)?.toFixed(2)})`}
-                    onPress={() => isPaid ? generateHTML() : handleButtonClick()}
-                />
+                {paramData?.item?.order &&
+                    <Button onLoading={loading}
+                        showText={isPaid ? 'Download Invoice' : `Pay(${(paramData?.item?.order?.amount_due / 100)?.toFixed(2)})`}
+                        onPress={() => isPaid ? generateHTML() : handleButtonClick()}
+                    />
+                }
             </ScrollView>
         </CommonView>
     )

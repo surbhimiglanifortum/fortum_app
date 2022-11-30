@@ -136,7 +136,7 @@ const MyCart = ({ route }) => {
                                 <DenseCard key={ind} padding={5}>
                                     <View style={styles.denceInnnerCard}>
                                         <View style={[styles.cartInner, { width: '50%' }]}>
-                                            <View style={{ width: '35%' }}>
+                                            <View style={{ width: '30%' }}>
                                                 <CommonIconCard Svg={StoreSvg} />
                                             </View>
                                             <View style={[styles.cartDetailsText, { width: '50%' }]}>

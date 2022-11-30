@@ -33,7 +33,7 @@ let mLocationPayload = {}
 let flatListBottomList
 let backHandler
 
-export default Home = ({ navigatedata }) => {
+export default Home = ({ navigatedata, tabName }) => {
 
   const isFocused = useIsFocused()
   const mapRef = useRef();
@@ -44,16 +44,18 @@ export default Home = ({ navigatedata }) => {
   const [selectedCharger, setSelectedCharger] = useState(false)
   const [openFilterModal, setOpenFilterModal] = useState(false)
   const [locationLoading, setLocationLoading] = useState(false)
+  const [unpaidSessionlist, setUnpaidSession] = useState([])
   const [locationsPayload, setLocationsPayload] = useState({
     onlyAvailableConnectors: false,
   })
   const [tncNotification, setTncNotification] = useState(false)
   const [mLocation, setMLocation] = useState([])
   const dispatch = useDispatch()
-
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const checkActiveSession = useSelector((state) => state.TempStore.checkActiveSession);
   const userLocation = useSelector((state) => state.commonReducer.userLocations)
+  let unPaidSeesion = useSelector((state) => state.UnPaidReducer.unPaid);
+
 
   const scheme = useColorScheme()
 
@@ -107,7 +109,7 @@ export default Home = ({ navigatedata }) => {
   const handleSelection = async (screen, payload) => {
     try {
       const result = await Auth.currentAuthenticatedUser();
-      console.log(result, '.............result scaner')
+
       if (result?.signInUserSession) {
         if (result.attributes.phone_number && result.attributes.phone_number != '') {
           navigation.navigate(screen, payload)
@@ -338,6 +340,8 @@ export default Home = ({ navigatedata }) => {
     })
   }
 
+
+
   return (
     <View style={styles.container}>
       {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} setSelectedTab={setSelectedTab}  refetch={refetch}/> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
@@ -365,9 +369,11 @@ export default Home = ({ navigatedata }) => {
           </TouchableOpacity>
           }
         </View>
-        {/* <View>
-          <CommonText showText={'reddddddddddddddddddddddddddddddd'} customstyles={{ color: colors.red }} />
-        </View> */}
+
+        {unPaidSeesion?.length > 0 && selectedTab != 'List' && <View style={{ position: 'absolute', top: 60, paddingVertical: 8, backgroundColor: colors.redLight, paddingHorizontal: 25, elevation: 5, borderRadius: 10 }}>
+          <CommonText showText={'You have an unpaid session'} regular customstyles={{ color: colors.red }} />
+        </View>}
+
         {selectedTab == 'List' && <TouchableOpacity onPress={filterButtonHandler}
           style={{ position: 'absolute', right: -70 }}>
           <CommonCard>
