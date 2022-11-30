@@ -340,7 +340,7 @@ const Passbook = () => {
 
                     {selectedTab == 'all' ?
                         <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
-                            <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton]}>
+                            <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton,]}>
                                 <CommonText customstyles={[{ color: selectedTab == 'all' ? colors.black : colors.white }]} showText={'All'} fontSize={12} bold />
                             </TouchableOpacity>
                         </DenseCard> :
