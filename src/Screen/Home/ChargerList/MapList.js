@@ -137,7 +137,7 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
         </CommonCard>
       </View>
 
-      <Loader modalOpen={loading} />
+      
       <FlatList
          refreshControl={<RefreshControl onRefresh={refetch}  refreshing={isRefetching} />}
         data={mapData}
