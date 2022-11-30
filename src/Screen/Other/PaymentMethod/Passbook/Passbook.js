@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, useColorScheme } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
@@ -315,7 +315,7 @@ const Passbook = () => {
                 <NoData showText={'No data found.'} />
         )
     }
-
+    const scheme = useColorScheme()
     return (
         <CommonView>
             <View style={{ flex: 1, marginBottom: 70 }}>
@@ -323,7 +323,7 @@ const Passbook = () => {
                     <View style={{ flex: 1 }}>
                         <Header showText={'Passbook'} />
                     </View>
-                    <SmallButton Svg={FilterSvg} onPress={() => setModalVisible(true)} />
+                    <SmallButton Svg={FilterSvg} fill={scheme == 'dark' ? 'white' : 'black'} onPress={() => setModalVisible(true)} />
                 </View>
 
                 <DenseCard padding={10}>
@@ -341,33 +341,33 @@ const Passbook = () => {
                     {selectedTab == 'all' ?
                         <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
                             <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton,]}>
-                                <CommonText customstyles={[{ color: selectedTab == 'all' ? colors.black : colors.white }]} showText={'All'} fontSize={12} bold />
+                                <CommonText customstyles={[{ color: selectedTab == 'all' ? colors.green : colors.white }]} showText={'All'} fontSize={14} bold />
                             </TouchableOpacity>
                         </DenseCard> :
                         <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton]}>
-                            <CommonText customstyles={[{ color: selectedTab == 'all' ? colors.black : colors.white }]} showText={'All'} fontSize={12} bold />
+                            <CommonText customstyles={[{ color: selectedTab == 'all' ? colors.black : colors.white }]} showText={'All'} fontSize={14} bold />
                         </TouchableOpacity>
                     }
 
                     {selectedTab == 'sent' ?
                         <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
                             <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton]}>
-                                <CommonText customstyles={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]} showText={'Sent'} fontSize={12} bold />
+                                <CommonText customstyles={[{ color: selectedTab == 'sent' ? colors.green : colors.white }]} showText={'Sent'} fontSize={14} bold />
                             </TouchableOpacity>
                         </DenseCard> :
                         <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton]}>
-                            <CommonText customstyles={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]} showText={'Sent'} fontSize={12} bold />
+                            <CommonText customstyles={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]} showText={'Sent'} fontSize={14} bold />
                         </TouchableOpacity>
                     }
 
                     {selectedTab == 'receive' ?
                         <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
                             <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
-                                <CommonText customstyles={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]} showText={'Received'} fontSize={12} bold />
+                                <CommonText customstyles={[{ color: selectedTab == 'receive' ? colors.green : colors.white }]} showText={'Received'} fontSize={14} bold />
                             </TouchableOpacity>
                         </DenseCard> :
                         <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
-                            <CommonText customstyles={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]} showText={'Received'} fontSize={12} bold />
+                            <CommonText customstyles={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]} showText={'Received'} fontSize={14} bold />
                         </TouchableOpacity>
                     }
                 </View>

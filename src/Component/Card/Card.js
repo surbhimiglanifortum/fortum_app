@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity,useColorScheme } from 'react-native'
 import React from 'react'
 import { scale } from 'react-native-size-matters'
 import colors from '../../Utils/colors'
@@ -47,7 +47,7 @@ const Card = ({ tabName, navigationHandler, Svg, dataItem, disabledCard, color, 
                 </View>
                 {tabName != 'ongoing' &&
                     <View >
-                        <CommonText showText={`₹ ${dataItem?.item?.order?.amount / 100 ? dataItem?.item?.order?.amount / 100 : '0'}`} fontSize={14} customstyles={{ color: color, textAlign: 'right' }} />
+                        <CommonText showText={`₹ ${dataItem?.item?.order?.amount / 100 ? dataItem?.item?.order?.amount / 100 : '0'}`} fontSize={14} customstyles={ !dataItem?.item?.paid && {color:colors.red}} />
                         <CommonText showText={`${dataItem?.item?.kwh ? dataItem?.item?.kwh : '0'} Kwh`} fontSize={12} regular />
                     </View>
                 }

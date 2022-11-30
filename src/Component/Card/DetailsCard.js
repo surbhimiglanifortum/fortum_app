@@ -123,7 +123,7 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
                             <View style={styles.leftContainer}>
                                 <CommonCard margin={1} padding={8}>
                                     <TouchableOpacity onPress={checkFav ? removeFav : addFav} >
-                                        {checkFav ? <AntDesign name='heart' color={scheme == 'dark' ? colors.svgColorDark : colors.red} size={18} /> : <AntDesign name='hearto' color={scheme == 'dark' ? colors.svgColorDark : colors.svgColor} size={18} />}
+                                        {checkFav ? <AntDesign name='heart' color={scheme == 'dark' ? colors.red : colors.red} size={18} /> : <AntDesign name='hearto' color={scheme == 'dark' ? colors.svgColorDark : colors.svgColor} size={18} />}
                                     </TouchableOpacity>
                                 </CommonCard>
                                 <CommonCard marginLeft={10} margin={1} padding={8} backgroundColor={'#3070CE'}>

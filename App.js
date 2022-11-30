@@ -53,7 +53,6 @@ const App = () => {
   };
 
   const scheme = useColorScheme();
-  console.log(scheme,'....................schememmeemmeemm')
   enableLatestRenderer();
 
   const queryClient = new QueryClient();

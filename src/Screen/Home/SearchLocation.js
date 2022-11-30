@@ -86,7 +86,7 @@ const SearchLocation = ({ route }) => {
                   container: { flex: 1, },
                   textInput: { height: 38, color: '#5d5d5d', fontSize: 16, },
                   predefinedPlacesDescription: { color: '#1faadb', },
-                  textInput: { backgroundColor: colors.lightBackGround, height: 44, borderRadius: 5, paddingVertical: 5, paddingHorizontal: 10, fontSize: 15, flex: 1, },
+                  textInput: { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.lightBackGround, height: 44, borderRadius: 5, paddingVertical: 5, paddingHorizontal: 10, fontSize: 15, flex: 1, },
                   row: { backgroundColor: colors.lightBackGround, padding: 13, height: 40, flexDirection: 'row', }
                 }}
               />
@@ -96,13 +96,13 @@ const SearchLocation = ({ route }) => {
 
         <TouchableOpacity onPress={liveLocationHAndler} style={styles.locationContainer}>
           <CommonCard>
-            <TouchableOpacity >
+            <TouchableOpacity onPress={liveLocationHAndler}>
               <LocationSvg fill={scheme == 'dark' ? 'white' : 'black'} />
             </TouchableOpacity>
           </CommonCard>
           <CommonText showText={'Current Location Using GPS'} fontSize={15} />
         </TouchableOpacity>
-        
+
         <View style={[styles.searchList, { flex: 1 }]}>
           <CommonText showText={'Recent Searches'} fontSize={18} customstyles={{ paddingHorizontal: 12 }} />
           {serachData?.length > 0 ?
