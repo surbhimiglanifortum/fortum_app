@@ -1,4 +1,4 @@
-package com.fortumapp.newarchitecture;
+package com.fortum.ChargeAndDriveIndia.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.fortumapp.BuildConfig;
-import com.fortumapp.newarchitecture.components.MainComponentsRegistry;
-import com.fortumapp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.fortum.ChargeAndDriveIndia.BuildConfig;
+import com.fortum.ChargeAndDriveIndia.newarchitecture.components.MainComponentsRegistry;
+import com.fortum.ChargeAndDriveIndia.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

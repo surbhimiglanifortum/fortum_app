@@ -1,4 +1,4 @@
-package com.fortumapp.newarchitecture.modules;
+package com.fortum.ChargeAndDriveIndia.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
