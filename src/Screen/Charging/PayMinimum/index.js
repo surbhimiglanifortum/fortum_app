@@ -319,7 +319,7 @@ const PayMinimum = ({ route }) => {
 
     return (
         <CommonView style={{ position: 'relative' }}>
-            <Header showText={'Payment Option'} />
+            <Header showText={'Payment Options'} />
             {
                 refreshing ?
                     <Loader modalOpen={refreshing} /> :

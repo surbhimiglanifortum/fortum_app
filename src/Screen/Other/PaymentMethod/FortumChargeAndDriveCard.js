@@ -18,6 +18,10 @@ import { getUserDetails } from '../../../Services/Api'
 import { AddToRedux } from '../../../Redux/AddToRedux'
 import * as Types from '../../../Redux/Types'
 import GlobalDefines from '../../../Utils/GlobalDefines'
+import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
+import PaymentSvg from '../../../assests/svg/PaymentSvg'
+import RupeesSvg from '../../../assests/svg/RupeesSvg'
+import WalletSvg from '../../../assests/svg/wallet'
 
 const FortumChargeAndDriveCard = () => {
 
@@ -81,21 +85,21 @@ const FortumChargeAndDriveCard = () => {
                         <View style={{ marginTop: 20 }}>
                             <CommonCard>
                                 <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(routes.CardDetails)}>
-                                    <IconCardLarge Svg={CardLight} />
+                                    <CommonIconCard Svg={PaymentSvg} />
                                     <CommonText showText={'View Card Details'} black customstyles={{ marginLeft: 10 }} />
                                 </TouchableOpacity>
                             </CommonCard>
 
                             <CommonCard>
                                 <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(routes.AddPinelabMoney)}>
-                                    <IconCardLarge Svg={RupeeLight} />
+                                    <CommonIconCard Svg={RupeesSvg} />
                                     <CommonText showText={'Add Money'} black customstyles={{ marginLeft: 10 }} />
                                 </TouchableOpacity>
                             </CommonCard>
 
                             <CommonCard>
                                 <TouchableOpacity style={styles.card} onPress={passbookButtonHAndler}>
-                                    <IconCardLarge Svg={WalletLight} />
+                                    <CommonIconCard Svg={WalletSvg} />
                                     <CommonText showText={'Passbook'} black customstyles={{ marginLeft: 10 }} />
                                 </TouchableOpacity>
                             </CommonCard>
