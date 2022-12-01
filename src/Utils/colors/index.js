@@ -22,6 +22,7 @@ const colors = {
     grey: "#c7c7c7",
     blue: '#006ADA',
     matteRed: '#D14F4F',
+    matteRed1: '#d04c4c',
     lightRed: '#FF7878',
     denseShadow: '#D6E3F3',
     denseShadowDark: '#303030',
