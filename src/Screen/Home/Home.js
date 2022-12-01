@@ -264,6 +264,8 @@ export default Home = ({ navigatedata, tabName }) => {
         try {
           if (token)
             config.headers.Authorization = token.getIdToken().getJwtToken();
+          config.headers.username = result.attributes.email
+
         } catch (e) {
           console.log(e)
         }
@@ -278,6 +280,8 @@ export default Home = ({ navigatedata, tabName }) => {
         try {
           if (token)
             config.headers.Authorization = token.getIdToken().getJwtToken();
+          config.headers.username = result.attributes.email
+
         } catch (e) {
           console.log(e)
         }
@@ -286,7 +290,7 @@ export default Home = ({ navigatedata, tabName }) => {
         return config;
       });
 
-      
+
     }
   }
   useEffect(() => {
