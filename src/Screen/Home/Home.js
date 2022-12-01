@@ -25,7 +25,8 @@ import TTNCNotificationDialog from '../../Component/Modal/TNCNotificationDialog'
 import { useDispatch } from 'react-redux'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import * as Types from '../../Redux/Types'
-import axios from "axios";
+import axios from '../../Services/BaseUrl'
+import * as axiosLib from 'axios'
 import appConfig from '../../../appConfig'
 
 let selectedMarker = ""
@@ -260,6 +261,22 @@ export default Home = ({ navigatedata, tabName }) => {
         // console.log("interceptror", config)
         return config;
       });
+
+      axiosLib.interceptors.request.use(async (config) => {
+        // console.log("AUTH ",Auth)
+        const token = await Auth.currentSession().catch(err => { console.log(err) });
+        try {
+          if (token)
+            config.headers.Authorization = token.getIdToken().getJwtToken();
+        } catch (e) {
+          console.log(e)
+        }
+        config.headers['App_ver'] = appConfig?.APP_VERSION;
+        // console.log("interceptror", config)
+        return config;
+      });
+
+      
     }
   }
   useEffect(() => {
