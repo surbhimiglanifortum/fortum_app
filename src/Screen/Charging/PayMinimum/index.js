@@ -16,6 +16,7 @@ import colors from '../../../Utils/colors'
 import routes from '../../../Utils/routes'
 import LinearInput from '../../../Component/Textinput/linearInput'
 import Loader from '../../../Component/Loader'
+import Textinput from '../../../Component/Textinput/Textinput'
 
 const PayMinimum = ({ route }) => {
 
@@ -48,6 +49,7 @@ const PayMinimum = ({ route }) => {
     const [loading, setLoading] = useState(false)
     const [showBtn, setShowBtn] = useState(true)
     const [isLoader, setLoader] = useState(false)
+    const [amount, setAmount] = useState({ value: evDetails?.connectors[0]?.pricing?.min_balance.toString(), error: '' })
 
     const qrLocationData = async () => {
         try {
@@ -100,10 +102,12 @@ const PayMinimum = ({ route }) => {
         setGoodToGo(false)
         setLoader(true)
         setPin({ value: '', error: '' })
+        console.log("Check Minimum Balance", amount)
         try {
             const res = await walletBalanceEnquiry({ username: mUserDetails?.username })
             setPrepaidCardBalance(res.data?.response?.Cards[0].Balance)
-            if (res.data?.response?.Cards[0].Balance < evDetails?.connectors[0]?.pricing?.min_balance) {
+            if (res.data?.response?.Cards[0].Balance < amount.value) {
+                setAskPin(false)
                 setColorText(colors.red)
                 setMsg("Your wallet balance is low to start charger. Please load money in your card.")
                 setGoodToGo(false)
@@ -122,6 +126,18 @@ const PayMinimum = ({ route }) => {
     }
 
     const blockMinBalance = async () => {
+        if (amount.value == '') {
+            setAmount({ value: amount.value, error: 'Please enter the amount or amount to be paid here.' })
+            return
+        }
+        if (amount.value > prepaidCardBalance) {
+            setAmount({ value: amount.value, error: 'Amount is not greater than the available card balance.' })
+            return
+        }
+        if (amount.value < evDetails?.connectors[0]?.pricing?.min_balance) {
+            setAmount({ value: amount.value, error: 'Enter same as amount to be paid or more.' })
+            return
+        }
         if (pin.value.length < 6) {
             setPin({ value: pin.value, error: "Please enter correct card pin." })
             return
@@ -133,7 +149,7 @@ const PayMinimum = ({ route }) => {
             const payload = {
                 username: mUserDetails?.username,
                 CardPin: pin.value,
-                Amount: evDetails?.connectors[0]?.pricing?.min_balance
+                Amount: amount
             }
 
             console.log("Check Payload", payload)
@@ -254,15 +270,20 @@ const PayMinimum = ({ route }) => {
         setGoodToGo(false)
         const username = mUserDetails?.username
         const payload = {
-            amount: evDetails?.connectors[0]?.pricing?.min_balance.toString(),
+            amount: amount.value,
             evses_uid: evDetails?.uid
         }
+
+        if (amount.value < evDetails?.connectors[0]?.pricing?.min_balance) {
+            setAmount({ value: amount.value, error: 'Enter same as amount to be paid or more.' })
+            setLoadingSign(false)
+            return
+        }
+
         try {
             const result = await payAsYouGo(username, payload)
             console.log("payAsYouGoMode try block", result.data)
-            const paymentSuccess = () => {
 
-            }
             if (result.data) {
                 setPayAsYouGoOrderId(result.data.JusPayCallback.order_id)
                 navigation.navigate(routes.PaymentScreenJuspay, {
@@ -277,8 +298,7 @@ const PayMinimum = ({ route }) => {
                     description: 'Pay as you go',
                     callback_url: '',
                     juspay_process_payload: result.data.JusPayCallback,
-                    orderStatus: orderStatus,
-                    paymentSuccess: paymentSuccess
+                    orderStatus: orderStatus
                 })
             }
             setLoadingSign(false)
@@ -332,6 +352,25 @@ const PayMinimum = ({ route }) => {
                                 <CommonText showText={`₹ ${evDetails?.connectors[0]?.pricing?.min_balance}`} fontSize={14} />
                             </View>
                         </DenseCard>
+
+                        {(mode == "PREPAID_CARD" || mode == "PAY_AS_U_GO") &&
+                            <View>
+                                <CommonText showText={'Enter Amount'} customstyles={{ marginLeft: 15 }} />
+                                <View style={{ marginHorizontal: 10 }} >
+                                    <Textinput
+                                        placeholder={"Enter Amount Here"}
+                                        onChange={(text) => setAmount({ value: text, error: '' })}
+                                        value={amount.value}
+                                        keyboardType={'numeric'}
+                                    />
+                                </View>
+                            </View>
+                        }
+
+                        {
+                            amount.error && <CommonText showText={amount.error} customstyles={{ color: colors.red, marginLeft: 10, marginBottom: 10 }} regular fontSize={12} />
+                        }
+
 
                         <View>
                             <CommonCard style={styles.wrapper}>
@@ -415,19 +454,21 @@ const PayMinimum = ({ route }) => {
 
                         </View>
 
-                        {showBtn && <View style={styles.fixedContainer}>
-                            <Button onLoading={loadingSign} showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() => {
-                                goodToGo && mode == 'PAY_AS_U_GO' ? navigation.replace(routes.OngoingDetails, {
-                                    locDetails: locDetails,
-                                    evDetails: evDetails,
-                                    paymentMethod: mode,
-                                    payAsYouGoOrderId: payAsYouGoOrderId
-                                }) :
-                                    handleClick(mode)
-                            }
-                            }
-                            />
-                        </View>}
+                        {
+                            showBtn && <View style={styles.fixedContainer}>
+                                <Button onLoading={loadingSign} showText={goodToGo ? 'Next' : 'Make Payment'} onPress={() => {
+                                    goodToGo && mode == 'PAY_AS_U_GO' ? navigation.replace(routes.OngoingDetails, {
+                                        locDetails: locDetails,
+                                        evDetails: evDetails,
+                                        paymentMethod: mode,
+                                        payAsYouGoOrderId: payAsYouGoOrderId
+                                    }) :
+                                        handleClick(mode)
+                                }
+                                }
+                                />
+                            </View>
+                        }
                     </>}
         </CommonView>
     )
