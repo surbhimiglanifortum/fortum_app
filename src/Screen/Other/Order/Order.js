@@ -1,7 +1,7 @@
 import { View, SafeAreaView, StyleSheet, useColorScheme, FlatList, TouchableOpacity, RefreshControl } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import colors from '../../../Utils/colors'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import OrderSvg from '../../../assests/svg/OrderSvg'
 import routes from '../../../Utils/routes'
@@ -16,6 +16,7 @@ const Order = () => {
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
+    const isFocused = useIsFocused()
     const orderCardHandler = () => {
         navigation.navigate(routes.OrderDetails)
     }
@@ -31,12 +32,15 @@ const Order = () => {
         setLoaderOpen(false)
         return result
     })
+    useEffect(() => {
+        refetch()
+    }, [isFocused])
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <View style={styles.innerContainer}>
                 {/* <Header /> */}
-                <Header showText={`Orders(${data?.length||''})`} />
+                <Header showText={`Orders(${data?.length || ''})`} />
                 {/* <View style={styles.headerText}>
                     <CommonText showText={'Today'} fontSize={16} />
                 </View>
@@ -54,7 +58,7 @@ const Order = () => {
                                 <TouchableOpacity onPress={() => {
                                     navigation.navigate(routes.OrderDetails, { dataItem: item })
                                 }} >
-                                    <OrdersCard Svg={OrderSvg} showText={item?.item?.id} fontSize={16} />
+                                    <OrdersCard Svg={OrderSvg} showText={item?.item?.id} fontSize={16} icon={item?.item?.paid} />
                                 </TouchableOpacity>
                             )
                         }

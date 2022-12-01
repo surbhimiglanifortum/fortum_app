@@ -178,6 +178,7 @@ const PayInvoice = ({ route }) => {
     }
 
     const getUnpaidSession = (mode) => {
+        console.log(mode,'..........mod')
         if (mode == 'PREPAID_CARD') {
             if (pin.value.length < 6) {
                 setPin({ value: pin.value, error: "Please enter correct card pin." })
@@ -224,6 +225,7 @@ const PayInvoice = ({ route }) => {
     const payByWallet = (session_id) => {
         setLoadingSign(true)
         unpaidPayByWallet(session_id).then((res) => {
+            console.log(res?.data,'..........succcc')
             if (res.data.success) {
                 setOpenCommonModal({
                     isVisible: true, message: res.data?.message, onOkPress: () => {
