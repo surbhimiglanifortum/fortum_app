@@ -254,7 +254,7 @@ const ActivateCard = () => {
                     <Textinput value={mUserDetails?.phone_number} editable={false} />
                 </View>
 
-                <TouchableOpacity style={[styles.otpBtn, { borderColor: disable ? colors.green : colors.grey, }]} onPress={otpSend}>
+                <TouchableOpacity style={[styles.otpBtn, { borderColor: disable ? colors.green : colors.grey, }]} disabled={disable ? false : true} onPress={otpSend}>
                     {otpLoader ? <Loader modalOpen={otpLoader} /> : <CommonText showText={'Send OTP'} fontSize={18} customstyles={{ color: disable ? colors.green : colors.grey }} />}
                 </TouchableOpacity>
 

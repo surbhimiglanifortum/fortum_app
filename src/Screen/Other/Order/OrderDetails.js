@@ -1,5 +1,5 @@
 import { View, StyleSheet, useColorScheme, } from 'react-native'
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import colors from '../../../Utils/colors'
 import Header from '../../../Component/Header/Header'
 import CommonText from '../../../Component/Text/CommonText'
@@ -13,11 +13,11 @@ import Button from '../../../Component/Button/Button'
 import { GetFormatedDate } from '../../../Utils/utils'
 import { scale } from 'react-native-size-matters'
 import CommonView from '../../../Component/CommonView/index'
-import { payUnpaidOrder } from '../../../Services/Api'
+import { payUnpaidOrder, orderDetails } from '../../../Services/Api'
 import { useSelector } from 'react-redux'
 import routes from '../../../Utils/routes'
 import SnackContext from '../../../Utils/context/SnackbarContext'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
 
 const OrderDetails = ({ route }) => {
 
@@ -25,20 +25,21 @@ const OrderDetails = ({ route }) => {
   const { setOpenCommonModal } = useContext(SnackContext);
 
   const navigation = useNavigation()
+  const isFocused = useIsFocused()
+  const scheme = useColorScheme()
 
   const paramsData = route?.params?.dataItem?.item
 
-  const scheme = useColorScheme()
-  const [isLoading, setLoading] = useState(false)
-  const [paid, setPaid] = useState(paramsData?.paid)
+  console.log("Check Order ID", paramsData)
 
+  const [isLoading, setLoading] = useState(false)
+  const [isPaid, setPaid] = useState(paramsData?.paid)
 
   const payUnpaid = async () => {
     setLoading(true)
     try {
       const result = await payUnpaidOrder(paramsData?.id, mUserDetails?.username)
       setPaid(result?.data?.success)
-      console.log("Check Order", result.data, '...................')
       if (result.data?.success && result.data?.juspay_sdk_payload?.order_id) {
         navigation.navigate(routes.PaymentScreenJuspay, {
           amount: "",
@@ -62,6 +63,20 @@ const OrderDetails = ({ route }) => {
       setLoading(false)
     }
   }
+
+  const getOrderDetails = async () => {
+    try {
+      const result = await orderDetails(paramsData?.id)
+      console.log("Check Result of order", result.data?.data)
+      setPaid(result.data?.data[0]?.paid)
+    } catch (error) {
+      console.log("Check Order Error", error)
+    }
+  }
+
+  useEffect(() => {
+    getOrderDetails()
+  }, [isFocused])
 
   return (
     <CommonView>
@@ -146,9 +161,9 @@ const OrderDetails = ({ route }) => {
             <Button showText={'Download Invoice'} style={{ width: '100%' }} />
           </View> : <Button showText={'Pay'} />
       } */}
-      {console.log(paid, '.........paid')}
+
       {
-        !paid&& <Button showText={'Pay'} onPress={payUnpaid} onLoadingo={isLoading} />
+        !isPaid && <Button showText={'Pay'} onPress={payUnpaid} onLoading={isLoading} />
       }
 
 
