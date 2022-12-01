@@ -12,10 +12,10 @@ const CommonCardReport = ({ Svg, }) => {
             style={{
                 shadowRadius: 3,
                 borderRadius: 12,
-                backgroundColor: colors.redLight,
+                backgroundColor: scheme == 'dark' ? colors.matteRed1 : colors.redLight,
                 padding: 15,
             }}>
-            <Svg fill={scheme == 'dark' ? colors.white : colors.green} />
+            <Svg fill={scheme == 'dark' ? colors.white : colors.red} />
         </NeomorphFlex>
     )
 }
