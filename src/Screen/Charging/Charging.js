@@ -76,6 +76,7 @@ const Charging = ({ setSelectedTab, route, chargingsrc }) => {
     const { data: completedData, status: completedStatus, isLoading: completedIsLoading, refetch: completedreFetch } = useQuery('chargingCompletedData', async () => {
         setLoaderOpen(true)
         const res = await chargingListCompleted(username)
+        console.log("CIMLEELJEJFDS",res)
         setLoaderOpen(false)
         return res.data
     })
