@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux'
 import routes from '../../../Utils/routes'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import { useNavigation, useIsFocused } from '@react-navigation/native'
+import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 
 const OrderDetails = ({ route }) => {
 
@@ -85,7 +86,7 @@ const OrderDetails = ({ route }) => {
         <DenseCard style={styles.card} margin={1}>
           <View style={styles.keyInner}>
             <View style={styles.keyInner1}>
-              <IconCard Svg={OrderGreenSvg} />
+              <CommonIconCard Svg={OrderGreenSvg} />
               <CommonText showText={'Order Id'} customstyles={styles.textCon} />
             </View>
             <CommonText showText={paramsData?.order?.id} fontSize={14} />
@@ -107,7 +108,7 @@ const OrderDetails = ({ route }) => {
               return (
                 <View style={styles.keyInner}>
                   <View style={styles.keyInner1}>
-                    <IconCard Svg={StoreGreenSvg} />
+                    <CommonIconCard Svg={StoreGreenSvg} />
                     <CommonText showText={item?.name} customstyles={styles.textCon} />
                   </View>
                   <CommonText showText={`₹ ${item?.price || '0'}`} />
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
     marginLeft: 14,
   },
   textType: { marginVertical: 10, },
-  icon: { paddingVertical: 8, paddingHorizontal: 8, borderRadius: 6, backgroundColor: colors.lightgreen },
+  icon: { paddingVertical: 15, paddingHorizontal: 15, borderRadius: 12, backgroundColor: colors.lightgreen },
   text: { marginTop: 15 },
 })
 

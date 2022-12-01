@@ -5,7 +5,10 @@ import { scale } from "react-native-size-matters";
 
 const Loader = ({ modalOpen }) => {
   return (
-    modalOpen && <ActivityIndicator />
+    modalOpen &&
+    <View style={{ flex: 9, alignItems: 'center', justifyContent: 'center' }}>
+      <ActivityIndicator />
+    </View>
   );
 };
 
