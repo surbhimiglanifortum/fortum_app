@@ -124,24 +124,23 @@ const Dashboard = ({ tabName, navigation, route }) => {
     } catch (error) {
     }
   }
+  // useEffect(() => {
+  //   if (unPaidSeesion?.length > 0) {
+  //     setOpenCommonModal({
+  //       isVisible: true, message: `You have an unpaid Charging Session`,
+  //       showBtnText: "View",
+  //       onOkPress: () => {
+  //         chargingsrc = "charging"
+  //         navigation.navigate(setSelectedTab('charging'), {})
+  //       }
+  //     })
+  //   }
 
-  useEffect(() => {
-    if (unPaidSeesion?.length > 0) {
-      setOpenCommonModal({
-        isVisible: true, message: `You have unpaid Charging Session`,
-        showBtnText: "View",
-        onOkPress: () => {
-          chargingsrc = "charging"
-          navigation.navigate(setSelectedTab('charging'), {})
-        }
-      })
-    }
-
-  }, [unPaidSeesion])
+  // }, [isFocused])
 
   useEffect(() => {
     unpaidSession()
-  }, [])
+  }, [isFocused])
 
 
   useEffect(() => {

@@ -126,6 +126,16 @@ export default Home = ({ navigatedata, tabName }) => {
   }
 
   const scannerButtonHandler = () => {
+    if (unPaidSeesion?.length > 0) {
+      setOpenCommonModal({
+        isVisible: true, message: "You have an unpaid session",
+        onOkPress: () => {
+          isVisible = false
+        }
+      })
+      return
+
+    }
     handleSelection(routes.QrScanner)
   }
 
@@ -361,7 +371,7 @@ export default Home = ({ navigatedata, tabName }) => {
 
   return (
     <View style={styles.container}>
-      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} setSelectedTab={setSelectedTab}  refetch={refetch}/> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
+      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} setSelectedTab={setSelectedTab} refetch={refetch} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
