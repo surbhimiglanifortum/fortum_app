@@ -30,14 +30,16 @@ const OrderDetails = ({ route }) => {
 
   const scheme = useColorScheme()
   const [isLoading, setLoading] = useState(false)
+  const [paid, setPaid] = useState(paramsData?.paid)
 
 
   const payUnpaid = async () => {
     setLoading(true)
     try {
       const result = await payUnpaidOrder(paramsData?.id, mUserDetails?.username)
-      console.log("Check Order", result.data)
-      if (result.data?.success && result.data?.juspay_sdk_payload?.orderId) {
+      setPaid(result?.data?.success)
+      console.log("Check Order", result.data, '...................')
+      if (result.data?.success && result.data?.juspay_sdk_payload?.order_id) {
         navigation.navigate(routes.PaymentScreenJuspay, {
           amount: "",
           email_address: "",
@@ -144,9 +146,9 @@ const OrderDetails = ({ route }) => {
             <Button showText={'Download Invoice'} style={{ width: '100%' }} />
           </View> : <Button showText={'Pay'} />
       } */}
-
+      {console.log(paid, '.........paid')}
       {
-        !paramsData?.paid && <Button showText={'Pay'} onPress={payUnpaid} onLoadingo={isLoading} />
+        !paid&& <Button showText={'Pay'} onPress={payUnpaid} onLoadingo={isLoading} />
       }
 
 
