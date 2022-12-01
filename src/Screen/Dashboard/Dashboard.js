@@ -28,7 +28,7 @@ import SnackContext from '../../Utils/context/SnackbarContext'
 
 let backHandler
 let mselectedHandler = "home"
-let chargingsrc ="" 
+let chargingsrc = ""
 const Dashboard = ({ tabName, navigation, route }) => {
 
   const navigatedata = route?.params?.animateMap
@@ -61,7 +61,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
     handleSelection('wallet')
   }
   const chargingButtonHandler = () => {
-    chargingsrc =""
+    chargingsrc = ""
     handleSelection('charging')
   }
   const notificationButtonHandler = () => {
@@ -104,18 +104,15 @@ const Dashboard = ({ tabName, navigation, route }) => {
         setSelectedTab('home')
         return true
       }
-
     }
     return false
   }
+
   const { setOpenCommonModal } = useContext(SnackContext)
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
   const unpaidSession = async () => {
-
-    console.log("Grting unpaid", mUserDetails?.username)
     const username = mUserDetails?.username
-
     try {
       let res = await ApiAction.getAllUnpaid(username)
       setUnpaidSession(res?.data)
@@ -127,6 +124,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
     } catch (error) {
     }
   }
+
   useEffect(() => {
     if (unPaidSeesion?.length > 0) {
       setOpenCommonModal({
@@ -134,14 +132,12 @@ const Dashboard = ({ tabName, navigation, route }) => {
         showBtnText: "View",
         onOkPress: () => {
           chargingsrc = "charging"
-          navigation.navigate(setSelectedTab('charging'),{})
+          navigation.navigate(setSelectedTab('charging'), {})
         }
       })
     }
 
   }, [unPaidSeesion])
-
-  console.log(unPaidSeesion,'............unpaid sessin')
 
   useEffect(() => {
     unpaidSession()
