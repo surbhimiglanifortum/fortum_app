@@ -266,3 +266,8 @@ export const reportIssue = async (payload) => {
 export const pushNotification = async (username, payload) => {
     return await axios.post("/api_app/users/gist/" + username + "/expo_token", payload);
 }
+
+export const orderDetails = async (orderId) => {
+    console.log("Check url", "/api_app/orders/getOrderDetails/" + orderId)
+    return await axios.get("/api_app/orders/getOrderDetails/" + orderId);
+}

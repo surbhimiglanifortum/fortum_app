@@ -8,7 +8,6 @@ import IconCardWithoutBg from '../../../Component/Card/IconCardWithoutBg'
 import IconCard from '../../../Component/Card/IconCard'
 import Button from '../../../Component/Button/Button'
 import { useNavigation } from '@react-navigation/native'
-import routes from '../../../Utils/routes'
 import { getChargerMapObject } from '../../../Utils/HelperCommonFunctions'
 import Report from "../../../assests/svg/Report"
 import CommonCard from "../../../Component/Card/CommonCard"
@@ -25,6 +24,7 @@ import CommonView from '../../../Component/CommonView'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 import CommonCardReport from '../../../Component/Card/CommonIconCard/CommonCardReport'
+import routes from '../../../Utils/routes'
 
 
 var mStoppedPressed = false;
@@ -505,7 +505,7 @@ const OngoingDetails = ({ route }) => {
       })
       navigation.reset({
         index: 0,
-        routes: [{ name: 'MapStack' }],
+        routes: [{ name: routes.dashboard }],
       });
       setLoadingRefund(false)
     } catch (error) {
@@ -526,7 +526,7 @@ const OngoingDetails = ({ route }) => {
       })
       navigation.reset({
         index: 0,
-        routes: [{ name: 'MapStack' }],
+        routes: [{ name: routes.dashboard }],
       });
       setLoadingWallet(false)
     } catch (error) {
