@@ -1,5 +1,5 @@
 const initialData = {
-    
+    unPaid:[]
 }
 
 const UnPaidReducer = ((state = initialData, action) => {

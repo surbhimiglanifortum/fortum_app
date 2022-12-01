@@ -28,7 +28,8 @@ import SnackContext from '../../Utils/context/SnackbarContext'
 
 let backHandler
 let mselectedHandler = "home"
-let chargingsrc ="" 
+let chargingsrc = ""
+let unpaidbannerShowed = false
 const Dashboard = ({ tabName, navigation, route }) => {
 
   const navigatedata = route?.params?.animateMap
@@ -61,7 +62,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
     handleSelection('wallet')
   }
   const chargingButtonHandler = () => {
-    chargingsrc =""
+    chargingsrc = ""
     handleSelection('charging')
   }
   const notificationButtonHandler = () => {
@@ -115,7 +116,6 @@ const Dashboard = ({ tabName, navigation, route }) => {
 
     console.log("Grting unpaid", mUserDetails?.username)
     const username = mUserDetails?.username
-
     try {
       let res = await ApiAction.getAllUnpaid(username)
       setUnpaidSession(res?.data)
@@ -127,25 +127,24 @@ const Dashboard = ({ tabName, navigation, route }) => {
     } catch (error) {
     }
   }
-  useEffect(() => {
-    if (unPaidSeesion?.length > 0) {
-      setOpenCommonModal({
-        isVisible: true, message: `You have unpaid Charging Session`,
-        showBtnText: "View",
-        onOkPress: () => {
-          chargingsrc = "charging"
-          navigation.navigate(setSelectedTab('charging'),{})
-        }
-      })
-    }
+  // useEffect(() => {
+  //   if (unPaidSeesion?.length > 0) {
+  //     setOpenCommonModal({
+  //       isVisible: true, message: `You have an unpaid Charging Session`,
+  //       showBtnText: "View",
+  //       onOkPress: () => {
+  //         chargingsrc = "charging"
+  //         navigation.navigate(setSelectedTab('charging'), {})
+  //       }
+  //     })
+  //   }
 
-  }, [unPaidSeesion])
+  // }, [isFocused])
 
-  console.log(unPaidSeesion,'............unpaid sessin')
 
   useEffect(() => {
     unpaidSession()
-  }, [])
+  }, [isFocused])
 
 
   useEffect(() => {

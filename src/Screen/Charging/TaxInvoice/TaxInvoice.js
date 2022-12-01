@@ -368,7 +368,7 @@ const TaxInvoice = ({ route }) => {
                 <DenseCard >
                     <View style={{ flexDirection: 'row', alignItems: 'center', }} >
                         <View style={{ marginRight: 7 }}>
-                            {isPaid ? <CommonIconCard Svg={Charger} /> : <CommonCardReport Svg={ChargerRed} />}
+                            {isPaid ? <CommonIconCard Svg={Charger} /> : <CommonCardReport Svg={Charger} />}
                         </View>
 
                         <View style={styles.row1}>

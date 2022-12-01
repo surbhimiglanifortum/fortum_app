@@ -27,17 +27,21 @@ export default function QrScanner() {
     }
 
     const onSuccess = (e) => {
+        // if (unPaidSeesion?.length > 0) {
+        //     setOpenCommonModal({
+        //         isVisible: true, message: "You have an unpaid session",
+        //         onOkPress: () => {
+        //             navigation.goBack()
+        //         }
+        //     })
+        //     return
+
+        // }
         qrCodeService(JSON.parse(e.data).locid, payload).then((r) => {
             console.log("qrCodeService", r.data, e)
+
+
             let allEvse = r.data?.evses
-            if (unPaidSeesion?.length > 0) {
-                setOpenCommonModal({
-                    isVisible: true, message: "You have unPaid session", onOkPress: () => {
-                        navigation.goBack()
-                    }
-                })
-                return
-            }
             for (let i = 0; i < allEvse.length; i++) {
                 if (allEvse[i].uid === JSON.parse(e.data).evid) {
                     console.log("Received", allEvse[i]?.status)

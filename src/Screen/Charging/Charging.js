@@ -76,6 +76,7 @@ const Charging = ({ setSelectedTab, route, chargingsrc }) => {
     const { data: completedData, status: completedStatus, isLoading: completedIsLoading, refetch: completedreFetch } = useQuery('chargingCompletedData', async () => {
         setLoaderOpen(true)
         const res = await chargingListCompleted(username)
+        console.log(res?.data,'......................compl')
         setLoaderOpen(false)
         return res.data
     })
@@ -127,7 +128,7 @@ const Charging = ({ setSelectedTab, route, chargingsrc }) => {
                                 keyExtractor={item => item.id}
                                 renderItem={(item) => {
                                     return (
-                                        <Card tabName={"ongoing"} navigationHandler={() => navigationHandler(item)} Svg={item?.item?.paid ? Charger : ChargerRed} dataItem={item} />
+                                        <Card tabName={"ongoing"} navigationHandler={() => navigationHandler(item)} Svg={Charger} dataItem={item} />
                                     )
                                 }
                                 }
@@ -144,11 +145,11 @@ const Charging = ({ setSelectedTab, route, chargingsrc }) => {
                                 data={completedData}
                                 refreshControl={<RefreshControl refreshing={loaderOpen} onRefresh={completedreFetch} />}
                                 keyExtractor={item => item.id}
-
                                 renderItem={(item) => {
+                                  
                                     return (
                                         <>
-                                            {item?.item?.status != "ACTIVE" && <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={item?.item?.paid ? Charger : ChargerRed} SvgBg={item?.item?.paid} dataItem={item} />}
+                                            {item?.item?.status != "ACTIVE" && <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={Charger} SvgBg={item?.item?.paid} dataItem={item} />}
                                         </>
                                     )
                                 }
