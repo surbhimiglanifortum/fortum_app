@@ -148,9 +148,7 @@ const RechargeWallet = ({ route }) => {
           {amount.error != '' && <CommonText showText={amount.error} fontSize={14} customstyles={{ color: colors.red, marginLeft: 15, marginVertical: 10 }} />}
         </DenseCard>
 
-
-
-        <View style={[styles.row,{flexWrap:'wrap'}]}>
+        <View style={[styles.row, { flexWrap: 'wrap' }]}>
           {lazyAmount.map((e) => {
             return (
               <TouchableOpacity style={styles.innerRow} onPress={() => {
@@ -224,15 +222,15 @@ const styles = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
   },
   column: {
     // paddingHorizontal: 16,
     // paddingVertical: 16
-    width:scale(60),
-    height:scale(45),
-    alignItems:'center',
-    justifyContent:'center'
+    width: scale(60),
+    height: scale(45),
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   rupeeText: {
     marginTop: 17
