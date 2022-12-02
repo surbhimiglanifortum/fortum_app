@@ -14,7 +14,7 @@ export const GetFormatedDate = (date) => {
     // export const GetFormatedDateOnly = (datetime) => {
     //     var date = new Date(datetime);
     //     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
-    return moment.utc(date).local().format('DD/MM/YYYY h:mm A');
+    return moment.utc(date).local().format('DD/MM/YYYY , h:mm A');
 }
 
 export const GetCouterTime = (startTime, endDate) => {

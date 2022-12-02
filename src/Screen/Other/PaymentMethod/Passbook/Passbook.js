@@ -81,7 +81,6 @@ const Passbook = () => {
     }
 
     const { data: passbookData, status, isLoading, refetch } = useQuery('PassbookData', getWalletHistory)
-
     const getWalletBalance = async () => {
         try {
             const payload = {
@@ -335,7 +334,6 @@ const Passbook = () => {
                         <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2) || '0'}`} fontSize={14} />
                     </View>
                 </DenseCard>
-
                 <View style={styles.tabContainer}>
 
                     {selectedTab == 'all' ?

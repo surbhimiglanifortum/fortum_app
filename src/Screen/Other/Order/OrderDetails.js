@@ -19,6 +19,9 @@ import routes from '../../../Utils/routes'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import { useNavigation, useIsFocused } from '@react-navigation/native'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
+import CalendarSvg from '../../../assests/svg/CalendarSvg'
+import OrderSvg from '../../../assests/svg/OrderSvg'
+import StoreSvg from '../../../assests/svg/StoreSvg'
 
 const OrderDetails = ({ route }) => {
 
@@ -86,16 +89,15 @@ const OrderDetails = ({ route }) => {
         <DenseCard style={styles.card} margin={1}>
           <View style={styles.keyInner}>
             <View style={styles.keyInner1}>
-              <CommonIconCard Svg={OrderGreenSvg} />
+              <CommonIconCard Svg={OrderSvg} />
               <CommonText showText={'Order Id'} customstyles={styles.textCon} />
             </View>
             <CommonText showText={paramsData?.order?.id} fontSize={14} />
           </View>
           <View style={styles.keyInner}>
             <View style={styles.keyInner1}>
-              <View style={styles.icon}>
-                <AntDesign name='calendar' size={25} color={colors.green} />
-              </View>
+
+              <CommonIconCard Svg={CalendarSvg} />
               <CommonText showText={'Date'} customstyles={styles.textCon} />
             </View>
             <CommonText showText={GetFormatedDate(paramsData?.orderdate)} fontSize={14} />
@@ -108,7 +110,7 @@ const OrderDetails = ({ route }) => {
               return (
                 <View style={styles.keyInner}>
                   <View style={styles.keyInner1}>
-                    <CommonIconCard Svg={StoreGreenSvg} />
+                    <CommonIconCard Svg={StoreSvg} />
                     <CommonText showText={item?.name} customstyles={styles.textCon} />
                   </View>
                   <CommonText showText={`₹ ${item?.price || '0'}`} />
