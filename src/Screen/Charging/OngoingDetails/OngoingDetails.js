@@ -25,7 +25,7 @@ import SnackContext from '../../../Utils/context/SnackbarContext'
 import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
 import CommonCardReport from '../../../Component/Card/CommonIconCard/CommonCardReport'
 import routes from '../../../Utils/routes'
-
+import Spinner from 'react-native-loading-spinner-overlay';
 
 var mStoppedPressed = false;
 let sessionId = ''
@@ -202,15 +202,14 @@ const OngoingDetails = ({ route }) => {
 
 
       axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/allunpaid/' + username + '?app_version=' + appconfig.APP_VERSION_NUMBER).then((r) => {
+        setIsVisible(true)
         axios.get(appconfig.TOTAL_BASE_URL + '/api_app/sessions/showRefundDialog/' + sessionId + '/' + username).then(res => {
           console.log("Response Restart API", res.data.data)
           if (res.data.success) {
             setChargingCost(res.data.data.chargingCost / 100)
             setRemainingCost(res.data.data.remainingAmount / 100)
             setShowRestart(true)
-            setRefreshing(false)
           } else {
-            // setIsVisible(true)
             setShowYouSavedModel({
               isVisible: true, message: YouSavedBannerAmount(lastPaidSession.kwh), onOkPress: () => {
                 setShowFeedbackModel({ "isVisible": true, "locid": locDetails?.id, "evseid": evDetails?.uid })
@@ -220,21 +219,13 @@ const OngoingDetails = ({ route }) => {
               index: 0,
               routes: [{ name: routes.dashboard }],
             });
-            // setOpenCommonModal({
-            //   isVisible: true,
-            //   message: 'Charging Completed. Are You Ready To Drive ?',
-            //   showBtnText: 'Yes',
-            //   onOkPress: () => {
-            //     navigation.navigate(routes.dashboard)
-            //     console.log("Charging Completed")
-            //   }
-            // })
-            setRefreshing(false)
           }
+          setIsVisible(false)
         }).catch(error => {
           console.log("Error Restart API", error)
-          setRefreshing(false)
+          setIsVisible(false)
         })
+
       }).catch(error => {
         console.log("All Unpaid API Catch", error)
         setRefreshing(false)
@@ -544,6 +535,12 @@ const OngoingDetails = ({ route }) => {
           <CommonText showText={locDetails?.name} customstyles={{ marginBottom: 7 }} regular fontSize={14} />
           <CommonText showText={`${locDetails?.address?.city} ${locDetails?.address?.street} ${locDetails?.address?.postalCode}`} bold />
         </View>
+
+        <Spinner
+          visible={isVisible}
+          textContent={'Loading...'}
+          textStyle={styles.spinnerTextStyle}
+        />
 
         <DenseCard>
           <View style={styles.topCard}>

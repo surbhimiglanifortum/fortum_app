@@ -268,6 +268,5 @@ export const pushNotification = async (username, payload) => {
 }
 
 export const orderDetails = async (orderId) => {
-    console.log("Check url", "/api_app/orders/getOrderDetails/" + orderId)
     return await axios.get("/api_app/orders/getOrderDetails/" + orderId);
 }

@@ -56,7 +56,7 @@ const Login = () => {
         }
       }
     } catch (error) {
-      console.log("error---------------", error.message)
+      console.log("error---------------", error)
 
       switch (error.code) {
         case 'UserNotFoundException':
