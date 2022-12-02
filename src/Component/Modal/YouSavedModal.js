@@ -31,7 +31,7 @@ const YouSavedModal = ({ openYouSavedModal, setOpenYouSavedModal }) => {
                             </ImageBackground>
 
                         </View>
-                        <Button showText={'Continue'} onPress={okayBtnHandler} />
+                        <Button showText={'Okay'} onPress={okayBtnHandler} />
                     </View>
                 </View>
             </View>

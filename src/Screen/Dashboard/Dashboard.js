@@ -121,16 +121,16 @@ const Dashboard = ({ tabName, navigation, route }) => {
     try {
       let res = await ApiAction.getAllUnpaid(username)
       setUnpaidSession(res?.data)
-      dispatch({
-        type: 'ADD_TO_UNPAID',
-        payload: { item: res?.data }
-      })
-
+      // dispatch({
+      //   type: 'ADD_TO_UNPAID',
+      //   payload: { item: res?.data }
+      // })
     } catch (error) {
+      console.log('Error')
     }
   }
   // useEffect(() => {
-  //   if (unPaidSeesion?.length > 0) {
+  //   if (unpaidSessionlist?.length > 0) {
   //     setOpenCommonModal({
   //       isVisible: true, message: `You have an unpaid Charging Session`,
   //       showBtnText: "View",
@@ -140,8 +140,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
   //       }
   //     })
   //   }
-
-  // }, [isFocused])
+  // }, [unpaidSessionlist])
 
   useEffect(() => {
     unpaidSession()
@@ -160,7 +159,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
       <View style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
         <View style={styles.renderComponent}>
           <View style={{ flex: 1 }}>
-            {selectedTab == 'home' && <Home navigatedata={navigatedata} />}
+            {selectedTab == 'home' && <Home navigatedata={navigatedata} unpaidSessionlist={unpaidSessionlist} />}
             {selectedTab == 'wallet' && <Wallet setSelectedTab={setSelectedTab} />}
             {selectedTab == 'charging' && <Charging chargingsrc={chargingsrc} setSelectedTab={setSelectedTab} />}
             {/* {selectedTab == 'notification' && <Notification setSelectedTab={setSelectedTab} />} */}

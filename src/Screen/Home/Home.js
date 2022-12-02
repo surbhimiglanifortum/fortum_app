@@ -34,7 +34,7 @@ let mLocationPayload = {}
 let flatListBottomList
 let backHandler
 
-export default Home = ({ navigatedata, tabName }) => {
+export default Home = ({ navigatedata, tabName, unpaidSessionlist }) => {
 
   const isFocused = useIsFocused()
   const mapRef = useRef();
@@ -45,7 +45,7 @@ export default Home = ({ navigatedata, tabName }) => {
   const [selectedCharger, setSelectedCharger] = useState(false)
   const [openFilterModal, setOpenFilterModal] = useState(false)
   const [locationLoading, setLocationLoading] = useState(false)
-  const [unpaidSessionlist, setUnpaidSession] = useState([])
+  // const [unpaidSessionlist, setUnpaidSession] = useState([])
   const [locationsPayload, setLocationsPayload] = useState({
     onlyAvailableConnectors: false,
   })
@@ -55,8 +55,7 @@ export default Home = ({ navigatedata, tabName }) => {
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const checkActiveSession = useSelector((state) => state.TempStore.checkActiveSession);
   const userLocation = useSelector((state) => state.commonReducer.userLocations)
-  let unPaidSeesion = useSelector((state) => state.UnPaidReducer.unPaid);
-
+  // let unPaidSeesion = useSelector((state) => state.UnPaidReducer?.unPaid);
 
   const scheme = useColorScheme()
 
@@ -126,7 +125,7 @@ export default Home = ({ navigatedata, tabName }) => {
   }
 
   const scannerButtonHandler = () => {
-    if (unPaidSeesion?.length > 0) {
+    if (unpaidSessionlist?.length > 0) {
       setOpenCommonModal({
         isVisible: true, message: "You have an unpaid session",
         onOkPress: () => {
@@ -371,6 +370,9 @@ export default Home = ({ navigatedata, tabName }) => {
     })
   }
 
+  useEffect(() => {
+
+  }, [unpaidSessionlist])
 
 
   return (
@@ -401,7 +403,7 @@ export default Home = ({ navigatedata, tabName }) => {
           }
         </View>
 
-        {unPaidSeesion?.length > 0 && selectedTab != 'List' && <View style={{ position: 'absolute', top: 60, paddingVertical: 8, backgroundColor: colors.redLight, paddingHorizontal: 25, elevation: 5, borderRadius: 10 }}>
+        {unpaidSessionlist?.length > 0 && selectedTab != 'List' && <View style={{ position: 'absolute', top: 60, paddingVertical: 8, backgroundColor: colors.redLight, paddingHorizontal: 25, elevation: 5, borderRadius: 10 }}>
           <CommonText showText={'You have an unpaid session'} regular customstyles={{ color: colors.red }} />
         </View>}
 
