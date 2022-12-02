@@ -540,7 +540,7 @@ const OngoingDetails = ({ route }) => {
           visible={isVisible}
           textContent={'Loading...'}
           textStyle={styles.spinnerTextStyle}
-        />
+        />  
 
         <DenseCard>
           <View style={styles.topCard}>
