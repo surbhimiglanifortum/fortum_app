@@ -41,7 +41,7 @@ const PayMinimum = ({ route }) => {
     const [payAsYouGoOrderStatus, setPayAsYouGoOrderStatus] = useState('')
     const [askPin, setAskPin] = useState(false)
     const [pin, setPin] = useState({ value: '', error: '' });
-    const [prepaidCardBalance, setPrepaidCardBalance] = useState('')
+    const [prepaidCardBalance, setPrepaidCardBalance] = useState('0')
     const [colorText, setColorText] = useState('red')
     const [orderExist, setOrderExist] = useState(false)
     const [isShow, setShow] = useState(true)
@@ -105,20 +105,24 @@ const PayMinimum = ({ route }) => {
         console.log("Check Minimum Balance", amount)
         try {
             const res = await walletBalanceEnquiry({ username: mUserDetails?.username })
-            setPrepaidCardBalance(res.data?.response?.Cards[0].Balance)
-            if (res.data?.response?.Cards[0].Balance < amount.value) {
-                setAskPin(false)
-                setColorText(colors.red)
-                setMsg("Your wallet balance is low to start charger. Please load money in your card.")
-                setGoodToGo(false)
-                setShowBtn(false)
-                setLoader(false)
+            if (res.data?.response?.Cards[0].Balance != undefined) {
+                setPrepaidCardBalance(res.data?.response?.Cards[0].Balance)
+                if (res.data?.response?.Cards[0].Balance < amount.value) {
+                    setAskPin(false)
+                    setColorText(colors.red)
+                    setMsg("Your wallet balance is low to start charger. Please load money in your card.")
+                    setGoodToGo(false)
+                    setShowBtn(false)
+                }
+                else {
+                    setAskPin(true)
+                    setShowBtn(true)
+                }
             }
             else {
-                setAskPin(true)
-                setShowBtn(true)
-                setLoader(false)
+                setPrepaidCardBalance('0')
             }
+            setLoader(false)
         } catch (error) {
             console.log("Check Prepaid Card Balance Error", error)
             setLoader(false)
@@ -311,7 +315,10 @@ const PayMinimum = ({ route }) => {
     const fatchPinelabWalletBalance = async () => {
         try {
             const res = await walletBalanceEnquiry({ username: mUserDetails?.username })
-            setPrepaidCardBalance(res.data?.response?.Cards[0].Balance)
+            if (res.data?.response?.Cards[0].Balance != undefined)
+                setPrepaidCardBalance(res.data?.response?.Cards[0].Balance)
+            else
+                setPrepaidCardBalance('0')
         } catch (error) {
             console.log("Error in fatch pinelab wallet balance", error)
         }
@@ -339,6 +346,16 @@ const PayMinimum = ({ route }) => {
         }
     }
 
+    let lazyAmount = [50, 100, 120, 150]
+    let lazyAmount2 = [200, 300, 400, 500]
+
+    const onChange = e => {
+        // const input = e.currentTarget.value;
+        if (/^[^!-\/:-@\[-`{-~]+$/.test(e) || e === "") {
+            setAmount({ value: e.trim(), error: '' })
+        }
+    };
+
     return (
         <CommonView style={{ position: 'relative' }}>
             <Header showText={'Payment Options'} />
@@ -353,7 +370,7 @@ const PayMinimum = ({ route }) => {
                             </View>
                         </DenseCard>
 
-                        {(mode == "PREPAID_CARD" || mode == "PAY_AS_U_GO") &&
+                        {/* {(mode == "PREPAID_CARD" || mode == "PAY_AS_U_GO") &&
                             <View>
                                 <CommonText showText={'Enter Amount'} customstyles={{ marginLeft: 15 }} />
                                 <View style={{ marginHorizontal: 10 }} >
@@ -369,8 +386,70 @@ const PayMinimum = ({ route }) => {
 
                         {
                             amount.error && <CommonText showText={amount.error} customstyles={{ color: colors.red, marginLeft: 10, marginBottom: 10 }} regular fontSize={12} />
-                        }
+                        } */}
 
+                        {(mode == "PREPAID_CARD" || mode == "PAY_AS_U_GO") &&
+                            <>
+                                <DenseCard style={{ marginTop: 20 }}>
+                                    <View style={styles.row}>
+                                        <TouchableOpacity onPress={() => setAmount({ value: ((parseInt(amount.value) - 50) >= 0 ? parseInt(amount.value) - 50 : amount.value).toString(), error: '' })}>
+                                            <CommonCard style={{ padding: 10, height: 50, width: 50, alignItems: 'center', }}>
+                                                <CommonText showText={'-'} customstyles={[{ color: colors.greyText }]} fontSize={20} bold />
+                                            </CommonCard>
+                                        </TouchableOpacity>
+                                        <View style={[styles.row, { flex: 1, justifyContent: 'center' }]}>
+                                            <CommonText showText={'₹'} customstyles={[styles.rupeeText,]} fontSize={25} />
+                                            <LinearInput
+                                                editable={false}
+                                                value={amount.value}
+                                                onChange={(text) => onChange(text)}
+                                                placeholderText={'0'}
+                                                style={styles.input}
+                                                keyboardType={'numeric'}
+                                                maxLength={5}
+                                            />
+                                        </View>
+
+                                        <TouchableOpacity onPress={() => setAmount({ value: (isNaN((parseInt(amount.value) + 50)) == true ? "0" : (parseInt(amount.value) + 50)).toString(), error: '' })}>
+                                            <CommonCard style={{ padding: 10, backgroundColor: colors.green, height: 50, width: 50, alignItems: 'center' }} >
+                                                <CommonText showText={'+'} customstyles={[{ color: colors.white }]} fontSize={20} bold />
+                                            </CommonCard>
+                                        </TouchableOpacity>
+
+                                    </View>
+                                </DenseCard>
+                                {amount.error != '' && <CommonText showText={amount.error} fontSize={12} regular customstyles={{ color: colors.red, marginLeft: 15, marginVertical: 10 }} />}
+
+                                <View style={[styles.row, { flexWrap: 'wrap' }]}>
+                                    {lazyAmount.map((e) => {
+                                        return (
+                                            <TouchableOpacity style={styles.innerRow} onPress={() => {
+                                                setAmount({ value: e.toString(), error: '' })
+                                            }}>
+                                                <CommonCard style={[styles.column]}>
+                                                    <CommonText showText={`₹ ${e}`} />
+                                                </CommonCard>
+                                            </TouchableOpacity>
+                                        )
+                                    })}
+
+                                </View>
+
+                                <View style={styles.row}>
+                                    {lazyAmount2.map((e) => {
+                                        return (
+                                            <TouchableOpacity style={styles.innerRow} onPress={() => {
+                                                setAmount({ value: e.toString(), error: '' })
+                                            }}>
+                                                <CommonCard>
+                                                    <CommonText showText={`₹ ${e}`} />
+                                                </CommonCard>
+                                            </TouchableOpacity>
+                                        )
+                                    })}
+                                </View>
+                            </>
+                        }
 
                         <View>
                             <CommonCard style={styles.wrapper}>
@@ -464,8 +543,7 @@ const PayMinimum = ({ route }) => {
                                         payAsYouGoOrderId: payAsYouGoOrderId
                                     }) :
                                         handleClick(mode)
-                                }
-                                }
+                                }}
                                 />
                             </View>
                         }
@@ -495,6 +573,18 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 10,
         width: '100%'
+    },
+    row: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    input: {
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    rupeeText: {
+        marginTop: 17
     }
 })
 
