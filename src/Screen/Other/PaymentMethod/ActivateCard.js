@@ -260,7 +260,7 @@ const ActivateCard = () => {
 
                 <CommonText showText={'Enter OTP'} />
 
-                <View style={styles.otpContainer}>
+                <View style={[styles.otpContainer]}>
                     {[
                         firstTextInputRef,
                         secondTextInputRef,
@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 10
+        marginBottom: 10, flexWrap: 'wrap'
     },
     bottomText: {
         flexDirection: 'row',
