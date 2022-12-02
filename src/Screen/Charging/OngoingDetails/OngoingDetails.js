@@ -544,7 +544,7 @@ const OngoingDetails = ({ route }) => {
 
         <DenseCard>
           <View style={styles.topCard}>
-            <Charger1 height={40} width={40} />
+            <Charger1 height={40} width={40} fill={scheme == 'dark' ? colors.lightBackGround : colors.backgroundDark} />
             <View>
               <CommonText
                 showText={getChargerMapObject(evDetails?.connectors[0]?.standard)?.name + ' - ' + (evDetails?.connectors[0]?.amperage * evDetails?.connectors[0]?.voltage / 1000)?.toFixed(2) + 'kW'}
