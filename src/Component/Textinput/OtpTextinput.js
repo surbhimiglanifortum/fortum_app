@@ -3,7 +3,7 @@ import React from 'react'
 import colors from '../../Utils/colors'
 import { NeomorphFlex } from 'react-native-neomorph-shadows'
 import commonFonts from '../../Utils/fonts/fonts'
-
+import { scale } from 'react-native-size-matters'
 const OtpTextinput = ({ placeholder, value, onChange, refData, onKeyPress }) => {
 
     const scheme = useColorScheme()
@@ -19,8 +19,8 @@ const OtpTextinput = ({ placeholder, value, onChange, refData, onKeyPress }) => 
                 borderRadius: 12,
                 backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight,
                 // margin: 10,
-                width: 63,
-                height: 63,
+                width: scale(52),
+                height: scale(52),
                 marginVertical: 10,
                 padding: 5,
             }}
