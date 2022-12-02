@@ -43,15 +43,20 @@ const Dashboard = ({ tabName, navigation, route }) => {
 
   let unPaidSeesion = useSelector((state) => state.UnPaidReducer.unPaid);
 
-  useEffect(() => {
-    ApiAction.getUserDetails().then(result => {
-      if (result?.data) {
-        dispatch(AddToRedux(result.data, Types.USERDETAILS))
-      }
+  useEffect(async () => {
+    const result = await Auth.currentAuthenticatedUser();
 
-    }).catch(err => {
-      dispatch(AddToRedux({}, Types.USERDETAILS))
-    })
+    if (result?.signInUserSession) {
+      ApiAction.getUserDetails().then(result => {
+        if (result?.data) {
+          dispatch(AddToRedux(result.data, Types.USERDETAILS))
+        }
+
+      }).catch(err => {
+        dispatch(AddToRedux({}, Types.USERDETAILS))
+      })
+    }
+
   }, [])
 
   const homeButtonHandler = () => {
