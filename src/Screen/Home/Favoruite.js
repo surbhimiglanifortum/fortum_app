@@ -38,9 +38,10 @@ const Favoruite = ({ route }) => {
     })
   }
 
+
+
   const { data, isFetching } = useQuery("FavouriteCharger", async () => {
     const result = await ApiAction.getFavouriteCHarger(mUserDetails.username, dispatch)
-
     var locationsArray = result.data?.result
     if (location?.coords?.latitude) {
       locationsArray.map((item, index) => {
@@ -51,6 +52,8 @@ const Favoruite = ({ route }) => {
       })
     }
     dispatch(AddToRedux(locationsArray, Types.FAVCHARGER))
+
+    console.log("Check result of fav API", locationsArray)
     return locationsArray
   })
 

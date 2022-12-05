@@ -3,9 +3,16 @@ package com.fortum.ChargeAndDriveIndia;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
+import com.reactnativepipandroid.PipAndroidModule;
 import android.os.Bundle;
+import android.content.res.Configuration;
 
 public class MainActivity extends ReactActivity {
+  
+  @Override
+    public void onPictureInPictureModeChanged (boolean isInPictureInPictureMode, Configuration newConfig) {
+      PipAndroidModule.pipModeChanged(isInPictureInPictureMode);
+    }
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule

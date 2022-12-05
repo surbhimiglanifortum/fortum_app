@@ -129,6 +129,7 @@ const Verification = ({ route }) => {
     const loginSuccess = async (navigateToDashboard = true) => {
         const data = await Auth.currentAuthenticatedUser();
         const fcmToken = await AsyncStorage.getItem('fcmToken')
+        console.log("Login Success Result", data)
         if (data.signInUserSession) {
             sendToken(data?.attributes?.email, { firebasetoken: fcmToken })
             const result = await ApiAction.getUserDetails()
