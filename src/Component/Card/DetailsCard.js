@@ -33,6 +33,7 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
     const addFav = async () => {
         try {
             const result = await Auth.currentAuthenticatedUser();
+            console.log("Check Fav Auth User", result)
             if (result?.signInUserSession) {
                 if (result.attributes.phone_number && result.attributes.phone_number != '') {
                     const result = await ApiAction.addFavouriteCharger(mUserDetails.username, item.location_id || item.id)

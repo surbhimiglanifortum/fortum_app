@@ -1,7 +1,7 @@
 import * as Types from '../Types'
 const initialState = {
     tnc_last_called: null,
-    favCharger: null,
+    favCharger: [],
     checkActiveSession: true,
     userLocations: []
 }
