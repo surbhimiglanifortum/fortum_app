@@ -17,6 +17,7 @@ import routes from '../../Utils/routes'
 let totalEvse = 0
 
 const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
+
     const navigation = useNavigation()
     let favChargers = useSelector((state) => state.commonReducer.favCharger);
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
@@ -32,11 +33,9 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
     const addFav = async () => {
         try {
             const result = await Auth.currentAuthenticatedUser();
-            console.log(result)
             if (result?.signInUserSession) {
                 if (result.attributes.phone_number && result.attributes.phone_number != '') {
                     const result = await ApiAction.addFavouriteCharger(mUserDetails.username, item.location_id || item.id)
-
                     if (result.data.result == 'ok') {
                         dispatch(AddToRedux([...favChargers, { location_id: item.id, ...item }], Types.FAVCHARGER))
                     }
@@ -45,12 +44,10 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
                 }
                 return
             }
-
         } catch (error) {
-
+            console.log("Add Fav Error", error)
         }
         navigation.navigate(routes.login)
-
     }
 
     const removeFav = async () => {
@@ -143,8 +140,6 @@ const DetailsCard = ({ chargerType, onPress, item, favourite, location }) => {
                         </View>
                         {item?.distance != undefined && <CommonText fontSize={12} showText={`${item?.distance} Km`} />}
                     </View>
-                    {/* {chargerType == 1 && <HorizontalCard />}
-                    {chargerType == 2 && <VerticalCard />} */}
                 </>
             </CommonCard>
         </TouchableOpacity >

@@ -109,7 +109,6 @@ export default Home = ({ navigatedata, tabName, unpaidSessionlist }) => {
   const handleSelection = async (screen, payload) => {
     try {
       const result = await Auth.currentAuthenticatedUser();
-
       if (result?.signInUserSession) {
         if (result.attributes.phone_number && result.attributes.phone_number != '') {
           navigation.navigate(screen, payload)
@@ -190,8 +189,6 @@ export default Home = ({ navigatedata, tabName, unpaidSessionlist }) => {
         }
       }, 2000);
     }
-
-
   }
 
   const { setOpenCommonModal } = useContext(SnackContext)
@@ -242,7 +239,6 @@ export default Home = ({ navigatedata, tabName, unpaidSessionlist }) => {
 
   const userDetailsUpdated = async () => {
     const result = await ApiAction.getUserDetails()
-
     if (result.data) {
       dispatch(AddToRedux(result.data, Types.USERDETAILS))
     }
