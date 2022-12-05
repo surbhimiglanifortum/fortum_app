@@ -52,6 +52,7 @@ import CardOrderConfirmed from '../Screen/Other/PaymentMethod/CardOrderConfimed'
 import QrScanner from '../Screen/Home/QrScanner';
 import KycDone from '../Screen/Other/PaymentMethod/KycDone';
 import ReportPage from '../Screen/Other/Support/ReportPage';
+import JoinHandsWith from '../Screen/Other/JoinHandsWith/JoinHandsWith';
 
 const Stack = createNativeStackNavigator();
 
@@ -109,6 +110,7 @@ const Routes = ({ loggedin }) => {
       <Stack.Screen name={routes.QrScanner} component={QrScanner} options={{ headerShown: false }} />
       <Stack.Screen name={routes.KycDone} component={KycDone} options={{ headerShown: false }} />
       <Stack.Screen name={routes.ReportPage} component={ReportPage} options={{ headerShown: false }} />
+      <Stack.Screen name={routes.JoinHandsWith} component={JoinHandsWith} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

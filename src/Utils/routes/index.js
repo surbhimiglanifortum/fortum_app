@@ -52,7 +52,8 @@ const routes = {
     CardOrderConfirmed: 'CardOrderConfirmed',
     QrScanner: 'QrScanner',
     KycDone: 'KycDone',
-    ReportPage:'ReportPage'
+    ReportPage:'ReportPage',
+    JoinHandsWith:'JoinHandsWith',
 }
 
 export default routes

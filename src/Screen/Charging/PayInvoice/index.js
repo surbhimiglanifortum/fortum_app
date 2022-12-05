@@ -18,7 +18,7 @@ import CommonCard from '../../../Component/Card/CommonCard'
 import DenseCard from '../../../Component/Card/DenseCard'
 import CryptoJS from "react-native-crypto-js";
 import LinearInput from '../../../Component/Textinput/linearInput'
-import { encryptedPassword } from '../../../Utils/GlobalDefines'
+import { encryptedPassword } from '../../../Utils/globalDefines'
 
 
 const PayInvoice = ({ route }) => {

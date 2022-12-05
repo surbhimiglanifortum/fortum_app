@@ -9,7 +9,7 @@ import { getTncVersion, acceptTnc } from '../../Services/Api'
 import CommonText from '../Text/CommonText';
 import Button from '../Button/Button';
 import CommonView from '../CommonView'
-import GlobalDefines from '../../Utils/GlobalDefines';
+import GlobalDefines from '../../Utils/globalDefines';
 
 const TNCNotificationDialog = (props) => {
 
