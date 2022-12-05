@@ -11,7 +11,7 @@ import DensCard from '../../../Component/Card/DenseCard'
 import { Auth } from 'aws-amplify'
 import CommonView from '../../../Component/CommonView'
 
-const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTab, selectedTab,refetch }) => {
+const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTab, selectedTab, refetch, unpaidSessionlist }) => {
 
   const isFocused = useIsFocused()
 
@@ -54,9 +54,11 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
     try {
       const result = await Auth.currentAuthenticatedUser();
       if (result.attributes.phone_number && result.attributes.phone_number != '') {
+        
         navigation.navigate(routes.ChargingStation, {
           data: data
         })
+
       } else {
         navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
       }
@@ -137,9 +139,9 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
         </CommonCard>
       </View>
 
-      
+
       <FlatList
-         refreshControl={<RefreshControl onRefresh={refetch}  refreshing={isRefetching} />}
+        refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
         data={mapData}
         keyExtractor={item => item.id}
         renderItem={({ item }) => {

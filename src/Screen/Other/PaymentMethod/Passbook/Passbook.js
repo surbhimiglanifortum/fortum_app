@@ -81,6 +81,17 @@ const Passbook = () => {
     }
 
     const { data: passbookData, status, isLoading, refetch } = useQuery('PassbookData', getWalletHistory)
+
+
+    useEffect(() => {
+        let res = passbookData?.response?.Transactions?.filter(item => {
+            console.log(item, '..........rsooooooo')
+
+        })
+        return res
+    }, [])
+
+
     const getWalletBalance = async () => {
         try {
             const payload = {
@@ -269,6 +280,7 @@ const Passbook = () => {
                     refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
                     keyExtractor={item => item.id}
                     renderItem={(item) => {
+                        console.log(item?.item?.TransactionType !== 'GIFT CARD RELOAD', '..........tooo')
                         return (
                             item?.item?.TransactionType !== 'GIFT CARD RELOAD' ?
                                 <PinelabTransactionCard
@@ -278,7 +290,7 @@ const Passbook = () => {
                                     amount={item?.item?.TransactionAmount}
                                     style={{ color: colors.red }}
                                 /> :
-                                null
+                                <NoData showText={'No data found.'} />
                         )
                     }
                     }
