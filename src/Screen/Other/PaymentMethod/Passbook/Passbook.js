@@ -40,6 +40,8 @@ const Passbook = () => {
     const [loading, setLoading] = useState(false)
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
+    const [sentHistory, setSentHistory] = useState([])
+    const [receivedHistory, setReceivedHistory] = useState([])
 
     const allBtnHandler = () => {
         setSelectedTab('all')
@@ -71,6 +73,17 @@ const Passbook = () => {
         try {
             const result = await getPinelabHistroy(payload)
             // setData(result.data)
+            let tempSentData = []
+            let tempReceivedData = []
+            result.data?.response?.Transactions.map((item) => {
+                if (item?.TransactionType != 'GIFT CARD RELOAD') {
+                    tempSentData.push(item)
+                } else {
+                    tempReceivedData.push(item)
+                }
+            })
+            setSentHistory(tempSentData)
+            setReceivedHistory(tempReceivedData)
             setRefreshing(false)
             setModalVisible(false)
             return result?.data
@@ -81,16 +94,6 @@ const Passbook = () => {
     }
 
     const { data: passbookData, status, isLoading, refetch } = useQuery('PassbookData', getWalletHistory)
-
-
-    useEffect(() => {
-        let res = passbookData?.response?.Transactions?.filter(item => {
-            console.log(item, '..........rsooooooo')
-
-        })
-        return res
-    }, [])
-
 
     const getWalletBalance = async () => {
         try {
@@ -273,51 +276,45 @@ const Passbook = () => {
 
     const SentTransaction = () => {
         return (
-            passbookData?.response?.Transactions?.length >= 1 ?
+            sentHistory.length > 0 ?
                 <FlatList
                     style={{ flex: 1 }}
-                    data={passbookData?.response?.Transactions}
+                    data={sentHistory}
                     refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
                     keyExtractor={item => item.id}
                     renderItem={(item) => {
-                        console.log(item?.item?.TransactionType !== 'GIFT CARD RELOAD', '..........tooo')
                         return (
-                            item?.item?.TransactionType !== 'GIFT CARD RELOAD' ?
-                                <PinelabTransactionCard
-                                    Svg={Charger}
-                                    date={item?.item?.TransactionDate}
-                                    title={item?.item?.MerchantName}
-                                    amount={item?.item?.TransactionAmount}
-                                    style={{ color: colors.red }}
-                                /> :
-                                <NoData showText={'No data found.'} />
+                            <PinelabTransactionCard
+                                Svg={Charger}
+                                date={item?.item?.TransactionDate}
+                                title={item?.item?.MerchantName}
+                                amount={item?.item?.TransactionAmount}
+                                style={{ color: colors.red }}
+                            />
                         )
                     }
                     }
-                />
-                :
+                /> :
                 <NoData showText={'No data found.'} />
         )
     }
 
     const RecievedTransaction = () => {
         return (
-            passbookData?.response?.Transactions?.length >= 1 ?
+            receivedHistory.length > 0 ?
                 <FlatList
-                    data={passbookData?.response?.Transactions}
+                    data={receivedHistory}
                     refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
                     keyExtractor={item => item.id}
                     renderItem={(item) => {
                         return (
-                            (item?.item?.TransactionType === 'GIFT CARD RELOAD' || item?.item?.TransactionType === 'GIFT CARD CANCEL REDEEM') ?
-                                <PinelabTransactionCard
-                                    Svg={WalletSvg}
-                                    date={item?.item?.TransactionDate}
-                                    title={item?.item?.MerchantName}
-                                    amount={item?.item?.TransactionAmount}
-                                    style={{ color: colors.green }}
-                                /> :
-                                null
+                            <PinelabTransactionCard
+                                Svg={WalletSvg}
+                                date={item?.item?.TransactionDate}
+                                title={item?.item?.MerchantName}
+                                amount={item?.item?.TransactionAmount}
+                                style={{ color: colors.green }}
+                            />
                         )
                     }
                     }
