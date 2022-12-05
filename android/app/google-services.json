@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "505204154315",
+    "project_id": "charge-and-drive-india",
+    "storage_bucket": "charge-and-drive-india.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505204154315:android:211c06c7fcbab2bc36a04e",
+        "android_client_info": {
+          "package_name": "com.fortum.ChargeAndDriveIndia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "505204154315-cm870lp3o2c0skmh34vunrnam46a1uhj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC72UVZdFSEAGTLR2kKWh6VbNBrw8obrSk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "505204154315-cm870lp3o2c0skmh34vunrnam46a1uhj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

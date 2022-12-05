@@ -4,7 +4,6 @@ import { useNavigation, useIsFocused } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
 import CommonText from '../../../Component/Text/CommonText'
 import Button from '../../../Component/Button/Button'
-import { getFormatedDate } from '../../../Services/CommonServices'
 import DenseCard from '../../../Component/Card/DenseCard/index'
 import CommonView from '../../../Component/CommonView'
 import Divider from '../../../Component/Divider'
@@ -14,14 +13,18 @@ import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCar
 import Charger from '../../../assests/svg/charger'
 import ChargerRed from '../../../assests/svg/ChargerRed'
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-// import RNPrint from 'react-native-print';
+import RNPrint from 'react-native-print';
 import { useSelector } from 'react-redux'
-
+import { GetFormatedDate } from '../../../Utils/utils'
+import { getPaymentString } from '../../../Utils/HelperCommonFunctions'
+import { scale } from 'react-native-size-matters'
+import { getChargeTime } from '../../../Utils/HelperCommonFunctions'
+import CommonCardReport from '../../../Component/Card/CommonIconCard/CommonCardReport'
 
 const TaxInvoice = ({ route }) => {
 
     const paramData = route.params.data
-    
+
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const navigation = useNavigation()
@@ -34,6 +37,7 @@ const TaxInvoice = ({ route }) => {
     const [st, setSt] = useState("");
     const [gstAddr, setGstAddr] = useState("");
     const [gstIn, setGstIn] = useState("");
+    const [loading, setLoading] = useState(false)
 
     const start = new Date(route.params?.data?.item?.start_datetime);
     const end = new Date(route.params?.data?.item?.end_datetime);
@@ -90,6 +94,7 @@ const TaxInvoice = ({ route }) => {
     }, [])
 
     const generateHTML = async () => {
+        setLoading(true)
         console.log("Download Called")
         let printData = '<html lang="en">\n' +
             "<head>\n" +
@@ -117,8 +122,7 @@ const TaxInvoice = ({ route }) => {
             "</h1></td>\n" +
             "        <td>\n" +
             '            <span style="font-size: 1.1em"><strong>Duration :</strong> ' +
-            diffMin?.toFixed(2) +
-            " Min</span>\n" +
+            getChargeTime(route.params?.data) +
             "            <br/>\n" +
             '            <span style="font-size: 1.1em"><strong>kWh used :</strong> ' +
             route.params?.data?.item?.kwh +
@@ -131,13 +135,8 @@ const TaxInvoice = ({ route }) => {
             "</span>\n" +
             "            <br/>\n" +
             '            <span style="font-size: 1.1em"><strong>Date :</strong> ' +
-            getFormatedDate(route.params?.data?.item?.start_datetime) +
+            GetFormatedDate(route.params?.data?.item?.start_datetime) +
             "</span>\n" +
-
-
-
-            // history.paid_with && history.paid_with != undefined && history.paid_with != '' ?
-
             "            <br/>\n" +
             '            <span style="font-size: 1.1em"><strong>Payment Method : </strong> ' +
             allowMode.map((item) => {
@@ -222,12 +221,12 @@ const TaxInvoice = ({ route }) => {
             "    <tr>\n" +
             "        <td>\n" +
             '            <span style="font-size: 1.1em">' +
-            getFormatedDate(route.params?.data?.item?.start_datetime) +
+            GetFormatedDate(route.params?.data?.item?.start_datetime) +
             "</span>\n" +
             "        </td>\n" +
             "        <td>\n" +
             '            <span style="font-size: 1.1em">' +
-            getFormatedDate(route.params?.data?.item?.end_datetime) +
+            GetFormatedDate(route.params?.data?.item?.end_datetime) +
             "</span>\n" +
             "        </td><td>\n" +
             '            <span style="font-size: 1.1em">' +
@@ -257,21 +256,20 @@ const TaxInvoice = ({ route }) => {
             "\n" +
             "<h3>Total cost excl. GST : ₹ " +
             (
-                (route.params?.data?.item?.order?.amount -
-                    route.params?.data?.item?.order?.sgst -
-                    route.params?.data?.item?.order?.cgst) /
+                (route.params?.data?.item?.order?.amount
+                ) /
                 100
             )?.toFixed(2) +
             "</h3>\n" +
             "<h3>Amount of CGST(" +
-            (route.params?.data?.item?.order?.pricingToApply?.cgst != undefined ? route.params?.data?.item?.order?.pricingToApply?.cgst : 0) +
+            9 +
             "%) : ₹ " +
-            (route.params?.data?.item?.order?.cgst / 100)?.toFixed(2) +
+            (route.params?.data?.item?.order?.cgst) / 100?.toFixed(2) +
             "</h3>\n" +
             "<h3>Amount of SGST(" +
-            (route.params?.data?.item?.order?.pricingToApply?.sgst != undefined ? route.params?.data?.item?.order?.pricingToApply?.sgst : 0) +
+            9 +
             "%) : ₹ " +
-            (route.params?.data?.item?.order?.sgst / 100)?.toFixed(2) +
+            (route.params?.data?.item?.order?.sgst) / 100?.toFixed(2) +
             "</h3>\n" +
             "\n" +
             "\n" +
@@ -354,34 +352,34 @@ const TaxInvoice = ({ route }) => {
             base64: true,
         })
 
-        // RNHTMLtoPDF.convert(results).then(filePath => {
-        //     Share.open({
-        //         title: 'Invoice',
-        //         message: 'Invoice',
-        //         url: filePath.filePath
-        //     })
-        // })
-
-        // await RNPrint.print({ filePath: results.filePath })
+        await RNPrint.print({ filePath: results.filePath })
+        setLoading(false)
     }
+
+    useEffect(() => {
+
+    }, [isFocused])
+
 
     return (
         <CommonView>
             <Header showText={'Tax Invoice'} />
             <ScrollView>
                 <DenseCard >
-                    <View style={styles.row}>
-                        <View>
-                            <CommonIconCard Svg={paramData.item?.paid ? Charger : ChargerRed} />
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }} >
+                        <View style={{ marginRight: 7 }}>
+                            {isPaid ? <CommonIconCard Svg={Charger} /> : <CommonCardReport Svg={Charger} />}
                         </View>
 
-                        <View style={{}}>
-                            <CommonText showText={paramData?.item?.location?.name} fontSize={14} />
-                            <CommonText showText={getFormatedDate(paramData?.item?.start_datetime)} fontSize={14} regular />
-                        </View>
-                        <View>
-                            <CommonText showText={`₹ ${paramData?.item?.order?.amount / 100 ? paramData?.item?.order?.amount / 100 : '0'}`} fontSize={14} />
-                            <CommonText showText={`${paramData?.item?.kwh ? paramData?.item?.kwh : '0'} Kwh`} fontSize={14} regular />
+                        <View style={styles.row1}>
+                            <View style={{ width: scale(170), }}>
+                                <CommonText showText={paramData?.item?.location?.name} fontSize={14} />
+                                <CommonText showText={GetFormatedDate(paramData?.item?.start_datetime)} fontSize={14} regular />
+                            </View>
+                            <View>
+                                <CommonText showText={`₹ ${paramData?.item?.order?.amount / 100 ? paramData?.item?.order?.amount / 100 : '0'}`} fontSize={14} customstyles={{ textAlign: 'right' }} />
+                                <CommonText showText={`${paramData?.item?.kwh ? paramData?.item?.kwh : '0'} Kwh`} fontSize={14} regular />
+                            </View>
                         </View>
                     </View>
                 </DenseCard>
@@ -409,31 +407,35 @@ const TaxInvoice = ({ route }) => {
                         <View >
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Start Time'} fontSize={14} regular />
-                                <CommonText semibold showText={paramData?.item?.start_datetime ? getFormatedDate(paramData?.item?.start_datetime) : 'NA'} fontSize={14} regular />
+                                <CommonText semibold showText={paramData?.item?.start_datetime ? GetFormatedDate(paramData?.item?.start_datetime) : 'NA'} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'End Time'} fontSize={14} regular />
-                                <CommonText semibold showText={paramData?.item?.end_datetime ? getFormatedDate(paramData?.item?.end_datetime) : 'NA'} fontSize={14} regular />
+                                <CommonText semibold showText={paramData?.item?.end_datetime ? GetFormatedDate(paramData?.item?.end_datetime) : 'NA'} fontSize={14} regular />
                             </View>
                         </View>
                     </DenseCard>
                     <DenseCard>
                         <View >
                             <View style={styles.innerCard1}>
+                                <CommonText showText={'Flat Price'} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.pricingToApply?.flat_price ? paramData?.item?.order?.pricingToApply?.flat_price : 'NA'}`} fontSize={14} regular />
+                            </View>
+                            <View style={styles.innerCard1}>
                                 <CommonText showText={'Price'} fontSize={14} regular />
                                 <CommonText semibold showText={`₹ ${paramData?.item?.order?.pricingToApply?.price ? paramData?.item?.order?.pricingToApply?.price : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Cost'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? (((paramData?.item?.order?.amount)/100 - (paramData?.item?.order?.cgst + paramData?.item?.order?.sgst)))?.toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${paramData?.item?.order?.amount ? (((paramData?.item?.order?.amount) / 100 - (paramData?.item?.order?.cgst / 100 + paramData?.item?.order?.sgst / 100)))?.toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of CGST (9%)'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.cgst)?.toFixed(2) ? (paramData?.item?.order?.cgst)?.toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.cgst / 100)?.toFixed(2) ? (paramData?.item?.order?.cgst / 100)?.toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <View style={styles.innerCard1}>
                                 <CommonText showText={'Amount of SGST (9%)'} fontSize={14} regular />
-                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.sgst)?.toFixed(2) ? (paramData?.item?.order?.sgst)?.toFixed(2) : 'NA'}`} fontSize={14} regular />
+                                <CommonText semibold showText={`₹ ${(paramData?.item?.order?.sgst / 100)?.toFixed(2) ? (paramData?.item?.order?.sgst / 100)?.toFixed(2) : 'NA'}`} fontSize={14} regular />
                             </View>
                             <Divider />
                             <View style={styles.innerCard1}>
@@ -444,9 +446,19 @@ const TaxInvoice = ({ route }) => {
                     </DenseCard>
                     <DenseCard>
                         <View style={styles.card}>
-                            <CommonText showText={'Paid Via'} fontSize={14} regular />
-                            <CommonText showText={'Wallet'} fontSize={14} />
+                            <CommonText showText={'Paid Via'} fontSize={14} />
                         </View>
+
+                        {paramData?.item?.payments?.map((item) => {
+                            return (
+                                <View style={styles.card}>
+                                    <CommonText showText={getPaymentString(item?.payment_method) || ""} fontSize={14} regular />
+                                    <CommonText showText={((item?.amount_charged) / 100)?.toFixed(2) || ""} fontSize={14} />
+                                </View>
+                            )
+                        })}
+
+
                     </DenseCard>
                     <DenseCard>
                         <View >
@@ -469,10 +481,12 @@ const TaxInvoice = ({ route }) => {
                         </View>
                     </DenseCard>
                 </View>
-                <Button
-                    showText={isPaid ? 'Download Invoice' : `Pay(${(paramData?.item?.order?.amount_due/100)?.toFixed(2)})`}
-                    onPress={() => isPaid ? generateHTML() : handleButtonClick()}
-                />
+                {paramData?.item?.order &&
+                    <Button onLoading={loading}
+                        showText={isPaid ? 'Download Invoice' : `Pay(${(paramData?.item?.order?.amount_due / 100)?.toFixed(2)})`}
+                        onPress={() => isPaid ? generateHTML() : handleButtonClick()}
+                    />
+                }
             </ScrollView>
         </CommonView>
     )
@@ -483,11 +497,18 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#ECF4FC'
     },
+    row1: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flex: 1
+    },
     row: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     header: {
         flexDirection: 'row',
@@ -497,7 +518,7 @@ const styles = StyleSheet.create({
         marginVertical: 4,
         alignItems: 'center',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
 
     },
     innerCard: {

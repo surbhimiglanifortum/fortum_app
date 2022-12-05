@@ -42,15 +42,10 @@ export const walletBalanceEnquiry = async (payload) => {
 };
 
 export const blockAmount = async (payload) => {
-    return await axios.post('/api_app/pinelabs/wallet/transaction/block-amount', payload);
+    return await axios.post('/api_app/pinelabs/wallet/transaction/block-amount', payload, { timeout: 22000 });
 }
 
 export const walletHistory = async (username, startDate, endDated) => {
-    console.log("walletHistory", {
-        username: username,
-        startDate: startDate,
-        endDate: endDated
-    })
     return await axios.get(appconfig.BASE_URL + "/api_app/users/get-transactions/", {
         params: {
             username: username,
@@ -184,7 +179,7 @@ export const pinelabDocVerify = async (payload) => {
 }
 
 export const createPinelabWallet = async (payload) => {
-    return await axios.post("/api_app/pinelabs/create-wallet", payload);
+    return await axios.post("/api_app/pinelabs/create-wallet", payload, { timeout: 22000 });
 };
 
 export const createPinelabDigitalCard = async (payload) => {
@@ -253,9 +248,30 @@ export const invoiceMap = async (payload) => {
 }
 
 export const gstMap = async (payload) => {
-    return await axios.post('/api_app/invoice_map/',payload);
+    return await axios.post('/api_app/invoice_map/', payload);
 }
 
 export const qrCodeService = async (locid, payload) => {
     return await axios.post("/api_app/locations/gist/" + locid, payload);
+}
+
+export const payUnpaidOrder = async (orderId, username) => {
+    return await axios.get("/api_app/orders/initiateJuspay/" + orderId + "/" + username);
+}
+
+export const reportIssue = async (payload) => {
+    return await axios.post("/api_app/reports", payload);
+}
+
+export const pushNotification = async (username, payload) => {
+    return await axios.post("/api_app/users/gist/" + username + "/expo_token", payload);
+}
+
+export const orderDetails = async (orderId) => {
+    return await axios.get("/api_app/orders/getOrderDetails/" + orderId);
+}
+
+export const franchise = async (payload) => {
+    console.log(payload,'..........payloadppppppppppppp')
+    return await axios.post("/api_app/franchise/insertdata", payload);
 }

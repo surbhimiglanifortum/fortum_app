@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl, useColorScheme } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { scale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
@@ -23,7 +23,7 @@ import Charger from '../../../../assests/svg/charger'
 import CommonIconCard from '../../../../Component/Card/CommonIconCard/CommonIconCard'
 import NoData from '../../../../Component/NoDataFound/NoData'
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-// import RNPrint from 'react-native-print';
+import RNPrint from 'react-native-print';
 
 const Passbook = () => {
     const navigation = useNavigation()
@@ -31,14 +31,17 @@ const Passbook = () => {
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedTab, setSelectedTab] = useState('all')
     const [refreshing, setRefreshing] = useState(false)
-    const [techStart, setTechStart] = useState('')
-    const [techEnd, setTechEnd] = useState('')
+    const [techStart, setTechStart] = useState(moment().subtract(30, 'days').format('YYYY-MM-DDT24:00:00'))
+    const [techEnd, setTechEnd] = useState(moment().format('YYYY-MM-DDT23:59:00'))
     const [noTrans, setNoTrans] = useState('')
     const [data, setData] = useState([])
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
+    const [loading, setLoading] = useState(false)
     const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
+    const [sentHistory, setSentHistory] = useState([])
+    const [receivedHistory, setReceivedHistory] = useState([])
 
     const allBtnHandler = () => {
         setSelectedTab('all')
@@ -70,6 +73,17 @@ const Passbook = () => {
         try {
             const result = await getPinelabHistroy(payload)
             // setData(result.data)
+            let tempSentData = []
+            let tempReceivedData = []
+            result.data?.response?.Transactions.map((item) => {
+                if (item?.TransactionType != 'GIFT CARD RELOAD') {
+                    tempSentData.push(item)
+                } else {
+                    tempReceivedData.push(item)
+                }
+            })
+            setSentHistory(tempSentData)
+            setReceivedHistory(tempReceivedData)
             setRefreshing(false)
             setModalVisible(false)
             return result?.data
@@ -102,16 +116,7 @@ const Passbook = () => {
     };
 
     const handleStartConfirm = (date) => {
-        let selectedDate = moment(date).format('LL')
-        setStartDate(selectedDate)
-        let year = new Date(date).getFullYear()
-        let month = new Date(date).getMonth() + 1
-        if (month <= 9) {
-            month = "0" + month
-        }
-        let d = new Date(date).getDate()
-        let srt = `${year}-${month}-${d}T00:00:00`
-        setTechStart(srt)
+        setTechStart(moment(date).format('YYYY-MM-DDT00:00:00'))
         hideStartDatePicker();
     };
 
@@ -124,16 +129,7 @@ const Passbook = () => {
     };
 
     const handleEndConfirm = (date) => {
-        let selectedDate = moment(date).format('LL')
-        setEndDate(selectedDate)
-        let year = new Date(date).getFullYear()
-        let month = new Date(date).getMonth() + 1
-        if (month <= 9) {
-            month = "0" + month
-        }
-        let d = new Date(date).getDate()
-        let end = `${year}-${month}-${d}T23:59:00`
-        setTechEnd(end)
+        setTechEnd(moment(date).format('YYYY-MM-DDT23:59:00'))
         hideEndDatePicker();
     };
 
@@ -154,6 +150,7 @@ const Passbook = () => {
     }
 
     const generateHTML = async () => {
+        setLoading(true)
         let printData = '<html>\n' +
             '<head>\n' +
             '<title>Statement</title>\n' +
@@ -247,8 +244,8 @@ const Passbook = () => {
             fileName: 'Passbook',
             base64: true,
         })
-
-        // await RNPrint.print({ filePath: results.filePath })
+        await RNPrint.print({ filePath: results.filePath })
+        setLoading(false)
     }
 
     const AllTransaction = () => {
@@ -266,6 +263,7 @@ const Passbook = () => {
                                 title={item?.item?.MerchantName}
                                 amount={item?.item?.TransactionAmount}
                                 transactionType={item?.item?.TransactionType}
+                                style={{ color: (item?.item?.TransactionType === 'GIFT CARD RELOAD' || item?.item?.TransactionType === 'GIFT CARD CANCEL REDEEM') ? colors.green : colors.red }}
                             />
                         )
                     }
@@ -278,48 +276,45 @@ const Passbook = () => {
 
     const SentTransaction = () => {
         return (
-            passbookData?.response?.Transactions?.length >= 1 ?
+            sentHistory.length > 0 ?
                 <FlatList
                     style={{ flex: 1 }}
-                    data={passbookData?.response?.Transactions}
+                    data={sentHistory}
                     refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
                     keyExtractor={item => item.id}
                     renderItem={(item) => {
                         return (
-                            item?.item?.TransactionType !== 'GIFT CARD RELOAD' ?
-                                <PinelabTransactionCard
-                                    Svg={Charger}
-                                    date={item?.item?.TransactionDate}
-                                    title={item?.item?.MerchantName}
-                                    amount={item?.item?.TransactionAmount}
-                                /> :
-                                null
+                            <PinelabTransactionCard
+                                Svg={Charger}
+                                date={item?.item?.TransactionDate}
+                                title={item?.item?.MerchantName}
+                                amount={item?.item?.TransactionAmount}
+                                style={{ color: colors.red }}
+                            />
                         )
                     }
                     }
-                />
-                :
+                /> :
                 <NoData showText={'No data found.'} />
         )
     }
 
     const RecievedTransaction = () => {
         return (
-            passbookData?.response?.Transactions?.length >= 1 ?
+            receivedHistory.length > 0 ?
                 <FlatList
-                    data={passbookData?.response?.Transactions}
+                    data={receivedHistory}
                     refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
                     keyExtractor={item => item.id}
                     renderItem={(item) => {
                         return (
-                            item?.item?.TransactionType === 'GIFT CARD RELOAD' ?
-                                <PinelabTransactionCard
-                                    Svg={WalletSvg}
-                                    date={item?.item?.TransactionDate}
-                                    title={item?.item?.MerchantName}
-                                    amount={item?.item?.TransactionAmount}
-                                /> :
-                                null
+                            <PinelabTransactionCard
+                                Svg={WalletSvg}
+                                date={item?.item?.TransactionDate}
+                                title={item?.item?.MerchantName}
+                                amount={item?.item?.TransactionAmount}
+                                style={{ color: colors.green }}
+                            />
                         )
                     }
                     }
@@ -328,7 +323,7 @@ const Passbook = () => {
                 <NoData showText={'No data found.'} />
         )
     }
-
+    const scheme = useColorScheme()
     return (
         <CommonView>
             <View style={{ flex: 1, marginBottom: 70 }}>
@@ -336,7 +331,7 @@ const Passbook = () => {
                     <View style={{ flex: 1 }}>
                         <Header showText={'Passbook'} />
                     </View>
-                    <SmallButton Svg={FilterSvg} onPress={() => setModalVisible(true)} />
+                    <SmallButton Svg={FilterSvg} fill={scheme == 'dark' ? 'white' : 'black'} onPress={() => setModalVisible(true)} />
                 </View>
 
                 <DenseCard padding={10}>
@@ -345,42 +340,41 @@ const Passbook = () => {
                             <CommonIconCard Svg={WalletSvg} />
                             <CommonText showText={'Balance'} fontSize={14} regular customstyles={{ marginLeft: 10 }} />
                         </View>
-                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)}`} fontSize={14} />
+                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2) || '0'}`} fontSize={14} />
                     </View>
                 </DenseCard>
-
                 <View style={styles.tabContainer}>
 
                     {selectedTab == 'all' ?
                         <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
-                            <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton]}>
-                                <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
+                            <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton,]}>
+                                <CommonText customstyles={[{ color: selectedTab == 'all' ? colors.green : colors.white }]} showText={'All'} fontSize={14} bold />
                             </TouchableOpacity>
                         </DenseCard> :
                         <TouchableOpacity onPress={allBtnHandler} style={[styles.tabButton]}>
-                            <Text style={[{ color: selectedTab == 'all' ? colors.black : colors.white }]}>All</Text>
+                            <CommonText customstyles={[{ color: selectedTab == 'all' ? colors.black : colors.white }]} showText={'All'} fontSize={14} bold />
                         </TouchableOpacity>
                     }
 
                     {selectedTab == 'sent' ?
                         <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
                             <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton]}>
-                                <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
+                                <CommonText customstyles={[{ color: selectedTab == 'sent' ? colors.green : colors.white }]} showText={'Sent'} fontSize={14} bold />
                             </TouchableOpacity>
                         </DenseCard> :
                         <TouchableOpacity onPress={sentBtnHandler} style={[styles.tabButton]}>
-                            <Text style={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]}>Sent</Text>
+                            <CommonText customstyles={[{ color: selectedTab == 'sent' ? colors.black : colors.white }]} showText={'Sent'} fontSize={14} bold />
                         </TouchableOpacity>
                     }
 
                     {selectedTab == 'receive' ?
                         <DenseCard paddingLeft={20} paddingRight={20} padding={8} marginVertical={2} margin={2}>
                             <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
-                                <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Received</Text>
+                                <CommonText customstyles={[{ color: selectedTab == 'receive' ? colors.green : colors.white }]} showText={'Received'} fontSize={14} bold />
                             </TouchableOpacity>
                         </DenseCard> :
                         <TouchableOpacity onPress={receiveBtnHandler} style={[styles.tabButton]}>
-                            <Text style={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]}>Received</Text>
+                            <CommonText customstyles={[{ color: selectedTab == 'receive' ? colors.black : colors.white }]} showText={'Received'} fontSize={14} bold />
                         </TouchableOpacity>
                     }
                 </View>
@@ -389,14 +383,14 @@ const Passbook = () => {
             </View>
 
             <View style={styles.fixedBtn}>
-                <Button showText={'Download Passbook'} onPress={() => generateHTML()} />
+                <Button onLoading={loading} showText={'Download Passbook'} onPress={() => generateHTML()} />
             </View>
 
             <PinelabPassbookFilter
                 isVisible={modalVisible}
                 bgStyle={'rgba(0,0,0,0.5)'}
-                startDate={startDate}
-                endDate={endDate}
+                startDate={techStart}
+                endDate={techEnd}
                 showStartDatePicker={showStartDatePicker}
                 showEndDatePicker={showEndDatePicker}
                 noTrans={noTrans}
@@ -409,6 +403,7 @@ const Passbook = () => {
             <DateTimePickerModal
                 isVisible={isStartDatePickerVisible}
                 mode="date"
+                date={new Date(techStart)}
                 onConfirm={handleStartConfirm}
                 onCancel={hideStartDatePicker}
                 maximumDate={new Date()}
@@ -417,12 +412,12 @@ const Passbook = () => {
             <DateTimePickerModal
                 isVisible={isEndDatePickerVisible}
                 mode="date"
+                date={new Date(techEnd)}
                 onConfirm={handleEndConfirm}
                 onCancel={hideEndDatePicker}
                 maximumDate={new Date()}
+                minimumDate={new Date(techStart)}
             />
-
-
 
         </CommonView>
     )

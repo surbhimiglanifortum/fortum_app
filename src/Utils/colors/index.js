@@ -22,6 +22,7 @@ const colors = {
     grey: "#c7c7c7",
     blue: '#006ADA',
     matteRed: '#D14F4F',
+    matteRed1: '#d04c4c',
     lightRed: '#FF7878',
     denseShadow: '#D6E3F3',
     denseShadowDark: '#303030',
@@ -33,7 +34,8 @@ const colors = {
     darkIcon: '#1D9C71',
     lightIcon: '#C4E1D9',
     reportBackground: '#FAE1E1',
-    borderGreen: '#9FD7C8'
+    borderGreen: '#9FD7C8',
+    redLight:'#F9D9D9'
 }
 
 export default colors

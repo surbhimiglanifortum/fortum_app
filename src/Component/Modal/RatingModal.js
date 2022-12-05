@@ -1,9 +1,9 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, SafeAreaView, useColorScheme } from 'react-native'
-import React, { useState,useContext } from 'react'
+import { View, Modal, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native'
+import React, { useState, useContext } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Button from '../Button/Button'
 import CommonText from '../Text/CommonText'
-import { Rating, AirbnbRating } from 'react-native-ratings';
+import { AirbnbRating } from 'react-native-ratings';
 import Textinput from '../Textinput/Textinput'
 import CommonView from '../../Component/CommonView'
 import CommonCard from '../../Component/Card/CommonCard'
@@ -15,6 +15,7 @@ var ratings = 3
 
 const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
     const scheme = useColorScheme()
+
     const [review, setReview] = useState("");
     const [loadingSign, setLoadingSign] = useState(false)
 
@@ -22,17 +23,16 @@ const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
 
     const { setOpenCommonModal } = useContext(SnackContext);
 
-
     const okayBtnHandler = async () => {
         // openCommonModal?.onOkPress()
         // setShowFeedbackModel({ "isVisible": false, "locid": "", "evseid": "", onPress: () => { } })
+
         if (review == '') {
             setOpenCommonModal({
                 isVisible: true, message: "Please add your feedback!!!", onOkPress: () => { }
             })
             return
         }
-
 
         const payload = {
             "locid": isModalVisible.locid || "SDS",
@@ -41,11 +41,13 @@ const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
             "desc": review || "SADSDSD",
             "user": mUserDetails?.username || "res2GMAIL.COM"
         }
+
         setLoadingSign(true)
         try {
             const response = await ApiAction.feedback(payload)
 
             console.log("Req saved", response.data)
+
             if (response.data.result == "ok") {
                 setOpenCommonModal({
                     isVisible: true, message: "Your feedback has been saved", onOkPress: () => { }
@@ -65,23 +67,21 @@ const RatingModal = ({ isModalVisible, setShowFeedbackModel }) => {
                 isVisible: true, message: error, onOkPress: () => { }
             })
         }
-       
     }
 
     const onFinishRating = (data) => {
         ratings = data
-
     }
-
-
 
     return (
         <Modal visible={isModalVisible.isVisible} statusBarTranslucent={true} transparent>
             <View style={styles.container}>
                 <CommonView style={[styles.innerContainer]}>
                     <View style={styles.wrapContainer}>
-                        <View style={styles.header}>
-                            <CommonText showText={'How was your charging exprerience today?'} fontSize={20} />
+                        <View style={[styles.header,]}>
+                            <View >
+                                <CommonText showText={'How was your charging experience today?'} fontSize={20} />
+                            </View>
                             <TouchableOpacity style={styles.crossBtn} onPress={() => { setShowFeedbackModel({ "isVisible": false, "locid": "", "evseid": "" }) }}>
                                 <CommonCard >
                                     <AntDesign name='close' size={20} />
@@ -122,15 +122,16 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: '70%',
+        width: '82%',
         justifyContent: 'space-between',
         alignSelf: 'flex-end'
     },
     crossBtn: {
+        marginLeft: 14
     },
     centerText: {
         marginVertical: 50,
-        alignSelf: 'center'
+        alignSelf: 'center',
     }
 })
 

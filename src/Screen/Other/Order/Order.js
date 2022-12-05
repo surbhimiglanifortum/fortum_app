@@ -1,23 +1,22 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, ScrollView, FlatList, TouchableOpacity, RefreshControl } from 'react-native'
-import React, { useState } from 'react'
+import { View, SafeAreaView, StyleSheet, useColorScheme, FlatList, TouchableOpacity, RefreshControl } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import colors from '../../../Utils/colors'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import Header from '../../../Component/Header/Header'
-import CommonText from '../../../Component/Text/CommonText'
-import SettingCard from '../../../Component/Card/SettingCard'
 import OrderSvg from '../../../assests/svg/OrderSvg'
 import routes from '../../../Utils/routes'
 import { getOrdersService } from '../../../Services/Api'
 import { useQuery } from 'react-query'
 import NoData from '../../../Component/NoDataFound/NoData'
 import OrdersCard from '../../../Component/Card/OrdersCard'
-import OrderGreenSvg from '../../../assests/svg/OrderGreenSvg'
 import { useSelector } from 'react-redux'
 import Loader from '../../../Component/Loader'
+
 const Order = () => {
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
+    const isFocused = useIsFocused()
     const orderCardHandler = () => {
         navigation.navigate(routes.OrderDetails)
     }
@@ -29,15 +28,19 @@ const Order = () => {
     const { data, status, isLoading, refetch } = useQuery('ordersData', async () => {
         setLoaderOpen(true)
         const res = await getOrdersService(username)
+        var result = res.data
         setLoaderOpen(false)
-        return res.data
+        return result
     })
+    useEffect(() => {
+        refetch()
+    }, [isFocused])
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <View style={styles.innerContainer}>
                 {/* <Header /> */}
-                <Header showText={`Orders(${data?.length})`} />
+                <Header showText={`Orders(${data?.length || ''})`} />
                 {/* <View style={styles.headerText}>
                     <CommonText showText={'Today'} fontSize={16} />
                 </View>
@@ -55,7 +58,7 @@ const Order = () => {
                                 <TouchableOpacity onPress={() => {
                                     navigation.navigate(routes.OrderDetails, { dataItem: item })
                                 }} >
-                                    <OrdersCard Svg={OrderSvg} showText={item?.item?.id} fontSize={16} />
+                                    <OrdersCard Svg={OrderSvg} showText={item?.item?.id} fontSize={16} icon={item?.item?.paid} />
                                 </TouchableOpacity>
                             )
                         }

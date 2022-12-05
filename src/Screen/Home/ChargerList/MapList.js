@@ -1,8 +1,8 @@
-import { View, StyleSheet, TouchableOpacity, FlatList, TextInput, BackHandler, Alert } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, FlatList, TextInput, BackHandler, TouchableWithoutFeedback, RefreshControl } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DetailsCard from '../../../Component/Card/DetailsCard'
 import colors from '../../../Utils/colors'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import routes from '../../../Utils/routes'
 import Loader from '../../../Component/Loader'
@@ -11,7 +11,9 @@ import DensCard from '../../../Component/Card/DenseCard'
 import { Auth } from 'aws-amplify'
 import CommonView from '../../../Component/CommonView'
 
-const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTab, selectedTab }) => {
+const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTab, selectedTab, refetch, unpaidSessionlist }) => {
+
+  const isFocused = useIsFocused()
 
   const navigation = useNavigation()
 
@@ -27,17 +29,36 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
     searchBtnHandler()
   }
 
-  const favoruiteButtonHandler = () => {
-    navigation.navigate(routes.Favoruite, { location: location })
+  const favoruiteButtonHandler = async () => {
+    try {
+      const result = await Auth.currentAuthenticatedUser();
+      console.log(result)
+      if (result?.signInUserSession) {
+        if (result.attributes.phone_number && result.attributes.phone_number != '') {
+          navigation.navigate(routes.Favoruite, { location: location })
+        } else {
+          navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
+        }
+        return
+      }
+
+    } catch (error) {
+
+    }
+    navigation.navigate(routes.login)
+
+
   }
 
   const cardDetailsHandler = async (data) => {
     try {
       const result = await Auth.currentAuthenticatedUser();
       if (result.attributes.phone_number && result.attributes.phone_number != '') {
+        
         navigation.navigate(routes.ChargingStation, {
           data: data
         })
+
       } else {
         navigation.navigate(routes.MobileInput, { email_id: result.attributes.email })
       }
@@ -51,11 +72,11 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
     try {
       setLoading(true)
       for (var i = 0; i < data.length; i++) {
-        if (data[i].address.city.includes(search)) {
+        if (data[i].address.city.toLowerCase().includes(search.toLowerCase())) {
           results.push(data[i]);
         }
 
-        else if (data[i].name.includes(search)) {
+        else if (data[i].name.toLowerCase().includes(search.toLowerCase())) {
           results.push(data[i]);
         }
       }
@@ -75,25 +96,29 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
 
 
   const backAction = () => {
-    setSelectedTab('map')
-    return true
+    if (isFocused) {
+      setSelectedTab('map')
+      return true
+    } else {
+      return false
+    }
+
   }
 
   let backHandler
 
   useEffect(() => {
     backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
-
     return () => {
       backHandler.remove()
     }
-  }, [])
+  }, [isFocused])
 
   return (
     <CommonView style={[styles.container]}>
       <View style={styles.searchContainer}>
         <CommonCard padding={1} style={{ flex: 1 }}>
-          <TouchableOpacity onPress={searchButtonHandler} style={styles.searchContainer}>
+          <TouchableOpacity style={styles.searchContainer} disabled={true}>
             <View>
               <DensCard marginVertical={5}>
                 <AntDesign name='search1' size={16} />
@@ -114,9 +139,9 @@ const MapList = ({ data, isRefetching, location, searchBtnHandler, setSelectedTa
         </CommonCard>
       </View>
 
-      <Loader modalOpen={loading} />
 
       <FlatList
+        refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />}
         data={mapData}
         keyExtractor={item => item.id}
         renderItem={({ item }) => {

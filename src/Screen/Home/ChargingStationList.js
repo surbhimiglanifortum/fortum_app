@@ -1,4 +1,5 @@
-import { View, Text, SafeAreaView, StyleSheet, useColorScheme, ScrollView, TouchableOpacity } from 'react-native'
+import { View, 
+     SafeAreaView, StyleSheet, useColorScheme, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import colors from '../../Utils/colors'
 import Button from '../../Component/Button/Button'
@@ -12,44 +13,47 @@ const ChargingStationList = () => {
 
     const navigation = useNavigation()
     const scheme = useColorScheme()
-const startBtnHandler=()=>{
-    navigation.navigate(routes.OngoingDetails)
-}
+
+    const startBtnHandler = () => {
+        navigation.navigate(routes.OngoingDetails)
+    }
+    
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
             <ScrollView>
                 <View style={styles.innerContainer}>
                     {/* <Header /> */}
                     <Header showText={'Charging Station'} />
+                    
                     <View style={styles.cardContainer}>
-            {
-              [1,1,1,].map((item, ind) => {
-                return (
-                    <TouchableOpacity style={styles.card}  >
-                    <View style={styles.centerView}>
-                       <View style={styles.icon}>
-                        <CommonText showText={'A'} fontSize={20} />
-                       </View>
-                        <View style={styles.cardInner}>
-                            <CommonText showText={'A ChargingPoint'} fontSize={16} />
-                            <CommonText showText={`₹ ${'14 / 01 min'}`} fontSize={13} />
-                        </View>
-                    </View>
-                    <View>
-                        <View style={{ alignItems: 'flex-end' }}>
-                            <View style={styles.rightCon}>
-                                <ChargerSmallSvg  />
-                                <CommonText showText={'44 KW'} fontSize={12} />
-                            </View>
-                            <CommonText showText={'Out Of Order'} fontSize={12} customstyles={{color:colors.red}} />
-                        </View>
-                    </View>
-                </TouchableOpacity>
-                )
-              })
-            }
+                        {
+                            [1, 1, 1,].map((item, ind) => {
+                                return (
+                                    <TouchableOpacity style={styles.card}  >
+                                        <View style={styles.centerView}>
+                                            <View style={styles.icon}>
+                                                <CommonText showText={'A'} fontSize={20} />
+                                            </View>
+                                            <View style={styles.cardInner}>
+                                                <CommonText showText={'A ChargingPoint'} fontSize={16} />
+                                                <CommonText showText={`₹ ${'14 / 01 min'}`} fontSize={13} />
+                                            </View>
+                                        </View>
+                                        <View>
+                                            <View style={{ alignItems: 'flex-end' }}>
+                                                <View style={styles.rightCon}>
+                                                    <ChargerSmallSvg />
+                                                    <CommonText showText={'44 KW'} fontSize={12} />
+                                                </View>
+                                                <CommonText showText={'Out Of Order'} fontSize={12} customstyles={{ color: colors.red }} />
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            })
+                        }
 
-          </View>
+                    </View>
                 </View>
             </ScrollView>
             <View style={styles.button}>
@@ -73,8 +77,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
 
     },
-    cardContainer:{
-        marginTop:20
+    cardContainer: {
+        marginTop: 20
     },
     card: {
         backgroundColor: colors.white,
@@ -84,9 +88,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 10
-      },
-      card: {
-        marginTop:10,
+    },
+    card: {
+        marginTop: 10,
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: colors.white,
@@ -105,13 +109,13 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     rightCon: {
-        flexDirection:'row',
-        alignItems:'center',
+        flexDirection: 'row',
+        alignItems: 'center',
         paddingVertical: 4,
         paddingHorizontal: 4,
         borderRadius: 4,
     },
-    icon:{paddingVertical:12,paddingHorizontal:16,backgroundColor:colors.greenBackground,borderRadius:5},
+    icon: { paddingVertical: 12, paddingHorizontal: 16, backgroundColor: colors.greenBackground, borderRadius: 5 },
 })
 
 export default ChargingStationList

@@ -19,14 +19,14 @@ import Header from '../../Component/Header/Header'
 
 let backHandler
 
-const Charging = ({ setSelectedTab }) => {
+const Charging = ({ setSelectedTab, route, chargingsrc }) => {
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const navigation = useNavigation()
     const isFocused = useIsFocused()
 
-    const [tab, setTab] = useState('ongoing')
+    const [tab, setTab] = useState(chargingsrc == "charging" ? 'completed' : 'ongoing')
     const [loaderOpen, setLoaderOpen] = useState(false)
 
     const ongoingBtnHandler = () => {
@@ -36,9 +36,15 @@ const Charging = ({ setSelectedTab }) => {
         setTab('completed')
     }
 
+    // useEffect(() => {
+    //     if (unPaidSeesion == 'comp') {
+    //         setTab('completed')
+    //     }
+    // }, [unPaidSeesion])
+
+
     const navigationHandler = (item) => {
         if (tab == 'ongoing') {
-            console.log(item.item)
             navigation.navigate(routes.OngoingDetails, {
                 locDetails: {
                     ...item.item.location, address: {
@@ -70,6 +76,7 @@ const Charging = ({ setSelectedTab }) => {
     const { data: completedData, status: completedStatus, isLoading: completedIsLoading, refetch: completedreFetch } = useQuery('chargingCompletedData', async () => {
         setLoaderOpen(true)
         const res = await chargingListCompleted(username)
+        console.log("CIMLEELJEJFDS",res)
         setLoaderOpen(false)
         return res.data
     })
@@ -78,17 +85,11 @@ const Charging = ({ setSelectedTab }) => {
         setSelectedTab('home')
     }
 
-    // const backAction = () => {
-    //     setSelectedTab('home')
-    //     return true
-    // }
+    useEffect(() => {
+        completedreFetch()
+        refetch()
+    }, [isFocused])
 
-    // useEffect(() => {
-    //     backHandler = BackHandler.addEventListener('hardwareBackPress', () => isFocused ? backAction : null)
-    //     return () => {
-    //         backHandler.remove()
-    //     }
-    // }, [isFocused])
 
     return (
         <CommonView>
@@ -123,7 +124,7 @@ const Charging = ({ setSelectedTab }) => {
                         {!loaderOpen && data?.length > 0 ?
                             <FlatList
                                 data={data}
-                                refreshControl={<RefreshControl onRefresh={refetch} />}
+                                refreshControl={<RefreshControl onRefresh={refetch} refreshing={loaderOpen} />}
                                 keyExtractor={item => item.id}
                                 renderItem={(item) => {
                                     return (
@@ -142,12 +143,14 @@ const Charging = ({ setSelectedTab }) => {
                         <>{!loaderOpen && completedData?.length > 0 ?
                             <FlatList
                                 data={completedData}
-                                refreshControl={<RefreshControl onRefresh={completedreFetch} />}
+                                refreshControl={<RefreshControl refreshing={loaderOpen} onRefresh={completedreFetch} />}
                                 keyExtractor={item => item.id}
-
                                 renderItem={(item) => {
+                                  
                                     return (
-                                        <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={item?.item?.paid ? Charger : ChargerRed} dataItem={item} />
+                                        <>
+                                            {item?.item?.status != "ACTIVE" && <Card tabName={"completed"} navigationHandler={() => navigationHandler(item)} Svg={Charger} SvgBg={item?.item?.paid} dataItem={item} />}
+                                        </>
                                     )
                                 }
                                 }

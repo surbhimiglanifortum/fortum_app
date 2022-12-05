@@ -17,6 +17,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getUserDetails, checkCardOrderStatus } from '../../../Services/Api'
 import { AddToRedux } from '../../../Redux/AddToRedux'
 import * as Types from '../../../Redux/Types'
+import GlobalDefines from '../../../Utils/globalDefines'
+import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
+import PaymentSvg from '../../../assests/svg/PaymentSvg'
+import RupeesSvg from '../../../assests/svg/RupeesSvg'
+import WalletSvg from '../../../assests/svg/wallet'
 
 const FortumChargeAndDriveCard = () => {
 
@@ -32,6 +37,10 @@ const FortumChargeAndDriveCard = () => {
         navigation.navigate(routes.Passbook)
     }
 
+    const _onPresstermsCondition = () => {
+        console.log('first')
+        Linking.openURL(GlobalDefines.tncURL);
+    }
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const getDetails = async () => {
@@ -79,28 +88,32 @@ const FortumChargeAndDriveCard = () => {
                 <View style={{ marginTop: 20 }}>
                     <CommonCard>
                         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(routes.CardDetails)}>
-                            <IconCardLarge Svg={CardLight} />
+                            <CommonIconCard Svg={PaymentSvg} />
                             <CommonText showText={'View Card Details'} black customstyles={{ marginLeft: 10 }} />
                         </TouchableOpacity>
                     </CommonCard>
 
                     <CommonCard>
                         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate(routes.AddPinelabMoney)}>
-                            <IconCardLarge Svg={RupeeLight} />
+                            <CommonIconCard Svg={RupeesSvg} />
                             <CommonText showText={'Add Money'} black customstyles={{ marginLeft: 10 }} />
                         </TouchableOpacity>
                     </CommonCard>
 
                     <CommonCard>
                         <TouchableOpacity style={styles.card} onPress={passbookButtonHAndler}>
-                            <IconCardLarge Svg={WalletLight} />
+                            <CommonIconCard Svg={WalletSvg} />
                             <CommonText showText={'Passbook'} black customstyles={{ marginLeft: 10 }} />
                         </TouchableOpacity>
                     </CommonCard>
                 </View>
 
                 <View style={styles.centerText}>
-                    <CommonText fontSize={14}>{'View'} <CommonText fontSize={14} onPress={() => { Linking.openURL('https://www.google.com/') }} customstyles={styles.linkText} >{'Terms And Condition'}</CommonText></CommonText>
+                    <TouchableOpacity onPress={_onPresstermsCondition} >
+                        <CommonText fontSize={14}>{'View'}
+                            <CommonText fontSize={14} customstyles={styles.linkText} >{'Terms And Conditions'}</CommonText>
+                        </CommonText>
+                    </TouchableOpacity>
                 </View>
 
                 <PinelabCard width={'100%'} />
@@ -108,12 +121,12 @@ const FortumChargeAndDriveCard = () => {
                 {status != '' && <CommonText showText={`Card Status : ${status}`} customstyles={{ marginVertical: 10, textAlign: 'center' }} />}
             </ScrollView>
 
-            {
+            {/* {
                 btnText !== 'Check Status' &&
                 <Button showText={btnText} onLoading={loading} onPress={() => {
                     navigation.navigate(routes.OrderCard)
                 }} />
-            }
+            } */}
 
         </CommonView>
     )

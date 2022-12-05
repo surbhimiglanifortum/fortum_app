@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, useColorScheme, BackHandler } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { scale } from 'react-native-size-matters'
 import Home from '../Home/Home'
 import Wallet from '../Wallet/Wallet'
@@ -19,16 +19,21 @@ import { Auth } from 'aws-amplify'
 import routes from '../../Utils/routes';
 import DashboardCard from '../../Component/Card/DashboardCard'
 import * as ApiAction from '../../Services/Api'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AddToRedux } from '../../Redux/AddToRedux'
 import * as  Types from '../../Redux/Types'
 import { useIsFocused } from '@react-navigation/native'
+import SnackContext from '../../Utils/context/SnackbarContext'
+
+
 let backHandler
 let mselectedHandler = "home"
+let chargingsrc = ""
 const Dashboard = ({ tabName, navigation, route }) => {
 
   const navigatedata = route?.params?.animateMap
   const [selectedTab, setSelectedTab] = useState('home')
+  const [unpaidSessionlist, setUnpaidSession] = useState([])
   const dispatch = useDispatch()
   const isFocused = useIsFocused()
 
@@ -36,14 +41,22 @@ const Dashboard = ({ tabName, navigation, route }) => {
     mselectedHandler = selectedTab
   }, [selectedTab])
 
-  useEffect(() => {
-    ApiAction.getUserDetails().then(result => {
-      if (result?.data) {
-        dispatch(AddToRedux(result.data, Types.USERDETAILS))
-      }
-    }).catch(err => {
-      dispatch(AddToRedux({}, Types.USERDETAILS))
-    })
+  let unPaidSeesion = useSelector((state) => state.UnPaidReducer.unPaid);
+
+  useEffect(async () => {
+    const result = await Auth.currentAuthenticatedUser();
+
+    if (result?.signInUserSession) {
+      ApiAction.getUserDetails().then(result => {
+        if (result?.data) {
+          dispatch(AddToRedux(result.data, Types.USERDETAILS))
+        }
+
+      }).catch(err => {
+        dispatch(AddToRedux({}, Types.USERDETAILS))
+      })
+    }
+
   }, [])
 
   const homeButtonHandler = () => {
@@ -53,6 +66,7 @@ const Dashboard = ({ tabName, navigation, route }) => {
     handleSelection('wallet')
   }
   const chargingButtonHandler = () => {
+    chargingsrc = ""
     handleSelection('charging')
   }
   const notificationButtonHandler = () => {
@@ -90,19 +104,50 @@ const Dashboard = ({ tabName, navigation, route }) => {
   }, [tabName])
 
   const backAction = () => {
-    console.log('first', mselectedHandler)
     if (isFocused) {
       if (mselectedHandler != 'home') {
         setSelectedTab('home')
         return true
       }
-      
     }
     return false
   }
 
+  const { setOpenCommonModal } = useContext(SnackContext)
+  let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
+
+  const unpaidSession = async () => {
+    const username = mUserDetails?.username
+    try {
+      let res = await ApiAction.getAllUnpaid(username)
+      setUnpaidSession(res?.data)
+      // dispatch({
+      //   type: 'ADD_TO_UNPAID',
+      //   payload: { item: res?.data }
+      // })
+    } catch (error) {
+      console.log('Error')
+    }
+  }
+  // useEffect(() => {
+  //   if (unpaidSessionlist?.length > 0) {
+  //     setOpenCommonModal({
+  //       isVisible: true, message: `You have an unpaid Charging Session`,
+  //       showBtnText: "View",
+  //       onOkPress: () => {
+  //         chargingsrc = "charging"
+  //         navigation.navigate(setSelectedTab('charging'), {})
+  //       }
+  //     })
+  //   }
+  // }, [unpaidSessionlist])
+
   useEffect(() => {
-    console.log("IS focu", isFocused)
+    unpaidSession()
+  }, [isFocused])
+
+
+  useEffect(() => {
     backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
     return () => {
       backHandler.remove()
@@ -114,10 +159,10 @@ const Dashboard = ({ tabName, navigation, route }) => {
       <View style={[styles.container, { backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight }]}>
         <View style={styles.renderComponent}>
           <View style={{ flex: 1 }}>
-            {selectedTab == 'home' && <Home navigatedata={navigatedata} />}
+            {selectedTab == 'home' && <Home navigatedata={navigatedata} unpaidSessionlist={unpaidSessionlist} />}
             {selectedTab == 'wallet' && <Wallet setSelectedTab={setSelectedTab} />}
-            {selectedTab == 'charging' && <Charging setSelectedTab={setSelectedTab} />}
-            {selectedTab == 'notification' && <Notification setSelectedTab={setSelectedTab} />}
+            {selectedTab == 'charging' && <Charging chargingsrc={chargingsrc} setSelectedTab={setSelectedTab} />}
+            {/* {selectedTab == 'notification' && <Notification setSelectedTab={setSelectedTab} />} */}
             {selectedTab == 'other' && <Other setSelectedTab={setSelectedTab} />}
           </View>
         </View>
@@ -134,8 +179,6 @@ const Dashboard = ({ tabName, navigation, route }) => {
             </View></DashboardCard> : <WalletSvg color={colors.white} />}
           </TouchableOpacity>
 
-
-
           <TouchableOpacity onPress={chargingButtonHandler} style={[styles.tabButton, selectedTab == 'charging' ? styles.activeTab : null]}>
 
             {selectedTab == 'charging' ? <DashboardCard><View style={styles.tabButton}>
@@ -145,12 +188,12 @@ const Dashboard = ({ tabName, navigation, route }) => {
           </TouchableOpacity>
 
 
-          <TouchableOpacity onPress={notificationButtonHandler} style={[styles.tabButton, selectedTab == 'notification' ? styles.activeTab : null]}>
+          {/* <TouchableOpacity onPress={notificationButtonHandler} style={[styles.tabButton, selectedTab == 'notification' ? styles.activeTab : null]}>
             {selectedTab == 'notification' ? <DashboardCard><View style={styles.tabButton}>
               <NotificationSvg color={colors.white} />
               <CommonText showText={'Notification'} margin={6} customstyles={styles.tabText} />
             </View></DashboardCard> : <NotificationSvg color={colors.white} />}
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
 
           <TouchableOpacity onPress={otherButtonHandler} style={[styles.tabButton, selectedTab == 'other' ? styles.activeTab : null]}>

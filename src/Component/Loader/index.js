@@ -3,7 +3,10 @@ import { Modal, View, Text, ActivityIndicator } from "react-native";
 
 const Loader = ({ modalOpen }) => {
   return (
-    modalOpen && <ActivityIndicator />
+    modalOpen &&
+    <View style={{ flex: 9, alignItems: 'center', justifyContent: 'center' }}>
+      <ActivityIndicator />
+    </View>
   );
 };
 

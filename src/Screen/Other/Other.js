@@ -47,12 +47,13 @@ const Other = ({ setSelectedTab }) => {
 
   const logoutHandler = async () => {
     await Auth.signOut();
+    dispatch(AddToRedux({}, Types.USERDETAILS))
     navigation.reset({
       index: 0,
       routes: [{ name: routes.dashboard }],
     });
   }
-  
+
   const preferenceHandler = () => {
     navigation.navigate(routes.Preference)
   }
@@ -74,6 +75,9 @@ const Other = ({ setSelectedTab }) => {
   const chargingKeyHandler = () => {
     navigation.navigate(routes.ChargingKey)
   }
+  const joinHandsHandler = () => {
+    navigation.navigate(routes.JoinHandsWith)
+  }
   const storeHandler = () => {
     navigation.navigate(routes.Store)
   }
@@ -92,7 +96,7 @@ const Other = ({ setSelectedTab }) => {
     userDetailsUpdated()
   }, [isFocused])
 
-  
+
 
   return (
     <CommonView >
@@ -120,6 +124,7 @@ const Other = ({ setSelectedTab }) => {
             {/* <SettingCard showText={'Refer & Earn'} fontSize={15} Svg={ReferSvg} onPress={referandEarnHandler} /> */}
             {/* <SettingCard showText={'Change Password'} fontSize={15} Svg={PasswordSvg} onPress={changePasswordHandler} /> */}
             <SettingCard showText={'Support'} fontSize={15} Svg={HelpSvg} onPress={supportHandler} />
+            <SettingCard showText={'Join Hands With Us'} fontSize={15} Svg={HelpSvg} onPress={joinHandsHandler} />
             {/* <SettingCard showText={'Preference'} fontSize={15} Svg={PrefrenceSvg} onPress={preferenceHandler} /> */}
             <SettingCard showText={'Logout'} fontSize={15} Svg={LogoutSvg} onPress={logoutHandler} />
           </View>

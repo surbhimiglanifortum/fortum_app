@@ -14,6 +14,8 @@ import WhatsSvg from '../../../assests/svg/WhatsSvg'
 import routes from '../../../Utils/routes'
 import CommonView from '../../../Component/CommonView'
 import GlobalDefines from '../../../Utils/globalDefines'
+import MailSvg from '../../../assests/svg/MailSvg'
+import HelperSvg from '../../../assests/svg/HelperSvg'
 
 const Support = () => {
 
@@ -75,12 +77,12 @@ const Support = () => {
         <CommonView>
             <Header showText={'Support'} />
             <CommonText showText={'Legal'} fontSize={14} customstyles={styles.headerText} />
-            <SettingCard Svg={FAQSvg} showText={'FAQ'} fontSize={16} onPress={faqHandler} />
-            <SettingCard Svg={TermAndCondtionSvg} showText={'Terms and Conditions'} fontSize={16} onPress={_onPresstermsCondition} />
+            <SettingCard Svg={HelperSvg} showText={'FAQ'} fontSize={16} onPress={faqHandler} />
+            <SettingCard Svg={TermAndCondtionSvg} showText={'Terms and Condition'} fontSize={16} onPress={_onPresstermsCondition} />
             <SettingCard Svg={PrivacySvg} showText={'Privacy Policy'} fontSize={16} onPress={_onPressPrivacy} />
             <CommonText showText={'Contact Us'} fontSize={14} customstyles={styles.headerText} />
             <SettingCard Svg={CallSvg} showText={'18001203578'} fontSize={16} onPress={onPressMobileNumberClick} />
-            <SettingCard Svg={SupportSvg} showText={'support@chargedrive.in'} fontSize={16} onPress={_onpressEmail} />
+            <SettingCard Svg={MailSvg} showText={'support@chargedrive.in'} fontSize={16} onPress={_onpressEmail} />
             {/* <SettingCard Svg={WhatsSvg} showText={'Whatsapp'} fontSize={16} onPress={sendWhatsApp} /> */}
         </CommonView>
     )

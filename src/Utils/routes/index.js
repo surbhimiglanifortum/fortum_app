@@ -50,7 +50,10 @@ const routes = {
     AddMoneyDone: 'AddMoneyDone',
     OrderCard: 'OrderCard',
     CardOrderConfirmed: 'CardOrderConfirmed',
-    QrScanner: 'QrScanner'
+    QrScanner: 'QrScanner',
+    KycDone: 'KycDone',
+    ReportPage:'ReportPage',
+    JoinHandsWith:'JoinHandsWith',
 }
 
 export default routes

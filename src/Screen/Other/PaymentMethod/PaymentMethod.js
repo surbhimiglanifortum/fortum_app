@@ -19,6 +19,9 @@ import { AddToRedux } from '../../../Redux/AddToRedux'
 import * as Types from '../../../Redux/Types'
 import SettingCard from '../../../Component/Card/SettingCard'
 import PaymentSvg from '../../../assests/svg/PaymentSvg'
+import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
+import WalletSvg from '../../../assests/svg/wallet'
+import RupeesSvg from '../../../assests/svg/RupeesSvg'
 
 const PaymentMethod = () => {
 
@@ -86,16 +89,19 @@ const PaymentMethod = () => {
 
         <Header showText={'Payment Method'} />
 
-        <CommonText showText={'Tell us how you want to pay and then you are ready to start charging'} fontSize={14} regular customstyles={{ marginVertical: 20 }} />
+        <View style={{ marginVertical: 20, paddingHorizontal: 10 }}>
+          <CommonText showText={'Tell us how you want to pay and then you '} fontSize={16} regular customstyles={{}} />
+          <CommonText showText={'are ready to start charging '} fontSize={16} regular customstyles={{}} />
+        </View>
 
         <CommonCard>
           <TouchableOpacity>
             <View style={styles.card}>
               <View style={styles.card}>
-                <IconCardLarge Svg={RupeeLight} />
+                <CommonIconCard Svg={RupeesSvg} />
                 <CommonText showText={'Pay As You Go'} fontSize={14} customstyles={{ marginLeft: 10, flex: 0.9 }} black />
               </View>
-              <AntDesign name='right' color={colors.black} size={20} />
+              <AntDesign name='right' color={scheme == 'dark' ? colors.white : colors.black} size={20} />
             </View>
           </TouchableOpacity>
         </CommonCard>
@@ -109,17 +115,17 @@ const PaymentMethod = () => {
             <CommonText customstyles={styles.highlightedText} showText={'New'} medium fontSize={12} />
             <View style={styles.card}>
               <View style={styles.card}>
-                <IconCardLarge Svg={CardLight} />
+                <CommonIconCard Svg={PaymentSvg} />
                 <View style={{ marginLeft: 10, flex: 0.9 }}>
                   <CommonText showText={'Fortum Charge & Drive Card'} fontSize={14} black />
                   {
                     mUserDetails?.pinelabs_account ?
-                      <CommonText showText={`Card Balance : ₹ ${pinelabData?.Balance}`} fontSize={12} regular /> :
+                      <CommonText showText={`Card Balance : ₹ ${pinelabData?.Balance || '0'}`} fontSize={12} regular /> :
                       <CommonText showText={'Activate your prepaid card'} fontSize={12} regular />
                   }
                 </View>
               </View>
-              <AntDesign name='right' color={colors.black} size={20} />
+              <AntDesign name='right' color={scheme == 'dark' ? colors.white : colors.black} size={20} />
             </View>
           </TouchableOpacity>
         </CommonCard>
@@ -128,13 +134,13 @@ const PaymentMethod = () => {
           <TouchableOpacity onPress={() => { walletCardHandler(tabName) }}>
             <View style={styles.card}>
               <View style={styles.card}>
-                <IconCardLarge Svg={WalletLight} />
+                <CommonIconCard Svg={WalletSvg} />
                 <View style={{ marginLeft: 10, flex: 0.9 }}>
                   <CommonText showText={'Wallet'} fontSize={14} black />
-                  <CommonText showText={`Balance : ₹ ${balance}`} fontSize={12} regular />
+                  <CommonText showText={`Balance : ₹ ${balance || '0'}`} fontSize={12} regular />
                 </View>
               </View>
-              <AntDesign name='right' color={colors.black} size={20} />
+              <AntDesign name='right' color={scheme == 'dark' ? colors.white : colors.black} size={20} />
             </View>
           </TouchableOpacity>
         </CommonCard>

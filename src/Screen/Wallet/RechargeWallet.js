@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { StyleSheet, useColorScheme, View, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, useColorScheme, View, TouchableOpacity, ScrollView, FlatList } from 'react-native'
 import CommonView from '../../Component/CommonView'
 import DenseCard from '../../Component/Card/DenseCard'
 import Header from '../../Component/Header/Header'
@@ -15,6 +15,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import routes from '../../Utils/routes'
 import SnackContext from '../../Utils/context/SnackbarContext'
+import { scale } from 'react-native-size-matters'
 
 const RechargeWallet = ({ route }) => {
 
@@ -65,8 +66,6 @@ const RechargeWallet = ({ route }) => {
       setGstError('')
     }
 
-    console.log("Gst Error", gstState, gstError)
-
     const payload = {
       amount: amount.value,
       stategst: gstState
@@ -89,15 +88,14 @@ const RechargeWallet = ({ route }) => {
           callback_url: '',
           juspay_process_payload: result.data
         })
-        setLoadingSign(false)
       } else {
         setOpenCommonModal({
-          isVisible: true, message: 'Something Went Wrong Please Try After Some Time.', onOkPress: () => {
+          isVisible: true, message: 'Something Went Wrong. Please Try After Some Time.', onOkPress: () => {
             console.log("OKPRESSED")
           }
         })
-        setLoadingSign(false)
       }
+      setLoadingSign(false)
     } catch (error) {
       console.log("RechargeWallet Catch Block", error)
       setLoadingSign(false)
@@ -147,15 +145,13 @@ const RechargeWallet = ({ route }) => {
           {amount.error != '' && <CommonText showText={amount.error} fontSize={14} customstyles={{ color: colors.red, marginLeft: 15, marginVertical: 10 }} />}
         </DenseCard>
 
-
-
-        <View style={styles.row}>
+        <View style={[styles.row, { flexWrap: 'wrap' }]}>
           {lazyAmount.map((e) => {
             return (
-              <TouchableOpacity onPress={() => {
+              <TouchableOpacity style={styles.innerRow} onPress={() => {
                 setAmount({ value: e.toString(), error: '' })
               }}>
-                <CommonCard style={styles.column}>
+                <CommonCard style={[styles.column]}>
                   <CommonText showText={`₹ ${e}`} />
                 </CommonCard>
               </TouchableOpacity>
@@ -167,10 +163,10 @@ const RechargeWallet = ({ route }) => {
         <View style={styles.row}>
           {lazyAmount2.map((e) => {
             return (
-              <TouchableOpacity onPress={() => {
+              <TouchableOpacity style={styles.innerRow} onPress={() => {
                 setAmount({ value: e.toString(), error: '' })
               }}>
-                <CommonCard style={styles.column}>
+                <CommonCard>
                   <CommonText showText={`₹ ${e}`} />
                 </CommonCard>
               </TouchableOpacity>
@@ -223,10 +219,15 @@ const styles = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   column: {
-    paddingHorizontal: 20,
-    paddingVertical: 20
+    // paddingHorizontal: 16,
+    // paddingVertical: 16
+    width: scale(60),
+    height: scale(45),
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   rupeeText: {
     marginTop: 17

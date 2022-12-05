@@ -80,13 +80,11 @@ const Wallet = ({ setSelectedTab }) => {
   };
 
   const handleStartConfirm = (date) => {
-    console.log("handleStartConfirm", date)
     setTechStart(moment(date).format('YYYY-MM-DDT00:00:00'))
     hideStartDatePicker();
   };
 
   const handleEndConfirm = (date) => {
-    console.log("handleEndConfirm", date)
     setTechEnd(moment(date).format('YYYY-MM-DDT23:59:00'))
     hideEndDatePicker();
   };
@@ -96,6 +94,10 @@ const Wallet = ({ setSelectedTab }) => {
     setModalVisible(false)
   }
 
+  useEffect(() => {
+    refetch()
+  }, [isFocused])
+  
   const username = mUserDetails?.username
 
   const { data, status, isLoading, refetch } = useQuery('walletData', async () => {

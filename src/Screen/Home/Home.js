@@ -1,8 +1,7 @@
 import React, { useEffect, useContext, useState, useRef, useCallback } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme, FlatList, BackHandler } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, useColorScheme, FlatList, BackHandler } from 'react-native'
 import colors from '../../Utils/colors';
 import MapList from './ChargerList/MapList';
-import IconCardWithoutBg from '../../Component/Card/IconCardWithoutBg';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FilterSvg from '../../assests/svg/FilterSvg';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -15,7 +14,7 @@ import Geolocation from '@react-native-community/geolocation';
 import { computeDistance } from '../../Utils/helperFuncations/computeDistance';
 import SnackContext from '../../Utils/context/SnackbarContext';
 import { useQuery } from 'react-query'
-import { API, Auth } from 'aws-amplify'
+import { Auth } from 'aws-amplify'
 import * as ApiAction from '../../Services/Api'
 import MapCharger from '../Home/MapCharger'
 import CommonText from '../../Component/Text/CommonText';
@@ -26,14 +25,16 @@ import TTNCNotificationDialog from '../../Component/Modal/TNCNotificationDialog'
 import { useDispatch } from 'react-redux'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import * as Types from '../../Redux/Types'
-import axios from "axios";
+import axios from '../../Services/BaseUrl'
+import * as axiosLib from 'axios'
 import appConfig from '../../../appConfig'
-
 
 let selectedMarker = ""
 let mLocationPayload = {}
 let flatListBottomList
-export default Home = ({ navigatedata }) => {
+let backHandler
+
+export default Home = ({ navigatedata, tabName, unpaidSessionlist }) => {
 
   const isFocused = useIsFocused()
   const mapRef = useRef();
@@ -44,16 +45,17 @@ export default Home = ({ navigatedata }) => {
   const [selectedCharger, setSelectedCharger] = useState(false)
   const [openFilterModal, setOpenFilterModal] = useState(false)
   const [locationLoading, setLocationLoading] = useState(false)
+  // const [unpaidSessionlist, setUnpaidSession] = useState([])
   const [locationsPayload, setLocationsPayload] = useState({
     onlyAvailableConnectors: false,
   })
   const [tncNotification, setTncNotification] = useState(false)
   const [mLocation, setMLocation] = useState([])
   const dispatch = useDispatch()
-
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
-
   const checkActiveSession = useSelector((state) => state.TempStore.checkActiveSession);
+  const userLocation = useSelector((state) => state.commonReducer.userLocations)
+  // let unPaidSeesion = useSelector((state) => state.UnPaidReducer?.unPaid);
 
   const scheme = useColorScheme()
 
@@ -67,7 +69,6 @@ export default Home = ({ navigatedata }) => {
   const favButtonHandler = async () => {
     try {
       const result = await Auth.currentAuthenticatedUser();
-
       console.log(result)
       if (result?.signInUserSession) {
         if (result.attributes.phone_number && result.attributes.phone_number != '') {
@@ -82,17 +83,32 @@ export default Home = ({ navigatedata }) => {
 
     }
     navigation.navigate(routes.login)
-
   }
 
   const filterButtonHandler = () => {
     setOpenFilterModal(true)
   }
 
+  // const backAction = () => {
+  //   console.log("Check Filter", openFilterModal)
+  //   if (openFilterModal) {
+  //     setOpenFilterModal(false)
+  //     return true
+  //   }
+  //   return false
+  // }
+
+  // useEffect(() => {
+  //   console.log("hardwa")
+  //   backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
+  //   return () => {
+  //     backHandler.remove()
+  //   }
+  // }, [])
+
   const handleSelection = async (screen, payload) => {
     try {
       const result = await Auth.currentAuthenticatedUser();
-      console.log(result)
       if (result?.signInUserSession) {
         if (result.attributes.phone_number && result.attributes.phone_number != '') {
           navigation.navigate(screen, payload)
@@ -108,6 +124,16 @@ export default Home = ({ navigatedata }) => {
   }
 
   const scannerButtonHandler = () => {
+    if (unpaidSessionlist?.length > 0) {
+      setOpenCommonModal({
+        isVisible: true, message: "You have an unpaid session",
+        onOkPress: () => {
+          isVisible = false
+        }
+      })
+      return
+
+    }
     handleSelection(routes.QrScanner)
   }
 
@@ -118,6 +144,7 @@ export default Home = ({ navigatedata }) => {
         longitude: payload.lng
       }
     })
+    dispatch(AddToRedux(location, Types.USERLOCATIONS))
   }
 
   const searchBtnHandler = () => {
@@ -162,14 +189,12 @@ export default Home = ({ navigatedata }) => {
         }
       }, 2000);
     }
-
-
   }
 
   const { setOpenCommonModal } = useContext(SnackContext)
 
   const CallCheckActiveSession = async () => {
-  
+    console.log(checkActiveSession)
     const result = await Auth.currentAuthenticatedUser();
     if (result.signInUserSession) {
       if (checkActiveSession) {
@@ -180,6 +205,7 @@ export default Home = ({ navigatedata }) => {
             setOpenCommonModal({
               isVisible: true, message: `You have an ongoing charging session at Charger ${response.data[0]?.location?.name} please stop the session if you have done charging!`,
               heading: "Ongoing Session",
+              showBtnText: "Stop",
               secondButton: {
                 onPress: () => {
 
@@ -213,7 +239,6 @@ export default Home = ({ navigatedata }) => {
 
   const userDetailsUpdated = async () => {
     const result = await ApiAction.getUserDetails()
-
     if (result.data) {
       dispatch(AddToRedux(result.data, Types.USERDETAILS))
     }
@@ -223,7 +248,7 @@ export default Home = ({ navigatedata }) => {
     mLocationPayload = locationsPayload
     refetch({ jhsgd: "SLJ" })
     CallCheckActiveSession()
-  }, [location, locationsPayload])
+  }, [locationsPayload, userLocation])
 
   const addInterceptor = async () => {
     const result = await Auth.currentAuthenticatedUser();
@@ -234,6 +259,8 @@ export default Home = ({ navigatedata }) => {
         try {
           if (token)
             config.headers.Authorization = token.getIdToken().getJwtToken();
+          config.headers.username = result.attributes.email
+
         } catch (e) {
           console.log(e)
         }
@@ -241,6 +268,24 @@ export default Home = ({ navigatedata }) => {
         // console.log("interceptror", config)
         return config;
       });
+
+      axiosLib.interceptors.request.use(async (config) => {
+        // console.log("AUTH ",Auth)
+        const token = await Auth.currentSession().catch(err => { console.log(err) });
+        try {
+          if (token)
+            config.headers.Authorization = token.getIdToken().getJwtToken();
+          config.headers.username = result.attributes.email
+
+        } catch (e) {
+          console.log(e)
+        }
+        config.headers['App_ver'] = appConfig?.APP_VERSION;
+        // console.log("interceptror", config)
+        return config;
+      });
+
+
     }
   }
   useEffect(() => {
@@ -255,7 +300,7 @@ export default Home = ({ navigatedata }) => {
   }, [isFocused])
 
 
-  const { data, status, isLoading, isRefetching, refetch, refetc } = useQuery('MapData', async () => {
+  const { data, status, isLoading, isRefetching, refetch } = useQuery('MapData', async () => {
     {
       try {
 
@@ -266,18 +311,17 @@ export default Home = ({ navigatedata }) => {
 
         const res = await ApiAction.getLocation(payload)
         var locationsArray = res.data?.locations[0];
-        if (!location.coords) {
+        if (!userLocation?.coords) {
 
         } else {
           if (locationsArray.length > 0) {
             locationsArray.map((data, index) => {
-              locationsArray[index].distance = computeDistance([location?.coords?.latitude, location?.coords?.longitude], [
+              locationsArray[index].distance = computeDistance([userLocation?.coords?.latitude, userLocation?.coords?.longitude], [
                 data?.latitude,
                 data?.longitude,
               ])
             })
             locationsArray?.sort(function (a, b) { return a.distance - b.distance })
-
           }
         }
         setMLocation(locationsArray)
@@ -294,9 +338,9 @@ export default Home = ({ navigatedata }) => {
     try {
       setLocationLoading(true)
       Geolocation.getCurrentPosition(info => {
-
         setLocation(info)
         setLocationLoading(false)
+        dispatch(AddToRedux(info, Types.USERLOCATIONS))
       }, error => {
         console.log(error)
       })
@@ -322,9 +366,14 @@ export default Home = ({ navigatedata }) => {
     })
   }
 
+  useEffect(() => {
+
+  }, [unpaidSessionlist])
+
+
   return (
     <View style={styles.container}>
-      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} setSelectedTab={setSelectedTab} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
+      {selectedTab == 'List' ? <MapList data={mLocation} isRefetching={isRefetching} location={location} setOpenFilterModal={setOpenFilterModal} searchBtnHandler={searchBtnHandler} setSelectedTab={setSelectedTab} refetch={refetch}  unpaidSessionlist={unpaidSessionlist} /> : <MapCharger location={location} data={data} isLoading={isLoading} locationLoading={locationLoading} chargingBtnHandler={chargingBtnHandler} />}
       {/* Top Tab */}
       <View style={styles.topTab}>
         <View style={styles.topTabInner}>
@@ -349,6 +398,10 @@ export default Home = ({ navigatedata }) => {
           </TouchableOpacity>
           }
         </View>
+
+        {unpaidSessionlist?.length > 0 && selectedTab != 'List' && <View style={{ position: 'absolute', top: 60, paddingVertical: 8, backgroundColor: colors.redLight, paddingHorizontal: 25, elevation: 5, borderRadius: 10 }}>
+          <CommonText showText={'You have an unpaid session'} regular customstyles={{ color: colors.red }} />
+        </View>}
 
         {selectedTab == 'List' && <TouchableOpacity onPress={filterButtonHandler}
           style={{ position: 'absolute', right: -70 }}>

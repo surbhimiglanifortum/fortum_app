@@ -69,12 +69,12 @@ const MyCart = ({ route }) => {
         }
 
         setLoading(true)
-        
+
         const cartObj = {}
         cartDataDetails?.cartItem.map(e => {
             cartObj[e.id] = e.cartItem
         })
-        
+
         const payload = {
             username: mUserDetails.username, cartObj: cartObj, deliveryAddress
         }
@@ -82,8 +82,20 @@ const MyCart = ({ route }) => {
         try {
             const result = await ApiAction.placeOrder(payload)
             if (result.data.result === 'ok') {
+                dispatch({
+                    type: 'CLEAR_CART',
+                    payload: []
+                })
                 setOpenCommonModal({ isVisible: true, message: 'Order placed successfully' })
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: routes.dashboard }],
+                });
             } else {
+                dispatch({
+                    type: 'CLEAR_CART',
+                    payload: []
+                })
                 navigation.navigate(routes.PaymentScreenJuspay, {
                     callFrom: 'MyCart',
                     description: 'Add Money In Wallet',
@@ -117,14 +129,14 @@ const MyCart = ({ route }) => {
         <CommonView>
             <ScrollView >
                 <View style={styles.innerContainer}>
-                    <Header showText={'MY Cart'} />
+                    <Header showText={'My Cart'} />
                     <View style={styles.topCard}>
-                        {cartDataDetails?.cartItem.length > 0 ?cartDataDetails?.cartItem.map((item, ind) => {
+                        {cartDataDetails?.cartItem.length > 0 ? cartDataDetails?.cartItem.map((item, ind) => {
                             return (
                                 <DenseCard key={ind} padding={5}>
                                     <View style={styles.denceInnnerCard}>
                                         <View style={[styles.cartInner, { width: '50%' }]}>
-                                            <View style={{ width: '35%' }}>
+                                            <View style={{ width: '30%' }}>
                                                 <CommonIconCard Svg={StoreSvg} />
                                             </View>
                                             <View style={[styles.cartDetailsText, { width: '50%' }]}>
@@ -139,16 +151,15 @@ const MyCart = ({ route }) => {
                                     </View>
                                 </DenseCard>
                             )
-                        }):<NoData showText={'No Items Found in Cart'} />}
+                        }) : <NoData showText={'No Items Found in Cart'} />}
                     </View>
                     <TouchableOpacity onPress={handleChangeDeliveryAddress}>
                         <DenseCard>
                             <CommonText showText={'Delivery Address'} />
+                            {console.log("Check Address on cart", deliveryAddress)}
                             {!deliveryAddress?.address && <CommonText regular fontSize={14}>Add Delivery Address</CommonText>}
-                            <CommonText regular fontSize={14}>
-                                {deliveryAddress?.first_name + " " + deliveryAddress?.last_name}
-                            </CommonText>
-                            <CommonText regular fontSize={14}>{(deliveryAddress?.address || "") + " " + (deliveryAddress?.address_line_2 || "") + " " + (deliveryAddress?.city || "") + " " + (deliveryAddress?.country || "") + " " + (deliveryAddress?.postal_code || "")}</CommonText>
+                            {(!deliveryAddress?.first_name == "" || !deliveryAddress?.last_name == "") && <CommonText regular fontSize={14} showText={`${deliveryAddress?.first_name || ""} ${deliveryAddress?.last_name || ""}`} />}
+                            {(!deliveryAddress?.address == "" || !deliveryAddress?.address_line_2 == "" || !deliveryAddress?.city == "" || !deliveryAddress?.country == "" || !deliveryAddress?.postal_code == "") && <CommonText regular fontSize={14}>{(deliveryAddress?.address || "") + " " + (deliveryAddress?.address_line_2 || "") + " " + (deliveryAddress?.city || "") + " " + (deliveryAddress?.country || "") + " " + (deliveryAddress?.postal_code || "")}</CommonText>}
                         </DenseCard>
                     </TouchableOpacity>
 
@@ -180,7 +191,7 @@ const MyCart = ({ route }) => {
                 </View>
             </ScrollView>
 
-           {cartDataDetails?.cartItem.length > 0 &&  <Button onLoading={loading} showText={'Proceed to Pay'} onPress={ProceedToPayHadnler} />}
+            {cartDataDetails?.cartItem.length > 0 && <Button onLoading={loading} showText={'Proceed to Pay'} onPress={ProceedToPayHadnler} />}
 
         </CommonView>
     )

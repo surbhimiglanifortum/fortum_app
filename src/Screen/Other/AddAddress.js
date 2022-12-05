@@ -71,7 +71,7 @@ const AddAddress = () => {
     const handleSignup = async (values, event) => {
         let objToSend = {}
         objToSend.address = values.address_line1
-        objToSend.address_line2 = values.address_line2
+        objToSend.address_line_2 = values.address_line2
         objToSend.city = values.city
         objToSend.country = values.state
         objToSend.first_name = values.first_name
@@ -99,7 +99,7 @@ const AddAddress = () => {
                             referral_code: "",
                             mobile_number: '',
                             address_line1: '',
-                            address_line2: '',
+                            address_line_2: '',
                             postal_code: '',
                             city: '',
                             state: '',

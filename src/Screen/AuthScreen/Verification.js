@@ -13,6 +13,7 @@ import * as Types from '../../Redux/Types'
 import { AddToRedux } from '../../Redux/AddToRedux';
 import SnackContext from '../../Utils/context/SnackbarContext'
 import CommonView from '../../Component/CommonView'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Verification = ({ route }) => {
 
@@ -92,13 +93,18 @@ const Verification = ({ route }) => {
                         loginSuccess()
                     } else {
                         // enter valid OTP
-                        setOpenCommonModal({ isVisible: true, message: "OTP is wrong please re enter " })
+                        setOpenCommonModal({ isVisible: true, message: "OTP does not match, please re-enter" })
                     }
                     setLoading(false)
                 }).catch(error => {
                     // Somethong went wrong
+                    setOpenCommonModal({
+                        isVisible: true, message: "Session expired. Please retry.", onOkPress: () => {
+                            navigation.goBack()
+                        }
+                    })
                     console.log("Something went wrong", error)
-                    setOpenCommonModal({ isVisible: true, message: "Something Went Wrong!!!" })
+                    // setOpenCommonModal({ isVisible: true, message: "Something Went Wrong!!!" })
                     setLoading(false)
                     // loginSuccess(false)
                 })
@@ -112,14 +118,24 @@ const Verification = ({ route }) => {
         }
     }
 
+    const sendToken = async (username, payload) => {
+        try {
+            const result = await ApiAction.pushNotification(username, payload)
+        } catch (error) {
+            console.log("Push Notification Token API Error", error)
+        }
+    }
+
     const loginSuccess = async (navigateToDashboard = true) => {
         const data = await Auth.currentAuthenticatedUser();
+        const fcmToken = await AsyncStorage.getItem('fcmToken')
+        console.log("Login Success Result", data)
         if (data.signInUserSession) {
+            sendToken(data?.attributes?.email, { firebasetoken: fcmToken })
             const result = await ApiAction.getUserDetails()
             if (result?.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
                 if (navigateToDashboard) {
-
                     navigation.reset({
                         index: 0,
                         routes: [{ name: routes.dashboard }],
@@ -130,10 +146,10 @@ const Verification = ({ route }) => {
                 try {
                     const result = await ApiAction.registerNoPhone(data.attributes.email.toLowerCase(), {}, { first_name, last_name })
 
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: routes.dashboard }],
-                    });
+                    // navigation.reset({
+                    //     index: 0,
+                    //     routes: [{ name: routes.dashboard }],
+                    // });
                     // user created at backend if not exisits
                 } catch (error) {
                     setOpenCommonModal({ isVisible: true, message: "Unable to Create User" })

@@ -14,6 +14,8 @@ import routes from '../../../Utils/routes'
 import SnackContext from '../../../Utils/context/SnackbarContext'
 import Textinput from '../../../Component/Textinput/Textinput'
 import { useQuery } from 'react-query'
+import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCard'
+import WalletSvg from '../../../assests/svg/wallet'
 
 const AddPinelabMoney = ({ route }) => {
 
@@ -58,7 +60,11 @@ const AddPinelabMoney = ({ route }) => {
                 })
                 setLoadingSign(false)
             } else {
-                setSnack({ message: 'Something Went Wrong Please Try After Some Time.', open: true, color: 'success' })
+
+                setOpenCommonModal({
+                    isVisible: true, message: "Something Went Wrong Please Try After Some Time.",
+
+                })
                 setLoadingSign(false)
             }
         } catch (error) {
@@ -86,11 +92,12 @@ const AddPinelabMoney = ({ route }) => {
     return (
         <CommonView>
             <ScrollView >
-                <Header showText={'Recharge Pinelab Card'} />
-                <DenseCard margin={1}>
+                <Header showText={'Recharge Prepaid Card'} />
+                <DenseCard margin={1} padding={10}>
                     <View style={styles.row}>
-                        <CommonText showText={'Wallet Balance'} regular fontSize={14} customstyles={{ flex: 1 }} />
-                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2)}`} />
+                        <CommonIconCard Svg={WalletSvg} />
+                        <CommonText showText={'Wallet Balance'} regular fontSize={14} customstyles={{ flex: 1, marginLeft: 10 }} />
+                        <CommonText showText={`₹ ${data?.response?.Cards[0]?.Balance.toFixed(2) || '0'}`} fontSize={14}/>
                     </View>
                 </DenseCard>
 
@@ -112,10 +119,10 @@ const AddPinelabMoney = ({ route }) => {
                 <View style={styles.row}>
                     {lazyAmount.map((e) => {
                         return (
-                            <TouchableOpacity onPress={() => {
+                            <TouchableOpacity style={styles.innerRow} onPress={() => {
                                 setAmount({ value: e.toString(), error: '' })
                             }}>
-                                <CommonCard style={styles.column}>
+                                <CommonCard>
                                     <CommonText showText={`₹ ${e}`} />
                                 </CommonCard>
                             </TouchableOpacity>
@@ -127,10 +134,10 @@ const AddPinelabMoney = ({ route }) => {
                 <View style={styles.row}>
                     {lazyAmount2.map((e) => {
                         return (
-                            <TouchableOpacity onPress={() => {
+                            <TouchableOpacity style={styles.innerRow} onPress={() => {
                                 setAmount({ value: e.toString(), error: '' })
                             }}>
-                                <CommonCard style={styles.column}>
+                                <CommonCard>
                                     <CommonText showText={`₹ ${e}`} />
                                 </CommonCard>
                             </TouchableOpacity>
@@ -139,9 +146,13 @@ const AddPinelabMoney = ({ route }) => {
                 </View>
 
             </ScrollView>
-            <View style={[styles.row, { justifyContent: 'space-evenly' }]}>
-                <WhiteButton showText={'Cancel'} style={{ flex: 1, marginHorizontal: 10 }} onPress={() => navigation.goBack()} />
-                <Button showText={'Recharge'} style={{ flex: 1, marginHorizontal: 10 }} onPress={rechargeWallet} onLoading={loadingSign} />
+            <View style={[styles.row, { justifyContent: 'space-between' }]}>
+                <View style={{ width: '48%' }}>
+                    <WhiteButton showText={'Cancel'} onPress={() => navigation.goBack()} />
+                </View>
+                <View style={{ width: '48%', }}>
+                    <Button showText={'Recharge'} onPress={rechargeWallet} onLoading={loadingSign} />
+                </View>
             </View>
         </CommonView>
     )
@@ -157,16 +168,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    column: {
-        paddingHorizontal: 20,
-        paddingVertical: 20
-    },
     rupeeText: {
         position: 'absolute',
         zIndex: 9,
         top: 27,
         left: 15
-    }
+    },
+    innerRow: {
+        flex: 1,
+        alignItems: 'center',
+    },
 })
 
 export default AddPinelabMoney

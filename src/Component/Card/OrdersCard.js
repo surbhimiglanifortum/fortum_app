@@ -6,14 +6,15 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import CommonText from '../Text/CommonText'
 import CommonCard from '../../Component/Card/CommonCard/index'
 import CommonIconCard from './CommonIconCard/CommonIconCard'
+import CommonCardReport from './CommonIconCard/CommonCardReport'
 
-const OrdersCard = ({ showText, fontSize, Svg, onPress }) => {
+const OrdersCard = ({ showText, fontSize, Svg, onPress,icon }) => {
 const scheme=useColorScheme()
     return (
         <CommonCard>
             <View style={styles.card} >
                 <View style={styles.leftContainer}>
-                    <CommonIconCard Svg={Svg}  />
+                    {icon?<CommonIconCard Svg={Svg} />:<CommonCardReport Svg={Svg} />}
                     <View style={styles.middleContainer}>
                         <CommonText showText={showText} fontSize={fontSize} customstyles={{width:scale(180)}} />
                     </View>
@@ -21,7 +22,6 @@ const scheme=useColorScheme()
                 <AntDesign name='right' color={scheme=='dark'?colors.white:colors.black} size={18} />
             </View>
         </CommonCard>
-
     )
 }
 

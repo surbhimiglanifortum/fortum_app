@@ -8,7 +8,7 @@ import Charger from '../../assests/svg/charger'
 import { GetFormatedDate } from '../../Utils/utils'
 import CommonIconCard from './CommonIconCard/CommonIconCard'
 
-const PinelabTransactionCard = ({ navigationHandler, Svg, title, date, amount, transactionType }) => {
+const PinelabTransactionCard = ({ navigationHandler, Svg, title, date, amount, transactionType, style }) => {
 
     return (
         <CommonCard   >
@@ -16,13 +16,13 @@ const PinelabTransactionCard = ({ navigationHandler, Svg, title, date, amount, t
                 <View style={styles.leftContainer}>
                     <CommonIconCard Svg={Svg} />
                     <View style={styles.middleContainer}>
-                        <CommonText showText={title} fontSize={14} />
+                        <CommonText showText={title} fontSize={16} black />
                         <View style={styles.leftContainer}>
-                            <CommonText regular showText={GetFormatedDate(date)} fontSize={14} />
+                            <CommonText regular showText={GetFormatedDate(date)} fontSize={12} />
                         </View>
                     </View>
                 </View>
-                <CommonText showText={transactionType === 'GIFT CARD RELOAD' ? `+ ₹ ${amount}` : `₹ ${amount}`} fontSize={16} customstyles={transactionType === 'GIFT CARD RELOAD' ? { color: colors.green } : { color: colors.red }} />
+                <CommonText showText={(transactionType === 'GIFT CARD RELOAD' || transactionType === 'GIFT CARD CANCEL REDEEM') ? `+ ₹ ${amount}` : `₹ ${amount}`} fontSize={16} customstyles={[style]} black />
             </TouchableOpacity>
         </CommonCard>
     )

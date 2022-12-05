@@ -15,6 +15,7 @@ import { AddToRedux } from '../../Redux/AddToRedux';
 import * as Types from '../../Redux/Types'
 import SnackContext from '../../Utils/context/SnackbarContext'
 import CommonView from '../../Component/CommonView'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MobileVerification = ({ route }) => {
 
@@ -55,7 +56,14 @@ const MobileVerification = ({ route }) => {
         } catch (e) {
             console.log("Error occurred while sending OTP")
         }
+    }
 
+    const sendToken = async (username, payload) => {
+        try {
+            const result = await ApiAction.pushNotification(username, payload)
+        } catch (error) {
+            console.log("Push Notification Token API Error", error)
+        }
     }
 
     const VerifyButtonHandler = async () => {
@@ -118,17 +126,18 @@ const MobileVerification = ({ route }) => {
                             loginSuccess()
                         } else {
                             // enter valid OTP
-                            setOpenCommonModal({ isVisible: true, message: "OTP is wrong please re enter " })
+                            setOpenCommonModal({ isVisible: true, message: "OTP does not match, please re-enter" })
                         }
                     }).catch(e => {
-                        console.log("ERROR", e)
-                        setOpenCommonModal({ isVisible: true, message: e.message })
+                        setOpenCommonModal({
+                            isVisible: true, message: "Session expired. Please retry.", onOkPress: () => {
+                                navigation.goBack()
+                            }
+                        })
                     });
                 setLoading(false)
-
             } catch (e) {
                 // Handle 3 error thrown for 3 incorrect attempts. 
-                console.log("ERROR", e)
                 setOpenCommonModal({ isVisible: true, message: e.message })
                 setLoading(false)
             }
@@ -138,8 +147,9 @@ const MobileVerification = ({ route }) => {
 
     const loginSuccess = async () => {
         const data = await Auth.currentAuthenticatedUser();
-        console.log("Login data", data)
+        const fcmToken = await AsyncStorage.getItem('fcmToken')
         if (data.signInUserSession) {
+            sendToken(data?.attributes?.email, { firebasetoken: fcmToken })
             const result = await ApiAction.getUserDetails()
             if (result.data) {
                 dispatch(AddToRedux(result.data, Types.USERDETAILS))
