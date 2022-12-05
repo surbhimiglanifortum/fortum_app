@@ -23,7 +23,7 @@ const ChargingStation = ({ route }) => {
     const isFocused=useIsFocused()
 
     const [loading, setLoading] = useState(true)
-    const [unpaidSession, setUnpaidSession] = useState([])
+    const [unpaidSession, setUnpaidSession] = useState(null)
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
 
     const locDetails = route.params?.data
@@ -31,12 +31,14 @@ const ChargingStation = ({ route }) => {
     useEffect(() => {
         const callAsync = async () => {
 
-            const unpaidResult = await getAllUnpaid(mUserDetails.username).catch((error) => {
-                setLoading(false)
+            const unpaidResult = await getAllUnpaid(mUserDetails.username).
+            catch((error) => {
+                // setLoading(false)
                 console.log("Error in allunpaid", error)
             })
-            setLoading(false)
             setUnpaidSession(unpaidResult?.data)
+            setLoading(false)
+            
         }
         callAsync()
 
@@ -80,6 +82,9 @@ const ChargingStation = ({ route }) => {
             return
         }
         if (evDetails?.status === 'AVAILABLE') {
+            // if(!unpaidSession){
+            //     return
+            // }
             if (unpaidSession?.length > 0) {
                 setOpenCommonModal({
                     isVisible: true, message: `You have unpaid Charging Session`,
