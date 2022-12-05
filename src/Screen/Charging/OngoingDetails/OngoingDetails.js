@@ -1,5 +1,5 @@
-import { View, SafeAreaView, StyleSheet, useColorScheme, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState, useEffect, useContext } from 'react'
+import { View, StyleSheet, useColorScheme, TouchableOpacity, ScrollView, AppState } from 'react-native'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import Header from '../../../Component/Header/Header'
 import colors from '../../../Utils/colors'
 import CommonText from '../../../Component/Text/CommonText'
@@ -26,10 +26,12 @@ import CommonIconCard from '../../../Component/Card/CommonIconCard/CommonIconCar
 import CommonCardReport from '../../../Component/Card/CommonIconCard/CommonCardReport'
 import routes from '../../../Utils/routes'
 import Spinner from 'react-native-loading-spinner-overlay';
+import PipHandler, { usePipModeListener } from 'react-native-pip-android';
+import PipButton from '../../../Component/Button/PipButton'
+import PipDenseCard from '../../../Component/Card/PipDenseCard'
 
 var mStoppedPressed = false;
 let sessionId = ''
-
 
 const OngoingDetails = ({ route }) => {
 
@@ -37,7 +39,6 @@ const OngoingDetails = ({ route }) => {
 
   let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails);
   const username = mUserDetails?.username
-
 
   const { setOpenCommonModal, setShowFeedbackModel, setShowYouSavedModel } = useContext(SnackContext);
 
@@ -47,6 +48,10 @@ const OngoingDetails = ({ route }) => {
   const locDetails = route?.params?.locDetails
   const evDetails = route.params?.evDetails
 
+  const inPipMode = usePipModeListener();
+
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
 
   const [paymentMethod, setPaymentMethod] = useState(route?.params?.paymentMethod)
@@ -92,6 +97,27 @@ const OngoingDetails = ({ route }) => {
   //     }
   //   }).catch((err) => console.log("Check If Unpaid From Charging Start Page Error", err))
   // }
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        console.log("App has come to the foreground!");
+      } else {
+        PipHandler.enterPipMode(300, 214)
+      }
+
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      console.log("AppState", appState.current);
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
 
   const fetchLastSession = async () => {
     setRefreshing(true)
@@ -526,168 +552,226 @@ const OngoingDetails = ({ route }) => {
     }
   }
 
-
   return (
-    <CommonView>
-      <Header showText={'Charging'} />
-      <ScrollView>
-        <View style={styles.textCon}>
-          <CommonText showText={locDetails?.name} customstyles={{ marginBottom: 7 }} regular fontSize={14} />
-          <CommonText showText={`${locDetails?.address?.city} ${locDetails?.address?.street} ${locDetails?.address?.postalCode}`} bold />
-        </View>
-
-        <Spinner
-          visible={isVisible}
-          textContent={'Loading...'}
-          textStyle={styles.spinnerTextStyle}
-        />  
-
-        <DenseCard>
-          <View style={styles.topCard}>
-            <Charger1 height={40} width={40} fill={scheme == 'dark' ? colors.lightBackGround : colors.backgroundDark} />
-            <View>
-              <CommonText
-                showText={getChargerMapObject(evDetails?.connectors[0]?.standard)?.name + ' - ' + (evDetails?.connectors[0]?.amperage * evDetails?.connectors[0]?.voltage / 1000)?.toFixed(2) + 'kW'}
-                fontSize={15}
-                customstyles={{ marginLeft: 10 }}
-                bold
-              />
-              {evDetails?.connectors[0]?.pricing?.price && <CommonText
-                showText={'₹ ' + parseFloat(evDetails?.connectors[0]?.pricing?.price).toFixed(2) + ' / ' + (evDetails?.connectors[0]?.pricing?.type === "TIME" ? "min" : evDetails?.connectors[0]?.pricing?.type === "FLAT" ? "flat" : "kWh+GST")}
-                fontSize={15}
-                customstyles={{ marginLeft: 10, marginTop: 5 }}
-                regular
-              />}
-            </View>
-          </View>
-        </DenseCard>
-
-        {/* <DenseCard>
-            <SelectPaymentMode
-              min_balance={evDetails?.connectors[0]?.pricing?.min_balance}
-              addMoneyPress={() => navigation.navigate(routes.RechargeWallet, {
-                routeDirection: "SelectPaymentMode",
-                minBalance: evDetails?.connectors[0]?.pricing?.min_balance,
-                gstState: mUserDetails?.defaultState
-              })}
-              setPaymentMethod={setPaymentMethod}
-              setMsg={setMsg}
-              setGoodToGo={setGoodToGo}
-              evsesUid={evDetails?.uid}
-              isShow={isShow}
-              setPayAsYouGoOrderId={setPayAsYouGoOrderId}
-              orderStatus={orderStatus}
-            />
-
-            {
-              msg != '' &&
-              <CommonText showText={msg} regular fontSize={13} customstyles={{ color: colors.red, textAlign: 'center', paddingHorizontal: 10 }} />
-            }
-          </DenseCard> */}
-
-
-        {/* chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? */}
-
-        <DenseCard>
-          <View style={styles.middleCard}>
+    <>
+      {
+        inPipMode ?
+          <View style={{ backgroundColor: scheme == 'dark' ? colors.backgroundDark : colors.backgroundLight, alignItems: 'center', justifyContent: 'center', width: '100%' }}>
             <View style={styles.middleInner}>
-              <CommonText showText={'Time'} fontSize={18} />
+              <CommonText showText={'Time'} fontSize={14} />
             </View>
             <View style={styles.timeContainer}>
               <View>
-                <DenseCard>
-                  <CommonText showText={chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? chargeTime?.hours : '00'} customstyles={{ textAlign: 'center' }} />
-                </DenseCard>
-                <CommonText showText={'  Hours'} />
+                <PipDenseCard>
+                  <CommonText showText={chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? chargeTime?.hours : '00'} customstyles={{ textAlign: 'center' }} fontSize={12} />
+                </PipDenseCard>
+                <CommonText showText={'  Hours'} fontSize={10} />
               </View>
-              <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
+              <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={12} />
               <View>
-                <DenseCard>
-                  <CommonText showText={chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? chargeTime?.minutes : '00'} customstyles={{ textAlign: 'center' }} />
-                </DenseCard>
-                <CommonText showText={' Minutes'} />
-              </View>
-              <View>
-                <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
+                <PipDenseCard>
+                  <CommonText showText={chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? chargeTime?.minutes : '00'} customstyles={{ textAlign: 'center' }} fontSize={12} />
+                </PipDenseCard>
+                <CommonText showText={' Minutes'} fontSize={10} />
               </View>
               <View>
-                <DenseCard>
+                <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={12} />
+              </View>
+              <View>
+                <PipDenseCard>
                   <CommonText
                     showText={chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? chargeTime?.seconds : '00'}
                     customstyles={{ textAlign: 'center' }}
+                    fontSize={12}
                   />
-                </DenseCard>
-                <CommonText showText={' Seconds'} />
+                </PipDenseCard>
+                <CommonText showText={' Seconds'} fontSize={10} />
               </View>
             </View>
-          </View>
-        </DenseCard>
 
-        <PayAsUGoModal
-          modalVisible={showRestart}
-          bgStyle={'rgba(0,0,0,0.5)'}
-          chargingCost={chargingCost}
-          remainingCost={remainingCost}
-          loadingRefund={loadingRefund}
-          loadingWallet={loadingWallet}
-          cancelClick={() => {
-            console.log("cancelClick")
-            setShowRestart(!showRestart)
-          }}
-          onRestartClick={() => {
-            setShowRestart(!showRestart)
-            navigation.goBack()
-          }}
-          onRefundClick={() => {
-            console.log("Refund Click", sessionId)
-            initiateRefund(sessionId)
-            navigation.goBack()
-          }}
-          onWalletClick={() => {
-            console.log("Refund In Wallet Click", sessionId)
-            initiateWalletRefund(sessionId)
-            navigation.goBack()
-          }}
-        />
+            <View style={{ width: '90%' }}>
+              <PipButton showText={chargerText}
+                onPress={() => {
+                  if (chargerState === "STOP") {
+                    startChargerFlow()
+                  } else if (chargerState === 'CHARGING') {
+                    console.log("chargeSessionID")
+                    console.log(chargeSessionID)
+                    stopChargeSession(chargeSessionID)
+                  } else if (isSessionActive == true && chargerState === 'CHARGING') {
+                    console.log("chargeSessionID")
+                    console.log(chargeSessionID)
+                    stopChargeSession(chargeSessionID)
+                  }
+                }}
+                disable={chargerText == 'Stop' || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true) && (evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined)) || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true || evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined) && (payAsYouGoOrderStatus === "CHARGED" && paymentMethod === 'PAY_AS_U_GO') || goodToGo && !disableButton) ? false : true}
+                bg={getButtonColor("")}
+              />
+            </View>
+          </View> :
 
-        <CommonCard>
-          <TouchableOpacity onPress={() => navigation.navigate(routes.ReportPage, {
-            locDetails: locDetails
-          })} style={styles.topCard}>
-            <CommonCardReport Svg={Report} />
-            <CommonText showText={'Report'} customstyles={{ color: colors.lightRed, alignSelf: 'center', marginLeft: 10 }} />
-          </TouchableOpacity>
-        </CommonCard >
+          <CommonView>
+            <Header showText={'Charging'} />
+            <ScrollView>
+              <View style={styles.textCon}>
+                <CommonText showText={locDetails?.name} customstyles={{ marginBottom: 7 }} regular fontSize={14} />
+                <CommonText showText={`${locDetails?.address?.city} ${locDetails?.address?.street} ${locDetails?.address?.postalCode}`} bold />
+              </View>
 
-        <CommonCard>
-          <TouchableOpacity style={styles.topCard} onPress={() => navigation.navigate(routes.Support)}>
-            <CommonIconCard Svg={SupportSvg} />
-            <CommonText showText={'Support'} customstyles={{ alignSelf: 'center', marginLeft: 10 }} />
-          </TouchableOpacity>
-        </CommonCard>
-      </ScrollView>
+              <Spinner
+                visible={isVisible}
+                textContent={'Loading...'}
+                textStyle={styles.spinnerTextStyle}
+              />
 
-      <View style={styles.bottomButon}>
-        <Button showText={chargerText}
-          onPress={() => {
-            console.log('my state', chargerState)
-            if (chargerState === "STOP") {
-              startChargerFlow()
-            } else if (chargerState === 'CHARGING') {
-              console.log("chargeSessionID")
-              console.log(chargeSessionID)
-              stopChargeSession(chargeSessionID)
-            } else if (isSessionActive == true && chargerState === 'CHARGING') {
-              console.log("chargeSessionID")
-              console.log(chargeSessionID)
-              stopChargeSession(chargeSessionID)
-            }
-          }}
-          disable={chargerText == 'Stop' || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true) && (evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined)) || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true || evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined) && (payAsYouGoOrderStatus === "CHARGED" && paymentMethod === 'PAY_AS_U_GO') || goodToGo && !disableButton) ? false : true}
-          bg={getButtonColor("")}
-        />
-      </View>
-    </CommonView>
+              <DenseCard>
+                <View style={styles.topCard}>
+                  <Charger1 height={40} width={40} fill={scheme == 'dark' ? colors.lightBackGround : colors.backgroundDark} />
+                  <View>
+                    <CommonText
+                      showText={getChargerMapObject(evDetails?.connectors[0]?.standard)?.name + ' - ' + (evDetails?.connectors[0]?.amperage * evDetails?.connectors[0]?.voltage / 1000)?.toFixed(2) + 'kW'}
+                      fontSize={15}
+                      customstyles={{ marginLeft: 10 }}
+                      bold
+                    />
+                    {evDetails?.connectors[0]?.pricing?.price && <CommonText
+                      showText={'₹ ' + parseFloat(evDetails?.connectors[0]?.pricing?.price).toFixed(2) + ' / ' + (evDetails?.connectors[0]?.pricing?.type === "TIME" ? "min" : evDetails?.connectors[0]?.pricing?.type === "FLAT" ? "flat" : "kWh+GST")}
+                      fontSize={15}
+                      customstyles={{ marginLeft: 10, marginTop: 5 }}
+                      regular
+                    />}
+                  </View>
+                </View>
+              </DenseCard>
+
+              {/* <DenseCard>
+          <SelectPaymentMode
+            min_balance={evDetails?.connectors[0]?.pricing?.min_balance}
+            addMoneyPress={() => navigation.navigate(routes.RechargeWallet, {
+              routeDirection: "SelectPaymentMode",
+              minBalance: evDetails?.connectors[0]?.pricing?.min_balance,
+              gstState: mUserDetails?.defaultState
+            })}
+            setPaymentMethod={setPaymentMethod}
+            setMsg={setMsg}
+            setGoodToGo={setGoodToGo}
+            evsesUid={evDetails?.uid}
+            isShow={isShow}
+            setPayAsYouGoOrderId={setPayAsYouGoOrderId}
+            orderStatus={orderStatus}
+          />
+
+          {
+            msg != '' &&
+            <CommonText showText={msg} regular fontSize={13} customstyles={{ color: colors.red, textAlign: 'center', paddingHorizontal: 10 }} />
+          }
+        </DenseCard> */}
+
+
+              {/* chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? */}
+
+              <DenseCard>
+                <View>
+                  <View style={styles.middleInner}>
+                    <CommonText showText={'Time'} fontSize={18} />
+                  </View>
+                  <View style={styles.timeContainer}>
+                    <View>
+                      <DenseCard>
+                        <CommonText showText={chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? chargeTime?.hours : '00'} customstyles={{ textAlign: 'center' }} />
+                      </DenseCard>
+                      <CommonText showText={'  Hours'} />
+                    </View>
+                    <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
+                    <View>
+                      <DenseCard>
+                        <CommonText showText={chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? chargeTime?.minutes : '00'} customstyles={{ textAlign: 'center' }} />
+                      </DenseCard>
+                      <CommonText showText={' Minutes'} />
+                    </View>
+                    <View>
+                      <CommonText showText={':'} customstyles={{ marginTop: -25 }} fontSize={18} />
+                    </View>
+                    <View>
+                      <DenseCard>
+                        <CommonText
+                          showText={chargeTime != '' && (chargerText == 'STOP' || chargerText == 'Stop' || chargerText == 'Stopping...') ? chargeTime?.seconds : '00'}
+                          customstyles={{ textAlign: 'center' }}
+                        />
+                      </DenseCard>
+                      <CommonText showText={' Seconds'} />
+                    </View>
+                  </View>
+                </View>
+              </DenseCard>
+
+              <PayAsUGoModal
+                modalVisible={showRestart}
+                bgStyle={'rgba(0,0,0,0.5)'}
+                chargingCost={chargingCost}
+                remainingCost={remainingCost}
+                loadingRefund={loadingRefund}
+                loadingWallet={loadingWallet}
+                cancelClick={() => {
+                  console.log("cancelClick")
+                  setShowRestart(!showRestart)
+                }}
+                onRestartClick={() => {
+                  setShowRestart(!showRestart)
+                  navigation.goBack()
+                }}
+                onRefundClick={() => {
+                  console.log("Refund Click", sessionId)
+                  initiateRefund(sessionId)
+                  navigation.goBack()
+                }}
+                onWalletClick={() => {
+                  console.log("Refund In Wallet Click", sessionId)
+                  initiateWalletRefund(sessionId)
+                  navigation.goBack()
+                }}
+              />
+
+              <CommonCard>
+                <TouchableOpacity onPress={() => navigation.navigate(routes.ReportPage, {
+                  locDetails: locDetails
+                })} style={styles.topCard}>
+                  <CommonCardReport Svg={Report} />
+                  <CommonText showText={'Report'} customstyles={{ color: colors.lightRed, alignSelf: 'center', marginLeft: 10 }} />
+                </TouchableOpacity>
+              </CommonCard >
+
+              <CommonCard>
+                <TouchableOpacity style={styles.topCard} onPress={() => navigation.navigate(routes.Support)}>
+                  <CommonIconCard Svg={SupportSvg} />
+                  <CommonText showText={'Support'} customstyles={{ alignSelf: 'center', marginLeft: 10 }} />
+                </TouchableOpacity>
+              </CommonCard>
+            </ScrollView>
+
+            <View style={styles.bottomButon}>
+              <Button showText={chargerText}
+                onPress={() => {
+                  console.log('my state', chargerState)
+                  if (chargerState === "STOP") {
+                    startChargerFlow()
+                  } else if (chargerState === 'CHARGING') {
+                    console.log("chargeSessionID")
+                    console.log(chargeSessionID)
+                    stopChargeSession(chargeSessionID)
+                  } else if (isSessionActive == true && chargerState === 'CHARGING') {
+                    console.log("chargeSessionID")
+                    console.log(chargeSessionID)
+                    stopChargeSession(chargeSessionID)
+                  }
+                }}
+                disable={chargerText == 'Stop' || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true) && (evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined)) || ((evDetails?.status === "AVAILABLE" || route.params?.started == true || isSessionActive == true || evDetails?.connectors[0]?.pricing?.min_balance == 0 || evDetails?.connectors[0]?.pricing?.min_balance == undefined) && (payAsYouGoOrderStatus === "CHARGED" && paymentMethod === 'PAY_AS_U_GO') || goodToGo && !disableButton) ? false : true}
+                bg={getButtonColor("")}
+              />
+            </View>
+          </CommonView>
+      }
+    </>
   )
 }
 
