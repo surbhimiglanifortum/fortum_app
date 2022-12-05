@@ -66,8 +66,6 @@ const RechargeWallet = ({ route }) => {
       setGstError('')
     }
 
-    console.log("Gst Error", gstState, gstError)
-
     const payload = {
       amount: amount.value,
       stategst: gstState
@@ -90,15 +88,14 @@ const RechargeWallet = ({ route }) => {
           callback_url: '',
           juspay_process_payload: result.data
         })
-        setLoadingSign(false)
       } else {
         setOpenCommonModal({
-          isVisible: true, message: 'Something Went Wrong Please Try After Some Time.', onOkPress: () => {
+          isVisible: true, message: 'Something Went Wrong. Please Try After Some Time.', onOkPress: () => {
             console.log("OKPRESSED")
           }
         })
-        setLoadingSign(false)
       }
+      setLoadingSign(false)
     } catch (error) {
       console.log("RechargeWallet Catch Block", error)
       setLoadingSign(false)
