@@ -109,7 +109,7 @@ const FortumChargeAndDriveCard = () => {
             {
                 !isAccount &&
                 <View style={styles.btnContainer}>
-                    <Button showText={'Activate'} onPress={actiavteButtonHAndler} />
+                    <Button isFlex={false} showText={'Activate'} onPress={actiavteButtonHAndler} />
                 </View>
             }
 

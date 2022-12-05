@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, useColorScheme, BackHandler } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { scale } from 'react-native-size-matters'
 import Home from '../Home/Home'
@@ -22,11 +22,19 @@ import * as ApiAction from '../../Services/Api'
 import { useDispatch } from 'react-redux';
 import { AddToRedux } from '../../Redux/AddToRedux'
 import * as  Types from '../../Redux/Types'
+import { useIsFocused } from '@react-navigation/native'
+let backHandler
+let mselectedHandler = "home"
 const Dashboard = ({ tabName, navigation, route }) => {
 
   const navigatedata = route?.params?.animateMap
   const [selectedTab, setSelectedTab] = useState('home')
   const dispatch = useDispatch()
+  const isFocused = useIsFocused()
+
+  useEffect(() => {
+    mselectedHandler = selectedTab
+  }, [selectedTab])
 
   useEffect(() => {
     ApiAction.getUserDetails().then(result => {
@@ -81,6 +89,25 @@ const Dashboard = ({ tabName, navigation, route }) => {
     }
   }, [tabName])
 
+  const backAction = () => {
+    console.log('first', mselectedHandler)
+    if (isFocused) {
+      if (mselectedHandler != 'home') {
+        setSelectedTab('home')
+        return true
+      }
+      
+    }
+    return false
+  }
+
+  useEffect(() => {
+    console.log("IS focu", isFocused)
+    backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
+    return () => {
+      backHandler.remove()
+    }
+  }, [isFocused])
 
   return (
     <>

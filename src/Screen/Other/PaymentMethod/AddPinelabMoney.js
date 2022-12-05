@@ -76,6 +76,12 @@ const AddPinelabMoney = ({ route }) => {
         refetch()
     }, [isFocused])
 
+    const onChange = e => {
+        // const input = e.currentTarget.value;
+        if (/^[^!-\/:-@\[-`{-~]+$/.test(e) || e === "") {
+            setAmount({ value: e.trim(), error: '' })
+        }
+    };
 
     return (
         <CommonView>
@@ -91,7 +97,14 @@ const AddPinelabMoney = ({ route }) => {
                 <CommonText showText={'Add Money in Wallet'} regular fontSize={14} />
                 <View style={{ position: 'relative' }}>
                     <CommonText showText={'₹'} customstyles={styles.rupeeText} />
-                    <Textinput paddingHorizontal={25} placeholder={'Enter Amount'} value={amount.value} onChange={(text) => { setAmount({ value: text, error: '' }) }} />
+                    <Textinput
+                        paddingHorizontal={25}
+                        placeholder={'Enter Amount'}
+                        value={amount.value}
+                        onChange={(text) => onChange(text)}
+                        keyboardType={'numeric'}
+                        maxLength={5}
+                    />
                 </View>
 
                 <CommonText showText={'Quick Recommendation'} fontSize={14} customstyles={{ marginVertical: 15 }} />

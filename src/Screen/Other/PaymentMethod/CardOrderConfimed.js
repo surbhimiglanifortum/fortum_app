@@ -9,7 +9,7 @@ const CardOrderConfirmed = () => {
             subHeading={'Order Confirmed'}
             btnText={'View Card Deatils'}
             onPress={() => {
-                navigation.pop(2)
+                navigation.pop(3)
             }}
         />
     )

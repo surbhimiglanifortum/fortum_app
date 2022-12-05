@@ -141,26 +141,26 @@ const OngoingDetails = ({ route }) => {
       })
 
       // checking if active session is not more than 24 hours
-      if (new Date() - new Date(item.start_datetime) > 86400000) {
-        const activeConnectors = item.location.evses[0].connectors
-        activeConnectors.map(i => {
-          if (i.id === evDetails?.uid) {
-            pollSessions(item.auth_id, 0, 0, 0)
-            setChargerText('STOP')
-            setChargerState('CHARGING')
-            setSessionActive(true)
-            setStopColor(colors.blue)
-            if (item.auth_id.startsWith("fleet") || item.auth_id.startsWith("token_")) {
-              setButtonDisable(false)
-            }
-          }
-          else {
-            setChargerText('START')
-            setChargerState('STOP')
-            setSessionActive(false)
-          }
-        })
-      }
+      // if (new Date() - new Date(item.start_datetime) > 86400000) {
+      //   const activeConnectors = item.location.evses[0].connectors
+      //   activeConnectors.map(i => {
+      //     if (i.id === evDetails?.uid) {
+      //       pollSessions(item.auth_id, 0, 0, 0)
+      //       setChargerText('STOP')
+      //       setChargerState('CHARGING')
+      //       setSessionActive(true)
+      //       setStopColor(colors.blue)
+      //       if (item.auth_id.startsWith("fleet") || item.auth_id.startsWith("token_")) {
+      //         setButtonDisable(false)
+      //       }
+      //     }
+      //     else {
+      //       setChargerText('START')
+      //       setChargerState('STOP')
+      //       setSessionActive(false)
+      //     }
+      //   })
+      // }
     })
   }
 
@@ -205,11 +205,18 @@ const OngoingDetails = ({ route }) => {
             setRefreshing(false)
           } else {
             // setIsVisible(true)
-            setShowFeedbackModel({ "isVisible": true, "locid": locDetails?.id, "evseid": evDetails?.uid })
-            navigation.reset({
-              index: 0,
-              routes: [{ name: routes.dashboard }],
-            });
+
+          //if(r.payments && r.payments.length>0 && r.order?.amount_due>0 && paymentMethod==="PREPAID_CARD"){
+            // amount due 
+            navigation.navigate(routes.PayInvoice, {
+             amount: (r.order?.amount_due / 100).toFixed(2)
+            })
+          // }
+            // setShowFeedbackModel({ "isVisible": true, "locid": locDetails?.id, "evseid": evDetails?.uid })
+            // navigation.reset({
+            //   index: 0,
+            //   routes: [{ name: routes.dashboard }],
+            // });
             // setOpenCommonModal({
             //   isVisible: true,
             //   message: 'Charging Completed. Are You Ready To Drive ?',
@@ -220,6 +227,12 @@ const OngoingDetails = ({ route }) => {
             //   }
             // })
             setRefreshing(false)
+          }
+          if(r.payments && r.payments.length>0 && r.order?.amount_due>0 && paymentMethod==="PREPAID_CARD"){
+           // amount due 
+           navigation.navigate(routes.PayInvoice, {
+            amount: (r.order?.amount_due / 100).toFixed(2)
+           })
           }
         }).catch(error => {
           console.log("Error Restart API", error)
@@ -296,6 +309,22 @@ const OngoingDetails = ({ route }) => {
     if (tr > 30) {
       setChargerState("STOP")
       setChargerText("Failed")
+      setOpenCommonModal({
+        isVisible: true, message: `The charging session couldn't start, please retry or get the refund into your wallet. The money will be auto refunded in 30 mins if the refund is not intitated manually from here.`,
+        heading: "Session could not start",
+        secondButton: {
+          onPress: () => {
+             setChargerText("Start")
+             setChargerState("STOP")
+          },
+          title: "Retry"
+        },
+
+        onOkPress: () => {
+          //cancel pre auth , store approval code in user table with blocked amount details and fetch from there
+           
+        }
+      })
       return
     }
     let data = {
@@ -415,9 +444,28 @@ const OngoingDetails = ({ route }) => {
                 setChargerStart(true)
                 setShow(false)
               } else {
+                //setOpenCommonModal
+                setOpenCommonModal({
+                  isVisible: true, message: `The charging session couldn't start, please retry or get the refund into your wallet. The money will be auto refunded in 30 mins if the refund is not intitated manually from here.`,
+                  heading: "Session could not start",
+                  secondButton: {
+                    onPress: () => {
+                       setChargerText("Start")
+                       setChargerState("STOP")
+                    },
+                    title: "Retry"
+                  },
+    
+                  onOkPress: () => {
+                    //cancel pre auth , store approval code in user table with blocked amount details and fetch from there
+                     
+                  }
+                })
                 console.log("REJECTED")
               }
             }).catch(err => {
+
+                //setOpenCommonModal
               console.log("start session error", err)
               setChargerState("STOP")
               setChargerText("Failed")
@@ -517,6 +565,11 @@ const OngoingDetails = ({ route }) => {
       console.log("Result initiateWalletRefund Catch", error)
       setLoadingWallet(false)
     }
+  }
+
+  //Release blocked amount
+  const CancelPreAuth = async ()=>{
+
   }
 
 

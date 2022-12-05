@@ -131,13 +131,13 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal, onFilterClick }) => 
                                 <CommonText fontSize={16} >Filter</CommonText>
                             </View>
                             <View>
-                                <CommonCard>
+                                {/* <CommonCard>
                                     <TouchableOpacity onPress={() => { setOpenFilterModal(false) }}
                                         style={{ alignSelf: 'center', justifyContent: 'center' }}>
                                         <AntDesign size={20} name='close' color={scheme == 'dark' ? colors.backgroundLight : colors.ligthIcon} />
                                     </TouchableOpacity>
 
-                                </CommonCard>
+                                </CommonCard> */}
                             </View>
 
 

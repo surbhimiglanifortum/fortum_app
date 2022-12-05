@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { initialize, PinePerksCardView, setPinePerksSecrets } from 'react-native-pine-perks'
 import { getEncryptData } from '../../../Services/Api'
 import { useSelector } from 'react-redux';
@@ -9,12 +9,17 @@ import { updateCardStatus } from '../../../Services/Api'
 import SwitchButton from '../../../Component/Button/SwitchButton';
 import CommonText from '../../../Component/Text/CommonText';
 import { View } from 'react-native'
+import SnackContext from '../../../Utils/context/SnackbarContext'
+import Loader from '../../../Component/Loader'
 
 const CardDetails = () => {
     let encyptKey = ''
 
     let mUserDetails = useSelector((state) => state.userTypeReducer.userDetails)
     const [isEnabled, setIsEnabled] = useState(mUserDetails?.pinelabs_card_conf?.CardStatus === 'Active' ? true : false);
+    const { setOpenCommonModal } = useContext(SnackContext);
+
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         initialize('https://apiuat.pineperks.in', async function (key) {
@@ -36,6 +41,7 @@ const CardDetails = () => {
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
     const cardStatusUpdate = async () => {
+        setLoading(true)
         try {
             let payload = {}
             if (isEnabled) {
@@ -50,8 +56,27 @@ const CardDetails = () => {
                 }
             }
             const result = await updateCardStatus(payload)
+            if (result.data?.success) {
+                if (result.data?.response?.cardStatus == 1) {
+                    setOpenCommonModal({
+                        isVisible: true, message: 'Card Activated', onOkPress: () => {
+                            console.log("OKPRESSED")
+                        }
+                    })
+                }
+                if (result.data?.response?.cardStatus == 3) {
+                    setOpenCommonModal({
+                        isVisible: true, message: 'Card Deactivated', onOkPress: () => {
+                            console.log("OKPRESSED")
+                        }
+                    })
+                }
+            }
+            setLoading(false)
+            console.log("Check Card Status", result.data)
         } catch (error) {
             console.log("Pinelab Card Staus Error", error)
+            setLoading(false)
         }
     }
 
@@ -62,20 +87,24 @@ const CardDetails = () => {
     return (
         <CommonView style={styles.container}>
             <Header showText={'Card Details'} />
-            <View  style={{alignContent:'center',marginLeft:10}}>
+            <View style={{ alignContent: 'center', marginLeft: 10 }}>
                 <PinePerksCardView
-                    cardContainerStyle={{ justifyContent:'center',justifyContent:'center',alignContent:'center'}}
+                    cardContainerStyle={{ justifyContent: 'center', justifyContent: 'center', alignContent: 'center' }}
                     cardBackgroundImage={require('../../../assests/card.jpg')}
                     cardImageStyle={{ width: '100%', resizeMode: 'contain', height: 250, marginTop: 0 }}
                     cardNumberStyle={{ marginTop: 110, marginLeft: 19 }}
                     expiryTextStyle={{ marginTop: -5, marginLeft: 19, fontSize: 12 }}
-                    cvvTextStyle={{ marginTop: -5,marginRight:130, fontSize: 12, textAlign: 'center' }}
+                    cvvTextStyle={{ marginTop: -5, marginRight: 130, fontSize: 12, textAlign: 'center' }}
                 />
             </View>
 
             <View style={styles.row}>
-                <CommonText showText={'Update Card Status'} />
-                <SwitchButton onValueChange={toggleSwitch} value={isEnabled} />
+                <CommonText showText={'Lock / Unlock Card'} />
+                {
+                    !loading ?
+                        <SwitchButton onValueChange={toggleSwitch} value={isEnabled} /> :
+                        <Loader modalOpen={true} />
+                }
             </View>
         </CommonView>
     )
