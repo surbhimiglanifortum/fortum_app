@@ -270,3 +270,8 @@ export const pushNotification = async (username, payload) => {
 export const orderDetails = async (orderId) => {
     return await axios.get("/api_app/orders/getOrderDetails/" + orderId);
 }
+
+export const franchise = async (payload) => {
+    console.log(payload,'..........payloadppppppppppppp')
+    return await axios.post("/api_app/franchise/insertdata", payload);
+}
